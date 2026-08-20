@@ -1,0 +1,26 @@
+[Unit]
+Description=Einfach Hausen web app
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/srv/einfach-hausen
+Environment=NODE_ENV=production
+Environment=HOSTNAME=127.0.0.1
+Environment=PORT=3010
+Environment=PATH=/home/ubuntu/.nvm/versions/node/v22.23.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+EnvironmentFile=/etc/einfach-hausen.env
+ExecStart=/home/ubuntu/.nvm/versions/node/v22.23.0/bin/npm start -- -H 127.0.0.1 -p 3010
+Restart=always
+RestartSec=5
+TimeoutStopSec=20
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/srv/einfach-hausen /var/lib/einfach-hausen
+
+[Install]
+WantedBy=multi-user.target

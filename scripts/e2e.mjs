@@ -1,103 +1,101 @@
 import { chromium } from 'playwright-core';
 
-const base='http://127.0.0.1:3001';
-const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
-const owner=await browser.newContext({viewport:{width:390,height:844}});
-const op=await owner.newPage();
-const stamp=Date.now();
-const ownerEmail=`owner-${stamp}@example.test`;
-const providerEmail=`pro-${stamp}@example.test`;
+const base=process.env.E2E_BASE_URL||'http://127.0.0.1:3001';
 const adminPassword=process.env.E2E_ADMIN_PASSWORD;
 if(!adminPassword) throw new Error('E2E_ADMIN_PASSWORD is required');
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+const stamp=Date.now();
+const providerEmail=`firma-${stamp}@example.test`;
+const techEmail=`thomas-${stamp}@example.test`;
+const ownerEmail=`maria-${stamp}@example.test`;
+const password='Hausen!2026';
 
-await op.goto(base+'/register?role=homeowner');
-await op.getByLabel('Vorname').fill('Maria');
-await op.getByLabel('Nachname').fill('Test');
-await op.getByLabel('E-Mail').fill(ownerEmail);
-await op.getByLabel('Passwort').fill('Hausmeister!2026');
-await op.getByLabel('PLZ').fill('46325');
-await Promise.all([op.waitForURL('**/app'),op.getByRole('button',{name:'Konto erstellen'}).click()]);
-await op.getByPlaceholder(/Meine Hecke/).fill('Meine Hecke muss geschnitten werden. Ich habe Dienstag um 14 Uhr Zeit. 46325 Borken. Budget bis 170 €.');
-await Promise.all([op.waitForURL(/\/app\/jobs\/\d+/),op.getByRole('button',{name:/KI-Hausmeister/}).click()]);
-const jobUrl=op.url();
-const jobId=Number(jobUrl.match(/jobs\/(\d+)/)?.[1]);
-if(!jobId) throw new Error('job id missing');
-await op.screenshot({path:'artifacts/owner-job.png',fullPage:true});
+async function waitText(page,text){await page.getByText(text).first().waitFor({timeout:15000});}
+async function sendHousemaster(page,text){const c=page.getByPlaceholder(/Sag einfach, was dein Haus braucht/);await c.click();await c.pressSequentially(text,{delay:1});await page.locator('button.send-action:not([disabled])').click();}
 
-const provider=await browser.newContext({viewport:{width:390,height:844}});
-const pp=await provider.newPage();
-await pp.goto(base+'/register?role=provider');
-await pp.getByLabel('Vorname').fill('Thomas');
-await pp.getByLabel('Nachname').fill('Müller');
-await pp.getByLabel('E-Mail').fill(providerEmail);
-await pp.getByLabel('Passwort').fill('Hausmeister!2026');
-await pp.getByLabel('Firmenname').fill('Gartenbau Müller');
-await pp.getByLabel('Gewerke').fill('Garten');
-await pp.getByLabel('PLZ').fill('46325');
-await Promise.all([pp.waitForURL('**/pro'),pp.getByRole('button',{name:'Konto erstellen'}).click()]);
-await pp.goto(base+'/pro/profile');
-await pp.getByLabel('Nachweis').setInputFiles({name:'gewerbe.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n% Gewerbenachweis Test\n')});
-await pp.getByLabel('Hinweis').fill('Gewerbeanmeldung und Betriebshaftpflicht liegen vor.');
-await pp.getByRole('button',{name:'Zur Prüfung einreichen'}).click();
-await pp.waitForURL(/verification=submitted/);
-const admin=await browser.newContext({viewport:{width:1180,height:900}});
-const ap=await admin.newPage();
-await ap.goto(base+'/admin/login');
-await ap.getByLabel('Admin-Passwort').fill(adminPassword);
-await Promise.all([ap.waitForURL('**/admin'),ap.getByRole('button',{name:'Admin anmelden'}).click()]);
-const verifyCard=ap.locator('.admin-card').filter({hasText:'Gartenbau Müller'}).first();
-await verifyCard.getByRole('button',{name:'Freigeben'}).click();
-await verifyCard.getByText('Freigegeben').waitFor();
-await pp.goto(base+'/pro');
-await pp.getByText('Heckenschnitt').first().click();
-await pp.getByLabel('Preis (€)').fill('139');
-await pp.getByRole('textbox',{name:'Nachricht',exact:true}).fill('Heckenschnitt inkl. Abtransport des Schnittguts.');
-await pp.getByRole('button',{name:'Angebot senden'}).click();
-await pp.waitForTimeout(500);
-await pp.screenshot({path:'artifacts/provider-offer.png',fullPage:true});
+// 1) Firma registrieren, prüfen und als Vertragspartner aktivieren.
+const managerCtx=await browser.newContext({viewport:{width:390,height:844}}); const manager=await managerCtx.newPage();
+await manager.goto(base+'/register?role=provider');
+await manager.getByLabel('Vorname').fill('Daniel'); await manager.getByLabel('Nachname').fill('Müller');
+await manager.getByLabel('E-Mail').fill(providerEmail); await manager.getByLabel('Passwort').fill(password);
+await manager.getByLabel('Firmenname').fill('Gartenbau Müller'); await manager.getByLabel('Gewerke').fill('Garten, Grünpflege, Heckenschnitt'); await manager.getByLabel('PLZ').fill('46325');
+await Promise.all([manager.waitForURL('**/pro'),manager.getByRole('button',{name:'Konto erstellen'}).click()]);
+await manager.goto(base+'/pro/profile');
+await manager.getByLabel('Nachweis').setInputFiles({name:'gewerbe.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n% Test\n')});
+await manager.getByLabel('Hinweis').fill('Gewerbe, Qualifikation und Betriebshaftpflicht liegen vor.');
+await manager.getByRole('button',{name:'Zur Prüfung einreichen'}).click(); await manager.waitForURL(/verification=submitted/);
 
-await op.goto(base+`/app/jobs/${jobId}`);
-await op.getByText('Gartenbau Müller').waitFor();
-await op.getByRole('button',{name:'Angebot annehmen'}).click();
-await op.waitForTimeout(500);
-await op.locator('.detail-head .status').getByText('Beauftragt',{exact:true}).waitFor();
-await op.getByPlaceholder('Nachricht schreiben …').fill('Danke, bis Dienstag!');
-await op.locator('.chat-form button').click();
-await op.waitForTimeout(300);
-await op.screenshot({path:'artifacts/owner-accepted.png',fullPage:true});
+const adminCtx=await browser.newContext({viewport:{width:1180,height:1000}}); const admin=await adminCtx.newPage();
+await admin.goto(base+'/admin/login'); await admin.getByLabel('Admin-Passwort').fill(adminPassword);
+await Promise.all([admin.waitForURL('**/admin'),admin.getByRole('button',{name:'Admin anmelden'}).click()]);
+let companyCard=admin.locator('.admin-card').filter({hasText:'Gartenbau Müller'}).first();
+await companyCard.getByRole('button',{name:'Unternehmen freigeben'}).click(); await companyCard.locator('.status.approved').waitFor();
+companyCard=admin.locator('.admin-card').filter({hasText:'Gartenbau Müller'}).first();
+await companyCard.getByLabel('Status').selectOption('active');
+for(const name of ['Betriebshaftpflicht geprüft','Qualifikation/Zulassung geprüft','Partnervertrag unterschrieben','Qualitätsstandard akzeptiert']) await companyCard.getByLabel(name).check();
+await companyCard.getByRole('button',{name:'Partnervertrag speichern'}).click(); await companyCard.getByText(/Vertrag Aktiv/).waitFor();
+await manager.goto(base+'/pro/profile'); await waitText(manager,'Aktiver Einfach-Hausen-Vertragspartner'); await waitText(manager,'0 % Provision');
 
-await pp.goto(base+`/pro/jobs/${jobId}`);
-await pp.getByText(/verbindlich erteilt/).waitFor();
-await pp.getByRole('button',{name:'Arbeit starten'}).click();
-await pp.waitForTimeout(300);
-await pp.getByRole('button',{name:'Als erledigt markieren'}).click();
-await pp.waitForTimeout(300);
-await pp.getByLabel('Titel').fill('Leistungsnachweis Heckenschnitt');
-await pp.getByLabel('Dokumenttyp').selectOption('report');
-await pp.getByLabel('Datei').setInputFiles({name:'nachweis.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n% Mein Hausmeister Test\n')});
-await pp.getByRole('button',{name:'Dokument hochladen'}).click();
-await pp.waitForTimeout(300);
-await pp.screenshot({path:'artifacts/provider-completed.png',fullPage:true});
+// 2) Firma legt einen echten Ansprechpartner an. Nur ein Schalter für Auftragsverwaltung.
+await manager.goto(base+'/pro/team'); await waitText(manager,'Ein Unternehmen. Ein Team. Ein Schalter.');
+await manager.getByLabel('Vorname').last().fill('Thomas'); await manager.getByLabel('Nachname').last().fill('Weber');
+await manager.getByLabel('Funktion').fill('Techniker'); await manager.getByLabel('E-Mail').last().fill(techEmail); await manager.getByLabel('Telefon').last().fill('+49 151 12345678'); await manager.getByLabel('Startpasswort').fill(password);
+await manager.getByRole('button',{name:'Ansprechpartner anlegen'}).click(); await manager.waitForURL(/member=created/); await waitText(manager,'Thomas Weber');
+const thomasCard=manager.locator('.member-card').filter({hasText:'Thomas Weber'}); if(await thomasCard.getByLabel('Aufträge verwalten').isChecked())throw new Error('Technician must not manage new jobs by default');
 
-await op.goto(base+`/app/jobs/${jobId}`);
-await op.getByText('Bewertung',{exact:true}).waitFor();
-await op.getByPlaceholder(/Beschreibe möglichst genau/).fill('Die Ausführung soll von der Plattform geprüft werden, weil noch eine Rückfrage zur Qualität offen ist.');
-await op.getByRole('button',{name:'Problem melden'}).click();
-await op.waitForTimeout(300);
-await op.getByText(/Problemfall · Offen/).waitFor();
-await op.goto(base+'/app/documents');
-await op.getByText('Leistungsnachweis Heckenschnitt').waitFor();
-await pp.goto(base+`/pro/jobs/${jobId}`);
-await pp.getByText(/Problemfall gemeldet · Offen/).waitFor();
-await ap.goto(base+'/admin');
-const claimCard=ap.locator('.admin-card').filter({hasText:'Die Ausführung soll von der Plattform geprüft werden'}).first();
-await claimCard.getByLabel('Status').selectOption('resolved');
-await claimCard.getByPlaceholder('Rückmeldung / Entscheidung').fill('Fall geprüft und mit beiden Seiten geklärt.');
-await claimCard.getByRole('button',{name:'Fall aktualisieren'}).click();
-await claimCard.locator('.status.resolved').getByText('Gelöst',{exact:true}).waitFor();
-await op.goto(base+`/app/jobs/${jobId}`);
-await op.getByText(/Problemfall · Gelöst/).waitFor();
-await op.goto(base+'/notifications');
-await op.getByText('Problemfall aktualisiert').first().waitFor();
-console.log(JSON.stringify({ok:true,jobId,ownerEmail,providerEmail,jobUrl},null,2));
+// 3) Kunde registriert sich und spricht natürlich mit dem digitalen Hausmeister.
+const ownerCtx=await browser.newContext({viewport:{width:390,height:844}}); const owner=await ownerCtx.newPage();
+await owner.goto(base+'/register?role=homeowner');
+await owner.getByLabel('Vorname').fill('Maria'); await owner.getByLabel('Nachname').fill('Test'); await owner.getByLabel('E-Mail').fill(ownerEmail); await owner.getByLabel('Passwort').fill(password); await owner.getByLabel('PLZ').fill('46325');
+await Promise.all([owner.waitForURL('**/app'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
+await sendHousemaster(owner,'Meine Hecke muss geschnitten werden. Dienstag ab 14 Uhr hätte ich Zeit.'); await owner.waitForURL(/clarify=1/); await waitText(owner,'Wie lang ist die Hecke ungefähr?');
+await sendHousemaster(owner,'Etwa 25 Meter.'); await owner.waitForURL(/job=\d+/); const jobId=Number(new URL(owner.url()).searchParams.get('job')); if(!jobId)throw new Error('job missing');
+await owner.getByText(/Richtpreis liegt aktuell ungefähr/).waitFor(); await owner.getByText(/vertraglich geprüfte Partner/).waitFor();
+await owner.screenshot({path:'artifacts/owner-ai-housemaster.png',fullPage:true});
+
+// 4) Nur berechtigter Firmenmanager sieht die neue Anfrage und erstellt das Angebot.
+await manager.goto(base+'/pro'); await manager.getByText('Heckenschnitt').first().waitFor(); await manager.getByText('Heckenschnitt').first().click();
+await manager.getByLabel('Gesamtpreis (€)').fill('139'); await manager.getByLabel('Leistungsumfang').fill('Heckenschnitt inkl. Abtransport des Schnittguts und sauberer Übergabe.');
+await manager.getByRole('button',{name:'Angebot senden'}).click(); await manager.waitForTimeout(250);
+await manager.screenshot({path:'artifacts/provider-dispatch-offer.png',fullPage:true});
+
+// 5) Kunde vergleicht und bucht. Danach existiert ein echter Ansprechpartner.
+await owner.goto(base+`/app/jobs/${jobId}`); await waitText(owner,'Gartenbau Müller'); await waitText(owner,'MEINE EMPFEHLUNG'); await waitText(owner,'GÜNSTIGST');
+await owner.getByRole('button',{name:'Diesen Partner buchen'}).click(); await owner.waitForTimeout(300); await owner.locator('.detail-head .status').getByText('Beauftragt',{exact:true}).waitFor();
+await waitText(owner,'Dein persönlicher Ansprechpartner');
+
+// Manager weist bewusst Thomas zu.
+await manager.goto(base+`/pro/jobs/${jobId}`); await waitText(manager,'Ansprechpartner');
+const thomasOption=manager.getByLabel('Auftrag zuweisen').locator('option').filter({hasText:'Thomas Weber'}); const thomasValue=await thomasOption.getAttribute('value'); if(!thomasValue)throw new Error('Thomas option missing'); await manager.getByLabel('Auftrag zuweisen').selectOption(thomasValue); await manager.getByRole('button',{name:'Ansprechpartner festlegen'}).click(); await manager.waitForTimeout(250);
+await owner.reload(); await waitText(owner,'Thomas Weber'); await waitText(owner,'Techniker · Gartenbau Müller');
+await owner.screenshot({path:'artifacts/owner-personal-contact.png',fullPage:true});
+
+// 6) Kunde kann Thomas direkt schreiben; Thomas hat eigenen Login und sieht nur seinen Auftrag.
+await owner.getByRole('link',{name:'Nachricht',exact:true}).click(); await waitText(owner,'Meine Ansprechpartner');
+await owner.getByPlaceholder(/Nachricht an Thomas/).fill('Thomas, bitte kurz Bescheid sagen, bevor du losfährst.'); await owner.getByRole('button',{name:'Nachricht senden'}).click(); await owner.waitForTimeout(200);
+
+const techCtx=await browser.newContext({viewport:{width:390,height:844}}); const tech=await techCtx.newPage();
+await tech.goto(base+'/login'); await tech.getByLabel('E-Mail').fill(techEmail); await tech.getByLabel('Passwort').fill(password); await Promise.all([tech.waitForURL('**/pro'),tech.getByRole('button',{name:'Einloggen'}).click()]);
+await waitText(tech,'Meine Aufträge'); await waitText(tech,'Heckenschnitt');
+await tech.goto(base+'/pro/messages'); await waitText(tech,'Maria Test'); await waitText(tech,'Thomas, bitte kurz Bescheid');
+await tech.getByPlaceholder(/Nachricht an Maria/).fill('Gerne, ich melde mich etwa 30 Minuten vorher.'); await tech.getByRole('button',{name:'Nachricht senden'}).click();
+await owner.reload(); await waitText(owner,'30 Minuten vorher');
+
+// 7) Ansprechpartner führt aus, dokumentiert und bleibt danach gespeichert.
+await tech.goto(base+`/pro/jobs/${jobId}`); await waitText(tech,'Du bist der persönliche Ansprechpartner'); await tech.getByRole('button',{name:'Arbeit starten'}).click(); await tech.waitForTimeout(150); await tech.getByRole('button',{name:'Als erledigt markieren'}).click(); await tech.waitForTimeout(150);
+await tech.getByLabel('Titel').fill('Leistungsnachweis Heckenschnitt'); await tech.getByLabel('Dokumenttyp').selectOption('report'); await tech.getByLabel('Datei').setInputFiles({name:'nachweis.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n% Einfach Hausen Test\n')}); await tech.getByRole('button',{name:'Dokument hochladen'}).click();
+await owner.goto(base+'/app/messages'); await waitText(owner,'Thomas Weber'); await waitText(owner,'Bestehende Kundenbeziehung');
+await owner.goto(base+'/app/documents'); await waitText(owner,'Leistungsnachweis Heckenschnitt');
+
+// 8) Hausakte und Tarife entsprechen dem Geschäftsmodell.
+await owner.goto(base+'/app/home'); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche m²').fill('145'); await owner.getByLabel('Grundstück m²').fill('620'); await owner.getByRole('button',{name:'Hausprofil speichern'}).click();
+const assetForm=owner.locator('.asset-form'); await assetForm.locator('select[name="kind"]').selectOption('pv'); await assetForm.locator('input[name="name"]').fill('PV-Anlage 10 kWp'); await assetForm.getByRole('button',{name:'Hinzufügen'}).click(); await waitText(owner,'PV-Anlage und Ertrag prüfen');
+await owner.goto(base+'/app/plans'); await owner.getByText('Free',{exact:true}).waitFor(); await owner.getByText('Plus',{exact:true}).waitFor(); await owner.getByText('Premium',{exact:true}).waitFor();
+await manager.goto(base+'/pro/plans'); await waitText(manager,'0 % Provision'); for(const plan of ['Free','Start','Pro','Premium'])await manager.getByText(plan,{exact:true}).first().waitFor();
+
+// 9) Servicefall bleibt zentral unterstützbar, ohne den direkten Kontakt zu ersetzen.
+await owner.goto(base+`/app/jobs/${jobId}`); await owner.getByPlaceholder('Was ist passiert?').fill('Die Ausführung soll von Einfach Hausen geprüft werden, weil noch eine Rückfrage zur Qualität offen ist.'); await owner.getByRole('button',{name:'Hausmeister einschalten'}).click(); await waitText(owner,'Servicefall · Offen');
+await admin.goto(base+'/admin'); const claimCard=admin.locator('.admin-card').filter({hasText:'Rückfrage zur Qualität'}).first(); await claimCard.getByLabel('Status').selectOption('resolved'); await claimCard.getByPlaceholder('Rückmeldung / Entscheidung').fill('Fall geprüft und mit Kunde und Ansprechpartner geklärt.'); await claimCard.getByRole('button',{name:'Fall aktualisieren'}).click(); await claimCard.locator('.status.resolved').waitFor();
+
+console.log(JSON.stringify({ok:true,jobId,ownerEmail,providerEmail,techEmail,vision:'digital housemaster + clarification + quality matching + personal partner contact + persistent relationship + 0% commission'},null,2));
 await browser.close();

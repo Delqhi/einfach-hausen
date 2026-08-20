@@ -27,7 +27,55 @@ CREATE TABLE IF NOT EXISTS claims (id INTEGER PRIMARY KEY AUTOINCREMENT,job_id I
 CREATE TABLE IF NOT EXISTS admin_sessions (token TEXT PRIMARY KEY,expires_at TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS notifications (id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,kind TEXT NOT NULL DEFAULT 'info',title TEXT NOT NULL,body TEXT NOT NULL DEFAULT '',href TEXT NOT NULL DEFAULT '',read_at TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id,read_at,created_at DESC);
 CREATE TABLE IF NOT EXISTS postcode_geo (postcode TEXT PRIMARY KEY,lat REAL NOT NULL,lon REAL NOT NULL,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS partner_contracts (provider_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','active','suspended','ended')),commission_bps INTEGER NOT NULL DEFAULT 0,customer_discount_bps INTEGER NOT NULL DEFAULT 0,insurance_verified INTEGER NOT NULL DEFAULT 0,qualification_verified INTEGER NOT NULL DEFAULT 0,contract_verified INTEGER NOT NULL DEFAULT 0,quality_standard_verified INTEGER NOT NULL DEFAULT 0,response_target_minutes INTEGER NOT NULL DEFAULT 30,starts_at TEXT,ends_at TEXT,notes TEXT NOT NULL DEFAULT '',updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS job_dispatches (id INTEGER PRIMARY KEY AUTOINCREMENT,job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,status TEXT NOT NULL DEFAULT 'sent' CHECK(status IN ('sent','viewed','declined','quoted','accepted','closed','expired')),match_score REAL NOT NULL DEFAULT 0,distance_km REAL,sent_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,responded_at TEXT,UNIQUE(job_id,provider_id)); CREATE INDEX IF NOT EXISTS idx_dispatch_provider ON job_dispatches(provider_id,status,sent_at DESC);
+CREATE TABLE IF NOT EXISTS assistant_threads (id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,channel TEXT NOT NULL DEFAULT 'app' CHECK(channel IN ('app','whatsapp')),active_job_id INTEGER REFERENCES jobs(id) ON DELETE SET NULL,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_threads_user ON assistant_threads(user_id,updated_at DESC);
+CREATE TABLE IF NOT EXISTS assistant_messages (id INTEGER PRIMARY KEY AUTOINCREMENT,thread_id INTEGER NOT NULL REFERENCES assistant_threads(id) ON DELETE CASCADE,role TEXT NOT NULL CHECK(role IN ('user','assistant','event')),body TEXT NOT NULL,metadata_json TEXT NOT NULL DEFAULT '{}',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_assistant_messages_thread ON assistant_messages(thread_id,created_at ASC);
+CREATE TABLE IF NOT EXISTS assistant_drafts (thread_id INTEGER PRIMARY KEY REFERENCES assistant_threads(id) ON DELETE CASCADE,combined_text TEXT NOT NULL,photo_path TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS service_catalog (slug TEXT PRIMARY KEY,title TEXT NOT NULL,category TEXT NOT NULL,keywords TEXT NOT NULL,estimate_min INTEGER NOT NULL,estimate_max INTEGER NOT NULL,requires_license INTEGER NOT NULL DEFAULT 0,active INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS membership_plans (slug TEXT PRIMARY KEY,title TEXT NOT NULL,monthly_amount INTEGER NOT NULL,description TEXT NOT NULL,priority_level INTEGER NOT NULL DEFAULT 0,annual_house_check INTEGER NOT NULL DEFAULT 0,partner_discount_bps INTEGER NOT NULL DEFAULT 0,active INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS subscriptions (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,plan_slug TEXT NOT NULL REFERENCES membership_plans(slug),status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','active','past_due','cancelled')),stripe_subscription_id TEXT UNIQUE,current_period_end TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS service_packages (slug TEXT PRIMARY KEY,title TEXT NOT NULL,price_amount INTEGER NOT NULL,description TEXT NOT NULL,services_json TEXT NOT NULL DEFAULT '[]',active INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS package_orders (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,package_slug TEXT NOT NULL REFERENCES service_packages(slug),status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','paid','scheduled','completed','cancelled')),stripe_session_id TEXT UNIQUE,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS house_assets (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,kind TEXT NOT NULL,name TEXT NOT NULL,details TEXT NOT NULL DEFAULT '',installed_year INTEGER,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS maintenance_tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,asset_id INTEGER REFERENCES house_assets(id) ON DELETE SET NULL,title TEXT NOT NULL,category TEXT NOT NULL,due_date TEXT NOT NULL,recurrence_months INTEGER,status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open','completed','skipped')),created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_maintenance_user_due ON maintenance_tasks(homeowner_id,status,due_date);
+CREATE TABLE IF NOT EXISTS provider_members (id INTEGER PRIMARY KEY AUTOINCREMENT,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,user_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,job_title TEXT NOT NULL DEFAULT '',can_manage_jobs INTEGER NOT NULL DEFAULT 0,active INTEGER NOT NULL DEFAULT 1,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(provider_id,user_id)); CREATE INDEX IF NOT EXISTS idx_provider_members_company ON provider_members(provider_id,active,can_manage_jobs);
+CREATE TABLE IF NOT EXISTS job_assignments (job_id INTEGER PRIMARY KEY REFERENCES jobs(id) ON DELETE CASCADE,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,contact_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,assigned_by_user_id INTEGER NOT NULL REFERENCES users(id),assigned_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_job_assignments_contact ON job_assignments(contact_user_id,assigned_at DESC);
+CREATE TABLE IF NOT EXISTS homeowner_contacts (homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,contact_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,category TEXT NOT NULL DEFAULT '',last_job_id INTEGER REFERENCES jobs(id) ON DELETE SET NULL,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(homeowner_id,contact_user_id));
+CREATE TABLE IF NOT EXISTS contact_messages (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,contact_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,body TEXT NOT NULL,read_at TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_contact_messages_thread ON contact_messages(homeowner_id,contact_user_id,created_at ASC);
+CREATE TABLE IF NOT EXISTS partner_plans (slug TEXT PRIMARY KEY,title TEXT NOT NULL,monthly_amount INTEGER NOT NULL,description TEXT NOT NULL,monthly_lead_limit INTEGER,priority_level INTEGER NOT NULL DEFAULT 0,trial_days INTEGER NOT NULL DEFAULT 60,active INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS partner_subscriptions (id INTEGER PRIMARY KEY AUTOINCREMENT,provider_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,plan_slug TEXT NOT NULL REFERENCES partner_plans(slug),status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','trialing','active','past_due','cancelled')),stripe_subscription_id TEXT UNIQUE,current_period_end TEXT,trial_end TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 `);
+
+const seed=db.transaction(()=>{
+  const service=db.prepare('INSERT OR IGNORE INTO service_catalog(slug,title,category,keywords,estimate_min,estimate_max,requires_license) VALUES(?,?,?,?,?,?,?)');
+  [
+    ['heckenschnitt','Heckenschnitt','Garten & Außenbereich','hecke,heckenschnitt,schneiden',12000,17000,0],
+    ['rasenpflege','Rasenpflege','Garten & Außenbereich','rasen,mähen,rasenpflege',7000,14000,0],
+    ['terrassenreinigung','Terrassenreinigung','Garten & Außenbereich','terrasse,hochdruck,reinigung',9000,18000,0],
+    ['grundreinigung','Grundreinigung','Reinigung','reinigung,putzen,grundreinigung,fenster',9000,22000,0],
+    ['elektro','Elektroarbeiten','Elektro','elektrik,strom,steckdose,sicherung,lampe',12000,28000,1],
+    ['sanitaer','Sanitär & Heizung','Sanitär & Heizung','wasser,abfluss,wc,toilette,heizung,therme,wärmepumpe',14000,32000,1],
+    ['montage','Montage & Reparatur','Montage & Reparatur','montage,reparatur,tür,schloss,möbel,regal',8000,22000,0],
+    ['dach','Dach & Fassade','Dach & Fassade','dach,dachrinne,rinne,fassade,ziegel',14000,35000,1],
+    ['energie','Energie & Smart Home','Energie & Smart Home','pv,photovoltaik,speicher,wallbox,smart home,energie',12000,30000,1],
+    ['sonstiges','Hausservice','Hausmeister & Sonstiges','haus,hilfe,sonstiges',8000,22000,0]
+  ].forEach((x:any)=>service.run(...x));
+  const plan=db.prepare('INSERT OR REPLACE INTO membership_plans(slug,title,monthly_amount,description,priority_level,annual_house_check,partner_discount_bps,active) VALUES(?,?,?,?,?,?,?,?)');
+  plan.run('free','Free',0,'KI-Hausmeister, Aufträge, Angebote, Vermittlung, persönliche Ansprechpartner und digitale Hausakte.',0,0,0,1);
+  plan.run('plus','Plus',1990,'Automatische Wartungsplanung, Hausjahresplan, Erinnerungen, Dokumentenverwaltung, bevorzugte Vermittlung und Prioritätsservice.',2,0,0,1);
+  plan.run('premium','Premium',3990,'Persönliche Betreuung, höchste Priorität, jährlicher Hauscheck, automatische Wartungsorganisation, Premium-Partner und erweiterte Hausverwaltung.',3,1,0,1);
+  db.prepare("UPDATE membership_plans SET active=0 WHERE slug='basic'").run();
+  const partnerPlan=db.prepare('INSERT OR REPLACE INTO partner_plans(slug,title,monthly_amount,description,monthly_lead_limit,priority_level,trial_days,active) VALUES(?,?,?,?,?,?,?,1)');
+  partnerPlan.run('free','Free',0,'Kostenlos starten, 0 % Provision und eine begrenzte Zahl neuer Anfragen.',5,0,0);
+  partnerPlan.run('start','Start',2900,'Mehr passende Anfragen für kleine Betriebe. 0 % Provision und keine Gebühr pro Auftrag.',50,1,60);
+  partnerPlan.run('pro','Pro',7900,'Für aktive Partner mit höherem Anfragevolumen, besserer Sichtbarkeit im Qualitätsmatching und 0 % Provision.',null,2,60);
+  partnerPlan.run('premium','Premium',19900,'Für stark ausgelastete Partner mit höchster Servicepriorität, erweiterten Auswertungen und 0 % Provision.',null,3,60);
+  const pkg=db.prepare('INSERT OR IGNORE INTO service_packages(slug,title,price_amount,description,services_json) VALUES(?,?,?,?,?)');
+  pkg.run('haus-jahrespflege','Haus Jahrespflege',29900,'Ein strukturierter jährlicher Haus-Check mit Planung typischer Wartungs- und Werterhaltsthemen.',JSON.stringify(['Haus-Check','Dachrinne','Fenster/Türen','Haustechnik','Wartungsplan']));
+  pkg.run('garten-premium','Garten Premium Jahr',49900,'Saisonale Gartenplanung mit wiederkehrenden Pflegepunkten und priorisierter Partnerorganisation.',JSON.stringify(['Frühjahrscheck','Rasenpflege','Heckenplanung','Herbstcheck','Saisonplan']));
+  pkg.run('energie-technik','Energie & Technik Check',24900,'Jährlicher Organisations-Check für PV, Speicher, Wallbox, Heizung/Wärmepumpe und relevante Haustechnik.',JSON.stringify(['PV','Speicher','Wallbox','Heizung/Wärmepumpe','Smart Home']));
+}); seed();
 
 // Safe additive migrations for databases created by earlier versions. Next.js can
 // evaluate this module in parallel build workers, so tolerate the tiny race where
@@ -48,3 +96,16 @@ addColumnIfMissing('provider_profiles','lat','lat REAL');
 addColumnIfMissing('provider_profiles','lon','lon REAL');
 addColumnIfMissing('jobs','lat','lat REAL');
 addColumnIfMissing('jobs','lon','lon REAL');
+addColumnIfMissing('jobs','service_slug','service_slug TEXT');
+addColumnIfMissing('jobs','source_channel',"source_channel TEXT NOT NULL DEFAULT 'app'");
+addColumnIfMissing('quotes','submitted_by_user_id','submitted_by_user_id INTEGER REFERENCES users(id)');
+addColumnIfMissing('appointments','contact_user_id','contact_user_id INTEGER REFERENCES users(id)');
+addColumnIfMissing('homeowner_profiles','house_type',"house_type TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing('homeowner_profiles','build_year','build_year INTEGER');
+addColumnIfMissing('homeowner_profiles','living_area','living_area REAL');
+addColumnIfMissing('homeowner_profiles','plot_area','plot_area REAL');
+
+// Product model migration: one company can have many simple app contacts; no per-job platform commission.
+db.prepare('UPDATE partner_contracts SET commission_bps=0 WHERE commission_bps!=0').run();
+db.prepare(`INSERT OR IGNORE INTO provider_members(provider_id,user_id,job_title,can_manage_jobs,active)
+  SELECT user_id,user_id,'Geschäftsführung',1,1 FROM provider_profiles`).run();

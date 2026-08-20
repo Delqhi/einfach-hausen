@@ -9,6 +9,6 @@ export const dateLabel = (value?: string | null) => {
 
 const STATUS_LABELS: Record<string,string> = {
   open:'Offen', quoted:'Angebote da', accepted:'Beauftragt', in_progress:'In Arbeit', completed:'Erledigt', cancelled:'Storniert',
-  pending:'Offen', approved:'Freigegeben', rejected:'Abgelehnt', reviewing:'In Prüfung', resolved:'Gelöst', withdrawn:'Zurückgezogen', confirmed:'Bestätigt', paid:'Bezahlt', failed:'Fehlgeschlagen', refunded:'Erstattet',
+  pending:'Offen', active:'Aktiv', suspended:'Pausiert', ended:'Beendet', approved:'Freigegeben', rejected:'Abgelehnt', reviewing:'In Prüfung', resolved:'Gelöst', withdrawn:'Zurückgezogen', confirmed:'Bestätigt', sent:'Gesendet', viewed:'Gesehen', declined:'Abgelehnt', closed:'Geschlossen', expired:'Abgelaufen', scheduled:'Geplant', past_due:'Zahlung offen', paid:'Bezahlt', failed:'Fehlgeschlagen', refunded:'Erstattet',
 };
 export const statusLabel = (status?: string | null) => status ? (STATUS_LABELS[status] ?? status) : '–';
