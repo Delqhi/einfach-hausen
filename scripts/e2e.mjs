@@ -10,7 +10,7 @@ const techEmail=`thomas-${stamp}@example.test`;
 const ownerEmail=`maria-${stamp}@example.test`;
 const password='Hausen!2026';
 
-async function waitText(page,text){await page.getByText(text).first().waitFor({timeout:15000});}
+async function waitText(page,text){await page.waitForFunction(value=>document.body.innerText.includes(value),text,{timeout:15000});}
 async function sendHousemaster(page,text){const c=page.getByPlaceholder(/Sag einfach, was dein Haus braucht/);await c.click();await c.pressSequentially(text,{delay:1});await page.locator('button.send-action:not([disabled])').click();}
 
 // 1) Firma registrieren, prüfen und als Vertragspartner aktivieren.
