@@ -1,17 +1,17 @@
 id: einfach_hausen_health
 namespace: einfach.hausen
 
-description: Public and local health checks for the Einfach Hausen pilot deployment.
+description: Private OCI health check for the Einfach Hausen app, scheduled by the existing Kestra instance.
 
 tasks:
-  - id: public_health
+  - id: app_health
     type: io.kestra.plugin.core.http.Request
-    uri: https://einfach-hausen.delqhi.com/api/health
+    uri: http://172.28.50.1:3010/api/health
     method: GET
 
   - id: health_marker
     type: io.kestra.plugin.core.log.Log
-    message: "Einfach Hausen public health check succeeded at {{ execution.startDate }}"
+    message: "Einfach Hausen OCI health check succeeded at {{ execution.startDate }}"
 
 triggers:
   - id: every_ten_minutes

@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+NODE_BIN_DIR="${NODE_BIN_DIR:-/home/ubuntu/.nvm/versions/node/v22.23.0/bin}"
+if [[ -d "$NODE_BIN_DIR" ]]; then
+  export PATH="$NODE_BIN_DIR:$PATH"
+fi
+
 APP_DIR="${APP_DIR:-/srv/einfach-hausen}"
 SERVICE="${SERVICE:-einfach-hausen.service}"
 HEALTH_URL="${HEALTH_URL:-http://127.0.0.1:3010/api/health}"

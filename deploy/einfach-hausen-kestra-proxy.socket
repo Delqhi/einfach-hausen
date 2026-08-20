@@ -1,0 +1,9 @@
+[Unit]
+Description=Private Docker-network socket for Einfach Hausen health checks
+
+[Socket]
+ListenStream=172.28.50.1:3010
+NoDelay=true
+
+[Install]
+WantedBy=sockets.target

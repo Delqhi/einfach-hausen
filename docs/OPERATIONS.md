@@ -28,9 +28,11 @@ Bucket: `einfach-hausen-backups` (privat)
 
 ### Kestra
 
-Kestra überwacht den öffentlichen Health-Endpoint alle zehn Minuten. Geschäftliche Zeitpläne wie Wartungserinnerungen können später dort ergänzt werden, statt eigene Cron-Frameworks in die App einzubauen.
+Kestra überwacht den App-Health-Endpoint alle zehn Minuten über einen ausschließlich auf das private Kestra-Docker-Netz gebundenen systemd-Socket-Proxy. Der eigentliche Next.js-Dienst bleibt auf `127.0.0.1` gebunden. Geschäftliche Zeitpläne wie Wartungserinnerungen können später ebenfalls in Kestra ergänzt werden, statt eigene Cron-Frameworks in die App einzubauen.
 
 Flow: `einfach.hausen/einfach_hausen_health`
+
+Private Kestra-Route: `172.28.50.1:3010 -> systemd-socket-proxyd -> 127.0.0.1:3010`
 
 ## Deployment
 
