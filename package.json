@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test:e2e": "node scripts/e2e.mjs",
     "graph:update": "graphify update .",
-    "graph:check": "graphify check-update ."
+    "graph:check": "graphify check-update .",
+    "graph:install": "graphify hook install && graphify update ."
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

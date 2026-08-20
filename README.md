@@ -178,6 +178,7 @@ GitHub: `Delqhi/einfach-hausen`
 This repository uses the fleet-wide Graphify architecture graph from `wow-my-zsh`. The graph is derived locally and kept out of Git.
 
 ```bash
+npm run graph:install
 npm run graph:update
 npm run graph:check
 graphify query "where is partner assignment handled?"
