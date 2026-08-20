@@ -1,0 +1,11 @@
+[Unit]
+Description=Nightly Einfach Hausen backup
+
+[Timer]
+OnCalendar=*-*-* 03:25:00 UTC
+Persistent=true
+RandomizedDelaySec=10m
+Unit=einfach-hausen-backup.service
+
+[Install]
+WantedBy=timers.target

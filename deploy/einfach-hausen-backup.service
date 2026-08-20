@@ -1,0 +1,11 @@
+[Unit]
+Description=Backup Einfach Hausen SQLite database to local Supabase Storage
+After=einfach-hausen.service docker.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/srv/einfach-hausen/deploy/backup-to-supabase.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

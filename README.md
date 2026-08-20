@@ -8,6 +8,17 @@ Einfach Hausen ist ein digitaler Hausmeister für Eigenheimbesitzer. Die KI vers
 
 Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md).
 
+## Live Pilot
+
+- App: `https://einfach-hausen.delqhi.com`
+- Runtime: OCI `sin-supabase`
+- Cloudflare: existing `sin-kestra` tunnel
+- Process supervisor: systemd (`einfach-hausen.service`)
+- Backups: existing self-hosted Supabase Storage
+- Scheduled health checks: existing Kestra
+
+The pilot deliberately keeps the working core small. SQLite remains the transactional app database on the single OCI host for now; Supabase and Kestra are reused for platform services instead of rebuilding storage and scheduling from scratch. See `docs/OPERATIONS.md`.
+
 ## Kernablauf
 
 1. Kunde schreibt, spricht oder lädt ein Foto hoch.

@@ -1,0 +1,20 @@
+id: einfach_hausen_health
+namespace: einfach.hausen
+
+description: Public and local health checks for the Einfach Hausen pilot deployment.
+
+tasks:
+  - id: public_health
+    type: io.kestra.plugin.core.http.Request
+    uri: https://einfach-hausen.delqhi.com/api/health
+    method: GET
+
+  - id: health_marker
+    type: io.kestra.plugin.core.log.Log
+    message: "Einfach Hausen public health check succeeded at {{ execution.startDate }}"
+
+triggers:
+  - id: every_ten_minutes
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/10 * * * *"
+    allowConcurrent: false
