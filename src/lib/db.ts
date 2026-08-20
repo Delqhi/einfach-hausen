@@ -68,9 +68,9 @@ const seed=db.transaction(()=>{
   db.prepare("UPDATE membership_plans SET active=0 WHERE slug='basic'").run();
   const partnerPlan=db.prepare('INSERT OR REPLACE INTO partner_plans(slug,title,monthly_amount,description,monthly_lead_limit,priority_level,trial_days,active) VALUES(?,?,?,?,?,?,?,1)');
   partnerPlan.run('free','Free',0,'Kostenlos starten, 0 % Provision und eine begrenzte Zahl neuer Anfragen.',5,0,0);
-  partnerPlan.run('start','Start',2900,'Mehr passende Anfragen für kleine Betriebe. 0 % Provision und keine Gebühr pro Auftrag.',50,1,60);
-  partnerPlan.run('pro','Pro',7900,'Für aktive Partner mit höherem Anfragevolumen, besserer Sichtbarkeit im Qualitätsmatching und 0 % Provision.',null,2,60);
-  partnerPlan.run('premium','Premium',19900,'Für stark ausgelastete Partner mit höchster Servicepriorität, erweiterten Auswertungen und 0 % Provision.',null,3,60);
+  partnerPlan.run('start','Start',2900,'Mehr Anfragevolumen und einfache Partnerfunktionen für kleine Betriebe. 0 % Provision und keine Gebühr pro Auftrag.',50,0,60);
+  partnerPlan.run('pro','Pro',7900,'Für aktive Partner mit höherem Anfragevolumen, erweiterten Betriebsfunktionen und 0 % Provision. Das Qualitätsmatching bleibt tarifneutral.',null,0,60);
+  partnerPlan.run('premium','Premium',19900,'Für stark ausgelastete Partner mit erweitertem Support und Auswertungen bei 0 % Provision. Das Qualitätsmatching bleibt tarifneutral.',null,0,60);
   const pkg=db.prepare('INSERT OR IGNORE INTO service_packages(slug,title,price_amount,description,services_json) VALUES(?,?,?,?,?)');
   pkg.run('haus-jahrespflege','Haus Jahrespflege',29900,'Ein strukturierter jährlicher Haus-Check mit Planung typischer Wartungs- und Werterhaltsthemen.',JSON.stringify(['Haus-Check','Dachrinne','Fenster/Türen','Haustechnik','Wartungsplan']));
   pkg.run('garten-premium','Garten Premium Jahr',49900,'Saisonale Gartenplanung mit wiederkehrenden Pflegepunkten und priorisierter Partnerorganisation.',JSON.stringify(['Frühjahrscheck','Rasenpflege','Heckenplanung','Herbstcheck','Saisonplan']));
