@@ -48,3 +48,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated architecture graph (regenerated via `npm run graph:update`)
+/graphify-out/

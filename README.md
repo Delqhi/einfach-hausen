@@ -172,3 +172,16 @@ Die erste produktive Installation läuft auf der OCI-VM `sin-supabase` hinter ei
 ## Repository
 
 GitHub: `Delqhi/einfach-hausen`
+
+## Repository intelligence
+
+This repository uses the fleet-wide Graphify architecture graph from `wow-my-zsh`. The graph is derived locally and kept out of Git.
+
+```bash
+npm run graph:update
+npm run graph:check
+graphify query "where is partner assignment handled?"
+```
+
+The local Graphify post-commit and post-checkout hooks keep `graphify-out/graph.json` current for agent architecture queries. Product truth remains `docs/PRODUCT_VISION.md`; Graphify is a technical code/dependency graph, not product or customer data storage.
+

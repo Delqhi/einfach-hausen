@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:e2e": "node scripts/e2e.mjs"
+    "test:e2e": "node scripts/e2e.mjs",
+    "graph:update": "graphify update .",
+    "graph:check": "graphify check-update ."
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
