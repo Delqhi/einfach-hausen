@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Einfach Hausen
 
-## Getting Started
+Produktionsnaher Full-Stack-Marktplatz für Eigenheimbesitzer und Handwerker/Dienstleister – umgesetzt nach dem gelieferten UI-Referenzbild. Kein statischer Prototyp: Registrierung, Rollen, Aufträge, Matching, Angebote, Annahme, Termine, Nachrichten, Statusworkflow, Bild-Uploads, Zahlungen und Bewertungen arbeiten mit einer echten Datenbank.
 
-First, run the development server:
+## Funktionen
+
+- **Eigenheimbesitzer:** Freitext-Anfrage mit automatischer Kategorisierung, Budget/Termin/PLZ/Foto, Auftragsübersicht, Angebotsvergleich, Auftragserteilung, Kalender, Chat, Stripe-Zahlung, Bewertung.
+- **Dienstleister:** Gewerke/Region/Radius, passende Anfragen, Angebote erstellen/aktualisieren, angenommene Aufträge, Arbeitsstatus, Termine, Chat, Profil.
+- **Plattform:** Session-Auth mit HttpOnly-Cookies, bcrypt-Passwort-Hashes, SQLite/WAL, rollenbasierte Zugriffe, sichere Stripe-Checkout-Integration.
+
+## Start
 
 ```bash
+cp .env.example .env.local
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Öffne `http://localhost:3000`. Für die lokale Kernfunktion sind keine externen Services nötig. Stripe-Zahlungen werden nur aktiviert, wenn `STRIPE_SECRET_KEY` gesetzt ist.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Produktionsbetrieb
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Persistentes Volume für `DATABASE_PATH` bereitstellen (oder den Datenlayer für horizontale Skalierung auf Postgres migrieren).
+2. Für Live-Zahlungen Stripe Secret und Webhook-Secret setzen.
+3. TLS/HTTPS am Reverse Proxy aktivieren.
+4. `npm run build && npm run start`.
 
-## Learn More
+## Kern-Datenmodell
 
-To learn more about Next.js, take a look at the following resources:
+`users`, `sessions`, `homeowner_profiles`, `provider_profiles`, `jobs`, `job_photos`, `quotes`, `appointments`, `messages`, `payments`, `reviews`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Workflow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Eigenheimbesitzer erstellt Anfrage.
+2. Passende Dienstleister sehen sie im Anfragen-Dashboard.
+3. Dienstleister gibt Preis, Verfügbarkeit und Nachricht ab.
+4. Eigenheimbesitzer vergleicht und nimmt ein Angebot an.
+5. Termin und Chat werden freigeschaltet.
+6. Dienstleister setzt Auftrag auf *in Arbeit* und *erledigt*.
+7. Zahlung läuft über Stripe Checkout; danach kann bewertet werden.
 
-## Deploy on Vercel
+## Design
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Kundenseite: hell, grün, ruhig, an der linken Smartphone-Ansicht der Referenz orientiert.
+- Dienstleisterseite: dunkel/navy, kompakte Karten, an der rechten Smartphone-Ansicht orientiert.
+- Mobile-first, auf Desktop als hochwertiger App-Frame dargestellt.

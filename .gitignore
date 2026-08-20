@@ -12,6 +12,14 @@
 
 # testing
 /coverage
+/artifacts/
+
+# runtime data and user uploads
+/data/*.db
+/data/*.db-*
+/data/private/
+/private-data/
+/public/uploads/
 
 # next.js
 /.next/
@@ -30,8 +38,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (keep the documented template)
 .env*
+!.env.example
 
 # vercel
 .vercel

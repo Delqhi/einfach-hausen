@@ -1,0 +1,5 @@
+import Stripe from 'stripe';
+import { NextRequest,NextResponse } from 'next/server';
+import { getCurrentUser } from '@/lib/auth';
+import { db } from '@/lib/db';
+export async function GET(req:NextRequest){const u=await getCurrentUser();if(!u||u.role!=='provider')return NextResponse.redirect(new URL('/login',req.url));if(!process.env.STRIPE_SECRET_KEY)return NextResponse.redirect(new URL('/pro/profile?stripe=missing',req.url));const p=db.prepare('SELECT stripe_account_id FROM provider_profiles WHERE user_id=?').get(u.id) as any;if(!p?.stripe_account_id)return NextResponse.redirect(new URL('/pro/profile?stripe=missing',req.url));const stripe=new Stripe(process.env.STRIPE_SECRET_KEY);const account=await stripe.accounts.retrieve(p.stripe_account_id);const ready=Boolean(account.details_submitted&&account.charges_enabled&&account.payouts_enabled);db.prepare('UPDATE provider_profiles SET stripe_onboarded=? WHERE user_id=?').run(ready?1:0,u.id);return NextResponse.redirect(new URL(`/pro/profile?stripe=${ready?'ready':'incomplete'}`,req.url));}

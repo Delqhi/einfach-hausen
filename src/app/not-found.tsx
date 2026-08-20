@@ -1,0 +1,1 @@
+import Link from 'next/link'; export default function NotFound(){return <main className="auth-page"><div className="auth-card"><h1>Nicht gefunden</h1><p>Diese Seite oder dieser Auftrag existiert nicht.</p><Link className="btn primary" href="/">Zur Startseite</Link></div></main>}
