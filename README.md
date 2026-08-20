@@ -167,6 +167,7 @@ Die erste produktive Installation läuft auf der OCI-VM `sin-supabase` hinter ei
 - Admin-Passwort außerhalb von Git
 - KI-Gateway-Key außerhalb von Git
 - Stripe-/WhatsApp-Secrets außerhalb von Git
+- Stripe-Betrieb über den kanonischen `wow-my-zsh/shared/skills/sin-stripe`-Skill; Einfach-Hausen-Secrets bleiben in Infisical und werden nur in die private OCI-Runtime injiziert
 
 ## Repository
 

@@ -34,6 +34,28 @@ Flow: `einfach.hausen/einfach_hausen_health`
 
 Private Kestra-Route: `172.28.50.1:3010 -> systemd-socket-proxyd -> 127.0.0.1:3010`
 
+## Stripe
+
+Stripe wird nicht als eigener neuer Backend-Dienst betrieben. Die App verwendet Stripe Checkout/Connect direkt; Betrieb, Diagnose und Webhook-Verwaltung laufen über den kanonischen `sin-stripe`-Skill in `wow-my-zsh`.
+
+Kanonische Secrets in Infisical:
+
+- `EINFACH_HAUSEN_STRIPE_SECRET_KEY`
+- `EINFACH_HAUSEN_STRIPE_WEBHOOK_SECRET`
+
+Die OCI-Laufzeit mappt diese Werte auf `STRIPE_SECRET_KEY` und `STRIPE_WEBHOOK_SECRET` in `/etc/einfach-hausen.env`. Der öffentliche Webhook ist `https://einfach-hausen.delqhi.com/api/stripe/webhook`.
+
+Verifikation vom Mac-M1:
+
+```bash
+cd /Users/jeremy/dev/wow-my-zsh
+shared/skills/sin-stripe/scripts/sin-stripe ready --project einfach-hausen
+shared/skills/sin-stripe/scripts/sin-stripe doctor --project einfach-hausen \
+  --webhook-url https://einfach-hausen.delqhi.com/api/stripe/webhook
+```
+
+Die Geschäftsregel bleibt **0 % Provision auf Partneraufträge**. Einnahmen entstehen über Kunden-Mitgliedschaften, Partner-Tarife und definierte Service-/Jahrespakete.
+
 ## Deployment
 
 ```bash
