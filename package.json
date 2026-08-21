@@ -10,7 +10,9 @@
     "test:e2e": "node scripts/e2e.mjs",
     "graph:update": "graphify update .",
     "graph:check": "graphify check-update .",
-    "graph:install": "graphify hook install && graphify update ."
+    "graph:install": "graphify hook install && graphify update .",
+    "crm:import": "python3 scripts/import-business-research.py",
+    "test:crm": "node scripts/crm-e2e.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

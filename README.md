@@ -92,6 +92,24 @@ Für den Pilot ist das absichtlich einfacher als zwei separate native Codebasen.
 
 Jahrespakete sind zusätzlich möglich und erzeugen konkrete Aufgaben im Hausjahresplan.
 
+## Admin CRM & Leadgewinnung
+
+Unter `/admin/crm` gibt es ein schlankes internes CRM für die Akquise und
+Betreuung von Partner- und Eigentümer-Leads. Recherchierte Betriebe bleiben
+zunächst Leads und werden **nicht** künstlich als registrierte Partner angelegt.
+
+- Projektneutrale Handwerker-/Hausmeister-Recherche über `SIN-Business-Research`
+- Deutschlandweiter Overture-Import mit E-Mail, Telefon, Website, Social-Links
+  und Quellen-Provenienz soweit öffentlich vorhanden
+- Pipeline von `Gesammelt` bis `Konvertiert`, plus `Nicht kontaktieren`
+- Kontaktfreigabe/Einwilligung getrennt vom Vertriebsstatus
+- Filter nach Leadtyp, Status, Gewerk, Firma, Ort und PLZ
+- manuelle Eigentümer-Leads aus Website, Empfehlung, Facebook-Gruppen, Foren,
+  Communities und Kampagnen
+- keine automatische Social-Profil-Ernte oder Massen-DMs
+
+Betrieb und Datenmodell: [`docs/CRM.md`](docs/CRM.md).
+
 ## Partner-App
 
 Ein Unternehmen wird erst nach Unternehmensprüfung und aktivem Partnervertrag disponiert.
