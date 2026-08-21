@@ -264,3 +264,9 @@ Expansion erfolgt Region für Region: erst dichtes Netzwerk und perfekte Abläuf
 > Wir wollen der digitale Hausmeister für jedes Eigenheim werden.
 >
 > Der Eigentümer muss nicht wissen, welchen Handwerker er braucht. Er sagt einfach, was an seinem Haus gemacht werden muss. Unsere KI organisiert den Vorgang. Unser geprüftes Partnernetzwerk erledigt die Arbeit. Und der Kunde hat immer einen echten Menschen als direkten Ansprechpartner.
+
+## Design principle
+
+Einfach Hausen must feel calmer and simpler than the work happening behind it. The interface is content-first, editorial and minimal: generous whitespace, strong typography, very few surfaces, one restrained accent color and no decorative dashboard/card wall. The customer should primarily see one clear conversation with the digital housemaster, followed by decisions only when they are needed. Partner tooling follows the same rule: requests, assignments and customer contact are shown as simple operational lists, not an ERP.
+
+Visual inspiration may come from best-in-class contemporary software such as OpenAI products, but Einfach Hausen keeps its own identity and does not copy proprietary branding, typography or component designs.
