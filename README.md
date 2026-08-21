@@ -4,7 +4,7 @@
 >
 > **Du sagst, was dein Haus braucht. Wir kümmern uns um den Rest.**
 
-Einfach Hausen ist ein digitaler Hausmeister für Eigenheimbesitzer. **Der KI-Hausmeister ist immer verfügbar.** Der Kunde kann zunächst einfach eine Frage stellen oder ein Problem schildern und entscheidet erst danach ausdrücklich zwischen zwei Wegen: **nur einen passenden menschlichen Ansprechpartner finden** oder **einen echten Auftrag organisieren lassen**. Eine Kontaktanfrage ist noch keine Buchung und kein Preisversprechen. Bei einem Auftrag klärt die KI fehlende Informationen, erstellt Richtpreise, disponiert geprüfte regionale Vertragspartner und vergleicht Angebote.
+Einfach Hausen ist die zentrale Anlaufstelle für Eigenheimbesitzer. Der Kunde beschreibt ein Problem und entscheidet selbst: **nur einen konkreten menschlichen Ansprechpartner sprechen** oder **einen echten Auftrag organisieren lassen**. Kontakte, Hausdaten, Termine und Dokumente bleiben dauerhaft beim Haus. Die KI arbeitet im Hintergrund als Assistenz- und Organisationsschicht, ist aber nicht das eigentliche Kundenversprechen.
 
 Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md).
 
@@ -59,6 +59,21 @@ The pilot deliberately keeps the working core small. SQLite remains the transact
 - Benachrichtigungen
 - WhatsApp Cloud API mit demselben Modell: KI zuerst, danach `ANSPRECHPARTNER` oder `AUFTRAG`
 - PWA-Manifest
+
+## Mobile App / PWA
+
+Die bestehende Next.js-Anwendung ist zugleich die mobile Pilot-App. Sie ist auf iPhone und Android als **Progressive Web App** installierbar und läuft im Standalone-Modus ohne Browser-Chrome.
+
+- `manifest.webmanifest` mit App-Icons und Shortcuts
+- Apple-Touch-Icon und `appleWebApp`-Metadaten
+- Service Worker für Installierbarkeit und sichere Offline-Hinweise
+- **keine privaten Auftrags-, Nachrichten- oder Hausdaten im Service-Worker-Cache**
+- Safe-Area-Unterstützung für iPhone-Notch/Home-Indikator
+- mobile Bottom-Navigation mit fünf Primärzielen
+- 44px+-Touch-Ziele und 16px-Formfelder gegen iOS-Auto-Zoom
+- Installationshinweis direkt im Kunden- und Partnerprofil
+
+Für den Pilot ist das absichtlich einfacher als zwei separate native Codebasen. Falls später App-Store-Verteilung nötig wird, kann diese Web-App als dünne native Hülle veröffentlicht werden, ohne die Produktlogik zu duplizieren.
 
 ## Kunden-Tarife
 

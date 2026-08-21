@@ -19,6 +19,17 @@ Der digitale Hausmeister ist für alle Kunden dauerhaft verfügbar. Er kann Frag
 
 In beiden Fällen bleibt der KI-Hausmeister parallel verfügbar. Ein menschlicher Ansprechpartner kann also schon vor einer Buchung entstehen; eine Buchung ist keine Voraussetzung für persönlichen Kontakt.
 
+## Außenkommunikation
+
+Die öffentliche Website verkauft **nicht KI als Selbstzweck**. Die Reihenfolge der Botschaft ist:
+
+1. **Kundennutzen:** eine Anlaufstelle, weniger Suche, klarer nächster Schritt.
+2. **Persönlichkeit:** ein konkreter Ansprechpartner, wenn der Kunde einen Menschen braucht.
+3. **Organisation:** Aufträge, Termine, Unterlagen und Hauswissen an einem Ort.
+4. **Technologie:** KI ist die unsichtbare Assistenzschicht, die versteht, vorbereitet, erinnert und vergleicht.
+
+Die Startseite soll daher eher sagen **„Ein Ansprechpartner für alles rund ums Eigenheim“** als „KI-Hausmeister“. Innerhalb der App darf der Hausmeister-Assistent sichtbar sein, weil dort die Interaktion selbst der Nutzen ist.
+
 ## Produktprinzipien
 
 1. **Eine digitale Eingangstür.** Freitext, Foto und Sprache statt Kategorienwand und langer Formulare.

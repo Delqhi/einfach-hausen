@@ -11,7 +11,21 @@ const ownerEmail=`maria-${stamp}@example.test`;
 const password='Hausen!2026';
 
 async function waitText(page,text){await page.waitForFunction(value=>document.body.innerText.includes(value),text,{timeout:15000});}
+async function assertNoOverflow(page,label){const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth);if(overflow)throw new Error(`${label} has horizontal overflow`);}
 async function sendHousemaster(page,text){const c=page.getByPlaceholder(/Frag deinen KI-Hausmeister|Beantworte nur noch/);await c.click();await c.pressSequentially(text,{delay:1});await page.locator('button.send-action:not([disabled])').click();}
+
+// 0) Öffentliche Website ist mobile-first, nutzenorientiert und als PWA installierbar.
+const publicCtx=await browser.newContext({viewport:{width:390,height:844}}); const publicPage=await publicCtx.newPage();
+await publicPage.goto(base+'/');
+await publicPage.getByRole('heading',{name:'Ein Ansprechpartner für alles rund ums Eigenheim.'}).waitFor();
+await waitText(publicPage,'Kein Suchmarathon'); await waitText(publicPage,'Ein Mensch statt anonymer Vermittlung.');
+if((await publicPage.locator('body').innerText()).includes('Dein KI-Hausmeister ist immer da'))throw new Error('Landing page still foregrounds AI instead of customer benefit');
+await assertNoOverflow(publicPage,'Mobile landing');
+const manifestResponse=await publicPage.request.get(base+'/manifest.webmanifest'); if(!manifestResponse.ok())throw new Error('PWA manifest unavailable');
+const manifest=await manifestResponse.json(); if(manifest.display!=='standalone'||!Array.isArray(manifest.icons)||manifest.icons.length<3)throw new Error('PWA manifest incomplete');
+const swResponse=await publicPage.request.get(base+'/sw.js'); if(!swResponse.ok()||!(await swResponse.text()).includes('einfach-hausen-shell'))throw new Error('Service worker unavailable');
+await publicPage.screenshot({path:'artifacts/mobile-landing.png',fullPage:true});
+await publicCtx.close();
 
 // 1) Firma registrieren, prüfen und als Vertragspartner aktivieren.
 const managerCtx=await browser.newContext({viewport:{width:390,height:844}}); const manager=await managerCtx.newPage();
@@ -37,7 +51,7 @@ await companyCard.getByRole('button',{name:'Partnervertrag speichern'}).click();
 await manager.goto(base+'/pro/profile'); await waitText(manager,'Aktiver Einfach-Hausen-Vertragspartner'); await waitText(manager,'0 % Provision');
 
 // 2) Firma legt einen echten Ansprechpartner an. Nur ein Schalter für Auftragsverwaltung.
-await manager.goto(base+'/pro/team'); await waitText(manager,'Ein Unternehmen. Ein Team. Ein Schalter.');
+await manager.goto(base+'/pro/team'); await waitText(manager,'Ein Unternehmen. Ein Team. Ein Schalter.'); await assertNoOverflow(manager,'Mobile partner team');
 await manager.getByLabel('Vorname').last().fill('Thomas'); await manager.getByLabel('Nachname').last().fill('Weber');
 await manager.getByLabel('Funktion').fill('Techniker'); await manager.getByLabel('E-Mail').last().fill(techEmail); await manager.getByLabel('Telefon').last().fill('+49 151 12345678'); await manager.getByLabel('Startpasswort').fill(password);
 await manager.getByRole('button',{name:'Ansprechpartner anlegen'}).click(); await manager.waitForURL(/member=created/); await waitText(manager,'Thomas Weber');
@@ -48,6 +62,10 @@ const ownerCtx=await browser.newContext({viewport:{width:390,height:844}}); cons
 await owner.goto(base+'/register?role=homeowner');
 await owner.getByLabel('Vorname').fill('Maria'); await owner.getByLabel('Nachname').fill('Test'); await owner.getByLabel('E-Mail').fill(ownerEmail); await owner.getByLabel('Passwort').fill(password); await owner.getByLabel('PLZ').fill('46325');
 await Promise.all([owner.waitForURL('**/app'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
+await assertNoOverflow(owner,'Mobile customer app');
+if(await owner.locator('.bottom-nav a').count()!==5)throw new Error('Mobile navigation must expose five primary destinations');
+await owner.goto(base+'/app/profile'); await waitText(owner,'Einfach Hausen aufs Handy'); await assertNoOverflow(owner,'Mobile customer profile');
+await owner.goto(base+'/app');
 await sendHousemaster(owner,'Meine Hecke ist zu hoch. Dienstag ab 14 Uhr hätte ich Zeit. Wen kann ich dazu fragen?'); await owner.waitForURL(/answered=1/);
 await waitText(owner,'Wie soll ich weitermachen?'); await waitText(owner,'Ansprechpartner finden'); await waitText(owner,'Auftrag organisieren');
 // Eine normale KI-Frage darf noch keine Partneranfrage erzeugen.
@@ -60,10 +78,10 @@ await manager.goto(base+'/pro'); await manager.getByText('Heckenschnitt').first(
 await waitText(manager,'Nur persönlicher Ansprechpartner gesucht');
 const contactSelect=manager.getByLabel('Ansprechpartner'); const contactThomas=contactSelect.locator('option').filter({hasText:'Thomas Weber'}); const contactThomasValue=await contactThomas.getAttribute('value'); if(!contactThomasValue)throw new Error('Thomas contact option missing'); await contactSelect.selectOption(contactThomasValue);
 await manager.getByRole('button',{name:'Kontakt übernehmen'}).click(); await manager.waitForURL(new RegExp(`/pro/jobs/${contactJobId}`));
-await owner.goto(base+`/app/jobs/${contactJobId}`); await waitText(owner,'Thomas Weber'); await waitText(owner,'noch kein Auftrag');
+await owner.goto(base+`/app/jobs/${contactJobId}`); await waitText(owner,'Thomas Weber'); await waitText(owner,'noch kein Auftrag'); await assertNoOverflow(owner,'Mobile contact detail');
 
 // Direkter Kontakt funktioniert schon ohne Auftrag.
-await owner.getByRole('link',{name:'Nachricht',exact:true}).click(); await waitText(owner,'Meine Ansprechpartner');
+await owner.getByRole('link',{name:'Nachricht',exact:true}).click(); await waitText(owner,'Meine Ansprechpartner'); await assertNoOverflow(owner,'Mobile contacts');
 await owner.getByPlaceholder(/Nachricht an Thomas/).fill('Thomas, kannst du kurz sagen, ob du dir das ansehen würdest?'); await owner.getByRole('button',{name:'Nachricht senden'}).click();
 const techCtx=await browser.newContext({viewport:{width:390,height:844}}); const tech=await techCtx.newPage();
 await tech.goto(base+'/login'); await tech.getByLabel('E-Mail').fill(techEmail); await tech.getByLabel('Passwort').fill(password); await Promise.all([tech.waitForURL('**/pro'),tech.getByRole('button',{name:'Einloggen'}).click()]);
@@ -108,7 +126,7 @@ await owner.goto(base+'/app/messages'); await waitText(owner,'Thomas Weber'); aw
 await owner.goto(base+'/app/documents'); await waitText(owner,'Leistungsnachweis Heckenschnitt');
 
 // 8) Hausakte und Tarife entsprechen dem Geschäftsmodell.
-await owner.goto(base+'/app/home'); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche m²').fill('145'); await owner.getByLabel('Grundstück m²').fill('620'); await owner.getByRole('button',{name:'Hausprofil speichern'}).click();
+await owner.goto(base+'/app/home'); await assertNoOverflow(owner,'Mobile house file'); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche m²').fill('145'); await owner.getByLabel('Grundstück m²').fill('620'); await owner.getByRole('button',{name:'Hausprofil speichern'}).click();
 const assetForm=owner.locator('.asset-form'); await assetForm.locator('select[name="kind"]').selectOption('pv'); await assetForm.locator('input[name="name"]').fill('PV-Anlage 10 kWp'); await assetForm.getByRole('button',{name:'Hinzufügen'}).click(); await waitText(owner,'PV-Anlage und Ertrag prüfen');
 await owner.goto(base+'/app/plans'); await owner.getByText('Free',{exact:true}).waitFor(); await owner.getByText('Plus',{exact:true}).waitFor(); await owner.getByText('Premium',{exact:true}).waitFor();
 await manager.goto(base+'/pro/plans'); await waitText(manager,'0 % Provision'); for(const plan of ['Free','Start','Pro','Premium'])await manager.getByText(plan,{exact:true}).first().waitFor();

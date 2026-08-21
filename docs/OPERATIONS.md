@@ -34,6 +34,17 @@ Flow: `einfach.hausen/einfach_hausen_health`
 
 Private Kestra-Route: `172.28.50.1:3010 -> systemd-socket-proxyd -> 127.0.0.1:3010`
 
+## Mobile PWA
+
+Die mobile Pilot-App ist dieselbe produktive Next.js-Anwendung und wird über denselben Cloudflare-Endpunkt ausgeliefert. Dadurch gibt es keine zweite API, keinen zweiten Auth-Stack und keine separate native Release-Pipeline.
+
+Der Service Worker cached bewusst **nur öffentliche App-Icons**. Authentifizierte HTML-Seiten, Nachrichten, Hausdaten, Aufträge und Dokumente werden nicht offline gespeichert. Bei Netzverlust erscheint lediglich eine statische Offline-Meldung. Das reduziert Datenschutz- und Stale-Data-Risiken erheblich.
+
+Installation:
+
+- iPhone/iPad: Safari → Teilen → „Zum Home-Bildschirm“
+- Android/Chromium: Browser-Menü oder Installationsprompt → „App installieren“
+
 ## Stripe
 
 Stripe wird nicht als eigener neuer Backend-Dienst betrieben. Die App verwendet Stripe Checkout/Connect direkt; Betrieb, Diagnose und Webhook-Verwaltung laufen über den kanonischen `sin-stripe`-Skill in `wow-my-zsh`.

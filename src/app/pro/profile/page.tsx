@@ -6,6 +6,7 @@ import { db } from '@/lib/db';
 import { createStripeOnboardingAction,logoutAction,saveProfileAction,submitVerificationAction } from '@/app/actions';
 import { statusLabel } from '@/lib/format';
 import { getProviderContext } from '@/lib/provider';
+import { InstallAppCard } from '@/components/install-app-card';
 
 export default async function ProProfile({searchParams}:{searchParams:Promise<Record<string,string>>}){
   const u=await requireUser('provider'); const sp=await searchParams; const ctx=getProviderContext(u.id);
@@ -14,7 +15,7 @@ export default async function ProProfile({searchParams}:{searchParams:Promise<Re
     FROM provider_profiles p LEFT JOIN partner_contracts c ON c.provider_id=p.user_id WHERE p.user_id=?`).get(ctx.providerId) as any;
   const v=db.prepare('SELECT * FROM verification_requests WHERE provider_id=?').get(ctx.providerId) as any;
   const subscription=db.prepare(`SELECT s.status,s.plan_slug,s.trial_end,p.title FROM partner_subscriptions s JOIN partner_plans p ON p.slug=s.plan_slug WHERE s.provider_id=?`).get(ctx.providerId) as any;
-  return <AppShell role="provider" active="/pro/profile" title="Partnerprofil" subtitle={p?.business_name||ctx.businessName}>
+  return <AppShell role="provider" active="/pro/profile" title="Partnerprofil" subtitle={p?.business_name||ctx.businessName}><InstallAppCard dark/>
     {sp.verification==='submitted'&&<div className="alert success"><ShieldCheck/>Unternehmensnachweise wurden eingereicht.</div>}
     {sp.verification==='owner'&&<div className="alert error">Unternehmensnachweise kann nur der Firmeninhaber verwalten.</div>}
     {sp.stripe==='ready'&&<div className="alert success"><CreditCard/>Auszahlungen sind vollständig eingerichtet.</div>}
