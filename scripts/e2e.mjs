@@ -19,7 +19,7 @@ const publicCtx=await browser.newContext({viewport:{width:390,height:844}}); con
 await publicPage.goto(base+'/');
 await publicPage.getByRole('heading',{name:'Ein Ansprechpartner für alles rund ums Eigenheim.'}).waitFor();
 await waitText(publicPage,'Kein Suchmarathon'); await waitText(publicPage,'Ein Mensch statt anonymer Vermittlung.');
-if((await publicPage.locator('body').innerText()).includes('Dein KI-Hausmeister ist immer da'))throw new Error('Landing page still foregrounds AI instead of customer benefit');
+if(/KI-Hausmeister/i.test(await publicPage.locator('body').innerText()))throw new Error('Landing page still foregrounds AI instead of customer benefit');
 await assertNoOverflow(publicPage,'Mobile landing');
 const manifestResponse=await publicPage.request.get(base+'/manifest.webmanifest'); if(!manifestResponse.ok())throw new Error('PWA manifest unavailable');
 const manifest=await manifestResponse.json(); if(manifest.display!=='standalone'||!Array.isArray(manifest.icons)||manifest.icons.length<3)throw new Error('PWA manifest incomplete');
