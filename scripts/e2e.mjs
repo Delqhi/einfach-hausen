@@ -17,8 +17,8 @@ async function sendHousemaster(page,text){const c=page.getByPlaceholder(/Beschre
 // 0) Öffentliche Website ist mobile-first, nutzenorientiert und als PWA installierbar.
 const publicCtx=await browser.newContext({viewport:{width:390,height:844}}); const publicPage=await publicCtx.newPage();
 await publicPage.goto(base+'/');
-await publicPage.getByRole('heading',{name:'Ein Ansprechpartner für alles rund ums Eigenheim.'}).waitFor();
-await waitText(publicPage,'Kein Suchmarathon'); await waitText(publicPage,'Ein Mensch statt anonymer Vermittlung.');
+await publicPage.getByRole('heading',{name:/Alles rund ums Haus/}).waitFor();
+await waitText(publicPage,'Was möchtest du gerade erledigen?'); await waitText(publicPage,'Persönlicher Ansprechpartner');
 if(/KI-Hausmeister/i.test(await publicPage.locator('body').innerText()))throw new Error('Landing page still foregrounds AI instead of customer benefit');
 await assertNoOverflow(publicPage,'Mobile landing');
 const manifestResponse=await publicPage.request.get(base+'/manifest.webmanifest'); if(!manifestResponse.ok())throw new Error('PWA manifest unavailable');
