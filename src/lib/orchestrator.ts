@@ -1,10 +1,12 @@
 import { db } from './db';
-import { analyzeRequest } from './request-ai';
+import { analyzeRequest, answerHouseQuestion } from './request-ai';
 import { geocodePostcode, distanceKm } from './geocode';
 import { createNotification } from './notifications';
 import { getProviderManagerIds } from './provider';
 
-export type HausmeisterResult = { jobId:number; threadId:number; reply:string; providerCount:number };
+export type HausmeisterIntent='service'|'contact';
+export type HausmeisterResult = { jobId:number; threadId:number; reply:string; providerCount:number; intent:HausmeisterIntent };
+export type HausmeisterAnswer = { threadId:number; reply:string };
 
 type ServiceRow={slug:string;title:string;category:string;keywords:string;estimate_min:number;estimate_max:number;requires_license:number};
 
@@ -55,7 +57,7 @@ export function appendJobEvent(jobId:number,body:string,metadata:Record<string,u
   if(thread)addAgentMessage(thread.id,'event',body,metadata);
 }
 
-async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jobPostcode:string,jobGeo:{lat:number;lon:number}|null){
+async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jobPostcode:string,jobGeo:{lat:number;lon:number}|null,requestKind:HausmeisterIntent='service'){
   const partners=db.prepare(`SELECT p.*,c.status contract_status,c.insurance_verified,c.qualification_verified,c.contract_verified,c.quality_standard_verified,c.customer_discount_bps,c.response_target_minutes,
       CASE WHEN ps.id IS NULL THEN free.monthly_lead_limit ELSE paid.monthly_lead_limit END monthly_lead_limit,
       CASE WHEN ps.id IS NULL THEN 'free' ELSE ps.plan_slug END partner_plan
@@ -88,20 +90,42 @@ async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jo
   matches.sort((a,b)=>b.score-a.score);
   const insert=db.prepare(`INSERT OR IGNORE INTO job_dispatches(job_id,provider_id,status,match_score,distance_km) VALUES(?,?,'sent',?,?)`);
   let created=0;
-  for(const m of matches.slice(0,30)){
+  const limit=requestKind==='contact'?8:30;
+  for(const m of matches.slice(0,limit)){
     const result=insert.run(jobId,m.p.user_id,m.score,m.distance);
-    if(result.changes){created++;for(const managerId of getProviderManagerIds(m.p.user_id))createNotification(managerId,'Neue passende Anfrage',`${service.title} in ${jobPostcode||'deiner Region'} wartet auf deine Rückmeldung.`,`/pro/jobs/${jobId}`,'dispatch');}
+    if(result.changes){
+      created++;
+      const title=requestKind==='contact'?'Neue Kontaktanfrage':'Neue passende Anfrage';
+      const body=requestKind==='contact'?`Ein Eigentümer sucht einen fachlichen Ansprechpartner für ${service.title} in ${jobPostcode||'deiner Region'}. Kein Angebot nötig.`:`${service.title} in ${jobPostcode||'deiner Region'} wartet auf deine Rückmeldung.`;
+      for(const managerId of getProviderManagerIds(m.p.user_id))createNotification(managerId,title,body,`/pro/jobs/${jobId}`,'dispatch');
+    }
   }
   return created;
 }
 
-export async function createHausmeisterRequest(userId:number,body:string,channel:'app'|'whatsapp'='app',photoPath?:string|null):Promise<HausmeisterResult>{
-  const user=db.prepare(`SELECT u.id,u.first_name,h.postcode,h.address,h.lat,h.lon FROM users u JOIN homeowner_profiles h ON h.user_id=u.id WHERE u.id=? AND u.role='homeowner'`).get(userId) as any;
+export async function answerHausmeisterQuestion(userId:number,body:string,channel:'app'|'whatsapp'='app',photoPath?:string|null):Promise<HausmeisterAnswer>{
+  const user=db.prepare(`SELECT u.id,u.first_name,h.postcode,h.address,h.house_type,h.build_year,h.living_area,h.plot_area FROM users u JOIN homeowner_profiles h ON h.user_id=u.id WHERE u.id=? AND u.role='homeowner'`).get(userId) as any;
   if(!user)throw new Error('Homeowner not found');
   const threadId=getThread(userId,channel);
   addAgentMessage(threadId,'user',body,photoPath?{photo:photoPath}:{});
+  const assets=db.prepare(`SELECT kind,name,details,installed_year FROM house_assets WHERE homeowner_id=? ORDER BY created_at DESC LIMIT 8`).all(userId) as any[];
+  const maintenance=db.prepare(`SELECT title,category,due_date,status FROM maintenance_tasks WHERE homeowner_id=? AND status='open' ORDER BY due_date ASC LIMIT 8`).all(userId) as any[];
+  const contacts=db.prepare(`SELECT hc.category,u.first_name,u.last_name,p.business_name FROM homeowner_contacts hc JOIN users u ON u.id=hc.contact_user_id JOIN provider_profiles p ON p.user_id=hc.provider_id WHERE hc.homeowner_id=? ORDER BY hc.updated_at DESC LIMIT 8`).all(userId) as any[];
+  const recent=db.prepare(`SELECT title,category,status,updated_at FROM jobs WHERE homeowner_id=? ORDER BY updated_at DESC LIMIT 6`).all(userId) as any[];
+  const context=JSON.stringify({house:{postcode:user.postcode,address:user.address,houseType:user.house_type,buildYear:user.build_year,livingArea:user.living_area,plotArea:user.plot_area},assets,maintenance,contacts,recentJobs:recent});
+  const reply=await answerHouseQuestion(body,context);
+  addAgentMessage(threadId,'assistant',reply,{assistantOnly:true});
+  return {threadId,reply};
+}
 
-  const draft=db.prepare('SELECT * FROM assistant_drafts WHERE thread_id=?').get(threadId) as {combined_text:string;photo_path:string|null}|undefined;
+export async function createHausmeisterRequest(userId:number,body:string,channel:'app'|'whatsapp'='app',photoPath?:string|null,intent:HausmeisterIntent='service',recordUserMessage=true,threadIdOverride?:number):Promise<HausmeisterResult>{
+  const user=db.prepare(`SELECT u.id,u.first_name,h.postcode,h.address,h.lat,h.lon FROM users u JOIN homeowner_profiles h ON h.user_id=u.id WHERE u.id=? AND u.role='homeowner'`).get(userId) as any;
+  if(!user)throw new Error('Homeowner not found');
+  const threadId=threadIdOverride??getThread(userId,channel);
+  if(recordUserMessage)addAgentMessage(threadId,'user',body,photoPath?{photo:photoPath}:{});
+
+  const draft=db.prepare('SELECT combined_text,photo_path,intent FROM assistant_drafts WHERE thread_id=?').get(threadId) as {combined_text:string;photo_path:string|null;intent:HausmeisterIntent}|undefined;
+  const effectiveIntent=draft?.intent||intent;
   const combined=draft?`${draft.combined_text}\nErgänzung: ${body}`:body;
   const effectivePhoto=photoPath||draft?.photo_path||null;
   const parsed=await analyzeRequest(combined);
@@ -110,37 +134,46 @@ export async function createHausmeisterRequest(userId:number,body:string,channel
 
   const hasLength=/\b\d+(?:[,.]\d+)?\s*(?:m|meter)\b/i.test(combined);
   let question:string|null=null;
-  if(!postcode)question='Für welche Postleitzahl bzw. Adresse soll ich einen passenden regionalen Partner suchen?';
-  else if(service.slug==='heckenschnitt'&&!hasLength)question='Wie lang ist die Hecke ungefähr? Eine grobe Angabe in Metern reicht.';
-  else if(!parsed.preferredDate)question='Wann soll die Arbeit ungefähr erledigt werden? Du kannst z. B. „nächsten Dienstag ab 14 Uhr“ schreiben.';
-  else if(service.slug==='sonstiges'&&combined.replace(/\s+/g,' ').trim().length<18)question='Was genau soll an deinem Haus erledigt werden? Ein kurzer Satz reicht.';
+  if(!postcode)question='Für welche Postleitzahl bzw. Adresse soll ich einen passenden regionalen Ansprechpartner suchen?';
+  else if(effectiveIntent==='service'&&service.slug==='heckenschnitt'&&!hasLength)question='Wie lang ist die Hecke ungefähr? Eine grobe Angabe in Metern reicht.';
+  else if(effectiveIntent==='service'&&!parsed.preferredDate)question='Wann soll die Arbeit ungefähr erledigt werden? Du kannst z. B. „nächsten Dienstag ab 14 Uhr“ schreiben.';
+  else if(service.slug==='sonstiges'&&combined.replace(/\s+/g,' ').trim().length<18)question=effectiveIntent==='contact'?'Worum geht es ungefähr? Ein kurzer Satz reicht, damit ich den passenden fachlichen Ansprechpartner finde.':'Was genau soll an deinem Haus erledigt werden? Ein kurzer Satz reicht.';
 
   if(question){
-    db.prepare(`INSERT INTO assistant_drafts(thread_id,combined_text,photo_path,updated_at) VALUES(?,?,?,CURRENT_TIMESTAMP)
-      ON CONFLICT(thread_id) DO UPDATE SET combined_text=excluded.combined_text,photo_path=COALESCE(excluded.photo_path,assistant_drafts.photo_path),updated_at=CURRENT_TIMESTAMP`).run(threadId,combined,effectivePhoto);
-    addAgentMessage(threadId,'assistant',question,{clarification:true,service:service.slug});
-    return {jobId:0,threadId,reply:question,providerCount:0};
+    db.prepare(`INSERT INTO assistant_drafts(thread_id,combined_text,photo_path,intent,updated_at) VALUES(?,?,?,?,CURRENT_TIMESTAMP)
+      ON CONFLICT(thread_id) DO UPDATE SET combined_text=excluded.combined_text,photo_path=COALESCE(excluded.photo_path,assistant_drafts.photo_path),intent=excluded.intent,updated_at=CURRENT_TIMESTAMP`).run(threadId,combined,effectivePhoto,effectiveIntent);
+    addAgentMessage(threadId,'assistant',question,{clarification:true,service:service.slug,intent:effectiveIntent});
+    return {jobId:0,threadId,reply:question,providerCount:0,intent:effectiveIntent};
   }
 
   let geo=Number.isFinite(user.lat)&&Number.isFinite(user.lon)?{lat:user.lat,lon:user.lon}:null;
   if(parsed.postcode||!geo) geo=await geocodePostcode(postcode);
-  const min=parsed.budgetMin?parsed.budgetMin*100:service.estimate_min;
-  const max=parsed.budgetMax?parsed.budgetMax*100:service.estimate_max;
-  const result=db.prepare(`INSERT INTO jobs(homeowner_id,title,description,category,postcode,preferred_date,preferred_time,budget_min,budget_max,service_slug,source_channel,lat,lon)
-    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(userId,parsed.title||service.title,combined,service.category,postcode,parsed.preferredDate,parsed.preferredTime,min,max,service.slug,channel,geo?.lat??null,geo?.lon??null);
+  const min=effectiveIntent==='service'?(parsed.budgetMin?parsed.budgetMin*100:service.estimate_min):null;
+  const max=effectiveIntent==='service'?(parsed.budgetMax?parsed.budgetMax*100:service.estimate_max):null;
+  const baseTitle=service.slug==='sonstiges'?(parsed.title||service.title):service.title;
+  const title=effectiveIntent==='contact'?`Ansprechpartner: ${baseTitle}`:baseTitle;
+  const result=db.prepare(`INSERT INTO jobs(homeowner_id,title,description,category,postcode,preferred_date,preferred_time,budget_min,budget_max,service_slug,source_channel,request_kind,lat,lon)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(userId,title,combined,service.category,postcode,effectiveIntent==='service'?parsed.preferredDate:null,effectiveIntent==='service'?parsed.preferredTime:null,min,max,service.slug,channel,effectiveIntent,geo?.lat??null,geo?.lon??null);
   const jobId=Number(result.lastInsertRowid);
   if(effectivePhoto)db.prepare('INSERT INTO job_photos(job_id,path) VALUES(?,?)').run(jobId,effectivePhoto);
   db.prepare('DELETE FROM assistant_drafts WHERE thread_id=?').run(threadId);
   db.prepare('UPDATE assistant_threads SET active_job_id=?,updated_at=CURRENT_TIMESTAMP WHERE id=?').run(jobId,threadId);
 
-  const providerCount=await dispatchJob(jobId,userId,service,postcode,geo);
+  const providerCount=await dispatchJob(jobId,userId,service,postcode,geo,effectiveIntent);
   const euro=(v:number)=>new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v/100);
-  const when=parsed.preferredDate?` für ${parsed.preferredDate}${parsed.preferredTime?` ab ${parsed.preferredTime} Uhr`:''}`:'';
-  const reply=providerCount>0
-    ? `Alles klar. Ich habe ${service.title}${when} erkannt. Der Richtpreis liegt aktuell ungefähr bei ${euro(min)}–${euro(max)}. Ich habe ${providerCount} passende, vertraglich geprüfte Partner in deiner Region angefragt. Sobald Angebote eintreffen, vergleiche ich Preis, Termin, Entfernung und Qualität und zeige dir meine Empfehlung.`
-    : `Alles klar. Ich habe ${service.title}${when} erkannt. Der Richtpreis liegt aktuell ungefähr bei ${euro(min)}–${euro(max)}. In deinem aktuellen Partnergebiet ist gerade kein freigegebener Betrieb automatisch verfügbar. Die Anfrage bleibt offen und wird im Partnernetzwerk sichtbar, sobald ein passender Vertragspartner freigeschaltet ist.`;
-  addAgentMessage(threadId,'assistant',reply,{jobId,service:service.slug,estimateMin:min,estimateMax:max,providerCount});
-  return {jobId,threadId,reply,providerCount};
+  let reply:string;
+  if(effectiveIntent==='contact'){
+    reply=providerCount>0
+      ? `Alles klar. Ich suche dir jetzt einen passenden menschlichen Ansprechpartner für ${service.title}. Ich habe ${providerCount} geprüfte regionale Partner angefragt. Dafür wird noch kein Auftrag vergeben und kein Preis vereinbart. Sobald ein Betrieb übernimmt, kannst du direkt schreiben oder anrufen.`
+      : `Alles klar. Ich habe deine Kontaktanfrage für ${service.title} angelegt. In deinem aktuellen Partnergebiet ist gerade kein freigegebener Betrieb automatisch verfügbar. Die Anfrage bleibt offen, bis ein passender Vertragspartner verfügbar ist.`;
+  }else{
+    const when=parsed.preferredDate?` für ${parsed.preferredDate}${parsed.preferredTime?` ab ${parsed.preferredTime} Uhr`:''}`:'';
+    reply=providerCount>0
+      ? `Alles klar. Ich habe ${service.title}${when} erkannt. Der Richtpreis liegt aktuell ungefähr bei ${euro(min!)}–${euro(max!)}. Ich habe ${providerCount} passende, vertraglich geprüfte Partner in deiner Region angefragt. Sobald Angebote eintreffen, vergleiche ich Preis, Termin, Entfernung und Qualität und zeige dir meine Empfehlung.`
+      : `Alles klar. Ich habe ${service.title}${when} erkannt. Der Richtpreis liegt aktuell ungefähr bei ${euro(min!)}–${euro(max!)}. In deinem aktuellen Partnergebiet ist gerade kein freigegebener Betrieb automatisch verfügbar. Die Anfrage bleibt offen und wird im Partnernetzwerk sichtbar, sobald ein passender Vertragspartner freigeschaltet ist.`;
+  }
+  addAgentMessage(threadId,'assistant',reply,{jobId,service:service.slug,estimateMin:min,estimateMax:max,providerCount,intent:effectiveIntent});
+  return {jobId,threadId,reply,providerCount,intent:effectiveIntent};
 }
 
 export async function redispatchOpenJobs(){
@@ -150,7 +183,7 @@ export async function redispatchOpenJobs(){
     const service=(job.service_slug?db.prepare('SELECT * FROM service_catalog WHERE slug=?').get(job.service_slug):null) as ServiceRow|undefined;
     const fallback=(db.prepare("SELECT * FROM service_catalog WHERE slug='sonstiges'").get()) as ServiceRow;
     const geo=Number.isFinite(job.lat)&&Number.isFinite(job.lon)?{lat:job.lat,lon:job.lon}:null;
-    created+=await dispatchJob(job.id,job.homeowner_id,service||fallback,job.postcode,geo);
+    created+=await dispatchJob(job.id,job.homeowner_id,service||fallback,job.postcode,geo,job.request_kind==='contact'?'contact':'service');
   }
   return created;
 }

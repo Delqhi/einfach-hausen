@@ -4,7 +4,7 @@
 >
 > **Du sagst, was dein Haus braucht. Wir kümmern uns um den Rest.**
 
-Einfach Hausen ist ein digitaler Hausmeister für Eigenheimbesitzer. Die KI versteht freie Anfragen über App oder WhatsApp, klärt fehlende Informationen, erstellt Richtpreise, disponiert geprüfte regionale Vertragspartner und vergleicht Angebote. **Nach der Buchung erhält der Kunde einen konkreten menschlichen Ansprechpartner beim ausführenden Unternehmen.**
+Einfach Hausen ist ein digitaler Hausmeister für Eigenheimbesitzer. **Der KI-Hausmeister ist immer verfügbar.** Der Kunde kann zunächst einfach eine Frage stellen oder ein Problem schildern und entscheidet erst danach ausdrücklich zwischen zwei Wegen: **nur einen passenden menschlichen Ansprechpartner finden** oder **einen echten Auftrag organisieren lassen**. Eine Kontaktanfrage ist noch keine Buchung und kein Preisversprechen. Bei einem Auftrag klärt die KI fehlende Informationen, erstellt Richtpreise, disponiert geprüfte regionale Vertragspartner und vergleicht Angebote.
 
 Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md).
 
@@ -22,27 +22,32 @@ The pilot deliberately keeps the working core small. SQLite remains the transact
 ## Kernablauf
 
 1. Kunde schreibt, spricht oder lädt ein Foto hoch.
-2. Der KI-Hausmeister fragt nur fehlende Informationen ab.
-3. Leistung, Termin, Region und Preisorientierung werden ermittelt.
-4. Geeignete aktive Vertragspartner werden disponiert.
-5. Angebote werden nach Preis, Termin, Entfernung und Qualität verglichen.
-6. Der Kunde bucht mit einem Klick.
-7. Ein persönlicher Ansprechpartner des Partnerbetriebs wird zugewiesen.
-8. Kunde und Ansprechpartner können direkt schreiben, anrufen und Termine abstimmen.
-9. Der KI-Hausmeister bleibt für Hausakte, Organisation, Erinnerungen und Servicefälle verfügbar.
-10. Nach Abschluss bleibt der Ansprechpartner für Folgeaufträge gespeichert.
+2. Der KI-Hausmeister beantwortet und ordnet das Thema ein; **noch entsteht weder Vermittlung noch Auftrag**.
+3. Der Kunde entscheidet: **Ansprechpartner finden** oder **Auftrag organisieren**.
+4. Beim Ansprechpartner-Weg wird ein passender geprüfter Betrieb angefragt. Ein konkreter Mensch kann übernehmen, ohne Angebot und ohne Buchung.
+5. Beim Auftrags-Weg fragt die KI nur fehlende Auftragsdaten ab, ermittelt eine Preisorientierung und disponiert passende Partner.
+6. Angebote werden nach Preis, Termin, Entfernung und Qualität verglichen.
+7. Der Kunde bucht bewusst.
+8. Ein konkreter Ansprechpartner des Partnerbetriebs wird spätestens jetzt zugewiesen.
+9. Kunde und Ansprechpartner können direkt schreiben, anrufen und Termine abstimmen.
+10. Der KI-Hausmeister bleibt parallel für Fragen, Hausakte, Organisation, Erinnerungen und Servicefälle verfügbar.
+11. Ein bereits verbundener Ansprechpartner bleibt in der Hausakte und kann später ohne neue Suche kontaktiert werden.
+12. Aus einer reinen Kontaktanfrage kann der Kunde später separat einen Auftrag machen.
 
 ## Kunden-App
 
 - KI-Hausmeister als Hauptoberfläche
 - Freitext, Foto und Spracheingabe
-- mehrstufige Rückfragen bei fehlenden Auftragsdaten
+- echte Hausfragen zuerst beantworten, ohne automatisch einen Auftrag anzulegen
+- klare Auswahl **Ansprechpartner finden** oder **Auftrag organisieren**
+- mehrstufige Rückfragen nur bei fehlenden Daten des gewählten Wegs
 - optionaler OpenAI-kompatibler KI-Gateway, mit deterministischem Fallback
 - Richtpreise
 - regionales Qualitätsmatching
 - Angebotsvergleich: Empfehlung / günstigster Preis / schnellster Termin
 - Ein-Klick-Buchung
-- persönlicher Ansprechpartner nach Buchung
+- persönlicher Ansprechpartner auch ohne Buchungszwang
+- Kontaktanfrage ohne Angebot/Preis und spätere Umwandlung in einen Auftrag
 - direkter Chat / Telefon / Terminabstimmung
 - „Meine Ansprechpartner“ für dauerhafte Kundenbeziehungen
 - digitale Hausakte „Mein Haus“
@@ -52,7 +57,7 @@ The pilot deliberately keeps the working core small. SQLite remains the transact
 - Bewertungen
 - Service-/Problemfälle
 - Benachrichtigungen
-- WhatsApp Cloud API
+- WhatsApp Cloud API mit demselben Modell: KI zuerst, danach `ANSPRECHPARTNER` oder `AUFTRAG`
 - PWA-Manifest
 
 ## Kunden-Tarife
@@ -118,7 +123,7 @@ Der konkrete rechtliche, steuerliche und haftungsrechtliche Aufbau muss vor komm
 
 ## KI-Gateway
 
-Optional kann die Anfrageextraktion über einen OpenAI-kompatiblen Gateway laufen. Auf der OCI-Installation wird dafür OmniRoute lokal genutzt.
+Optional laufen sowohl die freie Hausfrage als auch die Anfrageextraktion über einen OpenAI-kompatiblen Gateway. Auf der OCI-Installation wird dafür OmniRoute lokal genutzt. Ohne Gateway bleibt die strukturierte Auftrags-/Kontaktlogik deterministisch funktionsfähig; die freie Hausfrage fällt auf eine kurze sichere Orientierung zurück.
 
 ```env
 AI_BASE_URL=http://127.0.0.1:20128/v1

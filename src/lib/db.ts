@@ -98,6 +98,8 @@ addColumnIfMissing('jobs','lat','lat REAL');
 addColumnIfMissing('jobs','lon','lon REAL');
 addColumnIfMissing('jobs','service_slug','service_slug TEXT');
 addColumnIfMissing('jobs','source_channel',"source_channel TEXT NOT NULL DEFAULT 'app'");
+addColumnIfMissing('jobs','request_kind',"request_kind TEXT NOT NULL DEFAULT 'service'");
+addColumnIfMissing('assistant_drafts','intent',"intent TEXT NOT NULL DEFAULT 'service'");
 addColumnIfMissing('quotes','submitted_by_user_id','submitted_by_user_id INTEGER REFERENCES users(id)');
 addColumnIfMissing('appointments','contact_user_id','contact_user_id INTEGER REFERENCES users(id)');
 addColumnIfMissing('homeowner_profiles','house_type',"house_type TEXT NOT NULL DEFAULT ''");

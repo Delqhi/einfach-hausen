@@ -1,22 +1,38 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { AlertTriangle,CalendarDays,CheckCircle2,Clock3,MapPin,MessageSquare,Phone,ShieldCheck,Sparkles,Star,UserRound } from 'lucide-react';
+import { AlertTriangle,CalendarDays,CheckCircle2,Clock3,MapPin,MessageCircle,MessageSquare,Phone,ShieldCheck,Sparkles,Star,UserRound } from 'lucide-react';
 import { AppShell,SectionTitle } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { acceptQuoteAction,createCheckoutAction,createClaimAction,reviewAction,sendMessageAction } from '@/app/actions';
+import { acceptQuoteAction,createCheckoutAction,createClaimAction,reviewAction,sendMessageAction,sendSavedContactMessageAction,turnContactIntoServiceAction } from '@/app/actions';
 import { dateLabel,euro,statusLabel } from '@/lib/format';
 import { getQuoteRecommendations } from '@/lib/orchestrator';
 
 export default async function JobDetail({params,searchParams}:{params:Promise<{id:string}>,searchParams:Promise<Record<string,string>>}){
   const u=await requireUser('homeowner'); const {id}=await params; const sp=await searchParams;
   const job=db.prepare(`SELECT j.*,(SELECT path FROM job_photos p WHERE p.job_id=j.id LIMIT 1) photo FROM jobs j WHERE j.id=? AND j.homeowner_id=?`).get(Number(id),u.id) as any; if(!job)notFound();
+  if(job.request_kind==='contact'){
+    const contact=db.prepare(`SELECT a.contact_user_id,u.first_name,u.last_name,u.phone,u.email,m.job_title,p.business_name FROM job_assignments a JOIN users u ON u.id=a.contact_user_id JOIN provider_members m ON m.user_id=a.contact_user_id JOIN provider_profiles p ON p.user_id=a.provider_id WHERE a.job_id=?`).get(job.id) as any;
+    const messages=contact?db.prepare('SELECT * FROM contact_messages WHERE homeowner_id=? AND contact_user_id=? ORDER BY created_at').all(u.id,contact.contact_user_id) as any[]:[];
+    const dispatches=db.prepare(`SELECT COUNT(*) total FROM job_dispatches WHERE job_id=?`).get(job.id) as any;
+    return <AppShell role="homeowner" active="/app/jobs" title="Ansprechpartner" subtitle={job.category}>
+      <div className="detail-head"><span className={`status ${job.status}`}>{contact?'Verbunden':'Ansprechpartner gesucht'}</span><h1>{job.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{job.description}</p><div className="meta-line"><span><MapPin/>{job.postcode}</span></div>{job.photo&&<img className="hero-photo" src={job.photo} alt="Foto zum Thema"/>}</div>
+      <div className="ai-summary"><Sparkles/><div><strong>Du hast nur einen Ansprechpartner gewählt</strong><p>Es wurde noch kein Auftrag vergeben und kein Preis vereinbart. Dein KI-Hausmeister bleibt dabei und verbindet dich nur mit einem passenden Menschen.</p></div></div>
+      {!contact?<div className="empty compact"><MessageCircle/><strong>Passender Ansprechpartner wird gesucht</strong><p>{dispatches.total||0} geprüfte regionale Partner wurden angefragt. Sobald ein Betrieb übernimmt, kannst du direkt schreiben oder anrufen.</p></div>:<>
+        <SectionTitle>Dein persönlicher Ansprechpartner</SectionTitle>
+        <div className="contact-card"><UserRound/><div className="grow"><strong>{contact.first_name} {contact.last_name}</strong><p>{contact.job_title||'Ansprechpartner'} · {contact.business_name}</p><small>Für Fragen direkt erreichbar. Daraus entsteht nicht automatisch ein Auftrag.</small></div></div>
+        <div className="direct-contact-actions"><Link className="btn primary" href={`/app/messages?contact=${contact.contact_user_id}`}><MessageSquare size={16}/>Nachricht</Link>{contact.phone&&<a className="btn ghost" href={`tel:${contact.phone}`}><Phone size={16}/>Anrufen</a>}</div>
+        <div className="chat">{messages.map((m:any)=><div className={m.sender_id===u.id?'msg mine':'msg'} key={m.id}><small>{m.sender_id===u.id?'Du':contact.first_name}</small><p>{m.body}</p></div>)}<form action={sendSavedContactMessageAction.bind(null,contact.contact_user_id,u.id)} className="chat-form"><input name="body" placeholder={`Nachricht an ${contact.first_name} …`} required/><button aria-label="Nachricht senden">↗</button></form></div>
+        <div className="contact-to-service"><div><strong>Soll daraus doch ein Auftrag werden?</strong><p>Du entscheidest erst jetzt. Dann organisiert dein KI-Hausmeister separat Termin und Angebote.</p></div><form action={turnContactIntoServiceAction.bind(null,job.id)}><button className="btn primary">Auftrag organisieren</button></form></div>
+      </>}
+    </AppShell>;
+  }
   const quotes=getQuoteRecommendations(job.id); const accepted=quotes.find(q=>q.status==='accepted');
   const paid=db.prepare(`SELECT status FROM payments WHERE job_id=? ORDER BY id DESC LIMIT 1`).get(job.id) as any;
   const review=db.prepare('SELECT * FROM reviews WHERE job_id=?').get(job.id) as any;
   const claim=accepted?db.prepare('SELECT * FROM claims WHERE job_id=?').get(job.id) as any:null;
   const contact=accepted?db.prepare(`SELECT a.contact_user_id,u.first_name,u.last_name,u.phone,u.email,m.job_title,p.business_name FROM job_assignments a JOIN users u ON u.id=a.contact_user_id JOIN provider_members m ON m.user_id=a.contact_user_id JOIN provider_profiles p ON p.user_id=a.provider_id WHERE a.job_id=?`).get(job.id) as any:null;
-  const messages=contact?db.prepare('SELECT * FROM messages WHERE job_id=? ORDER BY created_at').all(job.id) as any[]:[];
+  const messages=contact?db.prepare('SELECT * FROM contact_messages WHERE homeowner_id=? AND contact_user_id=? ORDER BY created_at').all(u.id,contact.contact_user_id) as any[]:[];
   const dispatches=db.prepare(`SELECT COUNT(*) total,SUM(CASE WHEN status='quoted' THEN 1 ELSE 0 END) quoted FROM job_dispatches WHERE job_id=?`).get(job.id) as any;
   const cheapest=quotes.length?Math.min(...quotes.map(q=>q.amount)):null;
   const available=quotes.filter(q=>q.available_at).sort((a,b)=>new Date(a.available_at).getTime()-new Date(b.available_at).getTime()); const fastest=available[0]?.id;

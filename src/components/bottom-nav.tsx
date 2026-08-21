@@ -4,7 +4,7 @@ import { ClipboardList, Home, House, MessageSquare, UsersRound, UserRound } from
 export const ownerNav = [
   ['/app', Home, 'Hausmeister'],
   ['/app/home', House, 'Mein Haus'],
-  ['/app/jobs', ClipboardList, 'Aufträge'],
+  ['/app/jobs', ClipboardList, 'Themen'],
   ['/app/messages', MessageSquare, 'Kontakte'],
   ['/app/profile', UserRound, 'Profil']
 ] as const;

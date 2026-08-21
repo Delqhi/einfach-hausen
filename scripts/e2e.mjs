@@ -11,7 +11,7 @@ const ownerEmail=`maria-${stamp}@example.test`;
 const password='Hausen!2026';
 
 async function waitText(page,text){await page.waitForFunction(value=>document.body.innerText.includes(value),text,{timeout:15000});}
-async function sendHousemaster(page,text){const c=page.getByPlaceholder(/Sag einfach, was dein Haus braucht/);await c.click();await c.pressSequentially(text,{delay:1});await page.locator('button.send-action:not([disabled])').click();}
+async function sendHousemaster(page,text){const c=page.getByPlaceholder(/Frag deinen KI-Hausmeister|Beantworte nur noch/);await c.click();await c.pressSequentially(text,{delay:1});await page.locator('button.send-action:not([disabled])').click();}
 
 // 1) Firma registrieren, prüfen und als Vertragspartner aktivieren.
 const managerCtx=await browser.newContext({viewport:{width:390,height:844}}); const manager=await managerCtx.newPage();
@@ -43,13 +43,37 @@ await manager.getByLabel('Funktion').fill('Techniker'); await manager.getByLabel
 await manager.getByRole('button',{name:'Ansprechpartner anlegen'}).click(); await manager.waitForURL(/member=created/); await waitText(manager,'Thomas Weber');
 const thomasCard=manager.locator('.member-card').filter({hasText:'Thomas Weber'}); if(await thomasCard.getByLabel('Aufträge verwalten').isChecked())throw new Error('Technician must not manage new jobs by default');
 
-// 3) Kunde registriert sich und spricht natürlich mit dem digitalen Hausmeister.
+// 3) Kunde startet immer beim KI-Hausmeister und entscheidet danach bewusst: Mensch oder Auftrag.
 const ownerCtx=await browser.newContext({viewport:{width:390,height:844}}); const owner=await ownerCtx.newPage();
 await owner.goto(base+'/register?role=homeowner');
 await owner.getByLabel('Vorname').fill('Maria'); await owner.getByLabel('Nachname').fill('Test'); await owner.getByLabel('E-Mail').fill(ownerEmail); await owner.getByLabel('Passwort').fill(password); await owner.getByLabel('PLZ').fill('46325');
 await Promise.all([owner.waitForURL('**/app'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
-await sendHousemaster(owner,'Meine Hecke muss geschnitten werden. Dienstag ab 14 Uhr hätte ich Zeit.'); await owner.waitForURL(/clarify=1/); await waitText(owner,'Wie lang ist die Hecke ungefähr?');
-await sendHousemaster(owner,'Etwa 25 Meter.'); await owner.waitForURL(/job=\d+/); const jobId=Number(new URL(owner.url()).searchParams.get('job')); if(!jobId)throw new Error('job missing');
+await sendHousemaster(owner,'Meine Hecke ist zu hoch. Dienstag ab 14 Uhr hätte ich Zeit. Wen kann ich dazu fragen?'); await owner.waitForURL(/answered=1/);
+await waitText(owner,'Wie soll ich weitermachen?'); await waitText(owner,'Ansprechpartner finden'); await waitText(owner,'Auftrag organisieren');
+// Eine normale KI-Frage darf noch keine Partneranfrage erzeugen.
+await manager.goto(base+'/pro'); await waitText(manager,'Keine neue passende Anfrage');
+
+// 3a) Zuerst nur einen Menschen verbinden — ausdrücklich noch kein Auftrag.
+await owner.getByRole('button',{name:/Ansprechpartner finden/}).click(); await owner.waitForURL(/\/app\/jobs\/\d+/); const contactJobId=Number(owner.url().split('/').pop()); if(!contactJobId)throw new Error('contact job missing');
+await waitText(owner,'Du hast nur einen Ansprechpartner gewählt'); await waitText(owner,'noch kein Auftrag');
+await manager.goto(base+'/pro'); await manager.getByText('Heckenschnitt').first().waitFor(); await manager.getByText('Heckenschnitt').first().click();
+await waitText(manager,'Nur persönlicher Ansprechpartner gesucht');
+const contactSelect=manager.getByLabel('Ansprechpartner'); const contactThomas=contactSelect.locator('option').filter({hasText:'Thomas Weber'}); const contactThomasValue=await contactThomas.getAttribute('value'); if(!contactThomasValue)throw new Error('Thomas contact option missing'); await contactSelect.selectOption(contactThomasValue);
+await manager.getByRole('button',{name:'Kontakt übernehmen'}).click(); await manager.waitForURL(new RegExp(`/pro/jobs/${contactJobId}`));
+await owner.goto(base+`/app/jobs/${contactJobId}`); await waitText(owner,'Thomas Weber'); await waitText(owner,'noch kein Auftrag');
+
+// Direkter Kontakt funktioniert schon ohne Auftrag.
+await owner.getByRole('link',{name:'Nachricht',exact:true}).click(); await waitText(owner,'Meine Ansprechpartner');
+await owner.getByPlaceholder(/Nachricht an Thomas/).fill('Thomas, kannst du kurz sagen, ob du dir das ansehen würdest?'); await owner.getByRole('button',{name:'Nachricht senden'}).click();
+const techCtx=await browser.newContext({viewport:{width:390,height:844}}); const tech=await techCtx.newPage();
+await tech.goto(base+'/login'); await tech.getByLabel('E-Mail').fill(techEmail); await tech.getByLabel('Passwort').fill(password); await Promise.all([tech.waitForURL('**/pro'),tech.getByRole('button',{name:'Einloggen'}).click()]);
+await tech.goto(base+'/pro/messages'); await waitText(tech,'Maria Test'); await waitText(tech,'ob du dir das ansehen würdest');
+await tech.getByPlaceholder(/Nachricht an Maria/).fill('Ja, das kann ich mir ansehen. Wenn du möchtest, kann daraus separat ein Auftrag werden.'); await tech.getByRole('button',{name:'Nachricht senden'}).click();
+await owner.reload(); await waitText(owner,'separat ein Auftrag');
+
+// 3b) Erst jetzt entscheidet Maria, daraus einen echten Auftrag zu machen.
+await owner.goto(base+`/app/jobs/${contactJobId}`); await owner.getByRole('button',{name:'Auftrag organisieren'}).click(); await owner.waitForURL(/clarify=1/); await waitText(owner,'Wie lang ist die Hecke ungefähr?');
+await sendHousemaster(owner,'Etwa 25 Meter.'); await owner.waitForURL(/job=\d+/); const jobId=Number(new URL(owner.url()).searchParams.get('job')); if(!jobId)throw new Error('service job missing');
 await owner.getByText(/Richtpreis liegt aktuell ungefähr/).waitFor(); await owner.getByText(/vertraglich geprüfte Partner/).waitFor();
 await owner.screenshot({path:'artifacts/owner-ai-housemaster.png',fullPage:true});
 
@@ -70,14 +94,10 @@ const thomasOption=manager.getByLabel('Auftrag zuweisen').locator('option').filt
 await owner.reload(); await waitText(owner,'Thomas Weber'); await waitText(owner,'Techniker · Gartenbau Müller');
 await owner.screenshot({path:'artifacts/owner-personal-contact.png',fullPage:true});
 
-// 6) Kunde kann Thomas direkt schreiben; Thomas hat eigenen Login und sieht nur seinen Auftrag.
+// 6) Derselbe Ansprechpartner bleibt auch nach der späteren Buchung erreichbar.
 await owner.getByRole('link',{name:'Nachricht',exact:true}).click(); await waitText(owner,'Meine Ansprechpartner');
 await owner.getByPlaceholder(/Nachricht an Thomas/).fill('Thomas, bitte kurz Bescheid sagen, bevor du losfährst.'); await owner.getByRole('button',{name:'Nachricht senden'}).click(); await owner.waitForTimeout(200);
-
-const techCtx=await browser.newContext({viewport:{width:390,height:844}}); const tech=await techCtx.newPage();
-await tech.goto(base+'/login'); await tech.getByLabel('E-Mail').fill(techEmail); await tech.getByLabel('Passwort').fill(password); await Promise.all([tech.waitForURL('**/pro'),tech.getByRole('button',{name:'Einloggen'}).click()]);
-await waitText(tech,'Meine Aufträge'); await waitText(tech,'Heckenschnitt');
-await tech.goto(base+'/pro/messages'); await waitText(tech,'Maria Test'); await waitText(tech,'Thomas, bitte kurz Bescheid');
+await tech.goto(base+'/pro/messages'); await waitText(tech,'Thomas, bitte kurz Bescheid');
 await tech.getByPlaceholder(/Nachricht an Maria/).fill('Gerne, ich melde mich etwa 30 Minuten vorher.'); await tech.getByRole('button',{name:'Nachricht senden'}).click();
 await owner.reload(); await waitText(owner,'30 Minuten vorher');
 
@@ -97,5 +117,5 @@ await manager.goto(base+'/pro/plans'); await waitText(manager,'0 % Provision'); 
 await owner.goto(base+`/app/jobs/${jobId}`); await owner.getByPlaceholder('Was ist passiert?').fill('Die Ausführung soll von Einfach Hausen geprüft werden, weil noch eine Rückfrage zur Qualität offen ist.'); await owner.getByRole('button',{name:'Hausmeister einschalten'}).click(); await waitText(owner,'Servicefall · Offen');
 await admin.goto(base+'/admin'); const claimCard=admin.locator('.admin-card').filter({hasText:'Rückfrage zur Qualität'}).first(); await claimCard.getByLabel('Status').selectOption('resolved'); await claimCard.getByPlaceholder('Rückmeldung / Entscheidung').fill('Fall geprüft und mit Kunde und Ansprechpartner geklärt.'); await claimCard.getByRole('button',{name:'Fall aktualisieren'}).click(); await claimCard.locator('.status.resolved').waitFor();
 
-console.log(JSON.stringify({ok:true,jobId,ownerEmail,providerEmail,techEmail,vision:'digital housemaster + clarification + quality matching + personal partner contact + persistent relationship + 0% commission'},null,2));
+console.log(JSON.stringify({ok:true,jobId,ownerEmail,providerEmail,techEmail,vision:'AI housemaster first + explicit human-contact or job choice + persistent relationship + quality matching + 0% commission'},null,2));
 await browser.close();

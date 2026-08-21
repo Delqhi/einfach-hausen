@@ -10,18 +10,23 @@ Er schreibt in der App oder über WhatsApp ganz normal, zum Beispiel:
 
 > Meine Hecke muss geschnitten werden. Dienstag ab 14 Uhr hätte ich Zeit.
 
-Der digitale Hausmeister versteht die Anfrage, fragt nur fehlende Informationen ab, ordnet die richtige Leistung zu, bildet einen Richtpreis, sucht passende geprüfte regionale Vertragspartner und holt Verfügbarkeit und Angebote ein.
+Der digitale Hausmeister ist für alle Kunden dauerhaft verfügbar. Er kann Fragen beantworten, Hausdaten einordnen, an frühere Vorgänge erinnern und das weitere Vorgehen vorbereiten.
 
-Danach entscheidet der Kunde. **Nach der Buchung bekommt er einen konkreten menschlichen Ansprechpartner beim ausführenden Unternehmen.** Die KI ersetzt nicht den persönlichen Kontakt.
+**Erst danach entscheidet der Kunde ausdrücklich, was er möchte:**
+
+1. **Nur einen passenden menschlichen Ansprechpartner** für Fragen oder eine fachliche Einschätzung. Dabei entsteht noch kein Auftrag und kein Preis.
+2. **Einen echten Auftrag organisieren lassen.** Dann klärt die KI die nötigen Auftragsdaten, bildet einen Richtpreis, fragt passende geprüfte regionale Partner an und holt – wenn sinnvoll – Angebote ein.
+
+In beiden Fällen bleibt der KI-Hausmeister parallel verfügbar. Ein menschlicher Ansprechpartner kann also schon vor einer Buchung entstehen; eine Buchung ist keine Voraussetzung für persönlichen Kontakt.
 
 ## Produktprinzipien
 
 1. **Eine digitale Eingangstür.** Freitext, Foto und Sprache statt Kategorienwand und langer Formulare.
-2. **KI organisiert, Menschen führen aus.** Die KI versteht, plant, vergleicht, erinnert und dokumentiert. Das Partnerunternehmen arbeitet und stellt den direkten Ansprechpartner.
+2. **KI-Hausmeister immer, Mensch oder Auftrag auf Wunsch.** Die KI versteht, erklärt, plant, vergleicht, erinnert und dokumentiert. Der Kunde entscheidet separat, ob er nur einen Menschen sprechen oder eine Leistung beauftragen möchte.
 3. **Nur geprüfte Vertragspartner.** Kein offener Lead-Marktplatz.
 4. **Qualität vor Monetarisierung.** Matching priorisiert Qualität, Kundenzufriedenheit, Eignung, Entfernung, Verfügbarkeit, Kapazität und bestehende Beziehungen — niemals den gebuchten Partner-Tarif.
-5. **Direkter persönlicher Kontakt nach Buchung.** Nachricht, Anruf und Terminabstimmung mit dem konkret zugewiesenen Ansprechpartner.
-6. **Beziehungen bleiben erhalten.** Ein Ansprechpartner bleibt nach einem erledigten Auftrag in der Hausakte gespeichert. Folgeaufträge können direkt mit ihm abgestimmt werden.
+5. **Direkter persönlicher Kontakt ohne Buchungszwang.** Für Fragen kann ein geprüfter Partner bereits als Ansprechpartner verbunden werden. Ein Auftrag entsteht erst durch eine separate bewusste Entscheidung des Kunden.
+6. **Beziehungen bleiben erhalten.** Ein verbundener Ansprechpartner bleibt in der Hausakte gespeichert – unabhängig davon, ob sofort ein Auftrag entsteht. Spätere Fragen oder Folgeaufträge können direkt mit ihm abgestimmt werden.
 7. **Mein Haus ist das Gedächtnis.** Hausdaten, Anlagen, Aufträge, Rechnungen, Termine, Dokumente, Wartungen, Ansprechpartner und Zukunftsaufgaben wachsen dauerhaft zu einer digitalen Hausakte.
 8. **So wenig Partner-Software wie möglich.** Keine komplexen Rollen und Rechte. Pro Ansprechpartner gibt es nur App-Zugang und den Schalter „Aufträge verwalten“.
 9. **0 % Auftragsprovision.** Partner behalten 100 % ihres Auftragswertes. Partnerumsatz entsteht über planbare Monatsabos, nicht über eine Gebühr pro Auftrag.
@@ -29,11 +34,11 @@ Danach entscheidet der Kunde. **Nach der Buchung bekommt er einen konkreten mens
 
 ## Kundenerlebnis
 
-### 1. Anfrage
+### 1. KI-Hausmeister
 
-Der Kunde schreibt, spricht oder fotografiert.
+Der Kunde schreibt, spricht oder fotografiert. Zunächst ist das einfach ein Gespräch mit dem KI-Hausmeister – **noch keine Vermittlung und kein Auftrag**. Die KI beantwortet die Frage soweit sinnvoll und nutzt relevante Informationen aus der Hausakte.
 
-Der digitale Hausmeister extrahiert unter anderem:
+Wenn der Kunde anschließend einen Auftrag möchte, extrahiert der digitale Hausmeister unter anderem:
 
 - Leistung / Gewerk
 - Ort / Haus
@@ -50,7 +55,18 @@ Beispiel Heckenschnitt:
 2. „Wann soll es gemacht werden?“
 3. Foto optional, wenn es die Kalkulation verbessert.
 
-### 2. Richtpreis und Matching
+### 2. Entscheidung: Ansprechpartner oder Auftrag
+
+Nach der Einordnung zeigt das Produkt zwei klare Wege:
+
+- **Ansprechpartner finden:** passender geprüfter Betrieb übernimmt die Kontaktanfrage; kein Angebot und keine Buchung nötig.
+- **Auftrag organisieren:** Auftragsdaten werden vervollständigt, Partner angefragt und Angebote verglichen.
+
+Der Kunde kann auch erst einen Ansprechpartner sprechen und **später aus demselben Thema einen Auftrag machen**.
+
+In WhatsApp gilt dasselbe Produktmodell. Nach der KI-Antwort kann der Kunde einfach **ANSPRECHPARTNER** oder **AUFTRAG** schreiben; eine normale Frage löst nicht automatisch eine Vermittlung aus.
+
+### 3. Richtpreis und Matching
 
 Das System erstellt eine Preisorientierung und sucht passende aktive Vertragspartner.
 
@@ -70,7 +86,7 @@ Matching berücksichtigt:
 
 Partner-Tarife beeinflussen **nicht** den Qualitäts-Score.
 
-### 3. Angebotsvergleich
+### 4. Angebotsvergleich
 
 Der Kunde sieht einen übersichtlichen Vergleich, zum Beispiel:
 
@@ -86,9 +102,9 @@ Zusätzlich markiert das System mindestens:
 - **Günstigstes Angebot**
 - **Schnellster Termin**
 
-### 4. Buchung und persönlicher Ansprechpartner
+### 5. Buchung und persönlicher Ansprechpartner
 
-Nach der Buchung wird ein konkreter Ansprechpartner zugewiesen.
+Bei einem Auftrag wird spätestens nach der Buchung ein konkreter Ansprechpartner zugewiesen. Bei einer reinen Kontaktanfrage kann derselbe persönliche Kontakt bereits vorher entstehen.
 
 Beispiel:
 
@@ -103,7 +119,7 @@ Der Kunde kann:
 
 Der KI-Hausmeister bleibt parallel für Organisation, Hausakte, Erinnerungen und Servicefälle erreichbar.
 
-### 5. Dauerhafte Beziehung
+### 6. Dauerhafte Beziehung
 
 Nach Abschluss bleibt der Ansprechpartner gespeichert:
 

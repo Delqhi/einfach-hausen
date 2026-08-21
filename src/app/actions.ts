@@ -12,7 +12,7 @@ import { createSession, destroySession, requireUser } from '@/lib/auth';
 import { adminPasswordMatches, createAdminSession, destroyAdminSession, requireAdmin } from '@/lib/admin-auth';
 import { createNotification } from '@/lib/notifications';
 import { geocodePostcode } from '@/lib/geocode';
-import { appendJobEvent, createHausmeisterRequest, redispatchOpenJobs } from '@/lib/orchestrator';
+import { answerHausmeisterQuestion, appendJobEvent, createHausmeisterRequest, redispatchOpenJobs, type HausmeisterIntent } from '@/lib/orchestrator';
 import { canAccessProviderJob, getProviderContext, getProviderManagerIds } from '@/lib/provider';
 
 function text(fd: FormData, key: string) { return String(fd.get(key) ?? '').trim(); }
@@ -64,15 +64,70 @@ async function saveUpload(file: File | null) {
 export async function sendHausmeisterAction(fd:FormData){
   const user=await requireUser('homeowner');
   const description=text(fd,'description');
-  if(description.length<4) redirect('/app?error=Sag%20mir%20kurz,%20was%20an%20deinem%20Haus%20erledigt%20werden%20soll');
+  if(description.length<4) redirect('/app?error=Schreib%20mir%20kurz,%20worum%20es%20bei%20deinem%20Haus%20geht');
   const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null);
-  const result=await createHausmeisterRequest(user.id,description,'app',saved);
-  revalidatePath('/app'); revalidatePath('/pro'); revalidatePath('/notifications');
-  redirect(result.jobId?`/app?job=${result.jobId}`:'/app?clarify=1');
+  const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='app' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
+  const draft=thread?db.prepare('SELECT intent FROM assistant_drafts WHERE thread_id=?').get(thread.id) as {intent:HausmeisterIntent}|undefined:undefined;
+  if(draft){
+    const result=await createHausmeisterRequest(user.id,description,'app',saved,draft.intent,true);
+    revalidatePath('/app'); revalidatePath('/pro'); revalidatePath('/notifications');
+    redirect(result.jobId?`/app?job=${result.jobId}`:'/app?clarify=1');
+  }
+  await answerHausmeisterQuestion(user.id,description,'app',saved);
+  revalidatePath('/app');
+  redirect('/app?answered=1');
 }
 
-// Compatibility endpoint for older forms/bookmarks. New homeowner UX uses the KI-Hausmeister action above.
-export async function createJobAction(fd: FormData) { return sendHausmeisterAction(fd); }
+export async function startHausmeisterRouteAction(intent:HausmeisterIntent){
+  const user=await requireUser('homeowner');
+  const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='app' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
+  if(!thread)redirect('/app?error=Beschreib%20dein%20Thema%20zuerst%20kurz%20dem%20KI-Hausmeister');
+  const latest=db.prepare(`SELECT body,metadata_json FROM assistant_messages WHERE thread_id=? AND role='user' ORDER BY created_at DESC,id DESC LIMIT 1`).get(thread.id) as {body:string;metadata_json:string}|undefined;
+  if(!latest)redirect('/app?error=Beschreib%20dein%20Thema%20zuerst%20kurz%20dem%20KI-Hausmeister');
+  let photo:string|null=null; try{const metadata=JSON.parse(latest.metadata_json||'{}');if(typeof metadata.photo==='string')photo=metadata.photo;}catch{}
+  const result=await createHausmeisterRequest(user.id,latest.body,'app',photo,intent,false);
+  revalidatePath('/app'); revalidatePath('/pro'); revalidatePath('/notifications');
+  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app?clarify=1');
+}
+
+// Compatibility endpoint for older forms/bookmarks. Treat explicit legacy job forms as real service requests.
+export async function createJobAction(fd: FormData) {
+  const user=await requireUser('homeowner'); const description=text(fd,'description'); if(description.length<4)return;
+  const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null);
+  const result=await createHausmeisterRequest(user.id,description,'app',saved,'service',true);
+  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app?clarify=1');
+}
+
+
+export async function turnContactIntoServiceAction(jobId:number){
+  const user=await requireUser('homeowner');
+  const job=db.prepare(`SELECT j.*,(SELECT path FROM job_photos p WHERE p.job_id=j.id ORDER BY p.id ASC LIMIT 1) photo FROM jobs j WHERE j.id=? AND j.homeowner_id=? AND j.request_kind='contact'`).get(jobId,user.id) as any;
+  if(!job)return;
+  const sourceThread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND active_job_id=? ORDER BY updated_at DESC LIMIT 1`).get(user.id,jobId) as {id:number}|undefined;
+  const result=await createHausmeisterRequest(user.id,job.description,'app',job.photo||null,'service',false,sourceThread?.id);
+  revalidatePath('/app'); revalidatePath('/pro'); revalidatePath('/notifications');
+  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app?clarify=1');
+}
+
+export async function acceptContactRequestAction(jobId:number,fd:FormData){
+  const user=await requireUser('provider'); const ctx=getProviderContext(user.id); if(!ctx?.canManageJobs)return;
+  const contactUserId=int(fd,'contactUserId')||user.id;
+  const contact=db.prepare(`SELECT m.user_id,u.first_name,u.last_name,m.job_title FROM provider_members m JOIN users u ON u.id=m.user_id WHERE m.provider_id=? AND m.user_id=? AND m.active=1`).get(ctx.providerId,contactUserId) as any;
+  if(!contact)return;
+  const job=db.prepare(`SELECT j.* FROM jobs j JOIN job_dispatches d ON d.job_id=j.id WHERE j.id=? AND j.request_kind='contact' AND d.provider_id=? AND d.status IN ('sent','viewed') AND j.status='open'`).get(jobId,ctx.providerId) as any;
+  if(!job)return;
+  const tx=db.transaction(()=>{
+    db.prepare(`UPDATE jobs SET status='accepted',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(jobId);
+    db.prepare(`UPDATE job_dispatches SET status=CASE WHEN provider_id=? THEN 'accepted' ELSE 'closed' END,responded_at=COALESCE(responded_at,CURRENT_TIMESTAMP) WHERE job_id=?`).run(ctx.providerId,jobId);
+    db.prepare(`INSERT INTO job_assignments(job_id,provider_id,contact_user_id,assigned_by_user_id) VALUES(?,?,?,?) ON CONFLICT(job_id) DO UPDATE SET provider_id=excluded.provider_id,contact_user_id=excluded.contact_user_id,assigned_by_user_id=excluded.assigned_by_user_id,assigned_at=CURRENT_TIMESTAMP`).run(jobId,ctx.providerId,contactUserId,user.id);
+    db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,updated_at) VALUES(?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,updated_at=CURRENT_TIMESTAMP`).run(job.homeowner_id,ctx.providerId,contactUserId,job.category||'',jobId);
+  }); tx();
+  createNotification(job.homeowner_id,'Dein Ansprechpartner ist da',`${contact.first_name} ${contact.last_name} von ${ctx.businessName} ist jetzt dein persönlicher Ansprechpartner für dein Thema.`,`/app/jobs/${jobId}`,'contact');
+  if(contactUserId!==user.id)createNotification(contactUserId,'Neue Kontaktanfrage zugewiesen',`Du bist jetzt Ansprechpartner für „${job.title.replace(/^Ansprechpartner:\s*/,'')}“.`,`/pro/jobs/${jobId}`,'assigned');
+  appendJobEvent(jobId,`${contact.first_name} ${contact.last_name} von ${ctx.businessName} ist jetzt dein persönlicher Ansprechpartner. Es wurde noch kein Auftrag vergeben; du kannst direkt schreiben oder anrufen.`,{contactUserId,providerId:ctx.providerId,requestKind:'contact'});
+  revalidatePath('/pro'); revalidatePath('/pro/orders'); revalidatePath(`/pro/jobs/${jobId}`); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/app/messages'); revalidatePath('/notifications');
+  redirect(`/pro/jobs/${jobId}`);
+}
 
 export async function submitQuoteAction(jobId:number, fd:FormData){
   const user=await requireUser('provider'); const amount=int(fd,'amount'); if(!amount || amount<1) return;
@@ -328,17 +383,17 @@ export async function assignJobContactAction(jobId:number,fd:FormData){
   const user=await requireUser('provider'); const ctx=getProviderContext(user.id); if(!ctx?.canManageJobs)return;
   const contactUserId=int(fd,'contactUserId'); if(!contactUserId)return;
   const contact=db.prepare(`SELECT m.user_id,u.first_name,u.last_name FROM provider_members m JOIN users u ON u.id=m.user_id WHERE m.provider_id=? AND m.user_id=? AND m.active=1`).get(ctx.providerId,contactUserId) as any; if(!contact)return;
-  const job=db.prepare(`SELECT j.id,j.homeowner_id,j.title,j.category FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=? AND q.provider_id=? AND j.status IN ('accepted','in_progress')`).get(jobId,ctx.providerId) as any; if(!job)return;
+  const job=db.prepare(`SELECT j.id,j.homeowner_id,j.title,j.category,j.request_kind FROM jobs j WHERE j.id=? AND j.status IN ('accepted','in_progress') AND ((j.request_kind='contact' AND EXISTS(SELECT 1 FROM job_dispatches d WHERE d.job_id=j.id AND d.provider_id=? AND d.status='accepted')) OR EXISTS(SELECT 1 FROM quotes q WHERE q.id=j.accepted_quote_id AND q.provider_id=?))`).get(jobId,ctx.providerId,ctx.providerId) as any; if(!job)return;
   const previous=db.prepare('SELECT contact_user_id FROM job_assignments WHERE job_id=?').get(jobId) as {contact_user_id:number}|undefined;
   const tx=db.transaction(()=>{
     db.prepare(`INSERT INTO job_assignments(job_id,provider_id,contact_user_id,assigned_by_user_id) VALUES(?,?,?,?) ON CONFLICT(job_id) DO UPDATE SET contact_user_id=excluded.contact_user_id,assigned_by_user_id=excluded.assigned_by_user_id,assigned_at=CURRENT_TIMESTAMP`).run(jobId,ctx.providerId,contactUserId,user.id);
-    db.prepare('UPDATE appointments SET contact_user_id=? WHERE job_id=?').run(contactUserId,jobId);
+    if(job.request_kind!=='contact')db.prepare('UPDATE appointments SET contact_user_id=? WHERE job_id=?').run(contactUserId,jobId);
     if(previous&&previous.contact_user_id!==contactUserId)db.prepare('DELETE FROM homeowner_contacts WHERE homeowner_id=? AND contact_user_id=? AND last_job_id=?').run(job.homeowner_id,previous.contact_user_id,jobId);
     db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,updated_at) VALUES(?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,updated_at=CURRENT_TIMESTAMP`).run(job.homeowner_id,ctx.providerId,contactUserId,job.category||'',jobId);
   }); tx();
   createNotification(job.homeowner_id,'Dein Ansprechpartner steht fest',`${contact.first_name} ${contact.last_name} von ${ctx.businessName} kümmert sich um „${job.title}“.`,`/app/jobs/${jobId}`,'contact');
-  if(contactUserId!==user.id)createNotification(contactUserId,'Auftrag zugewiesen',`Du bist jetzt Ansprechpartner für „${job.title}“.`,`/pro/jobs/${jobId}`,'assigned');
-  appendJobEvent(jobId,`${contact.first_name} ${contact.last_name} von ${ctx.businessName} ist dein direkter Ansprechpartner für diesen Auftrag. Du kannst jetzt direkt schreiben, anrufen oder den Termin abstimmen.`,{contactUserId,providerId:ctx.providerId});
+  if(contactUserId!==user.id)createNotification(contactUserId,job.request_kind==='contact'?'Kontaktanfrage zugewiesen':'Auftrag zugewiesen',`Du bist jetzt Ansprechpartner für „${job.title.replace(/^Ansprechpartner:\s*/,'')}“.`,`/pro/jobs/${jobId}`,'assigned');
+  appendJobEvent(jobId,job.request_kind==='contact'?`${contact.first_name} ${contact.last_name} von ${ctx.businessName} ist dein direkter Ansprechpartner. Du kannst jetzt schreiben oder anrufen; es ist weiterhin kein Auftrag vergeben.`:`${contact.first_name} ${contact.last_name} von ${ctx.businessName} ist dein direkter Ansprechpartner für diesen Auftrag. Du kannst jetzt direkt schreiben, anrufen oder den Termin abstimmen.`,{contactUserId,providerId:ctx.providerId,requestKind:job.request_kind});
   revalidatePath(`/pro/jobs/${jobId}`); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/app/messages'); revalidatePath('/pro/orders'); revalidatePath('/notifications');
 }
 

@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ArrowRight, BadgeCheck, CalendarDays, Camera, Check, ChevronRight, House, MessageSquare, Mic, Send, ShieldCheck, UserRound, Wrench } from 'lucide-react';
+import { ArrowRight, CalendarDays, Camera, Check, ChevronRight, ClipboardCheck, House, MessageCircle, MessageSquare, Mic, Send, UserRound, Wrench } from 'lucide-react';
 import { getCurrentUser } from '@/lib/auth';
 import { Logo } from '@/components/logo';
 
 const process=[
-  ['01','Sagen','Beschreibe in deinen Worten, was an deinem Haus gemacht werden soll. Ein Satz reicht; Foto oder Sprache sind optional.'],
-  ['02','Organisieren','Der digitale Hausmeister klärt nur fehlende Details und sucht passende, geprüfte regionale Vertragspartner.'],
-  ['03','Entscheiden','Du bekommst eine klare Empfehlung und kannst Preis, Termin und Qualität vergleichen. Du entscheidest.'],
-  ['04','Persönlich bleiben','Nach der Buchung übernimmt ein konkreter Mensch beim Partnerbetrieb. Er bleibt als Ansprechpartner in deiner Hausakte gespeichert.'],
+  ['01','KI fragen','Dein KI-Hausmeister ist immer da. Beschreibe ein Problem, stell eine Frage oder zeig ein Foto.'],
+  ['02','Selbst entscheiden','Du wählst danach: nur einen passenden menschlichen Ansprechpartner sprechen oder einen echten Auftrag organisieren lassen.'],
+  ['03','Persönlich bleiben','Wenn du einen Menschen möchtest, bekommst du einen konkreten Ansprechpartner beim geprüften Partnerbetrieb – direkt per Nachricht oder Telefon.'],
+  ['04','Hauswissen behalten','Kontakte, Aufträge, Dokumente und Wartungen bleiben in deiner digitalen Hausakte und werden beim nächsten Mal wieder genutzt.'],
 ] as const;
 
 export default async function Landing(){
@@ -24,23 +24,23 @@ export default async function Landing(){
       <div className="hero-v3-copy">
         <div className="hero-v3-kicker">Einfach Hausen · Dein digitaler Hausmeister</div>
         <h1>Du sagst, was dein Haus braucht. Wir kümmern uns um den Rest.</h1>
-        <p className="hero-v3-lead">Kein Branchenverzeichnis. Kein Handwerker-Suchmarathon. Eine einfache Oberfläche, ein geprüftes Partnernetzwerk und nach der Buchung ein echter persönlicher Ansprechpartner.</p>
+        <p className="hero-v3-lead">Dein KI-Hausmeister ist immer da. Und wenn du mehr brauchst, entscheidest du selbst: nur mit einem passenden Menschen sprechen oder einen Auftrag vollständig organisieren lassen.</p>
         <div className="hero-v3-actions"><Link className="btn primary" href="/register?role=homeowner">Hausmeister starten <ArrowRight size={17}/></Link><a className="text-link" href="#prinzip">So funktioniert es <ChevronRight size={15}/></a></div>
       </div>
 
       <div className="prompt-stage" aria-label="Beispiel für den digitalen Hausmeister">
         <div className="prompt-card">
-          <div className="prompt-label">Was braucht dein Haus?</div>
-          <div className="prompt-row"><div className="prompt-copy">Meine Hecke muss geschnitten werden. Dienstag ab 14 Uhr hätte ich Zeit.</div><div className="prompt-tools"><span className="prompt-tool"><Camera size={17}/></span><span className="prompt-tool"><Mic size={17}/></span><span className="prompt-send"><Send size={16}/></span></div></div>
-          <div className="prompt-answer"><span className="prompt-ai"><House size={16}/></span><div><strong>Alles klar. Wie lang ist die Hecke ungefähr?</strong><p>Eine grobe Angabe in Metern reicht. Danach kann ich passende Partner und einen realistischen Preisrahmen bestimmen.</p><div className="prompt-meta"><span><BadgeCheck size={14}/> geprüfte Partner</span><span><CalendarDays size={14}/> Terminwunsch berücksichtigt</span><span><ShieldCheck size={14}/> Qualität vor Werbebudget</span></div></div></div>
+          <div className="prompt-label">Frag deinen KI-Hausmeister</div>
+          <div className="prompt-row"><div className="prompt-copy">An der Kellerwand ist ein feuchter Fleck. Wen brauche ich dafür?</div><div className="prompt-tools"><span className="prompt-tool"><Camera size={17}/></span><span className="prompt-tool"><Mic size={17}/></span><span className="prompt-send"><Send size={16}/></span></div></div>
+          <div className="prompt-answer"><span className="prompt-ai"><House size={16}/></span><div><strong>Das kann mehrere Ursachen haben.</strong><p>Ich würde zuerst eingrenzen, ob Feuchtigkeit von außen, einer Leitung oder Kondensation kommt. Wenn du möchtest, kann ich dir einen passenden Menschen zum Besprechen suchen oder direkt einen Vor-Ort-Auftrag organisieren.</p><div className="prompt-options"><span><MessageCircle size={15}/><b>Ansprechpartner finden</b><small>Noch kein Auftrag</small></span><span><ClipboardCheck size={15}/><b>Auftrag organisieren</b><small>Termin & Angebote</small></span></div></div></div>
         </div>
       </div>
     </section>
 
-    <div className="statement-strip"><div className="statement-strip-inner"><span><strong>Free</strong> ab 0 €</span><span><strong>Partner</strong> 0 % Provision</span><span><strong>Regional</strong> geprüft & vertraglich gebunden</span><span><strong>Persönlich</strong> echter Ansprechpartner nach Buchung</span></div></div>
+    <div className="statement-strip"><div className="statement-strip-inner"><span><strong>Free</strong> ab 0 €</span><span><strong>Partner</strong> 0 % Provision</span><span><strong>Regional</strong> geprüft & vertraglich gebunden</span><span><strong>Du entscheidest</strong> Ansprechpartner oder Auftrag</span></div></div>
 
     <section className="editorial-section" id="prinzip">
-      <span className="editorial-eyebrow">Das Prinzip</span><h2>So wenig Software wie möglich. So viel Hilfe wie nötig.</h2><p className="editorial-intro">Einfach Hausen übernimmt die komplizierte Organisation im Hintergrund. Für dich bleibt ein klarer Ablauf.</p>
+      <span className="editorial-eyebrow">Das Prinzip</span><h2>So wenig Software wie möglich. So viel Hilfe wie nötig.</h2><p className="editorial-intro">Die KI bleibt dein Hausmeister. Ein echter Mensch oder ein Auftrag kommt erst dazu, wenn du das ausdrücklich möchtest.</p>
       <div className="process-list">{process.map(([i,t,d])=><article className="process-row" key={i}><span className="process-index">{i}</span><h3>{t}</h3><p>{d}</p></article>)}</div>
     </section>
 
@@ -56,11 +56,11 @@ export default async function Landing(){
     </section>
 
     <section className="partner-v3-wrap" id="partner"><div className="partner-v3">
-      <div><span className="editorial-eyebrow">Für Partnerbetriebe</span><h2>Aufträge rein. Ansprechpartner zuweisen. Erledigen.</h2><p>Keine komplizierte Handwerker-ERP. Ein Firmenkonto, beliebig viele Ansprechpartner und genau ein wichtiger Schalter: „Aufträge verwalten“.</p><Link className="btn light" href="/register?role=provider">Vertragspartner werden <ArrowRight size={16}/></Link></div>
+      <div><span className="editorial-eyebrow">Für Partnerbetriebe</span><h2>Anfragen rein. Ansprechpartner zuweisen. Aufträge erledigen.</h2><p>Keine komplizierte Handwerker-ERP. Ein Firmenkonto, beliebig viele Ansprechpartner und genau ein wichtiger Schalter: „Aufträge verwalten“.</p><Link className="btn light" href="/register?role=provider">Vertragspartner werden <ArrowRight size={16}/></Link></div>
       <div className="partner-facts"><div className="partner-fact"><strong>Provision pro Auftrag</strong><span>0 %</span></div><div className="partner-fact"><strong>Start-Tarif</strong><span>29 €/Monat</span></div><div className="partner-fact"><strong>Testphase</strong><span>2 Monate kostenlos</span></div><div className="partner-fact"><strong>Matching</strong><span>Qualität vor Tarif</span></div></div>
     </div></section>
 
-    <section className="final-v3"><h2>Ein Ansprechpartner für alles rund ums Eigenheim.</h2><Link className="btn primary" href="/register?role=homeowner">Kostenlos starten <ArrowRight size={17}/></Link></section>
+    <section className="final-v3"><h2>KI-Hausmeister. Persönlicher Ansprechpartner. Auftrag, wenn du ihn willst.</h2><Link className="btn primary" href="/register?role=homeowner">Kostenlos starten <ArrowRight size={17}/></Link></section>
     <footer className="marketing-v3-footer"><Logo/><p>© 2026 Einfach Hausen</p><nav><Link href="/login">Einloggen</Link><Link href="/register?role=provider">Partner werden</Link></nav></footer>
   </main>;
 }

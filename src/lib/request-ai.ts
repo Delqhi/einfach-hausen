@@ -53,3 +53,20 @@ export async function analyzeRequest(text:string):Promise<ParsedRequest>{
     return {category:typeof ai.category==='string'?ai.category:fallback.category,title:typeof ai.title==='string'&&ai.title.trim()?ai.title.trim():fallback.title,postcode:/^\d{5}$/.test(String(ai.postcode||''))?String(ai.postcode):fallback.postcode,preferredDate:/^\d{4}-\d{2}-\d{2}$/.test(String(ai.preferredDate||''))?String(ai.preferredDate):fallback.preferredDate,preferredTime:/^\d{2}:\d{2}$/.test(String(ai.preferredTime||''))?String(ai.preferredTime):fallback.preferredTime,budgetMin:Number.isFinite(Number(ai.budgetMin))?Number(ai.budgetMin):fallback.budgetMin,budgetMax:Number.isFinite(Number(ai.budgetMax))?Number(ai.budgetMax):fallback.budgetMax};
   }catch{return fallback;}
 }
+
+
+export async function answerHouseQuestion(question:string, context:string):Promise<string>{
+  const key=process.env.AI_API_KEY||process.env.OMNIROUTE_MASTER_KEY;
+  const fallback=`Ich kann dir dabei helfen, das einzuordnen. Wenn du nur eine fachliche Person sprechen möchtest, wähle „Ansprechpartner finden“. Wenn tatsächlich etwas erledigt werden soll, wähle „Auftrag organisieren“.`;
+  if(!key)return fallback;
+  const base=(process.env.AI_BASE_URL||'http://127.0.0.1:20128/v1').replace(/\/$/,'');
+  const model=process.env.AI_MODEL||'auto/best-fast';
+  const system=`Du bist der digitale Hausmeister von Einfach Hausen für private Hauseigentümer in Deutschland. Antworte knapp, praktisch und verständlich. Nutze die vorhandene Hausakte nur, wenn sie wirklich relevant ist. Erfinde keine Fakten, Preise, Diagnosen oder Termine. Bei potenziell gefährlichen Elektro-, Gas-, Brand-, Wasser- oder Statikproblemen priorisiere sichere Sofortmaßnahmen und professionelle Hilfe. Nach deiner fachlichen Einordnung darfst du in einem kurzen letzten Satz erwähnen, dass der Kunde entweder einen menschlichen Ansprechpartner finden oder einen Auftrag organisieren lassen kann. Die Auswahl trifft immer der Kunde. Hauskontext:\n${context}`;
+  try{
+    const res=await fetch(`${base}/chat/completions`,{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model,messages:[{role:'system',content:system},{role:'user',content:question}],temperature:0.25,max_tokens:500}),signal:AbortSignal.timeout(10000)});
+    if(!res.ok)return fallback;
+    const data=await res.json() as any;
+    const raw=String(data?.choices?.[0]?.message?.content||'').trim();
+    return raw||fallback;
+  }catch{return fallback;}
+}
