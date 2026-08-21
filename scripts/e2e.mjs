@@ -23,7 +23,7 @@ if(/KI-Hausmeister/i.test(await publicPage.locator('body').innerText()))throw ne
 await assertNoOverflow(publicPage,'Mobile landing');
 const manifestResponse=await publicPage.request.get(base+'/manifest.webmanifest'); if(!manifestResponse.ok())throw new Error('PWA manifest unavailable');
 const manifest=await manifestResponse.json(); if(manifest.display!=='standalone'||!Array.isArray(manifest.icons)||manifest.icons.length<3)throw new Error('PWA manifest incomplete');
-const swResponse=await publicPage.request.get(base+'/sw.js'); if(!swResponse.ok()||!(await swResponse.text()).includes('einfach-hausen-shell'))throw new Error('Service worker unavailable');
+const swResponse=await publicPage.request.get(base+'/sw.js'); if(!swResponse.ok()||!(await swResponse.text()).includes('einfach-hausen-shell'))throw new Error('Service worker unavailable'); const swCache=swResponse.headers()['cache-control']||''; if(!/no-cache|no-store/i.test(swCache))throw new Error('Service worker must not be long-term cached');
 await publicPage.screenshot({path:'artifacts/mobile-landing.png',fullPage:true});
 await publicCtx.close();
 
