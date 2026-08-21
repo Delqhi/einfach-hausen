@@ -34,9 +34,14 @@ The pilot deliberately keeps the working core small. SQLite remains the transact
 11. Ein bereits verbundener Ansprechpartner bleibt in der Hausakte und kann später ohne neue Suche kontaktiert werden.
 12. Aus einer reinen Kontaktanfrage kann der Kunde später separat einen Auftrag machen.
 
+## Visuelles Produktdesign
+
+Die verbindliche UI-Richtung steht in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md). Die Kunden-App ist mobile-first und folgt der Referenz: Startseite, Hausservice, Angebotsvergleich, Auftragsdetail, Mein Haus, Mein Jahr, Pakete, Aufträge, Partnerprofil und Einstellungen.
+
 ## Kunden-App
 
-- KI-Hausmeister als Hauptoberfläche
+- Startseite mit Schnellaktionen, Terminen, Angeboten und Hausstatus
+- fokussierter Hausservice unter `/app/hausmeister`
 - Freitext, Foto und Spracheingabe
 - echte Hausfragen zuerst beantworten, ohne automatisch einen Auftrag anzulegen
 - klare Auswahl **Ansprechpartner finden** oder **Auftrag organisieren**
@@ -51,6 +56,8 @@ The pilot deliberately keeps the working core small. SQLite remains the transact
 - direkter Chat / Telefon / Terminabstimmung
 - „Meine Ansprechpartner“ für dauerhafte Kundenbeziehungen
 - digitale Hausakte „Mein Haus“
+- „Mein Jahr“ als Jahres-, Wartungs- und Aufgabenplan
+- geprüfte Partnerprofile direkt aus dem Angebotsvergleich
 - Anlagenregister für Heizung, Wärmepumpe, PV, Speicher, Wallbox, Dach, Garten und Smart Home
 - wiederkehrender Wartungs- und Hausjahresplan
 - private Rechnungen, Nachweise und Belege

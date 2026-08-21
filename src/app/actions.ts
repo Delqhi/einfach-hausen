@@ -64,30 +64,30 @@ async function saveUpload(file: File | null) {
 export async function sendHausmeisterAction(fd:FormData){
   const user=await requireUser('homeowner');
   const description=text(fd,'description');
-  if(description.length<4) redirect('/app?error=Schreib%20mir%20kurz,%20worum%20es%20bei%20deinem%20Haus%20geht');
+  if(description.length<4) redirect('/app/hausmeister?error=Schreib%20mir%20kurz,%20worum%20es%20bei%20deinem%20Haus%20geht');
   const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null);
   const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='app' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
   const draft=thread?db.prepare('SELECT intent FROM assistant_drafts WHERE thread_id=?').get(thread.id) as {intent:HausmeisterIntent}|undefined:undefined;
   if(draft){
     const result=await createHausmeisterRequest(user.id,description,'app',saved,draft.intent,true);
-    revalidatePath('/app'); revalidatePath('/pro'); revalidatePath('/notifications');
-    redirect(result.jobId?`/app?job=${result.jobId}`:'/app?clarify=1');
+    revalidatePath('/app'); revalidatePath('/app/hausmeister'); revalidatePath('/pro'); revalidatePath('/notifications');
+    redirect(result.jobId?`/app/hausmeister?job=${result.jobId}`:'/app/hausmeister?clarify=1');
   }
   await answerHausmeisterQuestion(user.id,description,'app',saved);
-  revalidatePath('/app');
-  redirect('/app?answered=1');
+  revalidatePath('/app'); revalidatePath('/app/hausmeister');
+  redirect('/app/hausmeister?answered=1');
 }
 
 export async function startHausmeisterRouteAction(intent:HausmeisterIntent){
   const user=await requireUser('homeowner');
   const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='app' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
-  if(!thread)redirect('/app?error=Beschreib%20dein%20Thema%20zuerst%20kurz%20dem%20KI-Hausmeister');
+  if(!thread)redirect('/app/hausmeister?error=Beschreib%20dein%20Thema%20zuerst%20kurz%20dem%20Hausmeister');
   const latest=db.prepare(`SELECT body,metadata_json FROM assistant_messages WHERE thread_id=? AND role='user' ORDER BY created_at DESC,id DESC LIMIT 1`).get(thread.id) as {body:string;metadata_json:string}|undefined;
-  if(!latest)redirect('/app?error=Beschreib%20dein%20Thema%20zuerst%20kurz%20dem%20KI-Hausmeister');
+  if(!latest)redirect('/app/hausmeister?error=Beschreib%20dein%20Thema%20zuerst%20kurz%20dem%20Hausmeister');
   let photo:string|null=null; try{const metadata=JSON.parse(latest.metadata_json||'{}');if(typeof metadata.photo==='string')photo=metadata.photo;}catch{}
   const result=await createHausmeisterRequest(user.id,latest.body,'app',photo,intent,false);
-  revalidatePath('/app'); revalidatePath('/pro'); revalidatePath('/notifications');
-  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app?clarify=1');
+  revalidatePath('/app'); revalidatePath('/app/hausmeister'); revalidatePath('/pro'); revalidatePath('/notifications');
+  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app/hausmeister?clarify=1');
 }
 
 // Compatibility endpoint for older forms/bookmarks. Treat explicit legacy job forms as real service requests.
@@ -95,7 +95,7 @@ export async function createJobAction(fd: FormData) {
   const user=await requireUser('homeowner'); const description=text(fd,'description'); if(description.length<4)return;
   const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null);
   const result=await createHausmeisterRequest(user.id,description,'app',saved,'service',true);
-  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app?clarify=1');
+  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app/hausmeister?clarify=1');
 }
 
 
@@ -105,8 +105,8 @@ export async function turnContactIntoServiceAction(jobId:number){
   if(!job)return;
   const sourceThread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND active_job_id=? ORDER BY updated_at DESC LIMIT 1`).get(user.id,jobId) as {id:number}|undefined;
   const result=await createHausmeisterRequest(user.id,job.description,'app',job.photo||null,'service',false,sourceThread?.id);
-  revalidatePath('/app'); revalidatePath('/pro'); revalidatePath('/notifications');
-  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app?clarify=1');
+  revalidatePath('/app'); revalidatePath('/app/hausmeister'); revalidatePath('/pro'); revalidatePath('/notifications');
+  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app/hausmeister?clarify=1');
 }
 
 export async function acceptContactRequestAction(jobId:number,fd:FormData){
@@ -206,6 +206,25 @@ export async function markCompleteAction(jobId:number){
   createNotification(job.homeowner_id,'Auftrag erledigt',`„${job.title}“ wurde als erledigt markiert. Dein Ansprechpartner bleibt für künftige Aufträge in „Kontakte“ gespeichert.`,`/app/jobs/${jobId}`,'completed');
   appendJobEvent(jobId,`„${job.title}“ wurde als erledigt gemeldet. Dein Ansprechpartner bleibt in deiner Hausakte gespeichert, damit du ihn später direkt wieder kontaktieren kannst.`,{status:'completed'});
   revalidatePath(`/pro/jobs/${jobId}`); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/app/messages'); revalidatePath('/notifications');
+}
+
+export async function cancelJobAction(jobId:number){
+  const user=await requireUser('homeowner');
+  const job=db.prepare(`SELECT j.*,q.provider_id FROM jobs j LEFT JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=? AND j.homeowner_id=?`).get(jobId,user.id) as any;
+  if(!job||job.status!=='accepted')return;
+  const paid=db.prepare(`SELECT 1 FROM payments WHERE job_id=? AND status='paid' LIMIT 1`).get(jobId);
+  if(paid)redirect(`/app/jobs/${jobId}?error=Ein%20bereits%20bezahlter%20Auftrag%20kann%20nicht%20direkt%20storniert%20werden.%20Bitte%20nutze%20den%20Servicefall.`);
+  const assignment=db.prepare('SELECT contact_user_id FROM job_assignments WHERE job_id=?').get(jobId) as {contact_user_id:number}|undefined;
+  const tx=db.transaction(()=>{
+    db.prepare(`UPDATE jobs SET status='cancelled',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(jobId);
+    db.prepare(`UPDATE appointments SET status='cancelled' WHERE job_id=? AND status='confirmed'`).run(jobId);
+    db.prepare(`UPDATE job_dispatches SET status='closed' WHERE job_id=? AND status!='declined'`).run(jobId);
+  }); tx();
+  const recipients=new Set<number>(); if(job.provider_id)for(const id of getProviderManagerIds(job.provider_id))recipients.add(id); if(assignment?.contact_user_id)recipients.add(assignment.contact_user_id);
+  for(const id of recipients)createNotification(id,'Auftrag storniert',`${user.first_name} ${user.last_name} hat „${job.title}“ storniert.`,`/pro/jobs/${jobId}`,'cancelled');
+  appendJobEvent(jobId,`„${job.title}“ wurde vom Kunden storniert.`,{status:'cancelled'});
+  revalidatePath('/app'); revalidatePath('/app/jobs'); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/pro'); revalidatePath('/pro/orders'); revalidatePath('/notifications');
+  redirect(`/app/jobs/${jobId}?cancelled=1`);
 }
 
 export async function createCheckoutAction(jobId:number){

@@ -18,7 +18,7 @@ export default function manifest():MetadataRoute.Manifest{
       {src:'/icons/icon-maskable-512.png',sizes:'512x512',type:'image/png',purpose:'maskable'},
     ],
     shortcuts:[
-      {name:'Hausservice',short_name:'Hausservice',url:'/app',icons:[{src:'/icons/icon-192.png',sizes:'192x192'}]},
+      {name:'Hausservice',short_name:'Hausservice',url:'/app/hausmeister',icons:[{src:'/icons/icon-192.png',sizes:'192x192'}]},
       {name:'Mein Haus',short_name:'Mein Haus',url:'/app/home',icons:[{src:'/icons/icon-192.png',sizes:'192x192'}]},
       {name:'Kontakte',short_name:'Kontakte',url:'/app/messages',icons:[{src:'/icons/icon-192.png',sizes:'192x192'}]},
     ],

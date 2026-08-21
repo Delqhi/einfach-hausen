@@ -2,10 +2,9 @@ import Link from 'next/link';
 import { ClipboardList, Home, House, MessageSquare, UsersRound, UserRound } from 'lucide-react';
 
 export const ownerNav = [
-  ['/app', Home, 'Hausmeister'],
+  ['/app', Home, 'Start'],
   ['/app/home', House, 'Mein Haus'],
-  ['/app/jobs', ClipboardList, 'Themen'],
-  ['/app/messages', MessageSquare, 'Kontakte'],
+  ['/app/jobs', ClipboardList, 'Aufträge'],
   ['/app/profile', UserRound, 'Profil']
 ] as const;
 

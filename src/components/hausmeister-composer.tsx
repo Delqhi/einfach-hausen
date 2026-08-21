@@ -4,7 +4,7 @@ import { useRef,useState } from 'react';
 import { Camera,Mic,Send,Square } from 'lucide-react';
 import { sendHausmeisterAction } from '@/app/actions';
 
-export function HausmeisterComposer({continuingIntent}:{continuingIntent?:'service'|'contact'|null}){
+export function HausmeisterComposer({continuingIntent,starterHint}:{continuingIntent?:'service'|'contact'|null;starterHint?:string}){
   const [text,setText]=useState(''); const [listening,setListening]=useState(false); const recognition=useRef<any>(null);
   function toggleVoice(){
     if(listening){recognition.current?.stop();setListening(false);return;}
@@ -18,7 +18,7 @@ export function HausmeisterComposer({continuingIntent}:{continuingIntent?:'servi
     ?'Beantworte nur noch die kurze Rückfrage, damit ich deinen Ansprechpartner finde …'
     :continuingIntent==='service'
       ?'Beantworte nur noch die kurze Rückfrage, damit ich den Auftrag organisieren kann …'
-      :'Frag deinen KI-Hausmeister alles rund ums Eigenheim …';
+      :starterHint||'Beschreib kurz, was bei dir zu Hause los ist …';
   return <form action={sendHausmeisterAction} className="agent-composer">
     <textarea name="description" value={text} onChange={e=>setText(e.target.value)} rows={3} required placeholder={placeholder}/>
     <div className="agent-actions">

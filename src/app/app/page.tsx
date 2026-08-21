@@ -1,54 +1,50 @@
 import Link from 'next/link';
-import { Bot,ChevronRight,ClipboardCheck,Home,MapPin,MessageCircle,Sparkles,Wrench } from 'lucide-react';
-import { AppShell,SectionTitle } from '@/components/shell';
-import { HausmeisterComposer } from '@/components/hausmeister-composer';
-import { startHausmeisterRouteAction } from '@/app/actions';
+import { ArrowRight,CalendarDays,ChevronRight,Flower2,Hammer,House,Mic,Settings2,Sparkles,Wrench } from 'lucide-react';
+import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { dateLabel,euro,statusLabel } from '@/lib/format';
+import { dateLabel,euro } from '@/lib/format';
 
-export default async function HomePage({searchParams}:{searchParams:Promise<Record<string,string>>}){
-  const user=await requireUser('homeowner'); const sp=await searchParams;
-  const thread=db.prepare(`SELECT * FROM assistant_threads WHERE user_id=? AND channel='app' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as any;
-  const messages=thread?db.prepare('SELECT * FROM assistant_messages WHERE thread_id=? ORDER BY created_at DESC,id DESC LIMIT 16').all(thread.id).reverse() as any[]:[];
-  const draft=thread?db.prepare('SELECT intent FROM assistant_drafts WHERE thread_id=?').get(thread.id) as {intent:'service'|'contact'}|undefined:undefined;
-  const lastAssistant=[...messages].reverse().find(m=>m.role==='assistant');
-  let lastMeta:any={}; try{lastMeta=lastAssistant?JSON.parse(lastAssistant.metadata_json||'{}'):{};}catch{}
-  const showNextChoice=Boolean(lastMeta.assistantOnly&&!draft);
-  const jobs=db.prepare(`SELECT j.*,(SELECT COUNT(*) FROM quotes q WHERE q.job_id=j.id AND q.status='pending') quote_count,(SELECT COUNT(*) FROM job_dispatches d WHERE d.job_id=j.id) dispatch_count FROM jobs j WHERE homeowner_id=? ORDER BY j.created_at DESC LIMIT 5`).all(user.id) as any[];
-  const subscription=db.prepare(`SELECT s.status,p.title,p.priority_level FROM subscriptions s JOIN membership_plans p ON p.slug=s.plan_slug WHERE s.homeowner_id=?`).get(user.id) as any;
-  const due=db.prepare(`SELECT COUNT(*) c FROM maintenance_tasks WHERE homeowner_id=? AND status='open' AND due_date<=date('now','+45 day')`).get(user.id) as any;
+const quickActions=[
+  {href:'/app/hausmeister?topic=garten',label:'Garten & Außen',Icon:Flower2},
+  {href:'/app/hausmeister?topic=reparatur',label:'Reparaturen & Handwerk',Icon:Hammer},
+  {href:'/app/hausmeister?topic=pflege',label:'Reinigung & Pflege',Icon:Sparkles},
+  {href:'/app/hausmeister?topic=technik',label:'Technik & Installation',Icon:Settings2},
+] as const;
 
-  return <AppShell role="homeowner" active="/app" title="KI-Hausmeister" subtitle="Fragen, Ansprechpartner oder Auftrag">
-    <div className="agent-hero">
-      <div className="agent-avatar"><Bot/></div>
-      <div><span className="agent-online">● Dein KI-Hausmeister</span><h1>Hallo {user.first_name}. Was ist los?</h1><p>Frag mich zuerst ganz normal. Danach entscheidest du selbst: nur einen passenden Menschen sprechen oder direkt einen Auftrag organisieren.</p></div>
-    </div>
-    {sp.error&&<div className="alert error">{sp.error}</div>}
-    <div className="agent-chat">
-      {messages.length===0&&<div className="agent-message assistant"><div className="message-head"><Sparkles size={14}/> Einfach Hausen</div><p>Du kannst mich alles rund um dein Eigenheim fragen. Wenn du danach persönliche Hilfe möchtest, finde ich einen passenden Ansprechpartner. Wenn etwas erledigt werden soll, organisiere ich den Auftrag.</p></div>}
-      {messages.map(m=><div className={`agent-message ${m.role}`} key={m.id}><div className="message-head">{m.role==='user'?'Du':<><Sparkles size={14}/> Einfach Hausen</>}</div><p>{m.body}</p></div>)}
+export default async function Dashboard(){
+  const user=await requireUser('homeowner');
+  const nextAppointment=db.prepare(`SELECT a.*,j.title,p.business_name FROM appointments a JOIN jobs j ON j.id=a.job_id JOIN provider_profiles p ON p.user_id=a.provider_id WHERE a.homeowner_id=? AND a.status='confirmed' AND datetime(a.start_at)>=datetime('now') ORDER BY a.start_at LIMIT 1`).get(user.id) as any;
+  const openOffers=db.prepare(`SELECT j.id,j.title,j.status,COUNT(q.id) quote_count,MIN(q.amount) min_amount FROM jobs j LEFT JOIN quotes q ON q.job_id=j.id AND q.status='pending' WHERE j.homeowner_id=? AND j.request_kind='service' AND j.status IN ('open','quoted') GROUP BY j.id HAVING COUNT(q.id)>0 ORDER BY j.updated_at DESC LIMIT 1`).get(user.id) as any;
+  const activeJobs=(db.prepare(`SELECT COUNT(*) c FROM jobs WHERE homeowner_id=? AND request_kind='service' AND status IN ('accepted','in_progress')`).get(user.id) as {c:number}).c;
+  const contacts=(db.prepare(`SELECT COUNT(*) c FROM homeowner_contacts WHERE homeowner_id=?`).get(user.id) as {c:number}).c;
+  const due=(db.prepare(`SELECT COUNT(*) c FROM maintenance_tasks WHERE homeowner_id=? AND status='open' AND due_date<=date('now','+45 day')`).get(user.id) as {c:number}).c;
 
-      {showNextChoice&&<div className="resolution-choice" aria-label="Wie soll der Hausmeister weitermachen?">
-        <div className="resolution-copy"><strong>Wie soll ich weitermachen?</strong><span>Dein KI-Hausmeister bleibt in beiden Fällen dabei.</span></div>
-        <div className="resolution-actions">
-          <form action={startHausmeisterRouteAction.bind(null,'contact')}><button className="resolution-button" type="submit"><MessageCircle/><span><strong>Ansprechpartner finden</strong><small>Nur mit einem passenden Menschen sprechen. Noch kein Auftrag.</small></span><ChevronRight/></button></form>
-          <form action={startHausmeisterRouteAction.bind(null,'service')}><button className="resolution-button primary-choice" type="submit"><ClipboardCheck/><span><strong>Auftrag organisieren</strong><small>Angebote, Termin und Ausführung organisieren lassen.</small></span><ChevronRight/></button></form>
-        </div>
-      </div>}
+  return <AppShell role="homeowner" active="/app" title="Start" subtitle="Alles rund um dein Zuhause">
+    <section className="mobile-home-head">
+      <span className="soft-kicker">Einfach Hausen</span>
+      <h1>Hallo {user.first_name},<br/>was können wir heute für dich tun?</h1>
+    </section>
 
-      {draft&&<div className="route-progress"><span>{draft.intent==='contact'?<MessageCircle/>:<ClipboardCheck/>}</span><div><strong>{draft.intent==='contact'?'Ansprechpartner finden':'Auftrag organisieren'}</strong><small>{draft.intent==='contact'?'Ich brauche nur noch eine kurze Info, dann suche ich einen passenden Menschen.':'Ich brauche nur noch eine kurze Info, dann kann ich passende Partner anfragen.'}</small></div></div>}
-      <HausmeisterComposer continuingIntent={draft?.intent}/>
-    </div>
+    <Link href="/app/hausmeister" className="service-entry-card">
+      <div><small>Einfach beschreiben</small><strong>Was ist bei dir zu Hause los?</strong><p>Schreib oder sprich. Wir klären den richtigen nächsten Schritt.</p></div>
+      <span className="service-entry-action"><Mic size={19}/></span>
+    </Link>
 
-    <div className="trust-strip"><span><Sparkles/> KI-Hausmeister inklusive</span><span><MessageCircle/> Mensch, wenn du ihn willst</span><span><Wrench/> Auftrag nur auf deinen Wunsch</span></div>
+    <div className="quick-section-head"><strong>Schnelle Aktionen</strong><Link href="/app/hausmeister">Alle Möglichkeiten <ChevronRight size={14}/></Link></div>
+    <div className="quick-action-grid">{quickActions.map(({href,label,Icon})=><Link href={href} key={label}><span><Icon size={20}/></span><strong>{label}</strong><ChevronRight size={14}/></Link>)}</div>
 
-    <div className="home-insights">
-      <Link href="/app/plans"><small>Mitgliedschaft</small><strong>{subscription?.status==='active'?subscription.title:'Free'}</strong><span>{subscription?.status==='active'?`Priorität ${subscription.priority_level}`:'Free, Plus oder Premium ansehen'} <ChevronRight size={14}/></span></Link>
-      <Link href="/app/home"><small>Hausplan</small><strong>{due?.c||0} Punkte</strong><span>demnächst fällig <ChevronRight size={14}/></span></Link>
+    <div className="dashboard-facts">
+      <Link href="/app/jobs"><span>{activeJobs}</span><small>aktive Aufträge</small></Link>
+      <Link href="/app/messages"><span>{contacts}</span><small>Ansprechpartner</small></Link>
+      <Link href="/app/year"><span>{due}</span><small>bald fällig</small></Link>
     </div>
 
-    <SectionTitle href="/app/jobs">Aktuelle Themen</SectionTitle>
-    <div className="stack">{jobs.map(j=><Link className="job-row agent-job" href={`/app/jobs/${j.id}`} key={j.id}><div className="thumb-placeholder">{j.request_kind==='contact'?<MessageCircle/>:<Home/>}</div><div className="grow"><strong>{j.title.replace(/^Ansprechpartner:\s*/,'')}</strong><small><MapPin size={13}/>{j.postcode||'Dein Zuhause'}{j.preferred_date?` · ${dateLabel(j.preferred_date)}`:''}</small><span>{j.request_kind==='contact'?(j.status==='accepted'?'Ansprechpartner verbunden':`${j.dispatch_count||0} passende Partner angefragt`):j.quote_count?`${j.quote_count} Angebote werden verglichen`:j.dispatch_count?`${j.dispatch_count} Partner angefragt`:statusLabel(j.status)}</span></div><div className="right"><b>{j.request_kind==='service'&&j.budget_max?euro(j.budget_max):''}</b><ChevronRight size={18}/></div></Link>)}{jobs.length===0&&<div className="empty compact"><Bot/><strong>Noch kein Thema offen</strong><p>Frag oben einfach deinen KI-Hausmeister.</p></div>}</div>
+    <div className="quick-section-head"><strong>Als Nächstes</strong><Link href="/app/year">Mein Jahr <ChevronRight size={14}/></Link></div>
+    {nextAppointment?<Link href={`/app/jobs/${nextAppointment.job_id}`} className="next-card"><span className="next-card-icon"><CalendarDays/></span><div className="grow"><small>Nächster Termin</small><strong>{nextAppointment.title}</strong><p>{dateLabel(nextAppointment.start_at)} · {nextAppointment.business_name}</p></div><ChevronRight/></Link>:<Link href="/app/hausmeister" className="next-card empty-next"><span className="next-card-icon"><CalendarDays/></span><div className="grow"><small>Keine Termine geplant</small><strong>Etwas am Haus erledigen?</strong><p>Beschreib kurz, was du brauchst.</p></div><ArrowRight/></Link>}
+
+    {openOffers&&<Link href={`/app/jobs/${openOffers.id}`} className="offer-summary-card"><div><small>Offene Angebote</small><strong>{openOffers.title}</strong><p>{openOffers.quote_count} {openOffers.quote_count===1?'Angebot wartet':'Angebote warten'} auf deine Entscheidung.</p></div><div className="offer-summary-price"><b>{euro(openOffers.min_amount)}</b><span>ab</span><ChevronRight/></div></Link>}
+
+    <Link href="/app/home" className="home-memory-strip"><House/><div className="grow"><strong>Mein Haus</strong><p>Technik, Dokumente, Wartung und Kontakte an einem Ort.</p></div><Wrench size={17}/></Link>
   </AppShell>;
 }

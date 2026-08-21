@@ -12,7 +12,7 @@ const password='Hausen!2026';
 
 async function waitText(page,text){await page.waitForFunction(value=>document.body.innerText.includes(value),text,{timeout:15000});}
 async function assertNoOverflow(page,label){const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth);if(overflow)throw new Error(`${label} has horizontal overflow`);}
-async function sendHousemaster(page,text){const c=page.getByPlaceholder(/Frag deinen KI-Hausmeister|Beantworte nur noch/);await c.click();await c.pressSequentially(text,{delay:1});await page.locator('button.send-action:not([disabled])').click();}
+async function sendHousemaster(page,text){const c=page.getByPlaceholder(/Beschreib kurz|Beantworte nur noch|Was soll draußen|Was ist kaputt|Was soll gereinigt|Wobei brauchst du/);await c.click();await c.pressSequentially(text,{delay:1});await page.locator('button.send-action:not([disabled])').click();}
 
 // 0) Öffentliche Website ist mobile-first, nutzenorientiert und als PWA installierbar.
 const publicCtx=await browser.newContext({viewport:{width:390,height:844}}); const publicPage=await publicCtx.newPage();
@@ -63,11 +63,12 @@ await owner.goto(base+'/register?role=homeowner');
 await owner.getByLabel('Vorname').fill('Maria'); await owner.getByLabel('Nachname').fill('Test'); await owner.getByLabel('E-Mail').fill(ownerEmail); await owner.getByLabel('Passwort').fill(password); await owner.getByLabel('PLZ').fill('46325');
 await Promise.all([owner.waitForURL('**/app'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
 await assertNoOverflow(owner,'Mobile customer app');
-if(await owner.locator('.bottom-nav a').count()!==5)throw new Error('Mobile navigation must expose five primary destinations');
+if(await owner.locator('.bottom-nav a').count()!==4)throw new Error('Mobile homeowner navigation must expose four primary destinations');
+await waitText(owner,'was können wir heute für dich tun?'); await waitText(owner,'Schnelle Aktionen');
 await owner.goto(base+'/app/profile'); await waitText(owner,'Einfach Hausen aufs Handy'); await assertNoOverflow(owner,'Mobile customer profile');
-await owner.goto(base+'/app');
+await owner.goto(base+'/app/hausmeister'); await assertNoOverflow(owner,'Mobile housemaster');
 await sendHousemaster(owner,'Meine Hecke ist zu hoch. Dienstag ab 14 Uhr hätte ich Zeit. Wen kann ich dazu fragen?'); await owner.waitForURL(/answered=1/);
-await waitText(owner,'Wie soll ich weitermachen?'); await waitText(owner,'Ansprechpartner finden'); await waitText(owner,'Auftrag organisieren');
+await waitText(owner,'Wie soll es weitergehen?'); await waitText(owner,'Ansprechpartner finden'); await waitText(owner,'Auftrag organisieren');
 // Eine normale KI-Frage darf noch keine Partneranfrage erzeugen.
 await manager.goto(base+'/pro'); await waitText(manager,'Keine neue passende Anfrage');
 
@@ -103,6 +104,7 @@ await manager.screenshot({path:'artifacts/provider-dispatch-offer.png',fullPage:
 
 // 5) Kunde vergleicht und bucht. Danach existiert ein echter Ansprechpartner.
 await owner.goto(base+`/app/jobs/${jobId}`); await waitText(owner,'Gartenbau Müller'); await waitText(owner,'MEINE EMPFEHLUNG'); await waitText(owner,'GÜNSTIGST');
+await owner.getByRole('link',{name:/Gartenbau Müller/}).first().click(); await owner.waitForURL(/\/app\/partners\//); await waitText(owner,'Geprüfter Partner'); await waitText(owner,'Gartenbau Müller'); await assertNoOverflow(owner,'Mobile partner profile'); await owner.getByRole('link',{name:/Zum Angebot zurück/}).click(); await owner.waitForURL(new RegExp(`/app/jobs/${jobId}`));
 await owner.getByRole('button',{name:'Diesen Partner buchen'}).click(); await owner.waitForTimeout(300); await owner.locator('.detail-head .status').getByText('Beauftragt',{exact:true}).waitFor();
 await waitText(owner,'Dein persönlicher Ansprechpartner');
 
@@ -126,9 +128,11 @@ await owner.goto(base+'/app/messages'); await waitText(owner,'Thomas Weber'); aw
 await owner.goto(base+'/app/documents'); await waitText(owner,'Leistungsnachweis Heckenschnitt');
 
 // 8) Hausakte und Tarife entsprechen dem Geschäftsmodell.
-await owner.goto(base+'/app/home'); await assertNoOverflow(owner,'Mobile house file'); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche m²').fill('145'); await owner.getByLabel('Grundstück m²').fill('620'); await owner.getByRole('button',{name:'Hausprofil speichern'}).click();
+await owner.goto(base+'/app/home'); await waitText(owner,'Gebäude & Räume'); await assertNoOverflow(owner,'Mobile house file'); await owner.locator('.house-menu details > summary').click(); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche m²').fill('145'); await owner.getByLabel('Grundstück m²').fill('620'); await owner.getByRole('button',{name:'Hausprofil speichern'}).click();
 const assetForm=owner.locator('.asset-form'); await assetForm.locator('select[name="kind"]').selectOption('pv'); await assetForm.locator('input[name="name"]').fill('PV-Anlage 10 kWp'); await assetForm.getByRole('button',{name:'Hinzufügen'}).click(); await waitText(owner,'PV-Anlage und Ertrag prüfen');
+await owner.goto(base+`/app/year?year=${new Date().getFullYear()+1}`); await waitText(owner,'Mein Jahr'); await waitText(owner,'PV-Anlage und Ertrag prüfen'); await assertNoOverflow(owner,'Mobile year plan');
 await owner.goto(base+'/app/plans'); await owner.getByText('Free',{exact:true}).waitFor(); await owner.getByText('Plus',{exact:true}).waitFor(); await owner.getByText('Premium',{exact:true}).waitFor();
+await owner.goto(base+'/app/jobs?tab=completed'); await waitText(owner,'Meine Aufträge'); await waitText(owner,'Abgeschlossen'); await assertNoOverflow(owner,'Mobile completed jobs');
 await manager.goto(base+'/pro/plans'); await waitText(manager,'0 % Provision'); for(const plan of ['Free','Start','Pro','Premium'])await manager.getByText(plan,{exact:true}).first().waitFor();
 
 // 9) Servicefall bleibt zentral unterstützbar, ohne den direkten Kontakt zu ersetzen.

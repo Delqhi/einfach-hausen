@@ -1,15 +1,17 @@
 import Link from 'next/link';
-import { ChevronRight,MapPin,MessageCircle,Wrench } from 'lucide-react';
+import { CalendarDays,ChevronRight,MapPin,MessageCircle,Wrench } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { euro,dateLabel,statusLabel } from '@/lib/format';
 
-export default async function Jobs(){
-  const u=await requireUser('homeowner');
-  const jobs=db.prepare(`SELECT j.*,COUNT(q.id) quotes FROM jobs j LEFT JOIN quotes q ON q.job_id=j.id WHERE j.homeowner_id=? GROUP BY j.id ORDER BY j.created_at DESC`).all(u.id) as any[];
-  return <AppShell role="homeowner" active="/app/jobs" title="Themen & Aufträge" subtitle="Persönliche Kontakte und beauftragte Arbeiten">
-    <h1 className="page-title">Meine Themen</h1><p className="page-subtitle">Manches braucht nur den richtigen Ansprechpartner. Anderes wird als Auftrag organisiert.</p>
-    <div className="stack">{jobs.map(j=><Link href={`/app/jobs/${j.id}`} className="job-card" key={j.id}><div>{j.request_kind==='contact'?<span className="status active"><MessageCircle size={13}/> Ansprechpartner</span>:<span className={`status ${j.status}`}><Wrench size={13}/> {statusLabel(j.status)}</span>}<h3>{j.title.replace(/^Ansprechpartner:\s*/,'')}</h3><p>{j.description}</p><small><MapPin size={13}/>{j.postcode}{j.request_kind==='service'&&j.preferred_date?` · ${dateLabel(j.preferred_date)}`:''}{j.request_kind==='service'?` · ${j.quotes} Angebote`:''}</small></div><div className="job-card-side"><b>{j.request_kind==='service'&&j.budget_max?euro(j.budget_max):'Kontakt'}</b><ChevronRight/></div></Link>)}</div>
+export default async function Jobs({searchParams}:{searchParams:Promise<Record<string,string>>}){
+  const u=await requireUser('homeowner'); const sp=await searchParams; const tab=['planned','completed'].includes(sp.tab)?sp.tab:'active';
+  const jobs=db.prepare(`SELECT j.*,COUNT(DISTINCT q.id) quotes,ap.business_name accepted_business FROM jobs j LEFT JOIN quotes q ON q.job_id=j.id LEFT JOIN quotes aq ON aq.id=j.accepted_quote_id LEFT JOIN provider_profiles ap ON ap.user_id=aq.provider_id WHERE j.homeowner_id=? GROUP BY j.id ORDER BY j.updated_at DESC`).all(u.id) as any[];
+  const visible=jobs.filter(j=>tab==='completed'?['completed','cancelled'].includes(j.status):tab==='planned'?(j.request_kind==='service'&&j.status==='accepted'):!['completed','cancelled'].includes(j.status)&&!(j.request_kind==='service'&&j.status==='accepted'));
+  return <AppShell role="homeowner" active="/app/jobs" title="Meine Aufträge" subtitle="Alles, was geplant oder in Arbeit ist">
+    <div className="jobs-head"><h1>Meine Aufträge</h1><p>Termine, Angebote und erledigte Arbeiten auf einen Blick.</p></div>
+    <div className="segmented-tabs job-tabs"><Link className={tab==='active'?'active':''} href="/app/jobs?tab=active">Aktiv</Link><Link className={tab==='planned'?'active':''} href="/app/jobs?tab=planned">Geplant</Link><Link className={tab==='completed'?'active':''} href="/app/jobs?tab=completed">Abgeschlossen</Link></div>
+    <div className="mobile-job-list">{visible.map(j=><Link href={`/app/jobs/${j.id}`} className="mobile-job-card" key={j.id}><div className="mobile-job-top"><span className={`job-type-icon ${j.request_kind==='contact'?'contact':''}`}>{j.request_kind==='contact'?<MessageCircle/>:<Wrench/>}</span><span className={`status ${j.status}`}>{j.request_kind==='contact'?'Ansprechpartner':statusLabel(j.status)}</span></div><strong>{j.title.replace(/^Ansprechpartner:\s*/,'')}</strong><div className="mobile-job-meta">{j.preferred_date&&<span><CalendarDays/>{dateLabel(j.preferred_date)}</span>}<span><MapPin/>{j.postcode}</span></div><div className="mobile-job-foot"><div><small>{j.accepted_business|| (j.request_kind==='contact'?'Persönlicher Kontakt':j.quotes?`${j.quotes} Angebote`:'Partner werden angefragt')}</small>{j.request_kind==='service'&&j.budget_max&&<b>{euro(j.budget_max)}</b>}</div><ChevronRight/></div></Link>)}{visible.length===0&&<div className="empty"><Wrench/><strong>{tab==='completed'?'Noch nichts abgeschlossen':tab==='planned'?'Noch nichts geplant':'Keine aktiven Themen'}</strong><p>Neue Anliegen startest du direkt über die Startseite.</p></div>}</div>
   </AppShell>;
 }
