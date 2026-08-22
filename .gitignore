@@ -51,3 +51,7 @@ next-env.d.ts
 
 # generated architecture graph (regenerated via `npm run graph:update`)
 /graphify-out/
+
+# local agent/browser evidence and issue-reference downloads
+/.sin-gpt-web/
+/.issue9-logo.png

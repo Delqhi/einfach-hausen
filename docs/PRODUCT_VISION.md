@@ -17,7 +17,7 @@ Der digitale Hausmeister ist für alle Kunden dauerhaft verfügbar. Er kann Frag
 1. **Nur einen passenden menschlichen Ansprechpartner** für Fragen oder eine fachliche Einschätzung. Dabei entsteht noch kein Auftrag und kein Preis.
 2. **Einen echten Auftrag organisieren lassen.** Dann klärt die KI die nötigen Auftragsdaten, bildet einen Richtpreis, fragt passende geprüfte regionale Partner an und holt – wenn sinnvoll – Angebote ein.
 
-In beiden Fällen bleibt der KI-Hausmeister parallel verfügbar. Ein menschlicher Ansprechpartner kann also schon vor einer Buchung entstehen; eine Buchung ist keine Voraussetzung für persönlichen Kontakt.
+In beiden Fällen bleibt der Hausmeisterservice parallel verfügbar. Ein menschlicher Ansprechpartner kann also schon vor einer Buchung entstehen; eine Buchung ist keine Voraussetzung für persönlichen Kontakt.
 
 ## Außenkommunikation
 
@@ -45,9 +45,9 @@ Die Startseite soll daher eher sagen **„Ein Ansprechpartner für alles rund um
 
 ## Kundenerlebnis
 
-### 1. KI-Hausmeister
+### 1. Hausmeisterservice
 
-Der Kunde schreibt, spricht oder fotografiert. Zunächst ist das einfach ein Gespräch mit dem KI-Hausmeister – **noch keine Vermittlung und kein Auftrag**. Die KI beantwortet die Frage soweit sinnvoll und nutzt relevante Informationen aus der Hausakte.
+Der Kunde schreibt, spricht oder fotografiert. Zunächst ist das einfach ein Gespräch mit dem Hausmeisterservice – **noch keine Vermittlung und kein Auftrag**. Die KI beantwortet die Frage soweit sinnvoll und nutzt relevante Informationen aus der Hausakte.
 
 Wenn der Kunde anschließend einen Auftrag möchte, extrahiert der digitale Hausmeister unter anderem:
 
@@ -169,6 +169,41 @@ Langfristig gespeichert werden:
 - zukünftige Aufgaben
 
 Aus Anlagen und erledigten Arbeiten entsteht automatisch ein Hausjahres- und Wartungsplan.
+
+## Beratung und Notfall
+
+Neben dem normalen Hausmeisterservice gibt es zwei besonders schnelle Einstiege:
+
+- **Beratung:** Ein passender geprüfter Ansprechpartner kann fachlich helfen, ohne dass automatisch ein Auftrag oder Preis entsteht.
+- **Notfall:** Der Kunde beschreibt einen dringenden Fall und Einfach Hausen sucht zuerst nach qualifizierten verfügbaren Helfern in der Nähe. Berücksichtigt werden Entfernung, Bereitschaft, Qualifikation, Bewertung, Reaktionsgeschwindigkeit und hinterlegter Notfallzuschlag. 24/7-Notdienste und lokale Betriebe mit eigenen Bereitschaftszeiten laufen im selben Partnernetzwerk.
+
+Der Kunde soll nicht automatisch beim teuersten Notdienst landen. Mehrere passende Optionen und transparente Gesamtpreise bleiben das Ziel.
+
+## Rechnungen direkt über Einfach Hausen
+
+Der ausführende Partner kann aus einem gebuchten Auftrag direkt eine Rechnung an den Eigentümer senden. Die Rechnung bleibt Teil der Hausakte und enthält mindestens Rechnungsnummer, Rechnungs-/Leistungsdatum, Zahlungsziel, Rechnungssteller/-empfänger, Positionen, Netto, Umsatzsteuer und Brutto.
+
+Ist Stripe Connect eingerichtet, kann die Rechnung direkt in der App bezahlt werden. Einfach Hausen erhebt weiterhin **0 % Auftragsprovision**. Der Partner bleibt Rechnungssteller der Handwerkerleistung.
+
+## Die Immobilie ist der langlebige Datensatz
+
+Einfach Hausen wird nicht als Sammlung von User-Aufträgen modelliert. Die Immobilie besitzt eine eigene Identität und eine Eigentümerhistorie. Haus-Historie, Technik, Wartungen, Garantien, Ansprechpartner und spätere Bewertungen hängen an der Immobilie und können bei einem Eigentümerwechsel weitergeführt werden.
+
+Eine Übergabe überträgt nicht private alte Nachrichten oder Zahlungen. Der neue Eigentümer übernimmt die freigegebene Hausgeschichte und die hausbezogenen Daten.
+
+## Professionelle Anbieter: ein Konto, mehrere Tätigkeiten
+
+Es gibt keinen separaten Login für Handwerker, Makler oder Gutachter. Ein professioneller Anbieter hat ein Konto und kann mehrere Tätigkeiten aktivieren, z. B. Handwerk, Dienstleistung, Immobilienmakler, Gutachter, Energieberatung oder Hausverwaltung. Konkrete Leistungen werden separat gepflegt und für das Matching verwendet.
+
+Makler können zusätzlich Suchprofile für Regionen, Immobilientypen, Preis- und Flächenbereiche hinterlegen. Bei Verkaufsinteresse vergleicht Einfach Hausen diese Suchprofile mit der Immobilie. Eigentümerkontaktdaten werden erst nach ausdrücklicher Freigabe sichtbar. Freigaben sind zweckgebunden und widerrufbar.
+
+## Immobilienbewertung und Verkauf
+
+Bewertungen sind eigene Vorgänge und bleiben in der Hausakte. Aus einem Verkaufsinteresse kann ein nachvollziehbarer Maklerprozess entstehen:
+
+**Verkaufsinteresse → passende Makler → Eigentümerfreigabe → Kontakt → Besichtigung → Maklerauftrag → verkauft**
+
+Private Rechnungen, Versicherungen, Nachrichten, Zahlungsdaten und vollständige Hausdokumente werden einem Anbieter niemals automatisch offengelegt.
 
 ## Partnernetzwerk
 

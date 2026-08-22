@@ -12,7 +12,7 @@ export async function GET(req:NextRequest){
   if(session.payment_status==='paid'&&orderId&&userId){
     activatePackageOrder(orderId,userId);
     const pkg=db.prepare('SELECT title FROM service_packages WHERE slug=?').get(packageSlug) as {title:string}|undefined;
-    createNotification(userId,'Jahrespaket gebucht',`${pkg?.title||'Dein Paket'} ist bezahlt. Dein KI-Hausmeister übernimmt jetzt die weitere Jahresplanung.`,'/app/plans','package');
+    createNotification(userId,'Jahrespaket gebucht',`${pkg?.title||'Dein Paket'} ist bezahlt. Dein Hausmeisterservice übernimmt jetzt die weitere Jahresplanung.`,'/app/plans','package');
   }
   return NextResponse.redirect(new URL('/app/plans?checkout=success',req.url));
 }

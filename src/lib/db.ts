@@ -7,9 +7,29 @@ fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 const globalForDb = globalThis as unknown as { hausmeisterDb?: Database.Database };
 export const db = globalForDb.hausmeisterDb ?? new Database(dbPath);
 if (process.env.NODE_ENV !== 'production') globalForDb.hausmeisterDb = db;
+// busy_timeout makes concurrent writers (build workers, parallel requests)
+// wait instead of failing with SQLITE_BUSY; fail-closed limiter writes and
+// deterministic startup both depend on it.
+db.pragma('busy_timeout = 5000');
 db.pragma('journal_mode = WAL'); db.pragma('foreign_keys = ON');
 
-db.exec(`
+// Startup statements run while Next.js may evaluate this module in several
+// workers at once; tolerate transient SQLITE_BUSY with bounded retries.
+function execWithRetry<T>(fn: () => T, attempts = 10): T {
+  let lastError: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try { return fn(); } catch (error) {
+      lastError = error;
+      const message = error instanceof Error ? error.message.toLowerCase() : '';
+      if (!message.includes('busy') && !message.includes('locked')) throw error;
+      const waitMs = 25 * (i + 1);
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, waitMs);
+    }
+  }
+  throw lastError;
+}
+
+execWithRetry(() => db.exec(`
 CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,email TEXT NOT NULL UNIQUE COLLATE NOCASE,password_hash TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('homeowner','provider')),first_name TEXT NOT NULL,last_name TEXT NOT NULL,phone TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS sessions (token TEXT PRIMARY KEY,user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,expires_at TEXT NOT NULL); CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
 CREATE TABLE IF NOT EXISTS homeowner_profiles (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,postcode TEXT NOT NULL DEFAULT '',address TEXT NOT NULL DEFAULT '');
@@ -45,7 +65,27 @@ CREATE TABLE IF NOT EXISTS homeowner_contacts (homeowner_id INTEGER NOT NULL REF
 CREATE TABLE IF NOT EXISTS contact_messages (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,contact_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,body TEXT NOT NULL,read_at TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_contact_messages_thread ON contact_messages(homeowner_id,contact_user_id,created_at ASC);
 CREATE TABLE IF NOT EXISTS partner_plans (slug TEXT PRIMARY KEY,title TEXT NOT NULL,monthly_amount INTEGER NOT NULL,description TEXT NOT NULL,monthly_lead_limit INTEGER,priority_level INTEGER NOT NULL DEFAULT 0,trial_days INTEGER NOT NULL DEFAULT 60,active INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS partner_subscriptions (id INTEGER PRIMARY KEY AUTOINCREMENT,provider_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,plan_slug TEXT NOT NULL REFERENCES partner_plans(slug),status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','trialing','active','past_due','cancelled')),stripe_subscription_id TEXT UNIQUE,current_period_end TEXT,trial_end TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
-`);
+CREATE TABLE IF NOT EXISTS provider_preferences (provider_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,accepts_normal_jobs INTEGER NOT NULL DEFAULT 1,accepts_short_notice INTEGER NOT NULL DEFAULT 1,accepts_consultation INTEGER NOT NULL DEFAULT 1,accepts_emergencies INTEGER NOT NULL DEFAULT 0,emergency_mode TEXT NOT NULL DEFAULT 'local' CHECK(emergency_mode IN ('local','24_7')),emergency_start TEXT NOT NULL DEFAULT '18:00',emergency_end TEXT NOT NULL DEFAULT '22:00',emergency_markup_bps INTEGER NOT NULL DEFAULT 0,opening_hours_text TEXT NOT NULL DEFAULT '',bookable_hours_text TEXT NOT NULL DEFAULT '',instant_booking INTEGER NOT NULL DEFAULT 0,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS invoices (id INTEGER PRIMARY KEY AUTOINCREMENT,job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,invoice_number TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('draft','sent','paid','cancelled')),issue_date TEXT NOT NULL,service_date TEXT NOT NULL,due_date TEXT NOT NULL,currency TEXT NOT NULL DEFAULT 'eur',seller_name TEXT NOT NULL,seller_address TEXT NOT NULL DEFAULT '',seller_tax_id TEXT NOT NULL DEFAULT '',seller_vat_id TEXT NOT NULL DEFAULT '',seller_email TEXT NOT NULL DEFAULT '',seller_phone TEXT NOT NULL DEFAULT '',buyer_name TEXT NOT NULL,buyer_address TEXT NOT NULL DEFAULT '',notes TEXT NOT NULL DEFAULT '',subtotal_net INTEGER NOT NULL DEFAULT 0,tax_amount INTEGER NOT NULL DEFAULT 0,total_gross INTEGER NOT NULL DEFAULT 0,created_by_user_id INTEGER NOT NULL REFERENCES users(id),sent_at TEXT,paid_at TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(provider_id,invoice_number)); CREATE INDEX IF NOT EXISTS idx_invoices_homeowner ON invoices(homeowner_id,status,created_at DESC); CREATE INDEX IF NOT EXISTS idx_invoices_provider ON invoices(provider_id,status,created_at DESC);
+CREATE TABLE IF NOT EXISTS invoice_items (id INTEGER PRIMARY KEY AUTOINCREMENT,invoice_id INTEGER NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,position INTEGER NOT NULL,description TEXT NOT NULL,quantity REAL NOT NULL DEFAULT 1,unit TEXT NOT NULL DEFAULT 'Stk.',unit_price_net INTEGER NOT NULL,tax_rate_bps INTEGER NOT NULL DEFAULT 1900,line_net INTEGER NOT NULL,line_tax INTEGER NOT NULL,line_gross INTEGER NOT NULL); CREATE INDEX IF NOT EXISTS idx_invoice_items_invoice ON invoice_items(invoice_id,position);
+CREATE TABLE IF NOT EXISTS house_history_entries (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,category TEXT NOT NULL,title TEXT NOT NULL,performed_at TEXT NOT NULL,company_name TEXT NOT NULL DEFAULT '',provider_id INTEGER REFERENCES users(id) ON DELETE SET NULL,contact_name TEXT NOT NULL DEFAULT '',contact_phone TEXT NOT NULL DEFAULT '',contact_email TEXT NOT NULL DEFAULT '',cost_amount INTEGER,guarantee_until TEXT,maintenance_due TEXT,notes TEXT NOT NULL DEFAULT '',before_photo TEXT,after_photo TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_house_history_owner_date ON house_history_entries(homeowner_id,performed_at DESC);
+CREATE TABLE IF NOT EXISTS house_history_documents (id INTEGER PRIMARY KEY AUTOINCREMENT,entry_id INTEGER NOT NULL REFERENCES house_history_entries(id) ON DELETE CASCADE,title TEXT NOT NULL,path TEXT NOT NULL,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS provider_invites (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,email TEXT NOT NULL COLLATE NOCASE,company_name TEXT NOT NULL DEFAULT '',category TEXT NOT NULL DEFAULT '',token TEXT NOT NULL UNIQUE,status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','linked','cancelled')),linked_provider_id INTEGER REFERENCES users(id) ON DELETE SET NULL,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,linked_at TEXT); CREATE INDEX IF NOT EXISTS idx_provider_invites_email ON provider_invites(email,status);
+CREATE TABLE IF NOT EXISTS house_transfers (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,target_email TEXT NOT NULL COLLATE NOCASE,token TEXT NOT NULL UNIQUE,status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','accepted','revoked')),accepted_by_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,accepted_at TEXT);
+CREATE TABLE IF NOT EXISTS properties (id INTEGER PRIMARY KEY AUTOINCREMENT,address TEXT NOT NULL DEFAULT '',postcode TEXT NOT NULL DEFAULT '',lat REAL,lon REAL,property_type TEXT NOT NULL DEFAULT '',build_year INTEGER,living_area REAL,plot_area REAL,estimated_value_min INTEGER,estimated_value_max INTEGER,use_type TEXT NOT NULL DEFAULT 'residential' CHECK(use_type IN ('residential','commercial','mixed')),created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS property_ownerships (id INTEGER PRIMARY KEY AUTOINCREMENT,property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,started_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,ended_at TEXT,active INTEGER NOT NULL DEFAULT 1,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_property_ownerships_owner ON property_ownerships(homeowner_id,active,started_at DESC); CREATE INDEX IF NOT EXISTS idx_property_ownerships_property ON property_ownerships(property_id,active,started_at DESC);
+CREATE TABLE IF NOT EXISTS provider_categories (slug TEXT PRIMARY KEY,title TEXT NOT NULL,description TEXT NOT NULL DEFAULT '',active INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS provider_category_assignments (provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,category_slug TEXT NOT NULL REFERENCES provider_categories(slug) ON DELETE CASCADE,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(provider_id,category_slug)); CREATE INDEX IF NOT EXISTS idx_provider_category_provider ON provider_category_assignments(provider_id);
+CREATE TABLE IF NOT EXISTS provider_service_offerings (provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,service_slug TEXT NOT NULL REFERENCES service_catalog(slug) ON DELETE CASCADE,active INTEGER NOT NULL DEFAULT 1,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(provider_id,service_slug));
+CREATE TABLE IF NOT EXISTS broker_search_profiles (provider_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,regions_text TEXT NOT NULL DEFAULT '',property_types_text TEXT NOT NULL DEFAULT '',min_price INTEGER,max_price INTEGER,min_living_area REAL,max_living_area REAL,min_plot_area REAL,max_plot_area REAL,residential INTEGER NOT NULL DEFAULT 1,commercial INTEGER NOT NULL DEFAULT 0,specialties TEXT NOT NULL DEFAULT '',updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS property_shares (id INTEGER PRIMARY KEY AUTOINCREMENT,property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,purpose TEXT NOT NULL,permissions_json TEXT NOT NULL DEFAULT '[]',status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','revoked')),granted_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,revoked_at TEXT); CREATE INDEX IF NOT EXISTS idx_property_shares_provider ON property_shares(provider_id,status,granted_at DESC);
+CREATE TABLE IF NOT EXISTS property_valuations (id INTEGER PRIMARY KEY AUTOINCREMENT,property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,status TEXT NOT NULL DEFAULT 'requested' CHECK(status IN ('requested','completed','cancelled')),valuation_type TEXT NOT NULL DEFAULT 'orientation',estimated_min INTEGER,estimated_max INTEGER,notes TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,completed_at TEXT); CREATE INDEX IF NOT EXISTS idx_valuations_property ON property_valuations(property_id,created_at DESC);
+CREATE TABLE IF NOT EXISTS sale_leads (id INTEGER PRIMARY KEY AUTOINCREMENT,property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,status TEXT NOT NULL DEFAULT 'interested' CHECK(status IN ('interested','matched','contact_released','inspection','mandate','sold','cancelled')),created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_sale_leads_property ON sale_leads(property_id,status,created_at DESC);
+CREATE TABLE IF NOT EXISTS broker_lead_matches (id INTEGER PRIMARY KEY AUTOINCREMENT,sale_lead_id INTEGER NOT NULL REFERENCES sale_leads(id) ON DELETE CASCADE,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,match_score REAL NOT NULL DEFAULT 0,status TEXT NOT NULL DEFAULT 'suggested' CHECK(status IN ('suggested','contact_released','interested','rejected','inspection','mandate','sold','revoked')),created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(sale_lead_id,provider_id)); CREATE INDEX IF NOT EXISTS idx_broker_matches_provider ON broker_lead_matches(provider_id,status,created_at DESC);
+CREATE TABLE IF NOT EXISTS auth_rate_limits (kind TEXT NOT NULL,identifier TEXT NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,window_start_at TEXT NOT NULL,blocked_until TEXT,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(kind,identifier));
+CREATE TABLE IF NOT EXISTS admin_audit_log (id INTEGER PRIMARY KEY AUTOINCREMENT,actor TEXT NOT NULL,action TEXT NOT NULL,target TEXT NOT NULL DEFAULT '',detail TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_admin_audit_created ON admin_audit_log(created_at DESC);
+CREATE TABLE IF NOT EXISTS security_events (id INTEGER PRIMARY KEY AUTOINCREMENT,kind TEXT NOT NULL,identifier TEXT NOT NULL DEFAULT '',detail TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_security_events_created ON security_events(created_at DESC);
+`));
 
 const seed=db.transaction(()=>{
   const service=db.prepare('INSERT OR IGNORE INTO service_catalog(slug,title,category,keywords,estimate_min,estimate_max,requires_license) VALUES(?,?,?,?,?,?,?)');
@@ -62,7 +102,7 @@ const seed=db.transaction(()=>{
     ['sonstiges','Hausservice','Hausmeister & Sonstiges','haus,hilfe,sonstiges',8000,22000,0]
   ].forEach((x:any)=>service.run(...x));
   const plan=db.prepare('INSERT OR REPLACE INTO membership_plans(slug,title,monthly_amount,description,priority_level,annual_house_check,partner_discount_bps,active) VALUES(?,?,?,?,?,?,?,?)');
-  plan.run('free','Free',0,'KI-Hausmeister, Aufträge, Angebote, Vermittlung, persönliche Ansprechpartner und digitale Hausakte.',0,0,0,1);
+  plan.run('free','Free',0,'Hausmeisterservice, Aufträge, Angebote, persönliche Ansprechpartner und digitale Hausakte.',0,0,0,1);
   plan.run('plus','Plus',1990,'Automatische Wartungsplanung, Hausjahresplan, Erinnerungen, Dokumentenverwaltung, bevorzugte Vermittlung und Prioritätsservice.',2,0,0,1);
   plan.run('premium','Premium',3990,'Persönliche Betreuung, höchste Priorität, jährlicher Hauscheck, automatische Wartungsorganisation, Premium-Partner und erweiterte Hausverwaltung.',3,1,0,1);
   db.prepare("UPDATE membership_plans SET active=0 WHERE slug='basic'").run();
@@ -75,7 +115,14 @@ const seed=db.transaction(()=>{
   pkg.run('haus-jahrespflege','Haus Jahrespflege',29900,'Ein strukturierter jährlicher Haus-Check mit Planung typischer Wartungs- und Werterhaltsthemen.',JSON.stringify(['Haus-Check','Dachrinne','Fenster/Türen','Haustechnik','Wartungsplan']));
   pkg.run('garten-premium','Garten Premium Jahr',49900,'Saisonale Gartenplanung mit wiederkehrenden Pflegepunkten und priorisierter Partnerorganisation.',JSON.stringify(['Frühjahrscheck','Rasenpflege','Heckenplanung','Herbstcheck','Saisonplan']));
   pkg.run('energie-technik','Energie & Technik Check',24900,'Jährlicher Organisations-Check für PV, Speicher, Wallbox, Heizung/Wärmepumpe und relevante Haustechnik.',JSON.stringify(['PV','Speicher','Wallbox','Heizung/Wärmepumpe','Smart Home']));
-}); seed();
+  const providerCategory=db.prepare('INSERT OR REPLACE INTO provider_categories(slug,title,description,active) VALUES(?,?,?,1)');
+  providerCategory.run('handwerk','Handwerker','Handwerkliche Leistungen rund um Gebäude, Technik und Außenbereich.');
+  providerCategory.run('dienstleistung','Dienstleister','Hausnahe Dienstleistungen wie Reinigung, Pflege, Umzug oder Hausservice.');
+  providerCategory.run('makler','Immobilienmakler','Vermarktung, Verkauf und Käufer-/Verkäuferberatung.');
+  providerCategory.run('gutachter','Gutachter / Sachverständiger','Bewertungen, Gutachten und technische Sachkunde.');
+  providerCategory.run('energieberatung','Energieberatung','Energieeffizienz, Förderberatung und technische Planung.');
+  providerCategory.run('hausverwaltung','Hausverwaltung','Verwaltung und organisatorische Betreuung von Immobilien.');
+}); execWithRetry(() => seed());
 
 // Safe additive migrations for databases created by earlier versions. Next.js can
 // evaluate this module in parallel build workers, so tolerate the tiny race where
@@ -106,8 +153,67 @@ addColumnIfMissing('homeowner_profiles','house_type',"house_type TEXT NOT NULL D
 addColumnIfMissing('homeowner_profiles','build_year','build_year INTEGER');
 addColumnIfMissing('homeowner_profiles','living_area','living_area REAL');
 addColumnIfMissing('homeowner_profiles','plot_area','plot_area REAL');
+addColumnIfMissing('provider_profiles','logo_path','logo_path TEXT');
+addColumnIfMissing('provider_profiles','street_address',"street_address TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing('provider_profiles','tax_id',"tax_id TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing('provider_profiles','vat_id',"vat_id TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing('jobs','urgency',"urgency TEXT NOT NULL DEFAULT 'normal'");
+addColumnIfMissing('jobs','emergency_type','emergency_type TEXT');
+addColumnIfMissing('payments','invoice_id','invoice_id INTEGER REFERENCES invoices(id)');
+addColumnIfMissing('jobs','property_id','property_id INTEGER REFERENCES properties(id)');
+addColumnIfMissing('house_assets','property_id','property_id INTEGER REFERENCES properties(id)');
+addColumnIfMissing('maintenance_tasks','property_id','property_id INTEGER REFERENCES properties(id)');
+addColumnIfMissing('house_history_entries','property_id','property_id INTEGER REFERENCES properties(id)');
+addColumnIfMissing('house_history_entries','job_id','job_id INTEGER REFERENCES jobs(id)');
+addColumnIfMissing('homeowner_contacts','property_id','property_id INTEGER REFERENCES properties(id)');
+addColumnIfMissing('provider_invites','property_id','property_id INTEGER REFERENCES properties(id)');
+addColumnIfMissing('house_transfers','property_id','property_id INTEGER REFERENCES properties(id)');
+addColumnIfMissing('sessions','issued_at','issued_at TEXT');
+addColumnIfMissing('admin_sessions','issued_at','issued_at TEXT');
+
+// One-time security migration: sessions predating issued_at have unknown
+// provenance and cannot satisfy the single-live-session invariant, so they are
+// invalidated exactly once. Rows created after this migration always carry a
+// non-null issued_at and are preserved.
+execWithRetry(() => db.transaction(() => {
+  db.prepare('DELETE FROM sessions WHERE issued_at IS NULL').run();
+  // Keep only the newest session row per user, then enforce the invariant in SQL.
+  db.prepare(`DELETE FROM sessions WHERE rowid NOT IN (
+    SELECT MAX(rowid) FROM sessions GROUP BY user_id )`).run();
+  db.prepare('DELETE FROM admin_sessions WHERE issued_at IS NULL').run();
+  db.prepare('CREATE UNIQUE INDEX IF NOT EXISTS idx_sessions_user_live ON sessions(user_id)').run();
+  // Expression unique index: at most one admin session row may exist at all.
+  db.prepare('CREATE UNIQUE INDEX IF NOT EXISTS idx_admin_sessions_single ON admin_sessions((1))').run();
+})());
+
+execWithRetry(() => db.exec(`CREATE INDEX IF NOT EXISTS idx_sessions_expiry ON sessions(expires_at); CREATE INDEX IF NOT EXISTS idx_admin_sessions_expiry ON admin_sessions(expires_at);`));
 
 // Product model migration: one company can have many simple app contacts; no per-job platform commission.
 db.prepare('UPDATE partner_contracts SET commission_bps=0 WHERE commission_bps!=0').run();
 db.prepare(`INSERT OR IGNORE INTO provider_members(provider_id,user_id,job_title,can_manage_jobs,active)
   SELECT user_id,user_id,'Geschäftsführung',1,1 FROM provider_profiles`).run();
+db.prepare(`INSERT OR IGNORE INTO provider_preferences(provider_id) SELECT user_id FROM provider_profiles`).run();
+
+// Flexible provider categories: existing partner accounts default to Handwerker until changed in the profile.
+db.prepare(`INSERT OR IGNORE INTO provider_category_assignments(provider_id,category_slug) SELECT user_id,'handwerk' FROM provider_profiles`).run();
+
+// Every existing owner gets one persistent property record. New code attaches house data to this property,
+// while legacy homeowner_id columns remain for backwards compatibility during the pilot migration.
+const legacyOwners=db.prepare(`SELECT h.* FROM homeowner_profiles h JOIN users u ON u.id=h.user_id WHERE u.role='homeowner'`).all() as any[];
+for(const h of legacyOwners){
+  let ownership=db.prepare(`SELECT o.property_id FROM property_ownerships o WHERE o.homeowner_id=? AND o.active=1 ORDER BY o.started_at DESC,o.id DESC LIMIT 1`).get(h.user_id) as {property_id:number}|undefined;
+  if(!ownership){
+    const result=db.prepare(`INSERT INTO properties(address,postcode,lat,lon,property_type,build_year,living_area,plot_area) VALUES(?,?,?,?,?,?,?,?)`).run(h.address||'',h.postcode||'',h.lat??null,h.lon??null,h.house_type||'',h.build_year??null,h.living_area??null,h.plot_area??null);
+    const propertyId=Number(result.lastInsertRowid);
+    db.prepare(`INSERT INTO property_ownerships(property_id,homeowner_id,active) VALUES(?,?,1)`).run(propertyId,h.user_id);
+    ownership={property_id:propertyId};
+  }
+  const propertyId=ownership.property_id;
+  db.prepare(`UPDATE jobs SET property_id=COALESCE(property_id,?) WHERE homeowner_id=?`).run(propertyId,h.user_id);
+  db.prepare(`UPDATE house_assets SET property_id=COALESCE(property_id,?) WHERE homeowner_id=?`).run(propertyId,h.user_id);
+  db.prepare(`UPDATE maintenance_tasks SET property_id=COALESCE(property_id,?) WHERE homeowner_id=?`).run(propertyId,h.user_id);
+  db.prepare(`UPDATE house_history_entries SET property_id=COALESCE(property_id,?) WHERE homeowner_id=?`).run(propertyId,h.user_id);
+  db.prepare(`UPDATE homeowner_contacts SET property_id=COALESCE(property_id,?) WHERE homeowner_id=?`).run(propertyId,h.user_id);
+  db.prepare(`UPDATE provider_invites SET property_id=COALESCE(property_id,?) WHERE homeowner_id=?`).run(propertyId,h.user_id);
+  db.prepare(`UPDATE house_transfers SET property_id=COALESCE(property_id,?) WHERE homeowner_id=?`).run(propertyId,h.user_id);
+}

@@ -6,7 +6,7 @@
 
 Einfach Hausen ist die zentrale Anlaufstelle für Eigenheimbesitzer. Der Kunde beschreibt ein Problem und entscheidet selbst: **nur einen konkreten menschlichen Ansprechpartner sprechen** oder **einen echten Auftrag organisieren lassen**. Kontakte, Hausdaten, Termine und Dokumente bleiben dauerhaft beim Haus. Die KI arbeitet im Hintergrund als Assistenz- und Organisationsschicht, ist aber nicht das eigentliche Kundenversprechen.
 
-Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md).
+Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md). Das langlebige Daten- und Berechtigungsmodell steht in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Live Pilot
 
@@ -61,6 +61,13 @@ Die verbindliche UI-Richtung steht in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYST
 - Anlagenregister für Heizung, Wärmepumpe, PV, Speicher, Wallbox, Dach, Garten und Smart Home
 - wiederkehrender Wartungs- und Hausjahresplan
 - private Rechnungen, Nachweise und Belege
+- direkte Handwerker-Rechnungen in der App mit Positionen, MwSt., Zahlungsziel und optionaler Stripe-Zahlung
+- großer Notfall-Einstieg mit Bereitschafts-/Entfernungs-/Qualitätsmatching
+- eigener Beratungsweg ohne automatischen Auftrag
+- Ansprechpartner nach Bereichen gruppiert, inklusive eigener Kategorien
+- lebenslange Haus-Historie mit früheren Arbeiten, Kosten, Garantien, Fotos und Dokumenten
+- digitaler Hauspass und übertragbare Immobilie mit Eigentümerhistorie
+- Immobilienbewertung, Verkaufsinteresse und datenschutzgesteuertes Makler-Matching
 - Bewertungen
 - Service-/Problemfälle
 - Benachrichtigungen
@@ -76,7 +83,7 @@ Die bestehende Next.js-Anwendung ist zugleich die mobile Pilot-App. Sie ist auf 
 - Service Worker für Installierbarkeit und sichere Offline-Hinweise
 - **keine privaten Auftrags-, Nachrichten- oder Hausdaten im Service-Worker-Cache**
 - Safe-Area-Unterstützung für iPhone-Notch/Home-Indikator
-- mobile Bottom-Navigation mit fünf Primärzielen
+- mobile Bottom-Navigation: Home, Aufträge, Termine, Ansprechpartner, Mehr
 - 44px+-Touch-Ziele und 16px-Formfelder gegen iOS-Auto-Zoom
 - Installationshinweis direkt im Kunden- und Partnerprofil
 
@@ -86,7 +93,7 @@ Für den Pilot ist das absichtlich einfacher als zwei separate native Codebasen.
 
 | Tarif | Preis | Kernnutzen |
 |---|---:|---|
-| FREE | 0 €/Monat | KI-Hausmeister, Aufträge, Angebote, Vermittlung, Ansprechpartner, Hausakte |
+| FREE | 0 €/Monat | Hausmeisterservice, Aufträge, Angebote, Ansprechpartner, Hausakte |
 | PLUS | 19,90 €/Monat | Wartungsplanung, Hausjahresplan, Erinnerungen, Dokumente, Prioritätsservice |
 | PREMIUM | 39,90 €/Monat | höchste Servicepriorität, jährlicher Hauscheck, automatische Wartungsorganisation, erweiterte Betreuung |
 
@@ -116,7 +123,9 @@ Betrieb und Datenmodell: [`docs/CRM.md`](docs/CRM.md).
 
 ## Partner-App
 
-Ein Unternehmen wird erst nach Unternehmensprüfung und aktivem Partnervertrag disponiert.
+Ein Unternehmen wird erst nach Unternehmensprüfung und aktivem Partnervertrag disponiert. Professionelle Anbieter verwenden **ein gemeinsames Konto**. Darin können mehrere Tätigkeiten gleichzeitig aktiviert werden, z. B. Handwerk, Dienstleistung, Immobilienmakler, Gutachter, Energieberatung oder Hausverwaltung. Tätigkeiten und konkrete Leistungsprofile sind getrennte Daten und später erweiterbar.
+
+Makler können zusätzlich ein Suchprofil für Regionen, Immobilientypen, Preis- und Flächenbereiche pflegen. Freigegebene Immobilien-Leads erscheinen im selben Partnerzugang unter `/pro/leads`; Eigentümerkontaktdaten werden erst nach ausdrücklicher Freigabe sichtbar.
 
 ### Ansprechpartnermodell
 
@@ -204,6 +213,8 @@ npm run dev
 npm run lint
 npm run build
 E2E_ADMIN_PASSWORD='<lokales-testpasswort>' npm run test:e2e
+E2E_ADMIN_PASSWORD='<lokales-testpasswort>' npm run test:e2e:architecture
+npm run test:crm
 ```
 
 ## Produktion

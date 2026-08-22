@@ -57,7 +57,7 @@ export async function POST(req:NextRequest){
       const answer=await answerHausmeisterQuestion(user.id,body,'whatsapp');
       await sendWhatsApp(msg.from,`${answer.reply}\n\nWenn du einen passenden Menschen sprechen möchtest, antworte ANSPRECHPARTNER. Wenn ich einen echten Auftrag organisieren soll, antworte AUFTRAG.`);
     }catch{
-      await sendWhatsApp(msg.from,'Ich konnte das gerade nicht vollständig verarbeiten. Öffne bitte die Einfach-Hausen-App; dein KI-Hausmeister und deine Hausakte bleiben dort verfügbar.');
+      await sendWhatsApp(msg.from,'Ich konnte das gerade nicht vollständig verarbeiten. Öffne bitte die Einfach-Hausen-App; dein Hausmeisterservice und deine Hausakte bleiben dort verfügbar.');
     }
   }
   return NextResponse.json({received:true});

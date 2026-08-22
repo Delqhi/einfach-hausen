@@ -34,7 +34,7 @@ export async function POST(req:NextRequest){
       }
     } else if(kind==='package'&&s.payment_status==='paid'){
       const orderId=Number(s.metadata?.packageOrderId); const userId=Number(s.metadata?.homeownerId);
-      if(orderId&&userId){activatePackageOrder(orderId,userId);createNotification(userId,'Jahrespaket bezahlt','Dein KI-Hausmeister hat die Leistungen in deinen Jahresplan übernommen.','/app/plans','package');}
+      if(orderId&&userId){activatePackageOrder(orderId,userId);createNotification(userId,'Jahrespaket bezahlt','Dein Hausmeisterservice hat die Leistungen in deinen Jahresplan übernommen.','/app/plans','package');}
     } else if(s.payment_status==='paid') markPaymentPaid(s.id);
   }
   if(event.type==='checkout.session.async_payment_failed'){

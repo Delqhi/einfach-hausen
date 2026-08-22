@@ -2,14 +2,14 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest():MetadataRoute.Manifest{
   return {
-    name:'Einfach Hausen',
-    short_name:'Hausen',
+    name:'einfachhausen',
+    short_name:'einfachhausen',
     description:'Ein Ansprechpartner für alles rund ums Eigenheim.',
     start_url:'/app',
     scope:'/',
     display:'standalone',
-    background_color:'#ffffff',
-    theme_color:'#ffffff',
+    background_color:'#064b38',
+    theme_color:'#064b38',
     lang:'de-DE',
     categories:['lifestyle','business','utilities'],
     icons:[

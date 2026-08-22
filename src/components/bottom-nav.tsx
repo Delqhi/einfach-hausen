@@ -1,11 +1,12 @@
 import Link from 'next/link';
-import { ClipboardList, Home, House, MessageSquare, UsersRound, UserRound } from 'lucide-react';
+import { CalendarDays,ClipboardList,Home,Menu,MessageSquare,UsersRound,UserRound } from 'lucide-react';
 
 export const ownerNav = [
-  ['/app', Home, 'Start'],
-  ['/app/home', House, 'Mein Haus'],
+  ['/app', Home, 'Home'],
   ['/app/jobs', ClipboardList, 'Aufträge'],
-  ['/app/profile', UserRound, 'Profil']
+  ['/app/calendar', CalendarDays, 'Termine'],
+  ['/app/messages', UsersRound, 'Ansprechpartner'],
+  ['/app/more', Menu, 'Mehr'],
 ] as const;
 
 export const providerNav = [
@@ -13,11 +14,12 @@ export const providerNav = [
   ['/pro/orders', ClipboardList, 'Aufträge'],
   ['/pro/messages', MessageSquare, 'Nachrichten'],
   ['/pro/team', UsersRound, 'Team'],
-  ['/pro/profile', UserRound, 'Profil']
+  ['/pro/profile', UserRound, 'Profil'],
 ] as const;
 
 export function isNavActive(active:string, href:string){
   if(href==='/app'||href==='/pro') return active===href;
+  if(href==='/app/more') return ['/app/more','/app/home','/app/year','/app/documents','/app/plans','/app/profile'].some(prefix=>active===prefix||active.startsWith(`${prefix}/`));
   return active===href || active.startsWith(`${href}/`);
 }
 

@@ -12,41 +12,139 @@ import { createSession, destroySession, requireUser } from '@/lib/auth';
 import { adminPasswordMatches, createAdminSession, destroyAdminSession, requireAdmin } from '@/lib/admin-auth';
 import { createNotification } from '@/lib/notifications';
 import { geocodePostcode } from '@/lib/geocode';
-import { answerHausmeisterQuestion, appendJobEvent, createHausmeisterRequest, redispatchOpenJobs, type HausmeisterIntent } from '@/lib/orchestrator';
+import { answerHausmeisterQuestion, appendJobEvent, createEmergencyRequest, createHausmeisterRequest, redispatchOpenJobs, type HausmeisterIntent } from '@/lib/orchestrator';
 import { canAccessProviderJob, getProviderContext, getProviderManagerIds } from '@/lib/provider';
+import { nextInvoiceNumber } from '@/lib/invoices';
+import { normalizeContactCategory } from '@/lib/contact-categories';
+import { createPropertyForOwner, primaryProperty, propertyOwnedBy, syncPropertyFromLegacyProfile } from '@/lib/properties';
+import { createBrokerMatches } from '@/lib/broker-matching';
+import { headers } from 'next/headers';
+import { checkRateLimit, consumeRateLimitAttempt, applyRateLimitLockout, rateLimitBlockedEvent, recordRateLimitFailure, recordRateLimitSuccess } from '@/lib/security/rate-limit';
+import { logAdminAudit, logSecurityEvent } from '@/lib/security/audit';
+import {
+  registerSchema,
+  loginSchema,
+  adminLoginSchema,
+  providerMemberSchema,
+  intakeDescriptionSchema,
+  verificationDecisionSchema,
+  claimStatusSchema,
+  partnerContractSchema,
+  quoteSchema,
+  invoiceSchema,
+  emergencyTypeSchema,
+} from '@/lib/security/schemas';
+
+// Constant bcrypt digest of random material: comparing against it for unknown
+// accounts keeps response timing independent of account existence.
+const DUMMY_PASSWORD_HASH = '$2b$12$VewcCr68WsM1v4sD7Ot47uLqRUkRC3CSJFtnhMGlvkMQfCxOREUHG';
 
 function text(fd: FormData, key: string) { return String(fd.get(key) ?? '').trim(); }
 function int(fd: FormData, key: string) { const n = Number(fd.get(key)); return Number.isFinite(n) ? n : null; }
 
+// The last XFF hop is the only entry a directly connected trusted proxy adds;
+// leftmost values are client-controlled. Deployment must ensure the edge proxy
+// overwrites/appends X-Forwarded-For and blocks direct origin access.
+async function clientIp(): Promise<string> {
+  try {
+    const h = await headers();
+    const forwarded = h.get('x-forwarded-for')?.split(',').map(s => s.trim()).filter(Boolean);
+    return (forwarded?.length ? forwarded[forwarded.length - 1] : h.get('x-real-ip') || 'local').slice(0, 200);
+  } catch { return 'local'; }
+}
+
 export async function registerAction(fd: FormData) {
-  const role = text(fd,'role') === 'provider' ? 'provider' : 'homeowner';
-  const email = text(fd,'email').toLowerCase();
-  const password = text(fd,'password');
-  const first = text(fd,'firstName'); const last = text(fd,'lastName');
-  if (!email || password.length < 8 || !first || !last) redirect('/register?error=Bitte%20alle%20Pflichtfelder%20ausfüllen');
-  if (db.prepare('SELECT id FROM users WHERE email=?').get(email)) redirect('/login?error=Konto%20existiert%20bereits');
+  const ip = await clientIp();
+  const limit = checkRateLimit('register', ip);
+  if (!limit.allowed) { rateLimitBlockedEvent('register', ip, limit.retryAfterSeconds); redirect('/register?error=Zu%20viele%20Versuche.%20Bitte%20sp%C3%A4ter%20erneut%20versuchen'); }
+  const parsed = registerSchema.safeParse({
+    role: text(fd,'role'), email: text(fd,'email'), password: String(fd.get('password') ?? '').trim(),
+    firstName: text(fd,'firstName'), lastName: text(fd,'lastName'), phone: text(fd,'phone'),
+    postcode: text(fd,'postcode'), address: text(fd,'address'),
+    businessName: text(fd,'businessName'), trades: text(fd,'trades'), radius: int(fd,'radius') ?? 25,
+    description: text(fd,'description'), streetAddress: text(fd,'streetAddress'),
+    emergencyMode: text(fd,'emergencyMode'), emergencyStart: text(fd,'emergencyStart') || '18:00', emergencyEnd: text(fd,'emergencyEnd') || '22:00',
+    emergencyMarkup: int(fd,'emergencyMarkup') ?? 0, openingHours: text(fd,'openingHours'), bookableHours: text(fd,'bookableHours'),
+  });
+  if (!parsed.success) { recordRateLimitFailure('register', ip); logSecurityEvent('security_validation_reject', 'register', `fields=${parsed.error.issues.length}`); redirect('/register?error=Bitte%20alle%20Pflichtfelder%20ausfüllen'); }
+  const { role, email, password, firstName: first, lastName: last } = parsed.data;
+  if (db.prepare('SELECT id FROM users WHERE email=?').get(email)) { recordRateLimitFailure('register', ip); logSecurityEvent('security_validation_reject', 'register', 'duplicate_email'); redirect('/login?error=Konto%20existiert%20bereits'); }
+  const d = parsed.data;
+  const logoFile=fd.get('logo'); const logoPath=role==='provider'&&logoFile instanceof File&&logoFile.size?await saveUpload(logoFile):null;
   const hash = await bcrypt.hash(password, 12);
   const tx = db.transaction(() => {
-    const r = db.prepare('INSERT INTO users(email,password_hash,role,first_name,last_name) VALUES(?,?,?,?,?)').run(email,hash,role,first,last);
+    const r = db.prepare('INSERT INTO users(email,password_hash,role,first_name,last_name,phone) VALUES(?,?,?,?,?,?)').run(email,hash,role,first,last,d.phone||null);
     const id = Number(r.lastInsertRowid);
-    if (role==='homeowner') db.prepare('INSERT INTO homeowner_profiles(user_id,postcode,address) VALUES(?,?,?)').run(id,text(fd,'postcode'),text(fd,'address'));
+    if (role==='homeowner') db.prepare('INSERT INTO homeowner_profiles(user_id,postcode,address) VALUES(?,?,?)').run(id,d.postcode,d.address);
     else {
-      db.prepare('INSERT INTO provider_profiles(user_id,business_name,trades,postcode,radius_km,description) VALUES(?,?,?,?,?,?)').run(id,text(fd,'businessName') || `${first} ${last}`,text(fd,'trades'),text(fd,'postcode'),int(fd,'radius') ?? 25,text(fd,'description'));
+      db.prepare('INSERT INTO provider_profiles(user_id,business_name,trades,postcode,radius_km,description,street_address,logo_path) VALUES(?,?,?,?,?,?,?,?)').run(id,d.businessName || `${first} ${last}`,d.trades,d.postcode,d.radius,d.description,d.streetAddress,logoPath);
       db.prepare("INSERT INTO partner_contracts(provider_id,status,commission_bps) VALUES(?,'pending',0)").run(id);
       db.prepare("INSERT INTO provider_members(provider_id,user_id,job_title,can_manage_jobs,active) VALUES(?,?,'Geschäftsführung',1,1)").run(id,id);
+      db.prepare(`INSERT INTO provider_preferences(provider_id,accepts_normal_jobs,accepts_short_notice,accepts_consultation,accepts_emergencies,emergency_mode,emergency_start,emergency_end,emergency_markup_bps,opening_hours_text,bookable_hours_text,instant_booking) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`).run(id,1,fd.get('acceptsShortNotice')?1:0,fd.get('acceptsConsultation')?1:0,fd.get('acceptsEmergencies')?1:0,d.emergencyMode==='24_7'?'24_7':'local',d.emergencyStart,d.emergencyEnd,d.emergencyMarkup*100,d.openingHours,d.bookableHours,fd.get('instantBooking')?1:0);
     }
     return id;
   });
   const id = tx();
-  const postcode=text(fd,'postcode'); const geo=await geocodePostcode(postcode);
+  recordRateLimitSuccess('register', ip);
+  logSecurityEvent('auth_register', email);
+  const postcode=d.postcode; const geo=await geocodePostcode(postcode);
   if(geo){const table=role==='provider'?'provider_profiles':'homeowner_profiles';db.prepare(`UPDATE ${table} SET lat=?,lon=? WHERE user_id=?`).run(geo.lat,geo.lon,id);}
-  await createSession(id); redirect(role==='provider'?'/pro':'/app');
+  if(role==='homeowner'){
+    createPropertyForOwner(id,{address:d.address,postcode,lat:geo?.lat??null,lon:geo?.lon??null});
+  }else{
+    const availableCategories=new Set((db.prepare(`SELECT slug FROM provider_categories WHERE active=1`).all() as Array<{slug:string}>).map(r=>r.slug));
+    const selectedCategories=fd.getAll('providerCategory').map(String).filter(slug=>availableCategories.has(slug));
+    const categories=selectedCategories.length?selectedCategories:['handwerk'];
+    const addCategory=db.prepare(`INSERT OR IGNORE INTO provider_category_assignments(provider_id,category_slug) VALUES(?,?)`); for(const slug of categories)addCategory.run(id,slug);
+    const availableServices=new Set((db.prepare(`SELECT slug FROM service_catalog WHERE active=1`).all() as Array<{slug:string}>).map(r=>r.slug));
+    const selectedServices=fd.getAll('serviceSlug').map(String).filter(slug=>availableServices.has(slug));
+    const addService=db.prepare(`INSERT OR IGNORE INTO provider_service_offerings(provider_id,service_slug,active) VALUES(?,?,1)`); for(const slug of selectedServices)addService.run(id,slug);
+    if(categories.includes('makler'))db.prepare(`INSERT OR IGNORE INTO broker_search_profiles(provider_id,regions_text) VALUES(?,?)`).run(id,postcode);
+    const invites=db.prepare(`SELECT * FROM provider_invites WHERE lower(email)=lower(?) AND status='pending'`).all(email) as any[];
+    for(const invite of invites){db.prepare(`UPDATE provider_invites SET status='linked',linked_provider_id=?,linked_at=CURRENT_TIMESTAMP WHERE id=?`).run(id,invite.id);db.prepare(`INSERT OR IGNORE INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,property_id) VALUES(?,?,?,?,NULL,?)`).run(invite.homeowner_id,id,id,normalizeContactCategory(invite.category||'Haus'),invite.property_id||null);createNotification(invite.homeowner_id,'Früherer Handwerker verbunden',`${d.businessName||`${first} ${last}`} ist jetzt bei Einfach Hausen und wurde deinem Haus als Ansprechpartner zugeordnet.`,'/app/messages','contact');}
+  }
+  const initialRequest=text(fd,'initialRequest').slice(0,700);
+  if(role==='homeowner'&&initialRequest){
+    const bounded=intakeDescriptionSchema.safeParse({description:initialRequest});
+    if(bounded.success){await answerHausmeisterQuestion(id,bounded.data.description,'app');}
+  }
+  await createSession(id); redirect(role==='provider'?'/pro':initialRequest?'/app/hausmeister?answered=1':'/app');
 }
 
 export async function loginAction(fd: FormData) {
-  const email=text(fd,'email').toLowerCase(); const password=text(fd,'password');
+  const parsed = loginSchema.safeParse({ email: text(fd,'email'), password: String(fd.get('password') ?? '').trim() });
+  const ip = await clientIp();
+  // Two independent dimensions: one IP cannot spray unlimited accounts, and
+  // one account cannot be hammered from unlimited sources.
+  const identifier = parsed.success ? parsed.data.email : `ip:${ip}`;
+  const emailLimit = parsed.success ? checkRateLimit('login', parsed.data.email) : { allowed: true as const, retryAfterSeconds: 0 };
+  const ipLimit = checkRateLimit('login', `ip:${ip}`);
+  if (!emailLimit.allowed || !ipLimit.allowed) {
+    rateLimitBlockedEvent('login', identifier, Math.max(emailLimit.allowed ? 0 : emailLimit.retryAfterSeconds, ipLimit.retryAfterSeconds));
+    redirect('/login?error=Zu%20viele%20Versuche.%20Bitte%20sp%C3%A4ter%20erneut%20versuchen');
+  }
+  if (!parsed.success) { recordRateLimitFailure('login', `ip:${ip}`); logSecurityEvent('security_validation_reject', 'login', 'invalid_input'); redirect('/login?error=E-Mail%20oder%20Passwort%20ist%20falsch'); }
+  const { email, password } = parsed.data;
+  // Count the attempt BEFORE the expensive comparison so a concurrent batch
+  // cannot all pass the gate before any failure is recorded.
+  const emailConsumed = consumeRateLimitAttempt('login', email);
+  const ipConsumed = consumeRateLimitAttempt('login', `ip:${ip}`);
+  if (!emailConsumed.consumed || !ipConsumed.consumed || emailConsumed.blocked || ipConsumed.blocked) {
+    rateLimitBlockedEvent('login', email, 3600);
+    redirect('/login?error=Zu%20viele%20Versuche.%20Bitte%20sp%C3%A4ter%20erneut%20versuchen');
+  }
   const row=db.prepare('SELECT id,password_hash,role FROM users WHERE email=?').get(email) as {id:number,password_hash:string,role:'homeowner'|'provider'}|undefined;
-  if (!row || !(await bcrypt.compare(password,row.password_hash))) redirect('/login?error=E-Mail%20oder%20Passwort%20ist%20falsch');
+  // Always run bcrypt exactly once against comparable material.
+  const ok = await bcrypt.compare(password,row?.password_hash ?? DUMMY_PASSWORD_HASH);
+  if (!row || !ok) {
+    applyRateLimitLockout('login', email);
+    applyRateLimitLockout('login', `ip:${ip}`);
+    logSecurityEvent('auth_login_fail', email, `ip=${ip}`);
+    redirect('/login?error=E-Mail%20oder%20Passwort%20ist%20falsch');
+  }
+  recordRateLimitSuccess('login', email);
+  recordRateLimitSuccess('login', `ip:${ip}`);
+  logSecurityEvent('auth_login_ok', email, `ip=${ip}`);
   await createSession(row.id); redirect(row.role==='provider'?'/pro':'/app');
 }
 export async function logoutAction(){ await destroySession(); redirect('/'); }
@@ -63,8 +161,11 @@ async function saveUpload(file: File | null) {
 
 export async function sendHausmeisterAction(fd:FormData){
   const user=await requireUser('homeowner');
-  const description=text(fd,'description');
-  if(description.length<4) redirect('/app/hausmeister?error=Schreib%20mir%20kurz,%20worum%20es%20bei%20deinem%20Haus%20geht');
+  const submitted=text(fd,'description');
+  if(submitted.length<4) redirect('/app/hausmeister?error=Schreib%20mir%20kurz,%20worum%20es%20bei%20deinem%20Haus%20geht');
+  const bounded=intakeDescriptionSchema.safeParse({description:submitted});
+  if(!bounded.success){ logSecurityEvent('security_validation_reject','hausmeister_intake','invalid_description'); redirect('/app/hausmeister?error=Beschreib%20es%20bitte%20k%C3%BCrzer'); }
+  const description=bounded.data.description;
   const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null);
   const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='app' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
   const draft=thread?db.prepare('SELECT intent FROM assistant_drafts WHERE thread_id=?').get(thread.id) as {intent:HausmeisterIntent}|undefined:undefined;
@@ -76,6 +177,24 @@ export async function sendHausmeisterAction(fd:FormData){
   await answerHausmeisterQuestion(user.id,description,'app',saved);
   revalidatePath('/app'); revalidatePath('/app/hausmeister');
   redirect('/app/hausmeister?answered=1');
+}
+
+export async function createConsultationAction(fd:FormData){
+  const user=await requireUser('homeowner'); const submitted=text(fd,'description'); if(submitted.length<4)redirect('/app/consultation?error=Beschreib%20kurz,%20wobei%20du%20Rat%20brauchst');
+  const bounded=intakeDescriptionSchema.safeParse({description:submitted});
+  if(!bounded.success){ logSecurityEvent('security_validation_reject','consultation_intake','invalid_description'); redirect('/app/consultation?error=Beschreib%20es%20bitte%20k%C3%BCrzer'); }
+  const description=bounded.data.description;
+  const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null); const result=await createHausmeisterRequest(user.id,description,'app',saved,'contact',true);
+  revalidatePath('/app');revalidatePath('/pro');revalidatePath('/notifications');
+  redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app/hausmeister?clarify=1');
+}
+
+export async function createEmergencyAction(fd:FormData){
+  const user=await requireUser('homeowner'); const submitted=text(fd,'description'); if(submitted.length<3)redirect('/app/emergency?error=Beschreib%20kurz,%20was%20passiert%20ist');
+  const emergencyType=emergencyTypeSchema.parse(text(fd,'emergencyType')||'other');
+  const bounded=intakeDescriptionSchema.safeParse({description:submitted});
+  if(!bounded.success){ logSecurityEvent('security_validation_reject','emergency_intake','invalid_description'); redirect('/app/emergency?error=Beschreib%20es%20bitte%20k%C3%BCrzer'); }
+  const result=await createEmergencyRequest(user.id,emergencyType,bounded.data.description); revalidatePath('/app');revalidatePath('/app/jobs');revalidatePath('/pro');revalidatePath('/notifications'); redirect(`/app/jobs/${result.jobId}?emergency=1`);
 }
 
 export async function startHausmeisterRouteAction(intent:HausmeisterIntent){
@@ -92,9 +211,10 @@ export async function startHausmeisterRouteAction(intent:HausmeisterIntent){
 
 // Compatibility endpoint for older forms/bookmarks. Treat explicit legacy job forms as real service requests.
 export async function createJobAction(fd: FormData) {
-  const user=await requireUser('homeowner'); const description=text(fd,'description'); if(description.length<4)return;
+  const user=await requireUser('homeowner'); const submitted=text(fd,'description'); if(submitted.length<4)return;
+  const bounded=intakeDescriptionSchema.safeParse({description:submitted}); if(!bounded.success){ logSecurityEvent('security_validation_reject','legacy_job','invalid_description'); return; }
   const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null);
-  const result=await createHausmeisterRequest(user.id,description,'app',saved,'service',true);
+  const result=await createHausmeisterRequest(user.id,bounded.data.description,'app',saved,'service',true);
   redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app/hausmeister?clarify=1');
 }
 
@@ -120,7 +240,7 @@ export async function acceptContactRequestAction(jobId:number,fd:FormData){
     db.prepare(`UPDATE jobs SET status='accepted',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(jobId);
     db.prepare(`UPDATE job_dispatches SET status=CASE WHEN provider_id=? THEN 'accepted' ELSE 'closed' END,responded_at=COALESCE(responded_at,CURRENT_TIMESTAMP) WHERE job_id=?`).run(ctx.providerId,jobId);
     db.prepare(`INSERT INTO job_assignments(job_id,provider_id,contact_user_id,assigned_by_user_id) VALUES(?,?,?,?) ON CONFLICT(job_id) DO UPDATE SET provider_id=excluded.provider_id,contact_user_id=excluded.contact_user_id,assigned_by_user_id=excluded.assigned_by_user_id,assigned_at=CURRENT_TIMESTAMP`).run(jobId,ctx.providerId,contactUserId,user.id);
-    db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,updated_at) VALUES(?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,updated_at=CURRENT_TIMESTAMP`).run(job.homeowner_id,ctx.providerId,contactUserId,job.category||'',jobId);
+    db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,property_id,updated_at) VALUES(?,?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,property_id=excluded.property_id,updated_at=CURRENT_TIMESTAMP`).run(job.homeowner_id,ctx.providerId,contactUserId,normalizeContactCategory(job.category||''),jobId,job.property_id||null);
   }); tx();
   createNotification(job.homeowner_id,'Dein Ansprechpartner ist da',`${contact.first_name} ${contact.last_name} von ${ctx.businessName} ist jetzt dein persönlicher Ansprechpartner für dein Thema.`,`/app/jobs/${jobId}`,'contact');
   if(contactUserId!==user.id)createNotification(contactUserId,'Neue Kontaktanfrage zugewiesen',`Du bist jetzt Ansprechpartner für „${job.title.replace(/^Ansprechpartner:\s*/,'')}“.`,`/pro/jobs/${jobId}`,'assigned');
@@ -130,19 +250,22 @@ export async function acceptContactRequestAction(jobId:number,fd:FormData){
 }
 
 export async function submitQuoteAction(jobId:number, fd:FormData){
-  const user=await requireUser('provider'); const amount=int(fd,'amount'); if(!amount || amount<1) return;
+  const user=await requireUser('provider');
+  const parsed=quoteSchema.safeParse({ amount: text(fd,'amount'), availableAt: text(fd,'availableAt'), message: text(fd,'message') });
+  if(!parsed.success){ logSecurityEvent('security_validation_reject','quote',`fields=${parsed.error.issues.length}`); return; }
+  const { amount, availableAt, message } = parsed.data;
   const ctx=getProviderContext(user.id); if(!ctx?.active||!ctx.canManageJobs) redirect(`/pro/jobs/${jobId}?error=Du%20darfst%20für%20diesen%20Betrieb%20keine%20neuen%20Aufträge%20verwalten`);
   const profile=db.prepare(`SELECT p.verified,c.status contract_status FROM provider_profiles p LEFT JOIN partner_contracts c ON c.provider_id=p.user_id WHERE p.user_id=?`).get(ctx.providerId) as {verified:number,contract_status:string|null}|undefined;
   if(!profile?.verified || profile.contract_status!=='active') redirect(`/pro/jobs/${jobId}?error=Dein%20Betrieb%20muss%20geprüft%20und%20vertraglich%20freigeschaltet%20sein`);
   const dispatch=db.prepare(`SELECT id FROM job_dispatches WHERE job_id=? AND provider_id=? AND status IN ('sent','viewed','quoted')`).get(jobId,ctx.providerId) as {id:number}|undefined;
   if(!dispatch) return;
   db.prepare(`INSERT INTO quotes(job_id,provider_id,amount,available_at,message,submitted_by_user_id) VALUES(?,?,?,?,?,?)
-    ON CONFLICT(job_id,provider_id) DO UPDATE SET amount=excluded.amount,available_at=excluded.available_at,message=excluded.message,submitted_by_user_id=excluded.submitted_by_user_id,status='pending'`).run(jobId,ctx.providerId,amount*100,text(fd,'availableAt')||null,text(fd,'message'),user.id);
+    ON CONFLICT(job_id,provider_id) DO UPDATE SET amount=excluded.amount,available_at=excluded.available_at,message=excluded.message,submitted_by_user_id=excluded.submitted_by_user_id,status='pending'`).run(jobId,ctx.providerId,amount*100,availableAt||null,message,user.id);
   db.prepare(`UPDATE jobs SET status=CASE WHEN status='open' THEN 'quoted' ELSE status END,updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(jobId);
   db.prepare(`UPDATE job_dispatches SET status='quoted',responded_at=CURRENT_TIMESTAMP WHERE job_id=? AND provider_id=?`).run(jobId,ctx.providerId);
   const job=db.prepare('SELECT homeowner_id,title FROM jobs WHERE id=?').get(jobId) as {homeowner_id:number,title:string}|undefined;
   if(job){
-    createNotification(job.homeowner_id,'Neues Vergleichsangebot',`Für „${job.title}“ ist ein weiteres geprüftes Angebot eingetroffen. Dein Hausmeister hat den Vergleich aktualisiert.`,`/app/jobs/${jobId}`,'quote');
+    createNotification(job.homeowner_id,'Neues Vergleichsangebot',`Für „${job.title}“ ist ein weiteres geprüftes Angebot eingetroffen. Einfach Hausen hat den Vergleich aktualisiert.`,`/app/jobs/${jobId}`,'quote');
     appendJobEvent(jobId,`Ein neues Angebot für „${job.title}“ ist eingetroffen. Ich habe den Vergleich aktualisiert und bewerte Preis, Termin, Entfernung und Partnerqualität.`,{amount:amount*100,providerId:ctx.providerId});
   }
   revalidatePath('/pro'); revalidatePath(`/pro/jobs/${jobId}`); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/notifications');
@@ -150,7 +273,7 @@ export async function submitQuoteAction(jobId:number, fd:FormData){
 
 export async function acceptQuoteAction(quoteId:number){
   const user=await requireUser('homeowner');
-  const q=db.prepare(`SELECT q.*,j.homeowner_id,j.preferred_date,j.preferred_time,j.category,p.verified FROM quotes q JOIN jobs j ON j.id=q.job_id JOIN provider_profiles p ON p.user_id=q.provider_id WHERE q.id=?`).get(quoteId) as any;
+  const q=db.prepare(`SELECT q.*,j.homeowner_id,j.preferred_date,j.preferred_time,j.category,j.property_id,p.verified FROM quotes q JOIN jobs j ON j.id=q.job_id JOIN provider_profiles p ON p.user_id=q.provider_id WHERE q.id=?`).get(quoteId) as any;
   if(!q || q.homeowner_id!==user.id || !q.verified) return;
   const preferredContact=(db.prepare(`SELECT m.user_id FROM provider_members m WHERE m.provider_id=? AND m.active=1 AND m.user_id=?`).get(q.provider_id,q.submitted_by_user_id||q.provider_id) as {user_id:number}|undefined)?.user_id
     ||(db.prepare(`SELECT user_id FROM provider_members WHERE provider_id=? AND active=1 ORDER BY can_manage_jobs DESC,id ASC LIMIT 1`).get(q.provider_id) as {user_id:number}|undefined)?.user_id
@@ -163,14 +286,14 @@ export async function acceptQuoteAction(quoteId:number){
     db.prepare(`UPDATE job_dispatches SET status=CASE WHEN provider_id=? THEN 'accepted' ELSE 'closed' END,responded_at=COALESCE(responded_at,CURRENT_TIMESTAMP) WHERE job_id=?`).run(q.provider_id,q.job_id);
     db.prepare(`INSERT INTO job_assignments(job_id,provider_id,contact_user_id,assigned_by_user_id) VALUES(?,?,?,?)
       ON CONFLICT(job_id) DO UPDATE SET provider_id=excluded.provider_id,contact_user_id=excluded.contact_user_id,assigned_by_user_id=excluded.assigned_by_user_id,assigned_at=CURRENT_TIMESTAMP`).run(q.job_id,q.provider_id,preferredContact,preferredContact);
-    db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,updated_at) VALUES(?,?,?,?,?,CURRENT_TIMESTAMP)
-      ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,updated_at=CURRENT_TIMESTAMP`).run(user.id,q.provider_id,preferredContact,q.category||'',q.job_id);
+    db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,property_id,updated_at) VALUES(?,?,?,?,?,?,CURRENT_TIMESTAMP)
+      ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,property_id=excluded.property_id,updated_at=CURRENT_TIMESTAMP`).run(user.id,q.provider_id,preferredContact,normalizeContactCategory(q.category||''),q.job_id,q.property_id||null);
   }); tx();
   const jobTitle=(db.prepare('SELECT title FROM jobs WHERE id=?').get(q.job_id) as {title:string}|undefined)?.title||'Auftrag';
   for(const managerId of getProviderManagerIds(q.provider_id))createNotification(managerId,'Auftrag erhalten',`Das Angebot für „${jobTitle}“ wurde angenommen. Ansprechpartner kann jetzt bestätigt oder geändert werden.`,`/pro/jobs/${q.job_id}`,'accepted');
   if(!getProviderManagerIds(q.provider_id).includes(preferredContact))createNotification(preferredContact,'Neuer Auftrag für dich',`Du bist Ansprechpartner für „${jobTitle}“.`,`/pro/jobs/${q.job_id}`,'accepted');
   const contact=db.prepare('SELECT first_name,last_name FROM users WHERE id=?').get(preferredContact) as {first_name:string,last_name:string}|undefined;
-  appendJobEvent(q.job_id,`Gebucht. ${contact?`${contact.first_name} ${contact.last_name} ist ab jetzt dein persönlicher Ansprechpartner beim ausführenden Unternehmen.`:'Der Partner weist dir jetzt einen persönlichen Ansprechpartner zu.'} Dein KI-Hausmeister bleibt für Organisation, Hausakte und Unterstützung erreichbar.`,{providerId:q.provider_id,quoteId,contactUserId:preferredContact});
+  appendJobEvent(q.job_id,`Gebucht. ${contact?`${contact.first_name} ${contact.last_name} ist ab jetzt dein persönlicher Ansprechpartner beim ausführenden Unternehmen.`:'Der Partner weist dir jetzt einen persönlichen Ansprechpartner zu.'} Einfach Hausen bleibt für Organisation, Hausakte und Unterstützung erreichbar.`,{providerId:q.provider_id,quoteId,contactUserId:preferredContact});
   revalidatePath(`/app/jobs/${q.job_id}`); revalidatePath('/app/calendar'); revalidatePath('/app/messages'); revalidatePath('/pro'); revalidatePath('/pro/orders'); revalidatePath('/notifications');
 }
 
@@ -190,19 +313,24 @@ export async function markInProgressAction(jobId:number){
   const user=await requireUser('provider'); const ctx=canAccessProviderJob(user.id,jobId); if(!ctx)return;
   const job=db.prepare(`SELECT j.homeowner_id,j.title FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=? AND q.provider_id=?`).get(jobId,ctx.providerId) as any; if(!job)return;
   db.prepare(`UPDATE jobs SET status='in_progress',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(jobId);
-  createNotification(job.homeowner_id,'Auftrag gestartet',`${user.first_name} hat „${job.title}“ als in Arbeit markiert. Dein Hausmeister behält den Status im Blick.`,`/app/jobs/${jobId}`,'status');
-  appendJobEvent(jobId,`${user.first_name} hat mit „${job.title}“ begonnen. Bei Fragen kannst du deinen Ansprechpartner direkt kontaktieren; dein KI-Hausmeister bleibt parallel für Organisation und Hilfe da.`,{status:'in_progress',contactUserId:user.id});
+  createNotification(job.homeowner_id,'Auftrag gestartet',`${user.first_name} hat „${job.title}“ als in Arbeit markiert. Einfach Hausen behält den Status im Blick.`,`/app/jobs/${jobId}`,'status');
+  appendJobEvent(jobId,`${user.first_name} hat mit „${job.title}“ begonnen. Bei Fragen kannst du deinen Ansprechpartner direkt kontaktieren; Einfach Hausen bleibt parallel für Organisation und Hilfe da.`,{status:'in_progress',contactUserId:user.id});
   revalidatePath(`/pro/jobs/${jobId}`); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/notifications');
 }
 
 export async function markCompleteAction(jobId:number){
   const user=await requireUser('provider'); const ctx=canAccessProviderJob(user.id,jobId); if(!ctx)return;
-  const job=db.prepare(`SELECT j.homeowner_id,j.title,j.category FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=? AND q.provider_id=?`).get(jobId,ctx.providerId) as any; if(!job)return;
+  const job=db.prepare(`SELECT j.homeowner_id,j.title,j.category,j.property_id,q.amount,q.provider_id FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=? AND q.provider_id=?`).get(jobId,ctx.providerId) as any; if(!job)return;
   db.prepare(`UPDATE jobs SET status='completed',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(jobId);
   db.prepare(`UPDATE appointments SET status='completed' WHERE job_id=?`).run(jobId);
   const assigned=db.prepare('SELECT contact_user_id FROM job_assignments WHERE job_id=?').get(jobId) as {contact_user_id:number}|undefined;
-  if(assigned)db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,updated_at) VALUES(?,?,?,?,?,CURRENT_TIMESTAMP)
-    ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,updated_at=CURRENT_TIMESTAMP`).run(job.homeowner_id,ctx.providerId,assigned.contact_user_id,job.category||'',jobId);
+  if(assigned)db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,property_id,updated_at) VALUES(?,?,?,?,?,?,CURRENT_TIMESTAMP)
+    ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,property_id=excluded.property_id,updated_at=CURRENT_TIMESTAMP`).run(job.homeowner_id,ctx.providerId,assigned.contact_user_id,normalizeContactCategory(job.category||''),jobId,job.property_id||null);
+  if(job.property_id&&!db.prepare(`SELECT 1 FROM house_history_entries WHERE job_id=? LIMIT 1`).get(jobId)){
+    const provider=db.prepare(`SELECT business_name FROM provider_profiles WHERE user_id=?`).get(ctx.providerId) as {business_name:string}|undefined;
+    const contact=assigned?db.prepare(`SELECT first_name,last_name FROM users WHERE id=?`).get(assigned.contact_user_id) as {first_name:string,last_name:string}|undefined:undefined;
+    db.prepare(`INSERT INTO house_history_entries(homeowner_id,property_id,job_id,category,title,performed_at,company_name,provider_id,contact_name,cost_amount,notes) VALUES(?,?,?,?,?,date('now'),?,?,?,?,?)`).run(job.homeowner_id,job.property_id,jobId,normalizeContactCategory(job.category||''),job.title,provider?.business_name||ctx.businessName,ctx.providerId,contact?`${contact.first_name} ${contact.last_name}`:'',job.amount||null,'Aus Einfach Hausen automatisch aus dem abgeschlossenen Auftrag übernommen.');
+  }
   createNotification(job.homeowner_id,'Auftrag erledigt',`„${job.title}“ wurde als erledigt markiert. Dein Ansprechpartner bleibt für künftige Aufträge in „Kontakte“ gespeichert.`,`/app/jobs/${jobId}`,'completed');
   appendJobEvent(jobId,`„${job.title}“ wurde als erledigt gemeldet. Dein Ansprechpartner bleibt in deiner Hausakte gespeichert, damit du ihn später direkt wieder kontaktieren kannst.`,{status:'completed'});
   revalidatePath(`/pro/jobs/${jobId}`); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/app/messages'); revalidatePath('/notifications');
@@ -240,6 +368,68 @@ export async function createCheckoutAction(jobId:number){
   redirect(session.url!);
 }
 
+export async function createInvoiceAction(jobId:number,fd:FormData){
+  const user=await requireUser('provider'); const ctx=canAccessProviderJob(user.id,jobId); if(!ctx)return;
+  const row=db.prepare(`SELECT j.id,j.homeowner_id,j.title,j.status,q.amount,q.provider_id,p.business_name,p.street_address,p.tax_id,p.vat_id,pu.email provider_email,pu.phone provider_phone,hu.first_name homeowner_first,hu.last_name homeowner_last,h.address homeowner_address,h.postcode homeowner_postcode FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id JOIN provider_profiles p ON p.user_id=q.provider_id JOIN users pu ON pu.id=p.user_id JOIN users hu ON hu.id=j.homeowner_id JOIN homeowner_profiles h ON h.user_id=j.homeowner_id WHERE j.id=? AND q.provider_id=? AND j.request_kind='service' AND j.status IN ('accepted','in_progress','completed')`).get(jobId,ctx.providerId) as any;
+  if(!row)return;
+  if(!row.street_address)redirect(`/pro/jobs/${jobId}?error=Bitte%20hinterlege%20zuerst%20die%20vollständige%20Firmenanschrift%20im%20Partnerprofil`);
+  if(!row.tax_id&&!row.vat_id)redirect(`/pro/jobs/${jobId}?error=Bitte%20hinterlege%20für%20Rechnungen%20Steuernummer%20oder%20USt-IdNr.%20im%20Partnerprofil`);
+  const collect=(name:string)=>fd.getAll(name).map(String);
+  const num=(name:string,i:number)=>(collect(name)[i]??'').trim().replace(',','.');
+  // Optional trailing form rows stay droppable; only genuinely filled lines are validated.
+  const rowCount=Math.max(...['itemDescription','itemQuantity','itemUnit','itemPrice','itemTax'].map(n=>collect(n).length),0);
+  const rows=[] as Array<{description:string;quantity:string;unit:string;unitPriceEur:string;taxRatePercent:string}>;
+  for(let i=0;i<rowCount;i++){
+    const description=collect('itemDescription')[i]??'';
+    if(!description.trim()&&!num('itemPrice',i))continue;
+    rows.push({description,quantity:num('itemQuantity',i)||'1',unit:(collect('itemUnit')[i]??'').trim(),unitPriceEur:num('itemPrice',i)||'0',taxRatePercent:num('itemTax',i)||'19'});
+  }
+  const parsed=invoiceSchema.safeParse({
+    items: rows,
+    issueDate: text(fd,'issueDate'), serviceDate: text(fd,'serviceDate'), dueDate: text(fd,'dueDate'), notes: text(fd,'notes'),
+  });
+  if(!parsed.success){ logSecurityEvent('security_validation_reject','invoice',`fields=${parsed.error.issues.length}`); redirect(`/pro/jobs/${jobId}?error=Rechnungspositionen%20pr%C3%BCfen`); }
+  const calculated=parsed.data.items.map((item,i)=>{
+    const unitPrice=Math.round(item.unitPriceEur*100); const net=Math.round(item.quantity*unitPrice);
+    const lineTax=Math.round(net*item.taxRatePercent*100/10000); const gross=net+lineTax;
+    return { description:item.description, quantity:item.quantity, unit:item.unit||'Stk.', unitPrice, taxBps:Math.round(item.taxRatePercent*100), position:i+1, lineNet:net, lineTax, gross };
+  });
+  let subtotal=0,tax=0,total=0; for(const c of calculated){subtotal+=c.lineNet;tax+=c.lineTax;total+=c.gross;}
+  const invoiceNumber=nextInvoiceNumber(ctx.providerId);
+  const tx=db.transaction(()=>{
+    const result=db.prepare(`INSERT INTO invoices(job_id,provider_id,homeowner_id,invoice_number,status,issue_date,service_date,due_date,currency,seller_name,seller_address,seller_tax_id,seller_vat_id,seller_email,seller_phone,buyer_name,buyer_address,notes,subtotal_net,tax_amount,total_gross,created_by_user_id,sent_at) VALUES(?,?,?,?, 'sent',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP)`).run(jobId,ctx.providerId,row.homeowner_id,invoiceNumber,parsed.data.issueDate||new Date().toISOString().slice(0,10),parsed.data.serviceDate||parsed.data.issueDate||new Date().toISOString().slice(0,10),parsed.data.dueDate||new Date(Date.now()+14*86400000).toISOString().slice(0,10),process.env.STRIPE_CURRENCY||'eur',row.business_name,row.street_address,row.tax_id||'',row.vat_id||'',row.provider_email||'',row.provider_phone||'',`${row.homeowner_first} ${row.homeowner_last}`.trim(),row.homeowner_address||row.homeowner_postcode||'',parsed.data.notes,subtotal,tax,total,user.id);
+    const invoiceId=Number(result.lastInsertRowid); const insertItem=db.prepare(`INSERT INTO invoice_items(invoice_id,position,description,quantity,unit,unit_price_net,tax_rate_bps,line_net,line_tax,line_gross) VALUES(?,?,?,?,?,?,?,?,?,?)`); for(const item of calculated)insertItem.run(invoiceId,item.position,item.description,item.quantity,item.unit,item.unitPrice,item.taxBps,item.lineNet,item.lineTax,item.gross); return invoiceId;
+  });
+  const invoiceId=tx();
+  createNotification(row.homeowner_id,'Neue Rechnung',`${row.business_name} hat dir Rechnung ${invoiceNumber} für „${row.title}“ gesendet.`,`/app/invoices/${invoiceId}`,'invoice');
+  appendJobEvent(jobId,`${row.business_name} hat Rechnung ${invoiceNumber} gesendet. Sie liegt jetzt in deiner Hausakte.`,{invoiceId,invoiceNumber,totalGross:total});
+  revalidatePath(`/pro/jobs/${jobId}`);revalidatePath('/pro/orders');revalidatePath(`/app/jobs/${jobId}`);revalidatePath('/app/documents');revalidatePath('/notifications');
+  redirect(`/pro/invoices/${invoiceId}?sent=1`);
+}
+
+export async function cancelInvoiceAction(invoiceId:number){
+  const user=await requireUser('provider'); const ctx=getProviderContext(user.id); if(!ctx)return;
+  const invoice=db.prepare(`SELECT * FROM invoices WHERE id=? AND provider_id=?`).get(invoiceId,ctx.providerId) as any; if(!invoice||!['draft','sent'].includes(invoice.status))return;
+  const paid=db.prepare(`SELECT 1 FROM payments WHERE invoice_id=? AND status='paid'`).get(invoiceId); if(paid)return;
+  db.prepare(`UPDATE invoices SET status='cancelled',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(invoiceId);
+  createNotification(invoice.homeowner_id,'Rechnung storniert',`Rechnung ${invoice.invoice_number} wurde vom Dienstleister storniert.`,`/app/invoices/${invoiceId}`,'invoice');
+  revalidatePath(`/pro/invoices/${invoiceId}`);revalidatePath(`/app/invoices/${invoiceId}`);revalidatePath('/app/documents');
+}
+
+export async function createInvoiceCheckoutAction(invoiceId:number){
+  const user=await requireUser('homeowner');
+  const invoice=db.prepare(`SELECT i.*,p.stripe_account_id,p.stripe_onboarded,p.verified FROM invoices i JOIN provider_profiles p ON p.user_id=i.provider_id WHERE i.id=? AND i.homeowner_id=?`).get(invoiceId,user.id) as any;
+  if(!invoice||invoice.status!=='sent')return;
+  if(!process.env.STRIPE_SECRET_KEY)redirect(`/app/invoices/${invoiceId}?error=Onlinezahlung%20ist%20gerade%20nicht%20verfügbar`);
+  if(!invoice.verified||!invoice.stripe_account_id||!invoice.stripe_onboarded)redirect(`/app/invoices/${invoiceId}?error=Der%20Dienstleister%20hat%20die%20Onlinezahlung%20noch%20nicht%20vollständig%20eingerichtet`);
+  const existing=db.prepare(`SELECT stripe_session_id FROM payments WHERE invoice_id=? AND status='pending' ORDER BY id DESC LIMIT 1`).get(invoiceId) as {stripe_session_id:string}|undefined;
+  const stripe=new Stripe(process.env.STRIPE_SECRET_KEY!); const origin=process.env.NEXT_PUBLIC_APP_URL||'http://localhost:3000';
+  if(existing?.stripe_session_id){try{const previous=await stripe.checkout.sessions.retrieve(existing.stripe_session_id);if(previous.url)redirect(previous.url);}catch{}}
+  const session=await stripe.checkout.sessions.create({mode:'payment',customer_email:user.email,line_items:[{price_data:{currency:invoice.currency||'eur',product_data:{name:`Rechnung ${invoice.invoice_number}`},unit_amount:invoice.total_gross},quantity:1}],payment_intent_data:{transfer_data:{destination:invoice.stripe_account_id},metadata:{jobId:String(invoice.job_id),invoiceId:String(invoice.id),homeownerId:String(user.id),providerId:String(invoice.provider_id),platformCommissionBps:'0'}},success_url:`${origin}/api/payments/success?session_id={CHECKOUT_SESSION_ID}`,cancel_url:`${origin}/app/invoices/${invoiceId}?payment=cancelled`,metadata:{kind:'invoice_payment',jobId:String(invoice.job_id),invoiceId:String(invoice.id),homeownerId:String(user.id),providerId:String(invoice.provider_id),platformCommissionBps:'0'}});
+  db.prepare(`INSERT INTO payments(job_id,homeowner_id,provider_id,amount,currency,status,stripe_session_id,invoice_id) VALUES(?,?,?,?,?,'pending',?,?)`).run(invoice.job_id,user.id,invoice.provider_id,invoice.total_gross,invoice.currency||'eur',session.id,invoice.id);
+  redirect(session.url!);
+}
+
 export async function reviewAction(jobId:number, fd:FormData){
   const user=await requireUser('homeowner'); const rating=Math.max(1,Math.min(5,int(fd,'rating')||5));
   const row=db.prepare(`SELECT j.homeowner_id,q.provider_id FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=? AND j.status='completed'`).get(jobId) as any;
@@ -257,12 +447,32 @@ export async function saveProfileAction(fd:FormData){
   if(user.role==='homeowner'){
     db.prepare('UPDATE homeowner_profiles SET postcode=?,address=? WHERE user_id=?').run(text(fd,'postcode'),text(fd,'address'),user.id);
     const postcode=text(fd,'postcode'); const geo=await geocodePostcode(postcode); if(geo)db.prepare('UPDATE homeowner_profiles SET lat=?,lon=? WHERE user_id=?').run(geo.lat,geo.lon,user.id);
+    syncPropertyFromLegacyProfile(user.id);
   } else {
     const ctx=getProviderContext(user.id); if(!ctx)return;
     if(ctx.isOwner||ctx.canManageJobs){
       const current=db.prepare('SELECT business_name,trades,verified FROM provider_profiles WHERE user_id=?').get(ctx.providerId) as any;
       const businessName=text(fd,'businessName')||current?.business_name||ctx.businessName; const trades=text(fd,'trades')||current?.trades||'';
-      db.prepare('UPDATE provider_profiles SET business_name=?,trades=?,postcode=?,radius_km=?,description=? WHERE user_id=?').run(businessName,trades,text(fd,'postcode'),int(fd,'radius')||25,text(fd,'description'),ctx.providerId);
+      const logo=fd.get('logo'); const newLogo=logo instanceof File&&logo.size?await saveUpload(logo):null;
+      db.prepare('UPDATE provider_profiles SET business_name=?,trades=?,postcode=?,radius_km=?,description=?,street_address=?,tax_id=?,vat_id=?,logo_path=COALESCE(?,logo_path) WHERE user_id=?').run(businessName,trades,text(fd,'postcode'),int(fd,'radius')||25,text(fd,'description'),text(fd,'streetAddress'),text(fd,'taxId'),text(fd,'vatId'),newLogo,ctx.providerId);
+      db.prepare(`INSERT INTO provider_preferences(provider_id,accepts_normal_jobs,accepts_short_notice,accepts_consultation,accepts_emergencies,emergency_mode,emergency_start,emergency_end,emergency_markup_bps,opening_hours_text,bookable_hours_text,instant_booking,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(provider_id) DO UPDATE SET accepts_normal_jobs=excluded.accepts_normal_jobs,accepts_short_notice=excluded.accepts_short_notice,accepts_consultation=excluded.accepts_consultation,accepts_emergencies=excluded.accepts_emergencies,emergency_mode=excluded.emergency_mode,emergency_start=excluded.emergency_start,emergency_end=excluded.emergency_end,emergency_markup_bps=excluded.emergency_markup_bps,opening_hours_text=excluded.opening_hours_text,bookable_hours_text=excluded.bookable_hours_text,instant_booking=excluded.instant_booking,updated_at=CURRENT_TIMESTAMP`).run(ctx.providerId,fd.get('acceptsNormalJobs')?1:0,fd.get('acceptsShortNotice')?1:0,fd.get('acceptsConsultation')?1:0,fd.get('acceptsEmergencies')?1:0,text(fd,'emergencyMode')==='24_7'?'24_7':'local',text(fd,'emergencyStart')||'18:00',text(fd,'emergencyEnd')||'22:00',Math.max(0,Math.min(100,int(fd,'emergencyMarkup')||0))*100,text(fd,'openingHours'),text(fd,'bookableHours'),fd.get('instantBooking')?1:0);
+      if(fd.get('providerCategoriesPresent')){
+        const available=new Set((db.prepare(`SELECT slug FROM provider_categories WHERE active=1`).all() as Array<{slug:string}>).map(r=>r.slug));
+        const selected=fd.getAll('providerCategory').map(String).filter(slug=>available.has(slug));
+        const categories=selected.length?selected:['handwerk'];
+        const categoryTx=db.transaction(()=>{db.prepare(`DELETE FROM provider_category_assignments WHERE provider_id=?`).run(ctx.providerId);const insert=db.prepare(`INSERT INTO provider_category_assignments(provider_id,category_slug) VALUES(?,?)`);for(const slug of categories)insert.run(ctx.providerId,slug);});categoryTx();
+        if(categories.includes('makler'))db.prepare(`INSERT OR IGNORE INTO broker_search_profiles(provider_id,regions_text) VALUES(?,?)`).run(ctx.providerId,text(fd,'postcode'));
+      }
+      if(fd.get('serviceProfilePresent')){
+        const availableServices=new Set((db.prepare(`SELECT slug FROM service_catalog WHERE active=1`).all() as Array<{slug:string}>).map(r=>r.slug));
+        const selectedServices=fd.getAll('serviceSlug').map(String).filter(slug=>availableServices.has(slug));
+        const serviceTx=db.transaction(()=>{db.prepare(`DELETE FROM provider_service_offerings WHERE provider_id=?`).run(ctx.providerId);const insert=db.prepare(`INSERT INTO provider_service_offerings(provider_id,service_slug,active) VALUES(?,?,1)`);for(const slug of selectedServices)insert.run(ctx.providerId,slug);});serviceTx();
+      }
+      if(fd.get('brokerProfilePresent')){
+        const euroToCents=(key:string)=>{const value=Number(String(fd.get(key)||'').replace(',','.'));return Number.isFinite(value)&&value>=0?Math.round(value*100):null;};
+        const area=(key:string)=>{const value=Number(String(fd.get(key)||'').replace(',','.'));return Number.isFinite(value)&&value>=0?value:null;};
+        db.prepare(`INSERT INTO broker_search_profiles(provider_id,regions_text,property_types_text,min_price,max_price,min_living_area,max_living_area,min_plot_area,max_plot_area,residential,commercial,specialties,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(provider_id) DO UPDATE SET regions_text=excluded.regions_text,property_types_text=excluded.property_types_text,min_price=excluded.min_price,max_price=excluded.max_price,min_living_area=excluded.min_living_area,max_living_area=excluded.max_living_area,min_plot_area=excluded.min_plot_area,max_plot_area=excluded.max_plot_area,residential=excluded.residential,commercial=excluded.commercial,specialties=excluded.specialties,updated_at=CURRENT_TIMESTAMP`).run(ctx.providerId,text(fd,'brokerRegions'),text(fd,'brokerPropertyTypes'),euroToCents('brokerMinPrice'),euroToCents('brokerMaxPrice'),area('brokerMinLivingArea'),area('brokerMaxLivingArea'),area('brokerMinPlotArea'),area('brokerMaxPlotArea'),fd.get('brokerResidential')?1:0,fd.get('brokerCommercial')?1:0,text(fd,'brokerSpecialties').slice(0,1000));
+      }
       if(current?.verified && (current.business_name!==businessName || current.trades!==trades)){
         db.prepare('UPDATE provider_profiles SET verified=0 WHERE user_id=?').run(ctx.providerId);
         db.prepare(`UPDATE verification_requests SET status='pending',reviewed_at=NULL,admin_note='',submitted_at=CURRENT_TIMESTAMP WHERE provider_id=?`).run(ctx.providerId);
@@ -286,9 +496,118 @@ export async function uploadDocumentAction(jobId:number, fd:FormData){
 }
 
 
+export async function addHouseHistoryAction(fd:FormData){
+  const user=await requireUser('homeowner'); const property=primaryProperty(user.id); if(!property)return; const title=text(fd,'title'); const performedAt=text(fd,'performedAt'); if(!title||!performedAt)return;
+  const before=fd.get('beforePhoto'); const after=fd.get('afterPhoto'); const document=fd.get('document');
+  const beforePath=before instanceof File&&before.size?await savePrivateFile(before,'house-history'):null; const afterPath=after instanceof File&&after.size?await savePrivateFile(after,'house-history'):null;
+  const companyName=text(fd,'companyName'); const contactEmail=text(fd,'contactEmail').toLowerCase(); let providerId:number|null=null;
+  if(contactEmail){const byEmail=db.prepare(`SELECT p.user_id FROM provider_profiles p JOIN users u ON u.id=p.user_id WHERE lower(u.email)=lower(?) LIMIT 1`).get(contactEmail) as {user_id:number}|undefined;providerId=byEmail?.user_id||null;}
+  if(!providerId&&companyName){const byName=db.prepare(`SELECT user_id FROM provider_profiles WHERE lower(business_name)=lower(?) LIMIT 1`).get(companyName) as {user_id:number}|undefined;providerId=byName?.user_id||null;}
+  const cost=Number(String(fd.get('cost')||'').replace(',','.')); const costAmount=Number.isFinite(cost)&&cost>=0?Math.round(cost*100):null; const category=normalizeContactCategory(text(fd,'category')||'Haus');
+  const r=db.prepare(`INSERT INTO house_history_entries(homeowner_id,category,title,performed_at,company_name,provider_id,contact_name,contact_phone,contact_email,cost_amount,guarantee_until,maintenance_due,notes,before_photo,after_photo,property_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(user.id,category,title,performedAt,companyName,providerId,text(fd,'contactName'),text(fd,'contactPhone'),contactEmail,costAmount,text(fd,'guaranteeUntil')||null,text(fd,'maintenanceDue')||null,text(fd,'notes').slice(0,3000),beforePath,afterPath,property.id);
+  const entryId=Number(r.lastInsertRowid);
+  if(document instanceof File&&document.size){const stored=await savePrivateFile(document,'house-history');db.prepare(`INSERT INTO house_history_documents(entry_id,title,path) VALUES(?,?,?)`).run(entryId,text(fd,'documentTitle')||document.name,stored);}
+  if(providerId){const member=db.prepare(`SELECT user_id FROM provider_members WHERE provider_id=? AND active=1 ORDER BY can_manage_jobs DESC,id LIMIT 1`).get(providerId) as {user_id:number}|undefined;if(member)db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,property_id,updated_at) VALUES(?,?,?,?,NULL,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,property_id=excluded.property_id,updated_at=CURRENT_TIMESTAMP`).run(user.id,providerId,member.user_id,category,property.id);}
+  else if(contactEmail){db.prepare(`INSERT INTO provider_invites(homeowner_id,email,company_name,category,token,property_id) VALUES(?,?,?,?,?,?)`).run(user.id,contactEmail,companyName,category,randomUUID(),property.id);}
+  if(text(fd,'maintenanceDue'))db.prepare(`INSERT INTO maintenance_tasks(homeowner_id,title,category,due_date,status,property_id) VALUES(?,?,?,?, 'open',?)`).run(user.id,`Wartung: ${title}`,category,text(fd,'maintenanceDue'),property.id);
+  revalidatePath('/app/home');revalidatePath('/app/home/history');revalidatePath('/app/year');revalidatePath('/app/messages');
+}
+
+export async function createHouseTransferAction(fd:FormData){
+  const user=await requireUser('homeowner'); const property=primaryProperty(user.id); const email=text(fd,'targetEmail').toLowerCase(); if(!property||!email)return;
+  const token=randomUUID(); db.prepare(`INSERT INTO house_transfers(homeowner_id,target_email,token,property_id) VALUES(?,?,?,?)`).run(user.id,email,token,property.id);
+  const target=db.prepare(`SELECT id FROM users WHERE lower(email)=lower(?) AND role='homeowner'`).get(email) as {id:number}|undefined; if(target)createNotification(target.id,'Hausakte zur Übergabe bereit',`${user.first_name} ${user.last_name} möchte dir eine digitale Hausakte übergeben.`,`/transfer/${token}`,'house_transfer');
+  revalidatePath('/app/home/history'); redirect(`/app/home/history?transfer=${token}`);
+}
+
+export async function acceptHouseTransferAction(token:string){
+  const user=await requireUser('homeowner'); const transfer=db.prepare(`SELECT * FROM house_transfers WHERE token=? AND status='active'`).get(token) as any; if(!transfer)return;
+  if(String(transfer.target_email).toLowerCase()!==user.email.toLowerCase())redirect(`/transfer/${token}?error=Diese%20Hausakte%20wurde%20für%20eine%20andere%20E-Mail-Adresse%20freigegeben`);
+  const propertyId=Number(transfer.property_id); if(!propertyId||!propertyOwnedBy(transfer.homeowner_id,propertyId))return;
+  const property=db.prepare(`SELECT * FROM properties WHERE id=?`).get(propertyId) as any; if(!property)return;
+  const tx=db.transaction(()=>{
+    db.prepare(`UPDATE property_ownerships SET active=0,ended_at=CURRENT_TIMESTAMP WHERE property_id=? AND homeowner_id=? AND active=1`).run(propertyId,transfer.homeowner_id);
+    db.prepare(`INSERT INTO property_ownerships(property_id,homeowner_id,started_at,active) VALUES(?,?,CURRENT_TIMESTAMP,1)`).run(propertyId,user.id);
+    db.prepare(`UPDATE homeowner_profiles SET postcode=?,address=?,lat=?,lon=?,house_type=?,build_year=?,living_area=?,plot_area=? WHERE user_id=?`).run(property.postcode,property.address,property.lat,property.lon,property.property_type,property.build_year,property.living_area,property.plot_area,user.id);
+    db.prepare(`UPDATE house_assets SET homeowner_id=? WHERE property_id=?`).run(user.id,propertyId);
+    db.prepare(`UPDATE maintenance_tasks SET homeowner_id=? WHERE property_id=?`).run(user.id,propertyId);
+    const contacts=db.prepare(`SELECT * FROM homeowner_contacts WHERE property_id=? AND homeowner_id=?`).all(propertyId,transfer.homeowner_id) as any[];
+    const upsertContact=db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,property_id,updated_at) VALUES(?,?,?,?,NULL,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,property_id=excluded.property_id,updated_at=CURRENT_TIMESTAMP`);
+    for(const contact of contacts)upsertContact.run(user.id,contact.provider_id,contact.contact_user_id,contact.category,propertyId);
+    db.prepare(`DELETE FROM homeowner_contacts WHERE property_id=? AND homeowner_id=?`).run(propertyId,transfer.homeowner_id);
+    db.prepare(`UPDATE house_transfers SET status='accepted',accepted_by_user_id=?,accepted_at=CURRENT_TIMESTAMP WHERE id=?`).run(user.id,transfer.id);
+  });tx();
+  createNotification(transfer.homeowner_id,'Hausakte übergeben',`${user.first_name} ${user.last_name} hat die Hausakte übernommen.`,'/app/home/history','house_transfer'); revalidatePath('/app/home');revalidatePath('/app/home/history');revalidatePath('/app/year');revalidatePath('/app/messages');redirect('/app/home?transfer=accepted');
+}
+
+export async function savePropertyValuationAction(fd:FormData){
+  const user=await requireUser('homeowner'); const property=primaryProperty(user.id); if(!property)return;
+  const toCents=(key:string)=>{const value=Number(String(fd.get(key)||'').replace(',','.'));return Number.isFinite(value)&&value>=0?Math.round(value*100):null;};
+  const estimatedMin=toCents('estimatedMin'); const estimatedMax=toCents('estimatedMax'); const type=text(fd,'valuationType')||'orientation'; const notes=text(fd,'notes').slice(0,2000);
+  const completed=estimatedMin!=null&&estimatedMax!=null&&estimatedMax>=estimatedMin;
+  db.prepare(`INSERT INTO property_valuations(property_id,homeowner_id,status,valuation_type,estimated_min,estimated_max,notes,completed_at) VALUES(?,?,?, ?,?,?,?,?)`).run(property.id,user.id,completed?'completed':'requested',type,estimatedMin,estimatedMax,notes,completed?new Date().toISOString():null);
+  if(completed)db.prepare(`UPDATE properties SET estimated_value_min=?,estimated_value_max=?,updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(estimatedMin,estimatedMax,property.id);
+  revalidatePath('/app/home/sale'); revalidatePath('/app/home');
+}
+
+export async function startSaleProcessAction(){
+  const user=await requireUser('homeowner'); const property=primaryProperty(user.id); if(!property)return;
+  let lead=db.prepare(`SELECT id FROM sale_leads WHERE property_id=? AND homeowner_id=? AND status NOT IN ('sold','cancelled') ORDER BY id DESC LIMIT 1`).get(property.id,user.id) as {id:number}|undefined;
+  if(!lead){const result=db.prepare(`INSERT INTO sale_leads(property_id,homeowner_id,status) VALUES(?,?,'interested')`).run(property.id,user.id);lead={id:Number(result.lastInsertRowid)};}
+  createBrokerMatches(lead.id);
+  revalidatePath('/app/home/sale'); redirect(`/app/home/sale?lead=${lead.id}`);
+}
+
+export async function grantBrokerContactAction(matchId:number){
+  const user=await requireUser('homeowner');
+  const match=db.prepare(`SELECT m.*,l.property_id,l.homeowner_id,p.business_name FROM broker_lead_matches m JOIN sale_leads l ON l.id=m.sale_lead_id JOIN provider_profiles p ON p.user_id=m.provider_id WHERE m.id=?`).get(matchId) as any;
+  if(!match||match.homeowner_id!==user.id||!propertyOwnedBy(user.id,match.property_id))return;
+  const permissions=JSON.stringify(['property_summary','owner_contact']);
+  db.prepare(`UPDATE property_shares SET status='revoked',revoked_at=CURRENT_TIMESTAMP WHERE property_id=? AND provider_id=? AND purpose='sale' AND status='active'`).run(match.property_id,match.provider_id);
+  db.prepare(`INSERT INTO property_shares(property_id,homeowner_id,provider_id,purpose,permissions_json,status) VALUES(?,?,?,'sale',?,'active')`).run(match.property_id,user.id,match.provider_id,permissions);
+  db.prepare(`UPDATE broker_lead_matches SET status='contact_released',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(matchId);
+  db.prepare(`UPDATE sale_leads SET status='contact_released',updated_at=CURRENT_TIMESTAMP WHERE id=? AND status IN ('interested','matched')`).run(match.sale_lead_id);
+  for(const managerId of getProviderManagerIds(match.provider_id))createNotification(managerId,'Neue freigegebene Immobilienanfrage',`${user.first_name} ${user.last_name} hat den Kontakt für eine passende Immobilie freigegeben.`,`/pro/leads?match=${matchId}`,'sale_lead');
+  createNotification(user.id,'Kontakt freigegeben',`${match.business_name} darf jetzt die freigegebene Objektzusammenfassung und deine Kontaktdaten sehen. Private Dokumente bleiben gesperrt.`,'/app/home/sale','privacy');
+  revalidatePath('/app/home/sale'); revalidatePath('/pro/leads'); revalidatePath('/notifications');
+}
+
+export async function revokeBrokerContactAction(matchId:number){
+  const user=await requireUser('homeowner'); const match=db.prepare(`SELECT m.*,l.property_id,l.homeowner_id FROM broker_lead_matches m JOIN sale_leads l ON l.id=m.sale_lead_id WHERE m.id=?`).get(matchId) as any; if(!match||match.homeowner_id!==user.id)return;
+  db.prepare(`UPDATE property_shares SET status='revoked',revoked_at=CURRENT_TIMESTAMP WHERE property_id=? AND provider_id=? AND purpose='sale' AND status='active'`).run(match.property_id,match.provider_id);
+  db.prepare(`UPDATE broker_lead_matches SET status='revoked',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(matchId);
+  for(const managerId of getProviderManagerIds(match.provider_id))createNotification(managerId,'Freigabe widerrufen','Der Eigentümer hat die Freigabe für diese Immobilienanfrage widerrufen.','/pro/leads','privacy');
+  revalidatePath('/app/home/sale'); revalidatePath('/pro/leads'); revalidatePath('/notifications');
+}
+
+export async function updateBrokerLeadStatusAction(matchId:number,fd:FormData){
+  const user=await requireUser('provider'); const ctx=getProviderContext(user.id); if(!ctx?.canManageJobs)return;
+  const requested=text(fd,'status'); const allowed=new Set(['interested','rejected','inspection','mandate','sold']); if(!allowed.has(requested))return;
+  const match=db.prepare(`SELECT m.*,l.property_id,l.homeowner_id,l.id sale_lead_id FROM broker_lead_matches m JOIN sale_leads l ON l.id=m.sale_lead_id WHERE m.id=? AND m.provider_id=?`).get(matchId,ctx.providerId) as any; if(!match)return;
+  const share=db.prepare(`SELECT 1 FROM property_shares WHERE property_id=? AND provider_id=? AND purpose='sale' AND status='active'`).get(match.property_id,ctx.providerId); if(!share)return;
+  db.prepare(`UPDATE broker_lead_matches SET status=?,updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(requested,matchId);
+  if(['inspection','mandate','sold'].includes(requested))db.prepare(`UPDATE sale_leads SET status=?,updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(requested,match.sale_lead_id);
+  const labels:Record<string,string>={interested:'Makler hat Interesse',rejected:'Makler lehnt Anfrage ab',inspection:'Besichtigung vereinbart',mandate:'Maklerauftrag erteilt',sold:'Immobilie verkauft'};
+  createNotification(match.homeowner_id,labels[requested]||'Verkaufsprozess aktualisiert',`${ctx.businessName} hat den Status deiner Immobilienanfrage aktualisiert.`,'/app/home/sale','sale_lead');
+  revalidatePath('/pro/leads'); revalidatePath('/app/home/sale'); revalidatePath('/notifications');
+}
+
 export async function adminLoginAction(fd:FormData){
-  const password=text(fd,'password');
-  if(!adminPasswordMatches(password)) redirect('/admin/login?error=Anmeldung%20fehlgeschlagen');
+  const ip=await clientIp();
+  const limit=checkRateLimit('admin_login', ip);
+  if(!limit.allowed){ rateLimitBlockedEvent('admin_login', ip, limit.retryAfterSeconds); logAdminAudit('admin-login','login_blocked',`ip:${ip}`); redirect('/admin/login?error=Anmeldung%20fehlgeschlagen'); }
+  const parsed=adminLoginSchema.safeParse({ password: String(fd.get('password') ?? '').trim() });
+  // Constant-shape check runs on every attempt, including malformed input.
+  const password=parsed.success ? parsed.data.password : '';
+  if(!adminPasswordMatches(password)){
+    recordRateLimitFailure('admin_login', ip);
+    logSecurityEvent('admin_login_fail','admin',`ip=${ip}`);
+    logAdminAudit('admin-login','login_fail',`ip:${ip}`);
+    redirect('/admin/login?error=Anmeldung%20fehlgeschlagen');
+  }
+  recordRateLimitSuccess('admin_login', ip);
+  logSecurityEvent('admin_login_ok','admin',`ip=${ip}`);
+  logAdminAudit('admin-login','login_ok',`ip:${ip}`);
   await createAdminSession(); redirect('/admin');
 }
 export async function adminLogoutAction(){await destroyAdminSession();redirect('/admin/login');}
@@ -312,10 +631,13 @@ export async function submitVerificationAction(fd:FormData){
 }
 
 export async function adminReviewVerificationAction(requestId:number,fd:FormData){
-  await requireAdmin(); const decision=text(fd,'decision'); if(!['approved','rejected'].includes(decision)) return;
+  await requireAdmin();
+  const parsed=verificationDecisionSchema.safeParse({ decision: text(fd,'decision'), adminNote: text(fd,'adminNote') });
+  if(!parsed.success){ logAdminAudit('admin','verification_review_invalid',`request:${requestId}`); return; }
+  const { decision, adminNote } = parsed.data;
   const row=db.prepare('SELECT provider_id FROM verification_requests WHERE id=?').get(requestId) as {provider_id:number}|undefined; if(!row)return;
-  const tx=db.transaction(()=>{db.prepare('UPDATE verification_requests SET status=?,admin_note=?,reviewed_at=CURRENT_TIMESTAMP WHERE id=?').run(decision,text(fd,'adminNote').slice(0,2000),requestId);db.prepare('UPDATE provider_profiles SET verified=? WHERE user_id=?').run(decision==='approved'?1:0,row.provider_id);}); tx();
-  createNotification(row.provider_id,decision==='approved'?'Unternehmensprüfung bestanden':'Unternehmensprüfung abgelehnt',decision==='approved'?'Deine Unternehmensnachweise sind geprüft. Für Kundenanfragen muss zusätzlich der Einfach-Hausen-Partnervertrag aktiv sein.':(text(fd,'adminNote')||'Bitte prüfe deine Nachweise und reiche sie erneut ein.'),'/pro/profile','verification');
+  const tx=db.transaction(()=>{db.prepare('UPDATE verification_requests SET status=?,admin_note=?,reviewed_at=CURRENT_TIMESTAMP WHERE id=?').run(decision,adminNote,requestId);db.prepare('UPDATE provider_profiles SET verified=? WHERE user_id=?').run(decision==='approved'?1:0,row.provider_id);logAdminAudit('admin','verification_review',`provider:${row.provider_id}`,`request=${requestId};decision=${decision}`);}); tx();
+  createNotification(row.provider_id,decision==='approved'?'Unternehmensprüfung bestanden':'Unternehmensprüfung abgelehnt',decision==='approved'?'Deine Unternehmensnachweise sind geprüft. Für Kundenanfragen muss zusätzlich der Einfach-Hausen-Partnervertrag aktiv sein.':(adminNote||'Bitte prüfe deine Nachweise und reiche sie erneut ein.'),'/pro/profile','verification');
   revalidatePath('/admin'); revalidatePath('/pro/profile'); revalidatePath('/pro'); revalidatePath('/notifications');
 }
 
@@ -330,11 +652,15 @@ export async function createClaimAction(jobId:number,fd:FormData){
 }
 
 export async function adminUpdateClaimAction(claimId:number,fd:FormData){
-  await requireAdmin(); const status=text(fd,'status'); if(!['pending','reviewing','resolved','rejected'].includes(status))return;
+  await requireAdmin();
+  const parsed=claimStatusSchema.safeParse({ status: text(fd,'status'), adminNote: text(fd,'adminNote') });
+  if(!parsed.success){ logAdminAudit('admin','claim_update_invalid',`claim:${claimId}`); return; }
+  const { status, adminNote } = parsed.data;
   const claim=db.prepare('SELECT job_id,homeowner_id,provider_id FROM claims WHERE id=?').get(claimId) as {job_id:number,homeowner_id:number,provider_id:number}|undefined; if(!claim)return;
-  const note=text(fd,'adminNote').slice(0,3000); db.prepare('UPDATE claims SET status=?,admin_note=?,updated_at=CURRENT_TIMESTAMP WHERE id=?').run(status,note,claimId);
-  const body=note||`Der Fall wurde auf „${status}“ gesetzt.`; createNotification(claim.homeowner_id,'Problemfall aktualisiert',body,`/app/jobs/${claim.job_id}`,'claim');
+  db.transaction(()=>{db.prepare('UPDATE claims SET status=?,admin_note=?,updated_at=CURRENT_TIMESTAMP WHERE id=?').run(status,adminNote,claimId);logAdminAudit('admin','claim_update',`claim:${claimId}`,`job=${claim.job_id};status=${status}`);})();
+  const body=adminNote||`Der Fall wurde auf „${status}“ gesetzt.`; createNotification(claim.homeowner_id,'Problemfall aktualisiert',body,`/app/jobs/${claim.job_id}`,'claim');
   const assigned=db.prepare('SELECT contact_user_id FROM job_assignments WHERE job_id=?').get(claim.job_id) as {contact_user_id:number}|undefined; const recipients=new Set<number>([...getProviderManagerIds(claim.provider_id),...(assigned?[assigned.contact_user_id]:[])]); for(const recipient of recipients)createNotification(recipient,'Problemfall aktualisiert',body,`/pro/jobs/${claim.job_id}`,'claim');
+  logAdminAudit('admin','claim_update',`claim:${claimId}`,`job=${claim.job_id};status=${status}`);
   revalidatePath('/admin'); revalidatePath(`/app/jobs/${claim.job_id}`); revalidatePath(`/pro/jobs/${claim.job_id}`); revalidatePath('/notifications');
 }
 
@@ -359,14 +685,22 @@ export async function declineDispatchAction(jobId:number){
 
 export async function adminUpdatePartnerContractAction(providerId:number,fd:FormData){
   await requireAdmin();
-  const status=text(fd,'status'); if(!['pending','active','suspended','ended'].includes(status))return;
+  const parsed=partnerContractSchema.safeParse({
+    status: text(fd,'status'),
+    discountBps: int(fd,'discountBps') ?? 0,
+    responseTarget: int(fd,'responseTarget') ?? 30,
+    contractNotes: text(fd,'contractNotes'),
+  });
+  if(!parsed.success){ logAdminAudit('admin','contract_update_invalid',`provider:${providerId}`); return; }
+  const { status, discountBps: discount, responseTarget: response, contractNotes } = parsed.data;
   const commission=0;
-  const discount=Math.max(0,Math.min(3000,int(fd,'discountBps')??0));
-  const response=Math.max(5,Math.min(240,int(fd,'responseTarget')??30));
-  db.prepare(`INSERT INTO partner_contracts(provider_id,status,commission_bps,customer_discount_bps,insurance_verified,qualification_verified,contract_verified,quality_standard_verified,response_target_minutes,starts_at,notes,updated_at)
-    VALUES(?,?,?,?,?,?,?,?,?,CASE WHEN ?='active' THEN COALESCE((SELECT starts_at FROM partner_contracts WHERE provider_id=?),CURRENT_TIMESTAMP) ELSE (SELECT starts_at FROM partner_contracts WHERE provider_id=?) END,?,CURRENT_TIMESTAMP)
-    ON CONFLICT(provider_id) DO UPDATE SET status=excluded.status,commission_bps=excluded.commission_bps,customer_discount_bps=excluded.customer_discount_bps,insurance_verified=excluded.insurance_verified,qualification_verified=excluded.qualification_verified,contract_verified=excluded.contract_verified,quality_standard_verified=excluded.quality_standard_verified,response_target_minutes=excluded.response_target_minutes,starts_at=excluded.starts_at,notes=excluded.notes,updated_at=CURRENT_TIMESTAMP`).run(
-      providerId,status,commission,discount,fd.get('insurance')?1:0,fd.get('qualification')?1:0,fd.get('contract')?1:0,fd.get('quality')?1:0,response,status,providerId,providerId,text(fd,'contractNotes').slice(0,3000));
+  db.transaction(()=>{
+    db.prepare(`INSERT INTO partner_contracts(provider_id,status,commission_bps,customer_discount_bps,insurance_verified,qualification_verified,contract_verified,quality_standard_verified,response_target_minutes,starts_at,notes,updated_at)
+      VALUES(?,?,?,?,?,?,?,?,?,CASE WHEN ?='active' THEN COALESCE((SELECT starts_at FROM partner_contracts WHERE provider_id=?),CURRENT_TIMESTAMP) ELSE (SELECT starts_at FROM partner_contracts WHERE provider_id=?) END,?,CURRENT_TIMESTAMP)
+      ON CONFLICT(provider_id) DO UPDATE SET status=excluded.status,commission_bps=excluded.commission_bps,customer_discount_bps=excluded.customer_discount_bps,insurance_verified=excluded.insurance_verified,qualification_verified=excluded.qualification_verified,contract_verified=excluded.contract_verified,quality_standard_verified=excluded.quality_standard_verified,response_target_minutes=excluded.response_target_minutes,starts_at=excluded.starts_at,notes=excluded.notes,updated_at=CURRENT_TIMESTAMP`).run(
+        providerId,status,commission,discount,fd.get('insurance')?1:0,fd.get('qualification')?1:0,fd.get('contract')?1:0,fd.get('quality')?1:0,response,status,providerId,providerId,contractNotes);
+    logAdminAudit('admin','partner_contract_update',`provider:${providerId}`,`status=${status}`);
+  })();
   createNotification(providerId,status==='active'?'Partnervertrag aktiv':'Partnerstatus aktualisiert',status==='active'?'Dein Einfach-Hausen-Partnervertrag ist aktiv. Passende regionale Kundenanfragen werden ab jetzt automatisch an dich disponiert.':`Dein Partnerstatus wurde auf ${status} gesetzt.`,'/pro/profile','contract');
   if(status==='active')await redispatchOpenJobs();
   revalidatePath('/admin'); revalidatePath('/pro'); revalidatePath('/pro/profile'); revalidatePath('/notifications');
@@ -374,14 +708,15 @@ export async function adminUpdatePartnerContractAction(providerId:number,fd:Form
 
 export async function addProviderMemberAction(fd:FormData){
   const user=await requireUser('provider'); const ctx=getProviderContext(user.id); if(!ctx?.canManageJobs)redirect('/pro/team?error=Keine%20Berechtigung');
-  const email=text(fd,'email').toLowerCase(); const password=text(fd,'password'); const first=text(fd,'firstName'); const last=text(fd,'lastName');
-  if(!email||!first||!last||password.length<8)redirect('/pro/team?error=Bitte%20alle%20Pflichtfelder%20ausfüllen');
+  const parsed=providerMemberSchema.safeParse({email:text(fd,'email'),password:String(fd.get('password') ?? '').trim(),firstName:text(fd,'firstName'),lastName:text(fd,'lastName'),jobTitle:text(fd,'jobTitle'),phone:text(fd,'phone')});
+  if(!parsed.success){ logSecurityEvent('security_validation_reject','member_add',`fields=${parsed.error.issues.length}`); redirect('/pro/team?error=Bitte%20alle%20Pflichtfelder%20ausfüllen'); }
+  const { email, password, firstName: first, lastName: last, jobTitle, phone } = parsed.data;
   if(db.prepare('SELECT id FROM users WHERE email=?').get(email))redirect('/pro/team?error=E-Mail%20ist%20bereits%20registriert');
   const hash=await bcrypt.hash(password,12);
   const tx=db.transaction(()=>{
-    const r=db.prepare(`INSERT INTO users(email,password_hash,role,first_name,last_name,phone) VALUES(?,?,'provider',?,?,?)`).run(email,hash,first,last,text(fd,'phone')||null);
+    const r=db.prepare(`INSERT INTO users(email,password_hash,role,first_name,last_name,phone) VALUES(?,?,'provider',?,?,?)`).run(email,hash,first,last,phone||null);
     const memberId=Number(r.lastInsertRowid);
-    db.prepare('INSERT INTO provider_members(provider_id,user_id,job_title,can_manage_jobs,active) VALUES(?,?,?,?,1)').run(ctx.providerId,memberId,text(fd,'jobTitle'),fd.get('canManageJobs')?1:0);
+    db.prepare('INSERT INTO provider_members(provider_id,user_id,job_title,can_manage_jobs,active) VALUES(?,?,?,?,1)').run(ctx.providerId,memberId,jobTitle,fd.get('canManageJobs')?1:0);
     return memberId;
   });
   const memberId=tx(); createNotification(memberId,'Willkommen im Partnerteam',`Du hast jetzt App-Zugang für ${ctx.businessName}.`,'/pro','team');
@@ -402,18 +737,29 @@ export async function assignJobContactAction(jobId:number,fd:FormData){
   const user=await requireUser('provider'); const ctx=getProviderContext(user.id); if(!ctx?.canManageJobs)return;
   const contactUserId=int(fd,'contactUserId'); if(!contactUserId)return;
   const contact=db.prepare(`SELECT m.user_id,u.first_name,u.last_name FROM provider_members m JOIN users u ON u.id=m.user_id WHERE m.provider_id=? AND m.user_id=? AND m.active=1`).get(ctx.providerId,contactUserId) as any; if(!contact)return;
-  const job=db.prepare(`SELECT j.id,j.homeowner_id,j.title,j.category,j.request_kind FROM jobs j WHERE j.id=? AND j.status IN ('accepted','in_progress') AND ((j.request_kind='contact' AND EXISTS(SELECT 1 FROM job_dispatches d WHERE d.job_id=j.id AND d.provider_id=? AND d.status='accepted')) OR EXISTS(SELECT 1 FROM quotes q WHERE q.id=j.accepted_quote_id AND q.provider_id=?))`).get(jobId,ctx.providerId,ctx.providerId) as any; if(!job)return;
+  const job=db.prepare(`SELECT j.id,j.homeowner_id,j.title,j.category,j.request_kind,j.property_id FROM jobs j WHERE j.id=? AND j.status IN ('accepted','in_progress') AND ((j.request_kind='contact' AND EXISTS(SELECT 1 FROM job_dispatches d WHERE d.job_id=j.id AND d.provider_id=? AND d.status='accepted')) OR EXISTS(SELECT 1 FROM quotes q WHERE q.id=j.accepted_quote_id AND q.provider_id=?))`).get(jobId,ctx.providerId,ctx.providerId) as any; if(!job)return;
   const previous=db.prepare('SELECT contact_user_id FROM job_assignments WHERE job_id=?').get(jobId) as {contact_user_id:number}|undefined;
   const tx=db.transaction(()=>{
     db.prepare(`INSERT INTO job_assignments(job_id,provider_id,contact_user_id,assigned_by_user_id) VALUES(?,?,?,?) ON CONFLICT(job_id) DO UPDATE SET contact_user_id=excluded.contact_user_id,assigned_by_user_id=excluded.assigned_by_user_id,assigned_at=CURRENT_TIMESTAMP`).run(jobId,ctx.providerId,contactUserId,user.id);
     if(job.request_kind!=='contact')db.prepare('UPDATE appointments SET contact_user_id=? WHERE job_id=?').run(contactUserId,jobId);
     if(previous&&previous.contact_user_id!==contactUserId)db.prepare('DELETE FROM homeowner_contacts WHERE homeowner_id=? AND contact_user_id=? AND last_job_id=?').run(job.homeowner_id,previous.contact_user_id,jobId);
-    db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,updated_at) VALUES(?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,updated_at=CURRENT_TIMESTAMP`).run(job.homeowner_id,ctx.providerId,contactUserId,job.category||'',jobId);
+    db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,property_id,updated_at) VALUES(?,?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,last_job_id=excluded.last_job_id,property_id=excluded.property_id,updated_at=CURRENT_TIMESTAMP`).run(job.homeowner_id,ctx.providerId,contactUserId,normalizeContactCategory(job.category||''),jobId,job.property_id||null);
   }); tx();
   createNotification(job.homeowner_id,'Dein Ansprechpartner steht fest',`${contact.first_name} ${contact.last_name} von ${ctx.businessName} kümmert sich um „${job.title}“.`,`/app/jobs/${jobId}`,'contact');
   if(contactUserId!==user.id)createNotification(contactUserId,job.request_kind==='contact'?'Kontaktanfrage zugewiesen':'Auftrag zugewiesen',`Du bist jetzt Ansprechpartner für „${job.title.replace(/^Ansprechpartner:\s*/,'')}“.`,`/pro/jobs/${jobId}`,'assigned');
   appendJobEvent(jobId,job.request_kind==='contact'?`${contact.first_name} ${contact.last_name} von ${ctx.businessName} ist dein direkter Ansprechpartner. Du kannst jetzt schreiben oder anrufen; es ist weiterhin kein Auftrag vergeben.`:`${contact.first_name} ${contact.last_name} von ${ctx.businessName} ist dein direkter Ansprechpartner für diesen Auftrag. Du kannst jetzt direkt schreiben, anrufen oder den Termin abstimmen.`,{contactUserId,providerId:ctx.providerId,requestKind:job.request_kind});
   revalidatePath(`/pro/jobs/${jobId}`); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/app/messages'); revalidatePath('/pro/orders'); revalidatePath('/notifications');
+}
+
+export async function updateContactCategoryAction(contactUserId:number,fd:FormData){
+  const user=await requireUser('homeowner');
+  const relation=db.prepare('SELECT 1 FROM homeowner_contacts WHERE homeowner_id=? AND contact_user_id=?').get(user.id,contactUserId);
+  if(!relation)return;
+  const custom=text(fd,'customCategory'); const selected=text(fd,'category');
+  const category=normalizeContactCategory(custom||selected||'Haus & Allgemein');
+  db.prepare('UPDATE homeowner_contacts SET category=?,updated_at=CURRENT_TIMESTAMP WHERE homeowner_id=? AND contact_user_id=?').run(category,user.id,contactUserId);
+  revalidatePath('/app');revalidatePath('/app/messages');revalidatePath('/app/home');
+  redirect(`/app/messages?contact=${contactUserId}&category=saved`);
 }
 
 export async function sendSavedContactMessageAction(contactUserId:number,homeownerId:number,fd:FormData){
@@ -446,23 +792,24 @@ export async function saveHouseProfileAction(fd:FormData){
   const postcode=text(fd,'postcode');
   db.prepare(`UPDATE homeowner_profiles SET address=?,postcode=?,house_type=?,build_year=?,living_area=?,plot_area=? WHERE user_id=?`).run(text(fd,'address'),postcode,text(fd,'houseType'),int(fd,'buildYear'),Number(fd.get('livingArea'))||null,Number(fd.get('plotArea'))||null,user.id);
   const geo=await geocodePostcode(postcode); if(geo)db.prepare('UPDATE homeowner_profiles SET lat=?,lon=? WHERE user_id=?').run(geo.lat,geo.lon,user.id);
-  revalidatePath('/app/home'); revalidatePath('/app/profile');
+  syncPropertyFromLegacyProfile(user.id);
+  revalidatePath('/app/home'); revalidatePath('/app/profile'); revalidatePath('/app/home/sale');
 }
 
 export async function addHouseAssetAction(fd:FormData){
-  const user=await requireUser('homeowner'); const kind=text(fd,'kind'); const name=text(fd,'name'); if(!kind||!name)return;
-  const r=db.prepare('INSERT INTO house_assets(homeowner_id,kind,name,details,installed_year) VALUES(?,?,?,?,?)').run(user.id,kind,name,text(fd,'details').slice(0,1000),int(fd,'installedYear'));
+  const user=await requireUser('homeowner'); const kind=text(fd,'kind'); const name=text(fd,'name'); if(!kind||!name)return; const property=primaryProperty(user.id); if(!property)return;
+  const r=db.prepare('INSERT INTO house_assets(homeowner_id,kind,name,details,installed_year,property_id) VALUES(?,?,?,?,?,?)').run(user.id,kind,name,text(fd,'details').slice(0,1000),int(fd,'installedYear'),property.id);
   const assetId=Number(r.lastInsertRowid); const today=new Date(); const due=new Date(today); due.setMonth(due.getMonth()+12);
   const defaults:Record<string,string>={heating:'Heizung / Wärmepumpe prüfen lassen',pv:'PV-Anlage und Ertrag prüfen',storage:'Speicher-Check vormerken',wallbox:'Wallbox / Elektroprüfung vormerken',roof:'Dach und Dachrinne prüfen',windows:'Fenster und Türen prüfen',garden:'Saisonale Gartenpflege planen',smarthome:'Smart-Home- und Sicherheitscheck'};
-  db.prepare('INSERT INTO maintenance_tasks(homeowner_id,asset_id,title,category,due_date,recurrence_months) VALUES(?,?,?,?,?,12)').run(user.id,assetId,defaults[kind]||`${name} prüfen`,kind,due.toISOString().slice(0,10));
-  revalidatePath('/app/home');
+  db.prepare('INSERT INTO maintenance_tasks(homeowner_id,asset_id,title,category,due_date,recurrence_months,property_id) VALUES(?,?,?,?,?,12,?)').run(user.id,assetId,defaults[kind]||`${name} prüfen`,kind,due.toISOString().slice(0,10),property.id);
+  revalidatePath('/app/home'); revalidatePath('/app/year');
 }
 
 export async function completeMaintenanceTaskAction(taskId:number){
-  const user=await requireUser('homeowner'); const task=db.prepare('SELECT * FROM maintenance_tasks WHERE id=? AND homeowner_id=?').get(taskId,user.id) as any; if(!task)return;
+  const user=await requireUser('homeowner'); const property=primaryProperty(user.id); if(!property)return; const task=db.prepare('SELECT * FROM maintenance_tasks WHERE id=? AND property_id=?').get(taskId,property.id) as any; if(!task)return;
   db.prepare("UPDATE maintenance_tasks SET status='completed' WHERE id=?").run(taskId);
-  if(task.recurrence_months){const d=new Date(task.due_date);d.setMonth(d.getMonth()+task.recurrence_months);db.prepare('INSERT INTO maintenance_tasks(homeowner_id,asset_id,title,category,due_date,recurrence_months) VALUES(?,?,?,?,?,?)').run(user.id,task.asset_id,task.title,task.category,d.toISOString().slice(0,10),task.recurrence_months);}
-  revalidatePath('/app/home');
+  if(task.recurrence_months){const d=new Date(task.due_date);d.setMonth(d.getMonth()+task.recurrence_months);db.prepare('INSERT INTO maintenance_tasks(homeowner_id,asset_id,title,category,due_date,recurrence_months,property_id) VALUES(?,?,?,?,?,?,?)').run(user.id,task.asset_id,task.title,task.category,d.toISOString().slice(0,10),task.recurrence_months,property.id);}
+  revalidatePath('/app/home'); revalidatePath('/app/year');
 }
 
 export async function startMembershipCheckoutAction(planSlug:string){

@@ -10,8 +10,9 @@ export function markPaymentPaid(sessionId:string){
   if(!payment) return null;
   const changed=db.prepare(`UPDATE payments SET status='paid',paid_at=COALESCE(paid_at,CURRENT_TIMESTAMP) WHERE stripe_session_id=? AND status!='paid'`).run(sessionId).changes;
   if(changed){
-    createNotification(payment.homeowner_id,'Zahlung erfolgreich',`${euro(payment.amount)} für „${payment.title}“ wurden sicher verbucht.`,`/app/jobs/${payment.job_id}`,'payment');
-    for(const recipient of providerRecipients(payment.job_id,payment.provider_id))createNotification(recipient,'Zahlung eingegangen',`Die Kundenzahlung über ${euro(payment.amount)} für „${payment.title}“ wurde verbucht. 0 % Auftragsprovision.`,`/pro/jobs/${payment.job_id}`,'payment');
+    if(payment.invoice_id)db.prepare(`UPDATE invoices SET status='paid',paid_at=COALESCE(paid_at,CURRENT_TIMESTAMP),updated_at=CURRENT_TIMESTAMP WHERE id=? AND status!='cancelled'`).run(payment.invoice_id);
+    createNotification(payment.homeowner_id,'Zahlung erfolgreich',`${euro(payment.amount)} für „${payment.title}“ wurden sicher verbucht.`,payment.invoice_id?`/app/invoices/${payment.invoice_id}`:`/app/jobs/${payment.job_id}`,'payment');
+    for(const recipient of providerRecipients(payment.job_id,payment.provider_id))createNotification(recipient,'Zahlung eingegangen',`Die Kundenzahlung über ${euro(payment.amount)} für „${payment.title}“ wurde verbucht. 0 % Auftragsprovision.`,payment.invoice_id?`/pro/invoices/${payment.invoice_id}`:`/pro/jobs/${payment.job_id}`,'payment');
   }
   return payment;
 }

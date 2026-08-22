@@ -1,4 +1,5 @@
 import { db } from './db';
+import { primaryProperty } from './properties';
 
 function dateAfter(months:number,days=0){const d=new Date();d.setMonth(d.getMonth()+months);d.setDate(d.getDate()+days);return d.toISOString().slice(0,10);}
 
@@ -7,8 +8,9 @@ export function activatePackageOrder(orderId:number,userId:number){
   if(!order)return null;
   const wasPaid=order.status==='paid'||order.status==='scheduled'||order.status==='completed';
   if(!wasPaid)db.prepare("UPDATE package_orders SET status='paid',updated_at=CURRENT_TIMESTAMP WHERE id=?").run(orderId);
-  const exists=(title:string)=>db.prepare("SELECT 1 FROM maintenance_tasks WHERE homeowner_id=? AND title=? AND status='open'").get(userId,title);
-  const add=(title:string,category:string,due:string,recurrence:number|null=null)=>{if(!exists(title))db.prepare('INSERT INTO maintenance_tasks(homeowner_id,title,category,due_date,recurrence_months) VALUES(?,?,?,?,?)').run(userId,title,category,due,recurrence);};
+  const property=primaryProperty(userId); if(!property)return order;
+  const exists=(title:string)=>db.prepare("SELECT 1 FROM maintenance_tasks WHERE property_id=? AND title=? AND status='open'").get(property.id,title);
+  const add=(title:string,category:string,due:string,recurrence:number|null=null)=>{if(!exists(title))db.prepare('INSERT INTO maintenance_tasks(homeowner_id,title,category,due_date,recurrence_months,property_id) VALUES(?,?,?,?,?,?)').run(userId,title,category,due,recurrence,property.id);};
   if(order.package_slug==='haus-jahrespflege'){
     add('Jährlichen Haus-Check organisieren','Haus Jahrespflege',dateAfter(0,14),12);
     add('Dach und Dachrinne prüfen','Haus Jahrespflege',dateAfter(2),12);

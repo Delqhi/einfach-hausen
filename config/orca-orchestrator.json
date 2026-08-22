@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "review": {
+    "required_for_roles": [
+      "implementer"
+    ],
+    "blind": true,
+    "same_worktree": true,
+    "new_terminal": true,
+    "different_agent": true,
+    "maximum_diff_chars": 60000,
+    "require_all_criteria_proven": true,
+    "require_diff_hash_match": true,
+    "preferred_agents": [
+      "opencode",
+      "codex",
+      "claude"
+    ]
+  }
+}

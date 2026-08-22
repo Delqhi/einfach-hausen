@@ -4,15 +4,16 @@ import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel } from '@/lib/format';
+import { primaryProperty } from '@/lib/properties';
 
 const monthFmt=new Intl.DateTimeFormat('de-DE',{month:'short'});
 
 export default async function YearPage({searchParams}:{searchParams:Promise<Record<string,string>>}){
-  const user=await requireUser('homeowner'); const sp=await searchParams; const view=sp.view==='history'?'history':'plan';
+  const user=await requireUser('homeowner'); const property=primaryProperty(user.id); const sp=await searchParams; const view=sp.view==='history'?'history':'plan';
   const year=Number(sp.year)||new Date().getFullYear();
   const tasks=view==='plan'
-    ? db.prepare(`SELECT * FROM maintenance_tasks WHERE homeowner_id=? AND status='open' AND strftime('%Y',due_date)=? ORDER BY due_date`).all(user.id,String(year)) as any[]
-    : db.prepare(`SELECT * FROM maintenance_tasks WHERE homeowner_id=? AND status='completed' ORDER BY due_date DESC LIMIT 40`).all(user.id) as any[];
+    ? property?db.prepare(`SELECT * FROM maintenance_tasks WHERE property_id=? AND status='open' AND strftime('%Y',due_date)=? ORDER BY due_date`).all(property.id,String(year)):[] as any[]
+    : property?db.prepare(`SELECT * FROM maintenance_tasks WHERE property_id=? AND status='completed' ORDER BY due_date DESC LIMIT 40`).all(property.id):[] as any[];
   const jobs=view==='plan'
     ? db.prepare(`SELECT id,title,preferred_date,status FROM jobs WHERE homeowner_id=? AND request_kind='service' AND status IN ('accepted','in_progress') AND preferred_date IS NOT NULL ORDER BY preferred_date`).all(user.id) as any[]
     : db.prepare(`SELECT id,title,updated_at preferred_date,status FROM jobs WHERE homeowner_id=? AND request_kind='service' AND status='completed' ORDER BY updated_at DESC LIMIT 40`).all(user.id) as any[];

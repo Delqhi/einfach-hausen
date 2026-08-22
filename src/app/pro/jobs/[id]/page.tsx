@@ -7,6 +7,8 @@ import { acceptContactRequestAction,assignJobContactAction,declineDispatchAction
 import { dateLabel,euro,statusLabel } from '@/lib/format';
 import { canAccessProviderJob,getProviderMembers } from '@/lib/provider';
 import { DocumentForm } from './document-form';
+import { InvoiceForm } from './invoice-form';
+import { invoiceStatusLabel } from '@/lib/invoices';
 
 export default async function ProJob({params,searchParams}:{params:Promise<{id:string}>,searchParams:Promise<Record<string,string>>}){
   const u=await requireUser('provider'); const {id}=await params; const sp=await searchParams; const jobId=Number(id);
@@ -21,14 +23,16 @@ export default async function ProJob({params,searchParams}:{params:Promise<{id:s
   const assignment=isAccepted?db.prepare(`SELECT a.*,u.first_name,u.last_name,u.phone,u.email,m.job_title FROM job_assignments a JOIN users u ON u.id=a.contact_user_id JOIN provider_members m ON m.user_id=a.contact_user_id WHERE a.job_id=?`).get(access.id) as any:null;
   if(!ctx.canManageJobs&&assignment?.contact_user_id!==u.id)notFound();
   const members=ctx.canManageJobs?getProviderMembers(ctx.providerId):[];
+  const prefs=db.prepare('SELECT * FROM provider_preferences WHERE provider_id=?').get(ctx.providerId) as any;
   const docs=!isContact&&isAccepted?db.prepare('SELECT * FROM documents WHERE job_id=? AND provider_id=? ORDER BY created_at DESC').all(access.id,ctx.providerId) as any[]:[];
+  const invoices=!isContact&&isAccepted?db.prepare('SELECT * FROM invoices WHERE job_id=? AND provider_id=? ORDER BY created_at DESC').all(access.id,ctx.providerId) as any[]:[];
   const claim=!isContact&&isAccepted?db.prepare('SELECT * FROM claims WHERE job_id=?').get(access.id) as any:null;
   const messages=assignment?.contact_user_id===u.id?(isContact?db.prepare('SELECT * FROM contact_messages WHERE homeowner_id=? AND contact_user_id=? ORDER BY created_at').all(access.homeowner_id,u.id) as any[]:db.prepare('SELECT * FROM messages WHERE job_id=? ORDER BY created_at').all(access.id) as any[]):[];
   const mine=assignment?.contact_user_id===u.id;
 
   return <AppShell role="provider" active={isAccepted?'/pro/orders':'/pro'} title={isContact?'Kontaktanfrage':isAccepted?'Auftrag':'Anfrage'} subtitle={access.category}>
     {sp.error&&<div className="alert error">{sp.error}</div>}
-    <div className="detail-head pro-detail"><span className={`status ${access.status}`}>{isContact?(isAccepted?'Verbunden':'Kontakt gesucht'):statusLabel(access.status)}</span><h1>{access.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{access.description}</p><div className="meta-line"><span><MapPin/>{isAccepted&&access.address?access.address:access.postcode}</span>{!isContact&&<span><CalendarDays/>{dateLabel(access.preferred_date)}</span>}</div>{access.photo&&<img className="hero-photo" src={access.photo} alt="Foto zum Thema"/>}{!isContact&&<div className="budget-line"><small>KI-Richtpreis</small><strong>{access.budget_min&&access.budget_max?`${euro(access.budget_min)} – ${euro(access.budget_max)}`:euro(access.budget_max)}</strong></div>}</div>
+    <div className="detail-head pro-detail"><span className={`status ${access.status}`}>{isContact?(isAccepted?'Verbunden':'Kontakt gesucht'):statusLabel(access.status)}</span><h1>{access.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{access.description}</p><div className="meta-line"><span><MapPin/>{isAccepted&&access.address?access.address:access.postcode}</span>{!isContact&&<span><CalendarDays/>{dateLabel(access.preferred_date)}</span>}</div>{access.photo&&<img className="hero-photo" src={access.photo} alt="Foto zum Thema"/>}{!isContact&&<div className="budget-line"><small>Richtpreis</small><strong>{access.budget_min&&access.budget_max?`${euro(access.budget_min)} – ${euro(access.budget_max)}`:euro(access.budget_max)}</strong></div>}</div>
 
     {!isAccepted&&ctx.canManageJobs&&access.status!=='completed'&&isContact&&<>
       <div className="contact-request-note"><MessageCircle/><div><strong>Nur persönlicher Ansprechpartner gesucht</strong><p>Der Eigentümer möchte zunächst einen fachlichen Menschen sprechen. Es wird noch kein Auftrag und kein Preis vereinbart.</p></div></div>
@@ -37,7 +41,7 @@ export default async function ProJob({params,searchParams}:{params:Promise<{id:s
       <form action={declineDispatchAction.bind(null,access.id)} className="decline-form"><button className="btn ghost pro-ghost wide"><XCircle size={16}/>Kontaktanfrage ablehnen</button></form>
     </>}
 
-    {!isAccepted&&ctx.canManageJobs&&access.status!=='completed'&&!isContact&&<><SectionTitle>Anfrage beantworten</SectionTitle><form action={submitQuoteAction.bind(null,access.id)} className="quote-form"><label>Gesamtpreis (€)<input name="amount" type="number" min="1" required defaultValue={quote?quote.amount/100:''}/></label><label>Verfügbar ab<input name="availableAt" type="datetime-local" defaultValue={quote?.available_at?.slice(0,16)||''}/></label><label>Leistungsumfang<textarea name="message" rows={4} defaultValue={quote?.message||''} placeholder="Leistung, Material, Entsorgung, Gewährleistung/Ausschlüsse …" required/></label><button className="btn light wide">{quote?'Angebot aktualisieren':'Angebot senden'}</button></form>{!quote&&<form action={declineDispatchAction.bind(null,access.id)} className="decline-form"><button className="btn ghost pro-ghost wide"><XCircle size={16}/>Anfrage ablehnen</button></form>}</>}
+    {!isAccepted&&ctx.canManageJobs&&access.status!=='completed'&&!isContact&&<>{access.urgency==='emergency'&&<div className="pro-emergency-note"><strong>🚨 Notfallanfrage</strong><p>{Number.isFinite(access.distance_km)?`${access.distance_km.toFixed(1)} km entfernt · `:''}{prefs?.emergency_mode==='24_7'?'24/7-Bereitschaft aktiv':`deine Bereitschaft ${prefs?.emergency_start||'–'}–${prefs?.emergency_end||'–'} Uhr`}{prefs?.emergency_markup_bps?` · maximal ${(prefs.emergency_markup_bps/100).toFixed(0)} % Notfallzuschlag`: ' · kein hinterlegter Notfallzuschlag'}. Gib im Angebot den tatsächlichen Gesamtpreis und den frühesten realistischen Termin an.</p></div>}<SectionTitle>{access.urgency==='emergency'?'Notfall beantworten':'Anfrage beantworten'}</SectionTitle><form action={submitQuoteAction.bind(null,access.id)} className="quote-form"><label>Gesamtpreis (€)<input name="amount" type="number" min="1" required defaultValue={quote?quote.amount/100:''}/></label><label>Verfügbar ab<input name="availableAt" type="datetime-local" defaultValue={quote?.available_at?.slice(0,16)||''}/></label><label>Leistungsumfang<textarea name="message" rows={4} defaultValue={quote?.message||''} placeholder="Leistung, Material, Entsorgung, Gewährleistung/Ausschlüsse …" required/></label><button className="btn light wide">{quote?'Angebot aktualisieren':'Angebot senden'}</button></form>{!quote&&<form action={declineDispatchAction.bind(null,access.id)} className="decline-form"><button className="btn ghost pro-ghost wide"><XCircle size={16}/>Anfrage ablehnen</button></form>}</>}
 
     {isAccepted&&<>
       <div className="alert success"><ShieldCheck/> {isContact?`Du bist mit dem Eigentümer verbunden. Noch kein Auftrag.`:`Kunde hat den Auftrag bei ${ctx.businessName} gebucht.`}</div>
@@ -51,7 +55,7 @@ export default async function ProJob({params,searchParams}:{params:Promise<{id:s
       </>}
 
       {claim&&<div className="claim-notice pro-claim"><div><strong>Servicefall · {statusLabel(claim.status)}</strong><p>{claim.description}</p>{claim.admin_note&&<small>Plattform-Rückmeldung: {claim.admin_note}</small>}</div></div>}
-      {mine&&!isContact&&<><SectionTitle>Dokumente & Rechnung</SectionTitle>{docs.length>0&&<div className="stack pro-doc-list">{docs.map(d=><a key={d.id} href={`/api/documents/${d.id}`} target="_blank" rel="noreferrer"><strong>{d.title}</strong><small>{d.kind}</small></a>)}</div>}<DocumentForm jobId={access.id}/></>}
+      {mine&&!isContact&&<><SectionTitle>Rechnungen</SectionTitle>{invoices.length>0&&<div className="stack pro-doc-list">{invoices.map(inv=><a key={inv.id} href={`/pro/invoices/${inv.id}`}><strong>{inv.invoice_number} · {euro(inv.total_gross)}</strong><small>{invoiceStatusLabel(inv.status)} · fällig {dateLabel(inv.due_date)}</small></a>)}</div>}<InvoiceForm jobId={access.id} defaultAmount={quote?.amount||access.budget_max||0}/><SectionTitle>Weitere Dokumente</SectionTitle>{docs.length>0&&<div className="stack pro-doc-list">{docs.map(d=><a key={d.id} href={`/api/documents/${d.id}`} target="_blank" rel="noreferrer"><strong>{d.title}</strong><small>{d.kind}</small></a>)}</div>}<DocumentForm jobId={access.id}/></>}
     </>}
   </AppShell>;
 }

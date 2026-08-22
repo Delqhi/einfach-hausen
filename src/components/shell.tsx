@@ -24,7 +24,7 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
       <div className="workspace-main">
         <header className="topbar-v3">
           <div className="mobile-brand"><Logo inverse={pro}/></div>
-          <div className="page-context"><strong>{title || (pro?'Partnerbereich':'Einfach Hausen')}</strong><small>{subtitle || (pro?'Aufträge organisieren':'Dein digitaler Hausmeister')}</small></div>
+          <div className="page-context"><strong>{title || (pro?'Partnerbereich':'Einfach Hausen')}</strong><small>{subtitle || (pro?'Aufträge organisieren':'Alles rund um dein Zuhause')}</small></div>
           <div className="top-actions"><Link className="notification-link" href="/notifications" aria-label={unread?`${unread} ungelesene Benachrichtigungen`:'Benachrichtigungen'}><Bell size={18}/>{unread>0&&<span>{unread>99?'99+':unread}</span>}</Link><Link href={profileHref} className="top-user-avatar" aria-label="Profil">{initials}</Link></div>
         </header>
         <section className="screen-v3">{children}</section>
