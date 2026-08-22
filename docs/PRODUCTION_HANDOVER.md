@@ -4,6 +4,31 @@
 
 This document is the canonical continuation point for a new agent. It deliberately records both completed work and the one known external propagation blocker. Do not infer that the public cutover is complete until the verification checklist below passes.
 
+## 0. Latest continuation checkpoint — 2026-08-22
+
+**Canonical next-agent entry:** [`NEXT_AGENT.md`](NEXT_AGENT.md).
+
+### Current code/worktree
+
+- The remote `main` baseline contains the completed security waves and previous production/documentation commits.
+- The local worktree contains uncommitted **T-0004 intake/media work**. Preserve it and inspect it before any cleanup.
+- T-0004 is explicitly marked `in_progress` in `.sin-gpt-web/taskplan.sqlite3`; use `sin-gpt-web-state` for all subsequent task changes.
+
+### Latest deployment attempt — not yet production acceptance
+
+The last OCI deployment attempt stopped during the build because the deployment shell used **Node 20.20.2**, while `better-sqlite3@13` requires Node 22+. The systemd runtime already uses `/home/ubuntu/.nvm/versions/node/v22.23.0/bin`. No blind restart followed the failed build.
+
+**Next exact action:** repair/verify the deployment script environment so `npm ci` and `npm run build` execute with Node 22, then restart the existing service and run local + public smoke checks. Do not downgrade dependencies as a workaround.
+
+### Persistent storage checkpoint
+
+- Database: `/var/lib/einfach-hausen/einfach-hausen.db`
+- Private files: `/var/lib/einfach-hausen/private`
+- Upload persistence: `/var/lib/einfach-hausen/uploads`
+- Pre-deploy SQLite backup: `/var/lib/einfach-hausen/backups/pre-e3a5343.db`
+
+Do not overwrite or delete these paths during deployment.
+
 ## 1. Current state in one minute
 
 | Area | State | Evidence / next action |

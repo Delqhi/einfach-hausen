@@ -19,6 +19,8 @@ For the current STRATO → Cloudflare cutover state, DNS propagation, rollback g
 - Code: `/srv/einfach-hausen`
 - Runtime-Konfiguration: `/etc/einfach-hausen.env` (nicht in Git)
 - Datenbank: `/var/lib/einfach-hausen/einfach-hausen.db`
+- Private Dateien: `/var/lib/einfach-hausen/private`
+- Persistente Uploads: `/var/lib/einfach-hausen/uploads`
 - Service: `einfach-hausen.service`
 - Public health: `/api/health`
 
