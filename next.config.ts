@@ -35,7 +35,12 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   allowedDevOrigins: ['127.0.0.1', 'localhost'],
   serverExternalPackages: ['better-sqlite3'],
-  experimental: { serverActions: { bodySizeLimit: '14mb' } },
+  experimental: {
+    // OCI production runs on ARM; serialize Next page-data collection to avoid
+    // native-addon fork instability during `next build`.
+    cpus: 1,
+    serverActions: { bodySizeLimit: '14mb' },
+  },
   turbopack: { root: process.cwd() },
   async headers(){
     return [
