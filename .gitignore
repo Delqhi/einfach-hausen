@@ -54,4 +54,6 @@ next-env.d.ts
 
 # local agent/browser evidence and issue-reference downloads
 /.sin-gpt-web/
+/.sin-after-work/
 /.issue9-logo.png
+/src/app/pro/.t0018-final-start.log

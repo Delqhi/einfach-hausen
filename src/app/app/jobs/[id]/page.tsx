@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { AlertTriangle,CalendarDays,CheckCircle2,Clock3,MapPin,MessageCircle,MessageSquare,Phone,ShieldCheck,Sparkles,Star,UserRound } from 'lucide-react';
 import { AppShell,SectionTitle } from '@/components/shell';
 import { JobMedia } from '@/components/job-media';
+import { mediaKindFromPath } from '@/lib/intake-media';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { acceptQuoteAction,cancelJobAction,createCheckoutAction,createClaimAction,reviewAction,sendMessageAction,sendSavedContactMessageAction,turnContactIntoServiceAction } from '@/app/actions';
@@ -29,13 +30,13 @@ function scopeNotes(message:string|undefined,jobDescription:string){
 
 export default async function JobDetail({params,searchParams}:{params:Promise<{id:string}>,searchParams:Promise<Record<string,string>>}){
   const u=await requireUser('homeowner'); const {id}=await params; const sp=await searchParams;
-  const job=db.prepare(`SELECT j.*,(SELECT id FROM job_photos p WHERE p.job_id=j.id LIMIT 1) photo_id FROM jobs j WHERE j.id=? AND j.homeowner_id=?`).get(Number(id),u.id) as any; if(!job)notFound();
+  const job=db.prepare(`SELECT j.*,(SELECT id FROM job_photos p WHERE p.job_id=j.id LIMIT 1) photo_id,(SELECT path FROM job_photos p WHERE p.job_id=j.id LIMIT 1) photo_path FROM jobs j WHERE j.id=? AND j.homeowner_id=?`).get(Number(id),u.id) as any; if(!job)notFound();
   if(job.request_kind==='contact'){
     const contact=db.prepare(`SELECT a.provider_id,a.contact_user_id,u.first_name,u.last_name,u.phone,u.email,m.job_title,p.business_name FROM job_assignments a JOIN users u ON u.id=a.contact_user_id JOIN provider_members m ON m.user_id=a.contact_user_id JOIN provider_profiles p ON p.user_id=a.provider_id WHERE a.job_id=?`).get(job.id) as any;
     const messages=contact?db.prepare('SELECT * FROM contact_messages WHERE homeowner_id=? AND contact_user_id=? ORDER BY created_at').all(u.id,contact.contact_user_id) as any[]:[];
     const dispatches=db.prepare(`SELECT COUNT(*) total FROM job_dispatches WHERE job_id=?`).get(job.id) as any;
     return <AppShell role="homeowner" active="/app/jobs" title="Ansprechpartner" subtitle={job.category}>
-      <div className="detail-head"><span className={`status ${job.status}`}>{contact?'Verbunden':'Ansprechpartner gesucht'}</span><h1>{job.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{job.description}</p><div className="meta-line"><span><MapPin/>{job.postcode}</span></div>{job.photo_id&&<JobMedia src={`/api/job-media/${job.photo_id}`} alt="Foto oder Video zum Thema"/>}</div>
+      <div className="detail-head"><span className={`status ${job.status}`}>{contact?'Verbunden':'Ansprechpartner gesucht'}</span><h1>{job.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{job.description}</p><div className="meta-line"><span><MapPin/>{job.postcode}</span></div>{job.photo_id&&<JobMedia src={`/api/job-media/${job.photo_id}`} alt="Foto, Video oder Sprachnachricht zum Thema" kind={mediaKindFromPath(job.photo_path)}/>}</div>
       <div className="ai-summary"><Sparkles/><div><strong>Du hast nur einen Ansprechpartner gewählt</strong><p>Es wurde noch kein Auftrag vergeben und kein Preis vereinbart. Der Hausmeisterservice bleibt dabei und verbindet dich nur mit einem passenden Menschen.</p></div></div>
       {!contact?<div className="empty compact"><MessageCircle/><strong>Passender Ansprechpartner wird gesucht</strong><p>{dispatches.total||0} geprüfte regionale Partner wurden angefragt. Sobald ein Betrieb übernimmt, kannst du direkt schreiben oder anrufen.</p></div>:<>
         <SectionTitle>Dein persönlicher Ansprechpartner</SectionTitle>
@@ -57,7 +58,7 @@ export default async function JobDetail({params,searchParams}:{params:Promise<{i
   const available=quotes.filter(q=>q.available_at).sort((a,b)=>new Date(a.available_at).getTime()-new Date(b.available_at).getTime()); const fastest=available[0]?.id;
 
   return <AppShell role="homeowner" active="/app/jobs">
-    <div className="detail-head"><span className={`status ${job.status}`}>{statusLabel(job.status)}</span>{job.urgency==='emergency'&&<span className="emergency-inline-badge">NOTFALL</span>}<h1>{job.title}</h1><p>{job.description}</p><div className="meta-line"><span><MapPin/>{job.postcode}</span><span><CalendarDays/>{dateLabel(job.preferred_date)}</span></div>{job.photo_id&&<JobMedia src={`/api/job-media/${job.photo_id}`} alt="Foto oder Video zum Auftrag"/>}</div>
+    <div className="detail-head"><span className={`status ${job.status}`}>{statusLabel(job.status)}</span>{job.urgency==='emergency'&&<span className="emergency-inline-badge">NOTFALL</span>}<h1>{job.title}</h1><p>{job.description}</p><div className="meta-line"><span><MapPin/>{job.postcode}</span><span><CalendarDays/>{dateLabel(job.preferred_date)}</span></div>{job.photo_id&&<JobMedia src={`/api/job-media/${job.photo_id}`} alt="Foto, Video oder Sprachnachricht zum Auftrag" kind={mediaKindFromPath(job.photo_path)}/>}</div>
     {sp.error&&<div className="alert error">{sp.error}</div>}{sp.cancelled==='1'&&<div className="alert success">Auftrag wurde storniert.</div>}{sp.payment==='processing'&&<div className="alert success">Zahlung eingegangen. Der endgültige Status wird sicher über Stripe bestätigt.</div>}{sp.payment==='unavailable'&&<div className="alert error">Onlinezahlung ist derzeit nicht vollständig konfiguriert. Es wurde kein Zahlungsstatus geändert.</div>}{sp.payment==='cancelled'&&<div className="alert error">Zahlung wurde abgebrochen. Es wurde nichts belastet.</div>}
 
     <div className={job.urgency==='emergency'?"ai-summary emergency-summary":"ai-summary"}><Sparkles/><div><strong>{job.urgency==='emergency'?'Wir suchen jetzt verfügbare Hilfe':'Einfach Hausen organisiert'}</strong><p>Richtpreis {job.budget_min&&job.budget_max?`${euro(job.budget_min)}–${euro(job.budget_max)}`:'wird ermittelt'}. {dispatches.total||0} vertragliche Partner wurden angefragt. Qualität und Kundenzufriedenheit haben Vorrang — kein Partner kann sich im Matching nach oben kaufen.</p></div></div>

@@ -1,0 +1,1513 @@
+.providerScope {
+  --provider-green-900: #123c2a;
+  --provider-green-700: #176b45;
+  --provider-green-600: #238454;
+  --provider-green-100: #eaf5ee;
+  --provider-green-50: #f4faf6;
+  --provider-canvas: #f7f8f7;
+  --provider-surface: #ffffff;
+  --provider-subtle: #f2f4f2;
+  --provider-text: #171a18;
+  --provider-muted: #66706a;
+  --provider-border: #e4e8e5;
+  --provider-border-strong: #d5dcd7;
+  min-height: 100vh;
+  background: var(--provider-canvas);
+}
+
+.skipLink {
+  position: fixed;
+  left: 16px;
+  top: 12px;
+  z-index: 1000;
+  transform: translateY(-160%);
+  border-radius: 10px;
+  background: var(--provider-green-900);
+  color: white;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: transform 160ms ease-out;
+}
+
+.skipLink:focus {
+  transform: translateY(0);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme) {
+  min-height: 100vh;
+  padding: 0;
+  background: var(--provider-canvas);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .workspace-shell) {
+  background: var(--provider-canvas);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .desktop-sidebar) {
+  background: rgba(255, 255, 255, 0.97);
+  border-color: var(--provider-border);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-brand .brand[data-inverse='true']),
+.providerScope :global(.app-shell-v3.pro-theme .mobile-brand .brand[data-inverse='true']) {
+  color: var(--provider-green-900);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-brand .brand small),
+.providerScope :global(.app-shell-v3.pro-theme .mobile-brand .brand small) {
+  color: var(--provider-muted);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-nav a) {
+  min-height: 44px;
+  color: #66706a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-nav a:hover) {
+  background: var(--provider-subtle);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-nav a.active) {
+  background: var(--provider-green-100);
+  color: var(--provider-green-900);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-nav a.active .sidebar-icon) {
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-footer) {
+  border-color: var(--provider-border);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-user),
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-help) {
+  color: var(--provider-muted);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .sidebar-user strong) {
+  color: var(--provider-text);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .user-avatar),
+.providerScope :global(.app-shell-v3.pro-theme .top-user-avatar) {
+  background: var(--provider-green-100);
+  color: var(--provider-green-900);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .topbar-v3) {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: var(--provider-border);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .page-context small) {
+  color: var(--provider-muted);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .top-actions > a) {
+  width: 44px;
+  height: 44px;
+  color: #59635d;
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .top-actions > a:hover) {
+  background: var(--provider-subtle);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
+  width: min(100%, 1120px);
+  max-width: 1120px;
+  padding: 48px 48px 112px;
+  color: var(--provider-text);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .bottom-nav) {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: var(--provider-border);
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .bottom-nav a) {
+  min-height: 56px;
+  color: #727b75;
+}
+
+.providerScope :global(.app-shell-v3.pro-theme .bottom-nav a.active) {
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.provider-page-intro) {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 34px;
+}
+
+.providerScope :global(.provider-page-intro > div) {
+  min-width: 0;
+  max-width: 720px;
+}
+
+.providerScope :global(.provider-eyebrow) {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--provider-green-700);
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+}
+
+.providerScope :global(.provider-page-intro h1) {
+  margin: 0;
+  color: var(--provider-text);
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  font-weight: 650;
+}
+
+.providerScope :global(.provider-page-intro p) {
+  max-width: 650px;
+  margin: 12px 0 0;
+  color: var(--provider-muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.providerScope :global(.provider-primary-action),
+.providerScope :global(.provider-state-action) {
+  min-height: 46px;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--provider-green-700);
+  color: white;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.providerScope :global(.provider-section-head) {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 36px 0 12px;
+  padding-top: 4px;
+}
+
+.providerScope :global(.provider-section-head h2) {
+  margin: 0;
+  color: var(--provider-text);
+  font-size: 19px;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  font-weight: 650;
+}
+
+.providerScope :global(.provider-section-head p) {
+  margin: 5px 0 0;
+  color: var(--provider-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.providerScope :global(.provider-section-head > a) {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--provider-green-700);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.providerScope :global(.provider-state) {
+  min-height: 150px;
+  border: 1px dashed var(--provider-border-strong);
+  border-radius: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 26px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.provider-state-icon) {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  background: var(--provider-green-100);
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.provider-state strong) {
+  display: block;
+  font-size: 16px;
+}
+
+.providerScope :global(.provider-state p) {
+  max-width: 620px;
+  margin: 6px 0 0;
+  color: var(--provider-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.providerScope :global(.provider-state-action) {
+  min-height: 44px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.providerScope :global(.provider-state-error) {
+  border-style: solid;
+  border-color: #efcfcc;
+  background: #fff8f7;
+}
+
+.providerScope :global(.provider-state-error .provider-state-icon) {
+  background: #fcebea;
+  color: #a63b34;
+}
+
+.providerScope :global(.provider-state-unavailable) {
+  border-style: solid;
+  border-color: #e9ddbc;
+  background: #fffcf4;
+}
+
+.providerScope :global(.provider-state-unavailable .provider-state-icon) {
+  background: #f8f0d9;
+  color: #80611b;
+}
+
+.providerScope :global(.provider-state-success) {
+  border-style: solid;
+  border-color: #cde4d4;
+  background: var(--provider-green-50);
+}
+
+.providerScope :global(.provider-status-line) {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-top: 1px solid var(--provider-border);
+  border-bottom: 1px solid var(--provider-border);
+  color: var(--provider-muted);
+  font-size: 13px;
+}
+
+.providerScope :global(.provider-status-line > span),
+.providerScope :global(.provider-status-line > a) {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.providerScope :global(.provider-status-line b) {
+  color: var(--provider-text);
+}
+
+.providerScope :global(.provider-summary) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 0 8px;
+  border-top: 1px solid var(--provider-border);
+  border-bottom: 1px solid var(--provider-border);
+}
+
+.providerScope :global(.provider-summary > div) {
+  min-width: 0;
+  padding: 18px 18px 18px 0;
+}
+
+.providerScope :global(.provider-summary > div + div) {
+  border-left: 1px solid var(--provider-border);
+  padding-left: 18px;
+}
+
+.providerScope :global(.provider-summary small) {
+  display: block;
+  color: var(--provider-muted);
+  font-size: 12px;
+}
+
+.providerScope :global(.provider-summary strong) {
+  display: block;
+  margin-top: 5px;
+  color: var(--provider-text);
+  font-size: 21px;
+  font-weight: 620;
+}
+
+.providerScope :global(.provider-quick-links) {
+  display: flex;
+  gap: 4px;
+  margin: 22px 0 2px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.providerScope :global(.provider-quick-links::-webkit-scrollbar) {
+  display: none;
+}
+
+.providerScope :global(.provider-quick-links a) {
+  min-height: 44px;
+  border-radius: 999px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  padding: 0 13px;
+  color: #59635d;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.providerScope :global(.provider-quick-links a:hover) {
+  background: var(--provider-surface);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.partner-standard-banner) {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  margin: 0 0 22px;
+  padding: 0;
+  color: var(--provider-text);
+}
+
+.providerScope :global(.partner-standard-banner > svg) {
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.partner-standard-banner strong) {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.providerScope :global(.partner-standard-banner small) {
+  margin-top: 3px;
+  color: var(--provider-muted);
+  font-size: 12px;
+}
+
+.providerScope :global(.metrics) {
+  display: none;
+}
+
+.providerScope :global(.section-title) {
+  margin: 34px 0 12px;
+}
+
+.providerScope :global(.section-title strong) {
+  color: var(--provider-text);
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.providerScope :global(.section-title a) {
+  color: var(--provider-green-700);
+  font-size: 13px;
+}
+
+.providerScope :global(.stack) {
+  gap: 0;
+}
+
+.providerScope :global(.pro-request) {
+  min-height: 96px;
+  border: 0;
+  border-top: 1px solid var(--provider-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--provider-text);
+  padding: 17px 4px;
+  transition: background 160ms ease-out, padding 160ms ease-out;
+}
+
+.providerScope :global(.stack .pro-request:last-child) {
+  border-bottom: 1px solid var(--provider-border);
+}
+
+.providerScope :global(.pro-request:hover) {
+  margin-inline: -12px;
+  padding-inline: 16px;
+  border-radius: 12px;
+  background: var(--provider-surface);
+}
+
+.providerScope :global(.pro-request strong) {
+  color: var(--provider-text);
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.providerScope :global(.pro-request small) {
+  margin-top: 6px;
+  color: var(--provider-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.providerScope :global(.pro-request .request-main > span:not(.new)) {
+  margin-top: 11px;
+  color: var(--provider-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.providerScope :global(.pro-request .request-main > b) {
+  color: var(--provider-text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.providerScope :global(.pro-request > svg) {
+  color: #88918b;
+}
+
+.providerScope :global(.pro-request img) {
+  width: 86px;
+  height: 70px;
+  border: 1px solid var(--provider-border);
+  border-radius: 12px;
+}
+
+.providerScope :global(.new) {
+  margin-bottom: 7px;
+  border-radius: 999px;
+  background: var(--provider-green-100);
+  color: var(--provider-green-700);
+  padding: 4px 7px;
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+.providerScope :global(.quoted-badge) {
+  position: static;
+  align-self: center;
+  border-radius: 999px;
+  background: var(--provider-green-100);
+  color: var(--provider-green-700);
+  padding: 6px 9px;
+  font-size: 11px;
+}
+
+.providerScope :global(.provider-next-action) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 9px;
+  color: var(--provider-green-700);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.providerScope :global(.provider-row-meta) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 7px;
+}
+
+.providerScope :global(.provider-row-meta span) {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--provider-muted);
+  font-size: 12px;
+}
+
+.providerScope :global(.provider-row-meta svg) {
+  width: 14px;
+  height: 14px;
+}
+
+.providerScope :global(.provider-row-side) {
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.providerScope :global(.provider-row-side > strong) {
+  font-size: 14px;
+}
+
+.providerScope :global(.status) {
+  border-radius: 999px;
+  background: #eef1ef;
+  color: #57615a;
+  padding: 5px 8px;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.providerScope :global(.status.accepted),
+.providerScope :global(.status.completed),
+.providerScope :global(.status.active),
+.providerScope :global(.status.approved),
+.providerScope :global(.status.resolved) {
+  background: var(--provider-green-100);
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.status.in_progress),
+.providerScope :global(.status.pending),
+.providerScope :global(.status.trialing) {
+  background: #f8f1df;
+  color: #775d1e;
+}
+
+.providerScope :global(.empty),
+.providerScope :global(.dark-empty) {
+  min-height: 150px;
+  border-color: var(--provider-border-strong);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--provider-muted);
+  padding: 28px;
+}
+
+.providerScope :global(.dark-empty strong),
+.providerScope :global(.empty strong) {
+  color: var(--provider-text);
+  font-size: 15px;
+}
+
+.providerScope :global(.dark-empty p),
+.providerScope :global(.empty p) {
+  max-width: 560px;
+  color: var(--provider-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.providerScope :global(.empty svg),
+.providerScope :global(.dark-empty svg) {
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.verification-gate) {
+  max-width: 660px;
+  margin: 50px auto;
+  border: 1px solid var(--provider-border);
+  border-radius: 20px;
+  background: var(--provider-surface);
+  color: var(--provider-text);
+  padding: 38px 30px;
+  box-shadow: 0 16px 50px rgba(20, 45, 30, 0.05);
+}
+
+.providerScope :global(.verification-gate > svg) {
+  color: #9b7625;
+}
+
+.providerScope :global(.verification-gate p) {
+  color: var(--provider-muted);
+  font-size: 14px;
+}
+
+.providerScope :global(.detail-head.pro-detail) {
+  margin-bottom: 8px;
+}
+
+.providerScope :global(.pro-detail h1) {
+  margin: 12px 0 8px;
+  color: var(--provider-text);
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 650;
+}
+
+.providerScope :global(.pro-detail > p) {
+  max-width: 760px;
+  color: var(--provider-muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.providerScope :global(.pro-detail .meta-line) {
+  gap: 10px 18px;
+  margin-top: 15px;
+}
+
+.providerScope :global(.pro-detail .meta-line span) {
+  color: var(--provider-muted);
+  font-size: 13px;
+}
+
+.providerScope :global(.budget-line) {
+  max-width: 420px;
+  margin-top: 18px;
+  border: 1px solid var(--provider-border);
+  border-radius: 12px;
+  background: var(--provider-surface);
+  color: var(--provider-text);
+  padding: 13px 15px;
+}
+
+.providerScope :global(.budget-line small) {
+  color: var(--provider-muted);
+  font-size: 12px;
+}
+
+.providerScope :global(.budget-line strong) {
+  font-size: 15px;
+}
+
+.providerScope :global(.contact-request-note),
+.providerScope :global(.pro-emergency-note),
+.providerScope :global(.partner-job-note),
+.providerScope :global(.simple-role-principle),
+.providerScope :global(.partner-plan-hero),
+.providerScope :global(.verification-card),
+.providerScope :global(.pro-current-plan),
+.providerScope :global(.pro-claim) {
+  border: 1px solid var(--provider-border);
+  border-radius: 16px;
+  background: var(--provider-surface);
+  color: var(--provider-text);
+  box-shadow: none;
+}
+
+.providerScope :global(.contact-request-note),
+.providerScope :global(.simple-role-principle),
+.providerScope :global(.partner-plan-hero) {
+  padding: 16px;
+}
+
+.providerScope :global(.contact-request-note p),
+.providerScope :global(.pro-emergency-note p),
+.providerScope :global(.partner-job-note p),
+.providerScope :global(.simple-role-principle p),
+.providerScope :global(.partner-plan-hero p),
+.providerScope :global(.verification-card p),
+.providerScope :global(.pro-current-plan p),
+.providerScope :global(.pro-claim p),
+.providerScope :global(.pro-claim small) {
+  color: var(--provider-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.providerScope :global(.contact-request-note > svg),
+.providerScope :global(.simple-role-principle > svg),
+.providerScope :global(.partner-plan-hero > svg),
+.providerScope :global(.verification-card > svg) {
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.pro-emergency-note) {
+  border-color: #ead7c0;
+  background: #fffaf4;
+  padding: 16px;
+}
+
+.providerScope :global(.quote-form),
+.providerScope :global(.pro-form),
+.providerScope :global(.document-form),
+.providerScope :global(.invoice-form),
+.providerScope :global(.team-add-form),
+.providerScope :global(.member-card),
+.providerScope :global(.broker-lead-status),
+.providerScope :global(.app-shell-v3.pro-theme .quote-form),
+.providerScope :global(.app-shell-v3.pro-theme .pro-form),
+.providerScope :global(.app-shell-v3.pro-theme .document-form) {
+  border: 1px solid var(--provider-border);
+  border-radius: 16px;
+  background: var(--provider-surface);
+  color: var(--provider-text);
+  box-shadow: none;
+}
+
+.providerScope :global(.quote-form),
+.providerScope :global(.document-form),
+.providerScope :global(.invoice-form),
+.providerScope :global(.team-add-form),
+.providerScope :global(.broker-lead-status) {
+  padding: 18px;
+}
+
+.providerScope :global(.member-card) {
+  padding: 18px 2px;
+  border-width: 1px 0 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.providerScope :global(.stack .member-card:last-child) {
+  border-bottom-width: 1px;
+}
+
+.providerScope :global(.member-card input),
+.providerScope :global(.team-add-form input),
+.providerScope :global(.quote-form input),
+.providerScope :global(.quote-form textarea),
+.providerScope :global(.quote-form select),
+.providerScope :global(.pro-form input),
+.providerScope :global(.pro-form textarea),
+.providerScope :global(.pro-form select),
+.providerScope :global(.document-form input),
+.providerScope :global(.document-form select),
+.providerScope :global(.app-shell-v3.pro-theme .quote-form input),
+.providerScope :global(.app-shell-v3.pro-theme .quote-form textarea),
+.providerScope :global(.app-shell-v3.pro-theme .pro-form input),
+.providerScope :global(.app-shell-v3.pro-theme .pro-form textarea),
+.providerScope :global(.app-shell-v3.pro-theme .document-form input),
+.providerScope :global(.app-shell-v3.pro-theme .document-form select),
+.providerScope :global(.invoice-form input),
+.providerScope :global(.invoice-form textarea),
+.providerScope :global(.invoice-form select),
+.providerScope :global(.broker-lead-status select) {
+  min-height: 46px;
+  border: 1px solid var(--provider-border-strong);
+  border-radius: 10px;
+  background: white;
+  color: var(--provider-text);
+}
+
+.providerScope :global(.quote-form textarea),
+.providerScope :global(.pro-form textarea),
+.providerScope :global(.invoice-form textarea) {
+  min-height: 112px;
+}
+
+.providerScope :global(label) {
+  color: #3f4842;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.providerScope :global(label small) {
+  color: var(--provider-muted);
+}
+
+.providerScope :global(.btn) {
+  min-height: 46px;
+  border-radius: 11px;
+  padding-inline: 16px;
+  transform: none;
+  transition: background 160ms ease-out, border-color 160ms ease-out, color 160ms ease-out;
+}
+
+.providerScope :global(.btn.light) {
+  background: var(--provider-green-700);
+  color: white;
+}
+
+.providerScope :global(.btn.light:hover) {
+  background: var(--provider-green-600);
+}
+
+.providerScope :global(.btn.ghost),
+.providerScope :global(.pro-ghost) {
+  border: 1px solid var(--provider-border-strong);
+  background: white;
+  color: #4d5750;
+}
+
+.providerScope :global(.btn.ghost:hover),
+.providerScope :global(.pro-ghost:hover) {
+  border-color: #bfc8c1;
+  background: var(--provider-subtle);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.direct-contact-actions .btn.light) {
+  border: 1px solid var(--provider-border-strong);
+  background: white;
+  color: var(--provider-text);
+}
+
+.providerScope :global(.direct-contact-actions .btn.light:hover) {
+  border-color: #bdc8c0;
+  background: var(--provider-subtle);
+}
+
+.providerScope :global(.assign-form) {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.providerScope :global(.assign-form label) {
+  flex: 1;
+}
+
+.providerScope :global(.assign-form select) {
+  min-height: 46px;
+  border-color: var(--provider-border-strong);
+  border-radius: 10px;
+  background: white;
+  color: var(--provider-text);
+}
+
+.providerScope :global(.decline-form) {
+  max-width: 330px;
+  margin-top: 10px;
+}
+
+.providerScope :global(.pro-contact-card),
+.providerScope :global(.pro-contact-list .contact-row) {
+  border: 1px solid var(--provider-border);
+  background: var(--provider-surface);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.pro-contact-list .contact-row) {
+  min-height: 72px;
+  border-width: 1px 0 0;
+  border-radius: 0;
+  padding: 13px 2px;
+}
+
+.providerScope :global(.pro-contact-list .contact-row:last-child) {
+  border-bottom-width: 1px;
+}
+
+.providerScope :global(.pro-contact-list .contact-row.selected) {
+  margin-inline: -10px;
+  border: 1px solid #cfe2d5;
+  border-radius: 12px;
+  background: var(--provider-green-50);
+  box-shadow: none;
+  padding-inline: 12px;
+}
+
+.providerScope :global(.pro-contact-list .contact-row small),
+.providerScope :global(.pro-contact-list .contact-row p),
+.providerScope :global(.pro-contact-card p),
+.providerScope :global(.pro-contact-card small) {
+  color: var(--provider-muted);
+}
+
+.providerScope :global(.contact-avatar) {
+  background: var(--provider-green-100);
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.icon-contact) {
+  width: 44px;
+  height: 44px;
+  border-color: var(--provider-border);
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.pro-chat) {
+  min-height: 260px;
+  border: 1px solid var(--provider-border);
+  border-radius: 18px;
+  background: var(--provider-subtle);
+  padding: 14px;
+}
+
+.providerScope :global(.pro-chat .msg) {
+  max-width: min(82%, 600px);
+  border: 1px solid var(--provider-border);
+  background: white;
+  color: var(--provider-text);
+}
+
+.providerScope :global(.pro-chat .msg.mine) {
+  border-color: #cce2d3;
+  background: var(--provider-green-100);
+}
+
+.providerScope :global(.pro-chat .chat-form input) {
+  min-height: 48px;
+  border-color: var(--provider-border-strong);
+  background: white;
+  color: var(--provider-text);
+}
+
+.providerScope :global(.pro-chat .chat-form button) {
+  width: 48px;
+  height: 48px;
+  border-radius: 11px;
+  background: var(--provider-green-700);
+}
+
+.providerScope :global(.pro-appointment) {
+  min-height: 78px;
+  border: 0;
+  border-top: 1px solid var(--provider-border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--provider-text);
+  padding: 16px 2px;
+}
+
+.providerScope :global(.stack .pro-appointment:last-child) {
+  border-bottom: 1px solid var(--provider-border);
+}
+
+.providerScope :global(.pro-appointment > svg) {
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.pro-appointment p),
+.providerScope :global(.pro-appointment small) {
+  color: var(--provider-muted);
+  font-size: 12px;
+}
+
+.providerScope :global(.member-head strong) {
+  color: var(--provider-text);
+  font-size: 14px;
+}
+
+.providerScope :global(.member-head small),
+.providerScope :global(.member-explain) {
+  color: var(--provider-muted);
+  font-size: 12px;
+}
+
+.providerScope :global(.member-switches) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.providerScope :global(.member-switches label),
+.providerScope :global(.team-manage-toggle) {
+  min-height: 48px;
+  border-color: var(--provider-border);
+  background: var(--provider-surface);
+  color: var(--provider-text);
+  font-size: 12px;
+}
+
+.providerScope :global(.member-switches input),
+.providerScope :global(.team-manage-toggle input) {
+  width: 18px;
+  height: 18px;
+  min-height: auto;
+  accent-color: var(--provider-green-700);
+}
+
+.providerScope :global(.verification-card) {
+  min-height: 88px;
+  padding: 17px;
+}
+
+.providerScope :global(.verification-card.verified) {
+  border-color: #d4e5da;
+  background: var(--provider-green-50);
+}
+
+.providerScope :global(.verification-card strong) {
+  color: var(--provider-text);
+  font-size: 14px;
+}
+
+.providerScope :global(.verification-card small) {
+  color: var(--provider-muted);
+  font-size: 11px;
+}
+
+.providerScope :global(.contract-checks span) {
+  border-color: var(--provider-border);
+  background: var(--provider-subtle);
+  color: var(--provider-muted);
+  font-size: 10px;
+}
+
+.providerScope :global(.contract-checks span.ok) {
+  border-color: #cde2d4;
+  background: var(--provider-green-100);
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.provider-category-picker),
+.providerScope :global(.service-offering-picker),
+.providerScope :global(.service-preferences),
+.providerScope :global(.emergency-settings),
+.providerScope :global(.broker-profile-settings),
+.providerScope :global(.privacy-strip) {
+  border-color: var(--provider-border) !important;
+  background: #fafbfa !important;
+  color: var(--provider-text) !important;
+}
+
+.providerScope :global(.partner-plan-grid) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.providerScope :global(.partner-plan-card) {
+  border: 1px solid var(--provider-border);
+  border-radius: 18px;
+  background: var(--provider-surface);
+  color: var(--provider-text);
+  padding: 20px;
+}
+
+.providerScope :global(.partner-plan-card.featured) {
+  border-color: #bad8c4;
+  box-shadow: 0 0 0 1px #dcece1 inset;
+}
+
+.providerScope :global(.partner-plan-card .plan-price) {
+  color: var(--provider-green-900);
+}
+
+.providerScope :global(.partner-plan-card .plan-price small),
+.providerScope :global(.partner-plan-card > p),
+.providerScope :global(.partner-plan-card li) {
+  color: var(--provider-muted);
+  font-size: 12px;
+}
+
+.providerScope :global(.partner-plan-card li::before) {
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.pro-doc-list a) {
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-top: 1px solid var(--provider-border);
+  padding: 12px 2px;
+}
+
+.providerScope :global(.pro-doc-list a:last-child) {
+  border-bottom: 1px solid var(--provider-border);
+}
+
+.providerScope :global(.pro-doc-list a small) {
+  margin-top: 4px;
+  color: var(--provider-muted);
+  font-size: 12px;
+}
+
+.providerScope :global(.alert) {
+  min-height: 48px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.providerScope :global(.alert.success) {
+  border: 1px solid #cde4d4;
+  background: var(--provider-green-50);
+  color: var(--provider-green-900);
+}
+
+.providerScope :global(.alert.error) {
+  border: 1px solid #efcfcc;
+  background: #fff8f7;
+  color: #8f302a;
+}
+
+.providerScope :global(.broker-leads) {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.providerScope :global(.broker-leads article) {
+  border: 1px solid var(--provider-border);
+  border-radius: 18px;
+  background: var(--provider-surface);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.pro-invoice-page) {
+  min-height: 100vh;
+  background: var(--provider-canvas);
+  color: var(--provider-text);
+}
+
+.providerScope :global(.pro-invoice-page .invoice-page-tools) {
+  max-width: 980px;
+  margin: 0 auto 22px;
+  padding: 24px 20px 0;
+}
+
+.providerScope :global(.provider-loading) {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.providerScope :global(.provider-loading-bar),
+.providerScope :global(.provider-loading-row) {
+  overflow: hidden;
+  position: relative;
+  border-radius: 10px;
+  background: #e9ece9;
+}
+
+.providerScope :global(.provider-loading-bar::after),
+.providerScope :global(.provider-loading-row::after) {
+  position: absolute;
+  inset: 0;
+  content: '';
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.72), transparent);
+  animation: providerShimmer 1.35s infinite;
+}
+
+.providerScope :global(.provider-loading-bar) {
+  width: min(470px, 86%);
+  height: 38px;
+  margin-bottom: 18px;
+}
+
+.providerScope :global(.provider-loading-row) {
+  height: 92px;
+  border-radius: 14px;
+}
+
+.providerScope :global(.provider-error-page) {
+  width: min(680px, calc(100% - 32px));
+  margin: 60px auto;
+}
+
+.providerScope :global(.provider-error-page button) {
+  min-height: 46px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--provider-green-700);
+  color: white;
+  padding: 0 16px;
+  font: inherit;
+  font-weight: 700;
+}
+
+.providerScope :global(a:focus-visible),
+.providerScope :global(button:focus-visible),
+.providerScope :global(input:focus-visible),
+.providerScope :global(textarea:focus-visible),
+.providerScope :global(select:focus-visible),
+.providerScope :global(summary:focus-visible) {
+  outline: 3px solid rgba(23, 107, 69, 0.28);
+  outline-offset: 3px;
+}
+
+.providerScope :global(input:focus),
+.providerScope :global(textarea:focus),
+.providerScope :global(select:focus) {
+  border-color: var(--provider-green-700);
+  box-shadow: 0 0 0 3px rgba(23, 107, 69, 0.1);
+}
+
+@keyframes providerShimmer {
+  100% { transform: translateX(100%); }
+}
+
+.providerScope :global(.sr-only) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.providerScope :global(.provider-messages-layout) {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.providerScope :global(.provider-messages-layout .provider-section-head) {
+  margin-top: 0;
+}
+
+.providerScope :global(.provider-message-list-pane),
+.providerScope :global(.provider-message-thread) {
+  min-width: 0;
+}
+
+.providerScope :global(.provider-message-thread .pro-chat) {
+  margin-top: 12px;
+}
+
+.providerScope :global(.simple-role-principle) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px 24px;
+  align-items: start;
+}
+
+.providerScope :global(.simple-role-principle strong) {
+  color: var(--provider-text);
+  font-size: 13px;
+}
+
+.providerScope :global(.privacy-banner.pro-privacy) {
+  border: 1px solid #d7e6dc;
+  border-radius: 16px;
+  background: var(--provider-green-50);
+  color: var(--provider-text);
+  padding: 16px;
+}
+
+.providerScope :global(.privacy-banner.pro-privacy > svg) {
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.privacy-banner.pro-privacy p) {
+  color: var(--provider-muted);
+}
+
+.providerScope :global(.provider-leads-card) {
+  margin-top: 24px;
+}
+
+.providerScope :global(.invoice-form-head p),
+.providerScope :global(.invoice-items-head small),
+.providerScope :global(.invoice-preview-total span) {
+  color: var(--provider-muted);
+}
+
+.providerScope :global(.invoice-form-head strong),
+.providerScope :global(.invoice-items-head strong),
+.providerScope :global(.invoice-preview-total strong) {
+  color: var(--provider-text);
+}
+
+@media (max-width: 900px) {
+  .providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
+    padding-inline: 28px;
+  }
+
+  .providerScope :global(.partner-plan-grid) {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .providerScope :global(.provider-messages-layout) {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .providerScope :global(.simple-role-principle) {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px 14px;
+  }
+
+  .providerScope :global(.simple-role-principle > div) {
+    grid-column: 2;
+  }
+
+  .providerScope :global(.app-shell-v3.pro-theme .topbar-v3) {
+    background: rgba(255, 255, 255, 0.98);
+    border-bottom: 1px solid var(--provider-border);
+  }
+
+  .providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
+    padding: 30px 18px calc(96px + env(safe-area-inset-bottom));
+  }
+
+  .providerScope :global(.provider-page-intro) {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  .providerScope :global(.provider-page-intro h1) {
+    font-size: 32px;
+  }
+
+  .providerScope :global(.provider-page-intro p) {
+    font-size: 15px;
+  }
+
+  .providerScope :global(.provider-primary-action) {
+    width: 100%;
+  }
+
+  .providerScope :global(.provider-summary) {
+    grid-template-columns: 1fr;
+  }
+
+  .providerScope :global(.provider-summary > div),
+  .providerScope :global(.provider-summary > div + div) {
+    min-height: 62px;
+    border-left: 0;
+    border-bottom: 1px solid var(--provider-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 2px;
+  }
+
+  .providerScope :global(.provider-summary > div:last-child) {
+    border-bottom: 0;
+  }
+
+  .providerScope :global(.provider-summary strong) {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .providerScope :global(.provider-section-head) {
+    align-items: flex-start;
+    margin-top: 30px;
+  }
+
+  .providerScope :global(.pro-request) {
+    align-items: flex-start;
+    min-height: 100px;
+  }
+
+  .providerScope :global(.pro-request:hover) {
+    margin-inline: 0;
+    padding-inline: 4px;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .providerScope :global(.pro-request img) {
+    width: 70px;
+    height: 62px;
+  }
+
+  .providerScope :global(.provider-row-side) {
+    min-width: 0;
+  }
+
+  .providerScope :global(.assign-form),
+  .providerScope :global(.direct-contact-actions) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .providerScope :global(.assign-form .btn),
+  .providerScope :global(.direct-contact-actions .btn) {
+    width: 100%;
+  }
+
+  .providerScope :global(.decline-form) {
+    max-width: none;
+  }
+
+  .providerScope :global(.two),
+  .providerScope :global(.three),
+  .providerScope :global(.invoice-line),
+  .providerScope :global(.member-switches),
+  .providerScope :global(.broker-lead-grid) {
+    grid-template-columns: 1fr !important;
+  }
+
+  .providerScope :global(.invoice-line) {
+    display: grid;
+  }
+
+  .providerScope :global(.pro-chat .msg) {
+    max-width: 90%;
+  }
+
+  .providerScope :global(.verification-card) {
+    padding: 15px;
+  }
+
+  .providerScope :global(.pro-invoice-page .invoice-page-tools) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .providerScope :global(.pro-invoice-page .invoice-page-tools .btn),
+  .providerScope :global(.pro-invoice-page .invoice-page-tools form),
+  .providerScope :global(.pro-invoice-page .invoice-page-tools form button) {
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
+    padding-inline: 16px;
+  }
+
+  .providerScope :global(.provider-page-intro h1) {
+    font-size: 30px;
+  }
+
+  .providerScope :global(.provider-section-head) {
+    gap: 10px;
+  }
+
+  .providerScope :global(.provider-section-head h2) {
+    font-size: 18px;
+  }
+
+  .providerScope :global(.pro-request) {
+    gap: 9px;
+  }
+
+  .providerScope :global(.pro-request img) {
+    display: none;
+  }
+
+  .providerScope :global(.pro-request > svg) {
+    align-self: center;
+  }
+
+  .providerScope :global(.provider-row-side) {
+    display: none;
+  }
+
+  .providerScope :global(.provider-status-line) {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0;
+    padding-block: 4px;
+  }
+
+  .providerScope :global(.provider-state) {
+    padding: 20px;
+  }
+
+  .providerScope :global(.partner-plan-card) {
+    padding: 17px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skipLink,
+  .providerScope :global(.pro-request),
+  .providerScope :global(.btn),
+  .providerScope :global(.provider-loading-bar::after),
+  .providerScope :global(.provider-loading-row::after) {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

@@ -16,6 +16,8 @@ import { answerHausmeisterQuestion, appendJobEvent, createEmergencyRequest, crea
 import { canAccessProviderJob, getProviderContext, getProviderManagerIds } from '@/lib/provider';
 import { nextInvoiceNumber } from '@/lib/invoices';
 import { normalizeContactCategory } from '@/lib/contact-categories';
+import { savePrivateMediaUpload } from '@/lib/intake-media';
+import { completeMaintenanceAndScheduleNext, ensureAssetMaintenance, ensureCompletedWorkMaintenance, ensureMaintenanceTask } from '@/lib/maintenance';
 import { createPropertyForOwner, primaryProperty, propertyOwnedBy, syncPropertyFromLegacyProfile } from '@/lib/properties';
 import { createBrokerMatches } from '@/lib/broker-matching';
 import { headers } from 'next/headers';
@@ -160,19 +162,6 @@ async function savePublicImageUpload(file: File | null) {
   const dir = path.join(process.cwd(),'public','uploads'); await fs.mkdir(dir,{recursive:true});
   await fs.writeFile(path.join(dir,name),Buffer.from(await file.arrayBuffer()));
   return `/uploads/${name}`;
-}
-
-async function savePrivateMediaUpload(file: File | null) {
-  if (!file || file.size===0) return null;
-  const types:Record<string,{ext:string,max:number}>={
-    'image/jpeg':{ext:'jpg',max:8*1024*1024},'image/png':{ext:'png',max:8*1024*1024},'image/webp':{ext:'webp',max:8*1024*1024},'image/heic':{ext:'heic',max:8*1024*1024},
-    'video/mp4':{ext:'mp4',max:25*1024*1024},'video/webm':{ext:'webm',max:25*1024*1024},'video/quicktime':{ext:'mov',max:25*1024*1024},'video/x-m4v':{ext:'m4v',max:25*1024*1024},
-  };
-  const rule=types[file.type]; if(!rule||file.size>rule.max)throw new Error('Ungültige Mediendatei');
-  const name = `${Date.now()}-${randomUUID()}.${rule.ext}`;
-  const dir = path.join(process.cwd(),'data','private','job-media'); await fs.mkdir(dir,{recursive:true});
-  await fs.writeFile(path.join(dir,name),Buffer.from(await file.arrayBuffer()),{mode:0o600});
-  return `job-media/${name}`;
 }
 
 export async function sendHausmeisterAction(fd:FormData){
@@ -336,7 +325,7 @@ export async function markInProgressAction(jobId:number){
 
 export async function markCompleteAction(jobId:number){
   const user=await requireUser('provider'); const ctx=canAccessProviderJob(user.id,jobId); if(!ctx)return;
-  const job=db.prepare(`SELECT j.homeowner_id,j.title,j.category,j.property_id,q.amount,q.provider_id FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=? AND q.provider_id=?`).get(jobId,ctx.providerId) as any; if(!job)return;
+  const job=db.prepare(`SELECT j.homeowner_id,j.title,j.category,j.property_id,j.status,q.amount,q.provider_id FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=? AND q.provider_id=?`).get(jobId,ctx.providerId) as any; if(!job||job.status==='completed')return;
   db.prepare(`UPDATE jobs SET status='completed',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(jobId);
   db.prepare(`UPDATE appointments SET status='completed' WHERE job_id=?`).run(jobId);
   const assigned=db.prepare('SELECT contact_user_id FROM job_assignments WHERE job_id=?').get(jobId) as {contact_user_id:number}|undefined;
@@ -347,6 +336,7 @@ export async function markCompleteAction(jobId:number){
     const contact=assigned?db.prepare(`SELECT first_name,last_name FROM users WHERE id=?`).get(assigned.contact_user_id) as {first_name:string,last_name:string}|undefined:undefined;
     db.prepare(`INSERT INTO house_history_entries(homeowner_id,property_id,job_id,category,title,performed_at,company_name,provider_id,contact_name,cost_amount,notes) VALUES(?,?,?,?,?,date('now'),?,?,?,?,?)`).run(job.homeowner_id,job.property_id,jobId,normalizeContactCategory(job.category||''),job.title,provider?.business_name||ctx.businessName,ctx.providerId,contact?`${contact.first_name} ${contact.last_name}`:'',job.amount||null,'Aus Einfach Hausen automatisch aus dem abgeschlossenen Auftrag übernommen.');
   }
+  if(job.property_id)ensureCompletedWorkMaintenance(job.homeowner_id,job.property_id,job.category||'',job.title,new Date());
   createNotification(job.homeowner_id,'Auftrag erledigt',`„${job.title}“ wurde als erledigt markiert. Dein Ansprechpartner bleibt für künftige Aufträge in „Kontakte“ gespeichert.`,`/app/jobs/${jobId}`,'completed');
   appendJobEvent(jobId,`„${job.title}“ wurde als erledigt gemeldet. Dein Ansprechpartner bleibt in deiner Hausakte gespeichert, damit du ihn später direkt wieder kontaktieren kannst.`,{status:'completed'});
   revalidatePath(`/pro/jobs/${jobId}`); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/app/messages'); revalidatePath('/notifications');
@@ -526,7 +516,9 @@ export async function addHouseHistoryAction(fd:FormData){
   if(document instanceof File&&document.size){const stored=await savePrivateFile(document,'house-history');db.prepare(`INSERT INTO house_history_documents(entry_id,title,path) VALUES(?,?,?)`).run(entryId,text(fd,'documentTitle')||document.name,stored);}
   if(providerId){const member=db.prepare(`SELECT user_id FROM provider_members WHERE provider_id=? AND active=1 ORDER BY can_manage_jobs DESC,id LIMIT 1`).get(providerId) as {user_id:number}|undefined;if(member)db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,property_id,updated_at) VALUES(?,?,?,?,NULL,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,property_id=excluded.property_id,updated_at=CURRENT_TIMESTAMP`).run(user.id,providerId,member.user_id,category,property.id);}
   else if(contactEmail){db.prepare(`INSERT INTO provider_invites(homeowner_id,email,company_name,category,token,property_id) VALUES(?,?,?,?,?,?)`).run(user.id,contactEmail,companyName,category,randomUUID(),property.id);}
-  if(text(fd,'maintenanceDue'))db.prepare(`INSERT INTO maintenance_tasks(homeowner_id,title,category,due_date,status,property_id) VALUES(?,?,?,?, 'open',?)`).run(user.id,`Wartung: ${title}`,category,text(fd,'maintenanceDue'),property.id);
+  const maintenanceDue=text(fd,'maintenanceDue');
+  const derived=ensureCompletedWorkMaintenance(user.id,property.id,category,title,performedAt,maintenanceDue||null);
+  if(maintenanceDue&&!derived)ensureMaintenanceTask({homeownerId:user.id,propertyId:property.id,title:`Wartung: ${title}`,category,dueDate:maintenanceDue});
   revalidatePath('/app/home');revalidatePath('/app/home/history');revalidatePath('/app/year');revalidatePath('/app/messages');
 }
 
@@ -816,16 +808,14 @@ export async function saveHouseProfileAction(fd:FormData){
 export async function addHouseAssetAction(fd:FormData){
   const user=await requireUser('homeowner'); const kind=text(fd,'kind'); const name=text(fd,'name'); if(!kind||!name)return; const property=primaryProperty(user.id); if(!property)return;
   const r=db.prepare('INSERT INTO house_assets(homeowner_id,kind,name,details,installed_year,property_id) VALUES(?,?,?,?,?,?)').run(user.id,kind,name,text(fd,'details').slice(0,1000),int(fd,'installedYear'),property.id);
-  const assetId=Number(r.lastInsertRowid); const today=new Date(); const due=new Date(today); due.setMonth(due.getMonth()+12);
-  const defaults:Record<string,string>={heating:'Heizung / Wärmepumpe prüfen lassen',pv:'PV-Anlage und Ertrag prüfen',storage:'Speicher-Check vormerken',wallbox:'Wallbox / Elektroprüfung vormerken',roof:'Dach und Dachrinne prüfen',windows:'Fenster und Türen prüfen',garden:'Saisonale Gartenpflege planen',smarthome:'Smart-Home- und Sicherheitscheck'};
-  db.prepare('INSERT INTO maintenance_tasks(homeowner_id,asset_id,title,category,due_date,recurrence_months,property_id) VALUES(?,?,?,?,?,12,?)').run(user.id,assetId,defaults[kind]||`${name} prüfen`,kind,due.toISOString().slice(0,10),property.id);
+  const assetId=Number(r.lastInsertRowid);
+  ensureAssetMaintenance(user.id,property.id,assetId,kind,name);
   revalidatePath('/app/home'); revalidatePath('/app/year');
 }
 
 export async function completeMaintenanceTaskAction(taskId:number){
-  const user=await requireUser('homeowner'); const property=primaryProperty(user.id); if(!property)return; const task=db.prepare('SELECT * FROM maintenance_tasks WHERE id=? AND property_id=?').get(taskId,property.id) as any; if(!task)return;
-  db.prepare("UPDATE maintenance_tasks SET status='completed' WHERE id=?").run(taskId);
-  if(task.recurrence_months){const d=new Date(task.due_date);d.setMonth(d.getMonth()+task.recurrence_months);db.prepare('INSERT INTO maintenance_tasks(homeowner_id,asset_id,title,category,due_date,recurrence_months,property_id) VALUES(?,?,?,?,?,?,?)').run(user.id,task.asset_id,task.title,task.category,d.toISOString().slice(0,10),task.recurrence_months,property.id);}
+  const user=await requireUser('homeowner'); const property=primaryProperty(user.id); if(!property)return;
+  completeMaintenanceAndScheduleNext(user.id,property.id,taskId);
   revalidatePath('/app/home'); revalidatePath('/app/year');
 }
 

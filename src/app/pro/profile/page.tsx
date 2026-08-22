@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { BadgeCheck,CreditCard,FileCheck2,ShieldAlert,ShieldCheck,UsersRound,WalletCards } from 'lucide-react';
 import { AppShell,SectionTitle } from '@/components/shell';
+import { ProviderPageIntro,ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { createStripeOnboardingAction,logoutAction,saveProfileAction,submitVerificationAction } from '@/app/actions';
@@ -22,12 +23,14 @@ export default async function ProProfile({searchParams}:{searchParams:Promise<Re
   const services=db.prepare(`SELECT slug,title,category FROM service_catalog WHERE active=1 ORDER BY category,title`).all() as any[];
   const selectedServices=new Set((db.prepare(`SELECT service_slug FROM provider_service_offerings WHERE provider_id=? AND active=1`).all(ctx.providerId) as Array<{service_slug:string}>).map(r=>r.service_slug));
   const brokerProfile=db.prepare(`SELECT * FROM broker_search_profiles WHERE provider_id=?`).get(ctx.providerId) as any;
-  return <AppShell role="provider" active="/pro/profile" title="Partnerprofil" subtitle={p?.business_name||ctx.businessName}><InstallAppCard dark/>
+  return <AppShell role="provider" active="/pro/profile" title="Profil & Vertrauen" subtitle={p?.business_name||ctx.businessName}>
+    <ProviderPageIntro eyebrow="Unternehmen" title="Profil & Vertrauen" description="Verifizierung, Vertrag, Auszahlungen und Leistungsprofil an einem Ort. Änderungen an Firma und Einsatzgebiet sind nur für berechtigte Ansprechpartner verfügbar."/>
+    <InstallAppCard />
     {sp.verification==='submitted'&&<div className="alert success"><ShieldCheck/>Unternehmensnachweise wurden eingereicht.</div>}
     {sp.verification==='owner'&&<div className="alert error">Unternehmensnachweise kann nur der Firmeninhaber verwalten.</div>}
     {sp.stripe==='ready'&&<div className="alert success"><CreditCard/>Auszahlungen sind vollständig eingerichtet.</div>}
     {sp.stripe==='incomplete'&&<div className="alert error">Stripe-Onboarding ist noch nicht vollständig abgeschlossen.</div>}
-    {sp.stripe==='missing'&&<div className="alert error">Stripe ist auf der Plattform noch nicht konfiguriert.</div>}
+    {sp.stripe==='missing'&&<ProviderState icon={<CreditCard size={21}/>} title="Auszahlungen derzeit nicht verfügbar" description="Die Stripe-Integration ist auf der Plattform noch nicht vollständig konfiguriert. Es wurde nichts an deinem Auszahlungsstatus geändert." tone="unavailable"/>}
     {sp.stripe==='owner'&&<div className="alert error">Auszahlungen kann nur der Firmeninhaber einrichten.</div>}
 
     <div className={p?.verified?'verification-card verified':'verification-card'}>{p?.verified?<ShieldCheck/>:<ShieldAlert/>}<div><strong>{p?.verified?'Unternehmen geprüft':'Unternehmensprüfung erforderlich'}</strong><p>{p?.verified?'Identität und eingereichte Unternehmensnachweise sind geprüft.':v?`Prüfstatus: ${statusLabel(v.status)}`:'Gewerbe-, Qualifikations- und Versicherungsnachweise müssen geprüft werden.'}</p>{v?.admin_note&&<small>Rückmeldung: {v.admin_note}</small>}</div></div>

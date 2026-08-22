@@ -1,7 +1,7 @@
 import { createInvoiceAction } from '@/app/actions';
 import { euro } from '@/lib/format';
 
-export function InvoiceForm({jobId,defaultAmount}:{jobId:number;defaultAmount:number}){
+export function InvoiceForm({jobId,defaultAmount,primary=false}:{jobId:number;defaultAmount:number;primary?:boolean}){
   return <form action={createInvoiceAction.bind(null,jobId)} className="invoice-form">
     <div className="invoice-form-head"><div><strong>Rechnung direkt senden</strong><p>Die Rechnung erscheint sofort beim Eigentümer in „Dokumente“ und kann – falls Stripe Connect eingerichtet ist – direkt bezahlt werden.</p></div></div>
     <div className="three"><label>Rechnungsdatum<input name="issueDate" type="date"/><small>Leer = heute</small></label><label>Leistungsdatum<input name="serviceDate" type="date"/><small>Leer = heute</small></label><label>Zahlbar bis<input name="dueDate" type="date"/><small>Leer = 14 Tage</small></label></div>
@@ -10,6 +10,6 @@ export function InvoiceForm({jobId,defaultAmount}:{jobId:number;defaultAmount:nu
     <div className="invoice-line"><label>Weitere Position <small>(optional)</small><input name="itemDescription" placeholder="z. B. Material"/></label><label>Menge<input name="itemQuantity" type="number" step="0.01" min="0.01" defaultValue="1"/></label><label>Einheit<input name="itemUnit" defaultValue="Stk."/></label><label>Netto €<input name="itemPrice" type="number" step="0.01" min="0"/></label><label>MwSt. %<select name="itemTax" defaultValue="19"><option value="19">19 %</option><option value="7">7 %</option><option value="0">0 %</option></select></label></div>
     <label>Hinweis <small>(optional)</small><textarea name="notes" rows={3} placeholder="Zahlungsziel, Garantiehinweis oder Dankeschön …"/></label>
     <div className="invoice-preview-total"><span>Vorschlag auf Basis des gebuchten Auftrags</span><strong>{euro(defaultAmount)}</strong></div>
-    <button className="btn light wide">Rechnung erstellen & senden</button>
+    <button className={primary?'btn light wide':'btn ghost pro-ghost wide'}>Rechnung erstellen & senden</button>
   </form>;
 }

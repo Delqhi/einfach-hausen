@@ -7,7 +7,7 @@ import { db } from '@/lib/db';
 import { canAccessProviderJob } from '@/lib/provider';
 import { canReadJobMedia,resolvePrivatePath } from '@/lib/security/private-files';
 
-function mime(file:string){const e=path.extname(file).toLowerCase();return e==='.png'?'image/png':e==='.webp'?'image/webp':e==='.gif'?'image/gif':e==='.mp4'?'video/mp4':e==='.webm'?'video/webm':e==='.mov'?'video/quicktime':e==='.m4v'?'video/x-m4v':'image/jpeg';}
+function mime(file:string){const e=path.extname(file).toLowerCase();return e==='.png'?'image/png':e==='.webp'?'image/webp':e==='.gif'?'image/gif':e==='.mp4'?'video/mp4':e==='.webm'?'video/webm':e==='.mov'?'video/quicktime':e==='.m4v'?'video/x-m4v':e==='.aac'?'audio/aac':e==='.mp3'?'audio/mpeg':e==='.m4a'?'audio/mp4':e==='.ogg'?'audio/ogg':e==='.opus'?'audio/opus':e==='.wav'?'audio/wav':'image/jpeg';}
 
 export async function GET(_req:NextRequest,{params}:{params:Promise<{id:string}>}){
   const [user,admin]=await Promise.all([getCurrentUser(),isAdmin()]); if(!user&&!admin)return new NextResponse('Unauthorized',{status:401});

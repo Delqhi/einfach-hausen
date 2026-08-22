@@ -94,20 +94,25 @@ const seed=db.transaction(()=>{
     ['heckenschnitt','Heckenschnitt','Garten & Außenbereich','hecke,heckenschnitt,schneiden',12000,17000,0],
     ['rasenpflege','Rasenpflege','Garten & Außenbereich','rasen,mähen,rasenpflege',7000,14000,0],
     ['terrassenreinigung','Terrassenreinigung','Garten & Außenbereich','terrasse,hochdruck,reinigung',9000,18000,0],
-    ['grundreinigung','Grundreinigung','Reinigung','reinigung,putzen,grundreinigung,fenster',9000,22000,0],
+    ['grundreinigung','Grundreinigung','Reinigung','reinigung,putzen,grundreinigung',9000,22000,0],
+    ['fensterreinigung','Fensterreinigung','Reinigung','fenster,fensterreinigung,glas,putzen',7000,18000,0],
     ['elektro','Elektroarbeiten','Elektro','elektrik,strom,steckdose,sicherung,lampe',12000,28000,1],
     ['sanitaer','Sanitär & Heizung','Sanitär & Heizung','wasser,abfluss,wc,toilette,heizung,therme,wärmepumpe',14000,32000,1],
     ['montage','Montage & Reparatur','Montage & Reparatur','montage,reparatur,tür,schloss,möbel,regal',8000,22000,0],
     ['dach','Dach & Fassade','Dach & Fassade','dach,dachrinne,rinne,fassade,ziegel',14000,35000,1],
+    ['maler','Maler & Ausbau','Maler & Ausbau','maler,streichen,tapete,wand,decke,trockenbau',12000,30000,0],
+    ['umzug','Umzug & Transport','Umzug & Transport','umzug,transport,tragen,möbeltransport,entrümpelung',15000,45000,0],
     ['energie','Energie & Smart Home','Energie & Smart Home','pv,photovoltaik,speicher,wallbox,smart home,energie',12000,30000,1],
     ['sonstiges','Hausservice','Hausmeister & Sonstiges','haus,hilfe,sonstiges',8000,22000,0]
   ].forEach((x:any)=>service.run(...x));
-  const plan=db.prepare('INSERT OR REPLACE INTO membership_plans(slug,title,monthly_amount,description,priority_level,annual_house_check,partner_discount_bps,active) VALUES(?,?,?,?,?,?,?,?)');
+  const plan=db.prepare(`INSERT INTO membership_plans(slug,title,monthly_amount,description,priority_level,annual_house_check,partner_discount_bps,active) VALUES(?,?,?,?,?,?,?,?)
+    ON CONFLICT(slug) DO UPDATE SET title=excluded.title,monthly_amount=excluded.monthly_amount,description=excluded.description,priority_level=excluded.priority_level,annual_house_check=excluded.annual_house_check,partner_discount_bps=excluded.partner_discount_bps,active=excluded.active`);
   plan.run('free','Free',0,'Hausmeisterservice, Aufträge, Angebote, persönliche Ansprechpartner und digitale Hausakte.',0,0,0,1);
   plan.run('plus','Plus',1990,'Automatische Wartungsplanung, Hausjahresplan, Erinnerungen, Dokumentenverwaltung, bevorzugte Vermittlung und Prioritätsservice.',2,0,0,1);
   plan.run('premium','Premium',3990,'Persönliche Betreuung, höchste Priorität, jährlicher Hauscheck, automatische Wartungsorganisation, Premium-Partner und erweiterte Hausverwaltung.',3,1,0,1);
   db.prepare("UPDATE membership_plans SET active=0 WHERE slug='basic'").run();
-  const partnerPlan=db.prepare('INSERT OR REPLACE INTO partner_plans(slug,title,monthly_amount,description,monthly_lead_limit,priority_level,trial_days,active) VALUES(?,?,?,?,?,?,?,1)');
+  const partnerPlan=db.prepare(`INSERT INTO partner_plans(slug,title,monthly_amount,description,monthly_lead_limit,priority_level,trial_days,active) VALUES(?,?,?,?,?,?,?,1)
+    ON CONFLICT(slug) DO UPDATE SET title=excluded.title,monthly_amount=excluded.monthly_amount,description=excluded.description,monthly_lead_limit=excluded.monthly_lead_limit,priority_level=excluded.priority_level,trial_days=excluded.trial_days,active=excluded.active`);
   partnerPlan.run('free','Free',0,'Kostenlos starten, 0 % Provision und eine begrenzte Zahl neuer Anfragen.',5,0,0);
   partnerPlan.run('start','Start',2900,'Mehr Anfragevolumen und einfache Partnerfunktionen für kleine Betriebe. 0 % Provision und keine Gebühr pro Auftrag.',50,0,60);
   partnerPlan.run('pro','Pro',7900,'Für aktive Partner mit höherem Anfragevolumen, erweiterten Betriebsfunktionen und 0 % Provision. Das Qualitätsmatching bleibt tarifneutral.',null,0,60);
@@ -116,7 +121,8 @@ const seed=db.transaction(()=>{
   pkg.run('haus-jahrespflege','Haus Jahrespflege',29900,'Ein strukturierter jährlicher Haus-Check mit Planung typischer Wartungs- und Werterhaltsthemen.',JSON.stringify(['Haus-Check','Dachrinne','Fenster/Türen','Haustechnik','Wartungsplan']));
   pkg.run('garten-premium','Garten Premium Jahr',49900,'Saisonale Gartenplanung mit wiederkehrenden Pflegepunkten und priorisierter Partnerorganisation.',JSON.stringify(['Frühjahrscheck','Rasenpflege','Heckenplanung','Herbstcheck','Saisonplan']));
   pkg.run('energie-technik','Energie & Technik Check',24900,'Jährlicher Organisations-Check für PV, Speicher, Wallbox, Heizung/Wärmepumpe und relevante Haustechnik.',JSON.stringify(['PV','Speicher','Wallbox','Heizung/Wärmepumpe','Smart Home']));
-  const providerCategory=db.prepare('INSERT OR REPLACE INTO provider_categories(slug,title,description,active) VALUES(?,?,?,1)');
+  const providerCategory=db.prepare(`INSERT INTO provider_categories(slug,title,description,active) VALUES(?,?,?,1)
+    ON CONFLICT(slug) DO UPDATE SET title=excluded.title,description=excluded.description,active=excluded.active`);
   providerCategory.run('handwerk','Handwerker','Handwerkliche Leistungen rund um Gebäude, Technik und Außenbereich.');
   providerCategory.run('dienstleistung','Dienstleister','Hausnahe Dienstleistungen wie Reinigung, Pflege, Umzug oder Hausservice.');
   providerCategory.run('makler','Immobilienmakler','Vermarktung, Verkauf und Käufer-/Verkäuferberatung.');

@@ -17,11 +17,11 @@ async function sendHousemaster(page,text){const c=page.getByPlaceholder(/Beschre
 // 0) Öffentliche Website ist mobile-first, nutzenorientiert und als PWA installierbar.
 const publicCtx=await browser.newContext({viewport:{width:390,height:844}}); const publicPage=await publicCtx.newPage();
 await publicPage.goto(base+'/');
-await publicPage.getByRole('heading',{name:/Wenn am Haus etwas ist/}).waitFor();
-await waitText(publicPage,'WAS STEHT BEI DIR AN?'); await waitText(publicPage,'Geprüfte Vertragspartner'); await waitText(publicPage,'Konkreter Ansprechpartner');
+await publicPage.getByRole('heading',{name:/Ein Ansprechpartner für.*Eigenheim/i}).waitFor();
+await waitText(publicPage,'Was steht bei deinem Haus an?'); await waitText(publicPage,'Geprüfte Vertragspartner'); await waitText(publicPage,'Konkrete Ansprechpartner');
 if(/KI-Hausmeister/i.test(await publicPage.locator('body').innerText()))throw new Error('Landing page still foregrounds AI instead of customer benefit');
 await assertNoOverflow(publicPage,'Mobile landing');
-await publicPage.getByLabel('Was steht bei dir an?').fill('Meine Haustür klemmt seit gestern.'); await publicPage.getByRole('button',{name:/Kostenlos weiter/}).click(); await publicPage.waitForURL(/\/register\?role=homeowner&request=/); await waitText(publicPage,'DEIN ANLIEGEN'); await waitText(publicPage,'Meine Haustür klemmt seit gestern.'); await publicPage.goto(base+'/');
+await publicPage.getByLabel('Was steht bei deinem Haus an?').fill('Meine Haustür klemmt seit gestern.'); await publicPage.getByRole('button',{name:/Anliegen starten/}).click(); await publicPage.waitForURL(/\/register\?role=homeowner&request=/); await waitText(publicPage,'DEIN ANLIEGEN'); await waitText(publicPage,'Meine Haustür klemmt seit gestern.'); await publicPage.goto(base+'/');
 const manifestResponse=await publicPage.request.get(base+'/manifest.webmanifest'); if(!manifestResponse.ok())throw new Error('PWA manifest unavailable');
 const manifest=await manifestResponse.json(); if(manifest.display!=='standalone'||!Array.isArray(manifest.icons)||manifest.icons.length<3)throw new Error('PWA manifest incomplete');
 const swResponse=await publicPage.request.get(base+'/sw.js'); if(!swResponse.ok()||!(await swResponse.text()).includes('einfach-hausen-shell'))throw new Error('Service worker unavailable'); const swCache=swResponse.headers()['cache-control']||''; if(!/no-cache|no-store/i.test(swCache))throw new Error('Service worker must not be long-term cached');
@@ -54,7 +54,7 @@ await manager.getByLabel('Firmenanschrift').fill('Gartenstraße 12, 46325 Borken
 const emergencyToggle=manager.getByLabel('Notfälle',{exact:true}); if(!(await emergencyToggle.isChecked()))await emergencyToggle.check(); await manager.getByLabel('Modell').selectOption('24_7'); await manager.getByLabel('Max. Notfallzuschlag %').fill('20'); await manager.getByRole('button',{name:'Profil speichern'}).click(); await manager.waitForTimeout(350);
 
 // 2) Firma legt einen echten Ansprechpartner an. Nur ein Schalter für Auftragsverwaltung.
-await manager.goto(base+'/pro/team'); await waitText(manager,'Ein Unternehmen. Ein Team. Ein Schalter.'); await assertNoOverflow(manager,'Mobile partner team');
+await manager.goto(base+'/pro/team'); await manager.getByRole('heading',{name:'Menschen statt Rollenmatrix'}).waitFor(); await waitText(manager,'Aufträge verwalten AN'); await assertNoOverflow(manager,'Mobile partner team');
 await manager.getByLabel('Vorname').last().fill('Thomas'); await manager.getByLabel('Nachname').last().fill('Weber');
 await manager.getByLabel('Funktion').fill('Techniker'); await manager.getByLabel('E-Mail').last().fill(techEmail); await manager.getByLabel('Telefon').last().fill('+49 151 12345678'); await manager.getByLabel('Startpasswort').fill(password);
 await manager.getByRole('button',{name:'Ansprechpartner anlegen'}).click(); await manager.waitForURL(/member=created/); await waitText(manager,'Thomas Weber');
@@ -66,8 +66,8 @@ await owner.goto(base+'/register?role=homeowner');
 await owner.getByLabel('Vorname').fill('Maria'); await owner.getByLabel('Nachname').fill('Test'); await owner.getByLabel('E-Mail').fill(ownerEmail); await owner.getByLabel('Passwort').fill(password); await owner.getByLabel('PLZ').fill('46325');
 await Promise.all([owner.waitForURL('**/app'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
 await assertNoOverflow(owner,'Mobile customer app');
-if(await owner.locator('.bottom-nav a').count()!==5)throw new Error('Mobile homeowner navigation must expose five primary destinations');
-await waitText(owner,'NOTFALL'); await waitText(owner,'BERATUNG'); await waitText(owner,'Meine Ansprechpartner');
+await owner.locator('.bottom-nav a').first().waitFor(); const ownerNavCount=await owner.locator('.bottom-nav a').count(); if(ownerNavCount!==5)throw new Error(`Mobile homeowner navigation must expose five primary destinations, got ${ownerNavCount}`);
+await waitText(owner,'Dringender Notfall'); await waitText(owner,'Direkt einen Menschen fragen'); await owner.locator('.bottom-nav').getByText('Ansprechpartner',{exact:true}).waitFor();
 await owner.goto(base+'/app/profile'); await waitText(owner,'Einfach Hausen aufs Handy'); await assertNoOverflow(owner,'Mobile customer profile');
 await owner.goto(base+'/app/hausmeister'); await assertNoOverflow(owner,'Mobile housemaster');
 await sendHousemaster(owner,'Meine Hecke ist zu hoch. Dienstag ab 14 Uhr hätte ich Zeit. Wen kann ich dazu fragen?'); await owner.waitForURL(/answered=1/);
@@ -78,7 +78,7 @@ await manager.goto(base+'/pro'); await waitText(manager,'Keine neue passende Anf
 // 3a) Zuerst nur einen Menschen verbinden — ausdrücklich noch kein Auftrag.
 await owner.getByRole('button',{name:/Ansprechpartner finden/}).click(); await owner.waitForURL(/\/app\/jobs\/\d+/); const contactJobId=Number(owner.url().split('/').pop()); if(!contactJobId)throw new Error('contact job missing');
 await waitText(owner,'Du hast nur einen Ansprechpartner gewählt'); await waitText(owner,'noch kein Auftrag');
-await manager.goto(base+'/pro'); await manager.getByText('Heckenschnitt').first().waitFor(); await manager.getByText('Heckenschnitt').first().click();
+await manager.goto(base+'/pro'); const contactRequest=manager.locator('a.pro-request').filter({hasText:'Heckenschnitt'}).first(); await contactRequest.waitFor(); await contactRequest.focus(); await Promise.all([manager.waitForURL(new RegExp(`/pro/jobs/${contactJobId}$`)),manager.keyboard.press('Enter')]);
 await waitText(manager,'Nur persönlicher Ansprechpartner gesucht');
 const contactSelect=manager.getByLabel('Ansprechpartner'); const contactThomas=contactSelect.locator('option').filter({hasText:'Thomas Weber'}); const contactThomasValue=await contactThomas.getAttribute('value'); if(!contactThomasValue)throw new Error('Thomas contact option missing'); await contactSelect.selectOption(contactThomasValue);
 await manager.getByRole('button',{name:'Kontakt übernehmen'}).click(); await manager.waitForURL(new RegExp(`/pro/jobs/${contactJobId}`));
@@ -137,7 +137,7 @@ await owner.goto(base+'/app/home'); await waitText(owner,'Gebäude & Räume'); a
 const assetForm=owner.locator('.asset-form'); await assetForm.locator('select[name="kind"]').selectOption('pv'); await assetForm.locator('input[name="name"]').fill('PV-Anlage 10 kWp'); await assetForm.getByRole('button',{name:'Hinzufügen'}).click(); await waitText(owner,'PV-Anlage und Ertrag prüfen');
 await owner.goto(base+'/app/home/history'); await owner.getByLabel('Bereich').selectOption({label:'Dach & Fassade'}); await owner.getByLabel('Datum').fill('2025-06-12'); await owner.getByLabel('Was wurde gemacht?').fill('Dachsanierung 2025'); await owner.getByLabel('Firma').fill('Gartenbau Müller'); await owner.getByLabel('E-Mail Handwerker').fill(providerEmail); await owner.getByLabel('Kosten €').fill('18500'); await owner.getByRole('button',{name:'In Hausakte speichern'}).click(); await waitText(owner,'Dachsanierung 2025'); await waitText(owner,'Partner ist mit deinem Haus verbunden'); await assertNoOverflow(owner,'Mobile house history');
 await owner.goto(base+'/app/messages'); await waitText(owner,'Dach'); await waitText(owner,'Garten'); const thomasRow=owner.locator('.contact-row').filter({hasText:'Thomas Weber'}).first(); await thomasRow.click(); await owner.locator('.contact-category-editor summary').click(); await owner.getByLabel('Eigener Bereich').fill('Hecke & Bäume'); await owner.getByRole('button',{name:'Bereich speichern'}).click(); await owner.waitForURL(/category=saved/); await waitText(owner,'Hecke & Bäume');
-await owner.goto(base+`/app/year?year=${new Date().getFullYear()+1}`); await waitText(owner,'Mein Jahr'); await waitText(owner,'PV-Anlage und Ertrag prüfen'); await assertNoOverflow(owner,'Mobile year plan');
+await owner.goto(base+`/app/year?year=${new Date().getFullYear()+2}`); await waitText(owner,'Mein Jahr'); await waitText(owner,'PV-Anlage und Ertrag prüfen'); await assertNoOverflow(owner,'Mobile year plan');
 await owner.goto(base+'/app/plans'); await owner.getByText('Free',{exact:true}).waitFor(); await owner.getByText('Plus',{exact:true}).waitFor(); await owner.getByText('Premium',{exact:true}).waitFor();
 await owner.goto(base+'/app/jobs?tab=completed'); await waitText(owner,'Meine Aufträge'); await waitText(owner,'Abgeschlossen'); await assertNoOverflow(owner,'Mobile completed jobs');
 await manager.goto(base+'/pro/plans'); await waitText(manager,'0 % Provision'); for(const plan of ['Free','Start','Pro','Premium'])await manager.getByText(plan,{exact:true}).first().waitFor();

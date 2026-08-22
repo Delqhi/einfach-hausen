@@ -1,6 +1,7 @@
 import { db } from './db';
 import { analyzeRequest, answerHouseQuestion } from './request-ai';
-import { geocodePostcode, distanceKm } from './geocode';
+import { geocodePostcode, distanceKm, regionalPostcodeGeo } from './geocode';
+import { emergencyResponseScore, preferredRequestWindow } from './matching';
 import { createNotification } from './notifications';
 import { getProviderManagerIds } from './provider';
 import { primaryProperty } from './properties';
@@ -31,11 +32,13 @@ function partnerTradeMatch(trades:string,service:ServiceRow){
   const words=service.keywords.split(',').map(x=>x.trim().toLowerCase());
   const aliases:Record<string,string[]>= {
     'garten & außenbereich':['garten','galabau','landschaft','grünpflege','hausmeister'],
-    'reinigung':['reinigung','gebäudereinigung','putz','clean'],
+    'reinigung':['reinigung','gebäudereinigung','putz','clean','fensterreinigung'],
     'elektro':['elektro','elektrik','elektriker'],
     'sanitär & heizung':['sanitär','shk','heizung','wärmepumpe'],
     'montage & reparatur':['montage','reparatur','handwerk','hausmeister'],
     'dach & fassade':['dach','dachdecker','fassade'],
+    'maler & ausbau':['maler','malerei','trockenbau','ausbau','renovierung'],
+    'umzug & transport':['umzug','transport','entrümpelung','spedition'],
     'energie & smart home':['pv','photovoltaik','solar','energie','smart home','wallbox'],
     'hausmeister & sonstiges':['hausmeister','service','allround','montage']
   };
@@ -85,6 +88,8 @@ export function appendJobEvent(jobId:number,body:string,metadata:Record<string,u
 
 async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jobPostcode:string,jobGeo:{lat:number;lon:number}|null,requestKind:HausmeisterIntent|'emergency'='service'){
   const partners=db.prepare(`SELECT p.*,c.status contract_status,c.insurance_verified,c.qualification_verified,c.contract_verified,c.quality_standard_verified,c.customer_discount_bps,c.response_target_minutes,pref.accepts_normal_jobs,pref.accepts_short_notice,pref.accepts_consultation,pref.accepts_emergencies,pref.emergency_mode,pref.emergency_markup_bps,pref.emergency_start,pref.emergency_end,pref.emergency_days,
+      (SELECT AVG((julianday(d2.responded_at)-julianday(d2.sent_at))*1440.0) FROM job_dispatches d2 WHERE d2.provider_id=p.user_id AND d2.responded_at IS NOT NULL AND d2.sent_at>=datetime('now','-90 days')) average_response_minutes,
+      (SELECT COUNT(*) FROM job_dispatches d3 WHERE d3.provider_id=p.user_id AND d3.responded_at IS NOT NULL AND d3.sent_at>=datetime('now','-90 days')) response_samples,
       CASE WHEN ps.id IS NULL THEN free.monthly_lead_limit ELSE paid.monthly_lead_limit END monthly_lead_limit,
       CASE WHEN ps.id IS NULL THEN 'free' ELSE ps.plan_slug END partner_plan
     FROM provider_profiles p JOIN partner_contracts c ON c.provider_id=p.user_id
@@ -94,10 +99,11 @@ async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jo
     LEFT JOIN partner_plans free ON free.slug='free'
     WHERE p.verified=1 AND c.status='active'`).all() as any[];
   const preferredProviders=new Set((db.prepare('SELECT DISTINCT provider_id FROM homeowner_contacts WHERE homeowner_id=?').all(homeownerId) as Array<{provider_id:number}>).map(r=>r.provider_id));
-  const jobTiming=db.prepare('SELECT preferred_date FROM jobs WHERE id=?').get(jobId) as {preferred_date:string|null}|undefined;
-  const preferredMs=jobTiming?.preferred_date?new Date(`${jobTiming.preferred_date}T12:00:00`).getTime():null;
-  const shortNotice=preferredMs!==null&&preferredMs>=Date.now()-86400000&&preferredMs-Date.now()<=48*3600000;
+  const jobTiming=db.prepare('SELECT preferred_date,preferred_time FROM jobs WHERE id=?').get(jobId) as {preferred_date:string|null;preferred_time:string|null}|undefined;
+  const timingWindow=preferredRequestWindow({preferredDate:jobTiming?.preferred_date,preferredTime:jobTiming?.preferred_time});
+  const shortNotice=timingWindow.shortNotice;
   const matches:{p:any;distance:number|null;score:number}[]=[];
+  const jobPoint=jobGeo||regionalPostcodeGeo(jobPostcode);
   for(const p of partners){
     const offerings=(db.prepare(`SELECT service_slug FROM provider_service_offerings WHERE provider_id=? AND active=1`).all(p.user_id) as Array<{service_slug:string}>).map(r=>r.service_slug);
     if(offerings.length){if(!offerings.includes(service.slug)&&!offerings.includes('sonstiges'))continue;}else if(!partnerTradeMatch(p.trades,service))continue;
@@ -110,16 +116,18 @@ async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jo
       if(used>=Number(p.monthly_lead_limit))continue;
     }
     let distance:number|null=null;
-    if(jobGeo&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)) distance=distanceKm(jobGeo,{lat:p.lat,lon:p.lon});
+    const providerPoint=Number.isFinite(p.lat)&&Number.isFinite(p.lon)?{lat:Number(p.lat),lon:Number(p.lon)}:regionalPostcodeGeo(String(p.postcode||''));
+    if(jobPoint&&providerPoint)distance=distanceKm(jobPoint,providerPoint);
     if(distance!==null&&distance>p.radius_km)continue;
-    if(distance===null&&jobPostcode&&p.postcode&&jobPostcode.slice(0,2)!==p.postcode.slice(0,2)&&p.radius_km<50)continue;
+    // If neither an exact nor a regional centroid can be resolved, fail closed for narrow-radius matching.
+    if(distance===null&&Number(p.radius_km)<50)continue;
     const quality=[p.insurance_verified,p.qualification_verified,p.contract_verified,p.quality_standard_verified].filter(Boolean).length;
     const distanceScore=distance===null?10:Math.max(0,30-distance);
     const ratingScore=(Number(p.rating)||0)*8;
     const existingRelationship=preferredProviders.has(p.user_id)?30:0;
     const openJobs=(db.prepare(`SELECT COUNT(*) c FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status='accepted' AND j.status IN ('accepted','in_progress')`).get(p.user_id) as {c:number}).c;
     const capacityScore=Math.max(-20,10-openJobs*2);
-    const emergencyScore=requestKind==='emergency'?((p.emergency_mode==='24_7'?24:12)+Math.max(0,18-(Number(p.emergency_markup_bps)||0)/500)):0;
+    const emergencyScore=requestKind==='emergency'?emergencyResponseScore({averageResponseMinutes:p.average_response_minutes,responseSamples:p.response_samples,responseTargetMinutes:p.response_target_minutes,emergencyMode:p.emergency_mode}):0;
     const score=quality*15+distanceScore+ratingScore+existingRelationship+capacityScore+emergencyScore;
     matches.push({p,distance,score});
   }
@@ -232,10 +240,12 @@ export async function redispatchOpenJobs(){
   const jobs=db.prepare(`SELECT * FROM jobs WHERE status IN ('open','quoted') ORDER BY created_at DESC LIMIT 200`).all() as any[];
   let created=0;
   for(const job of jobs){
+    const requestKind=job.urgency==='emergency'?'emergency':job.request_kind==='contact'?'contact':'service';
+    if(requestKind==='service'&&preferredRequestWindow({preferredDate:job.preferred_date,preferredTime:job.preferred_time}).expired)continue;
     const service=(job.service_slug?db.prepare('SELECT * FROM service_catalog WHERE slug=?').get(job.service_slug):null) as ServiceRow|undefined;
     const fallback=(db.prepare("SELECT * FROM service_catalog WHERE slug='sonstiges'").get()) as ServiceRow;
-    const geo=Number.isFinite(job.lat)&&Number.isFinite(job.lon)?{lat:job.lat,lon:job.lon}:null;
-    created+=await dispatchJob(job.id,job.homeowner_id,service||fallback,job.postcode,geo,job.urgency==='emergency'?'emergency':job.request_kind==='contact'?'contact':'service');
+    const geo=Number.isFinite(job.lat)&&Number.isFinite(job.lon)?{lat:job.lat,lon:job.lon}:regionalPostcodeGeo(String(job.postcode||''));
+    created+=await dispatchJob(job.id,job.homeowner_id,service||fallback,job.postcode,geo,requestKind);
   }
   return created;
 }

@@ -1,0 +1,63 @@
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import styles from './marketing.module.css';
+
+export function Eyebrow({ children }: { children: React.ReactNode }) {
+  return <span className={styles.eyebrow}>{children}</span>;
+}
+
+export function PageHero({ eyebrow, title, text, actions }: { eyebrow: string; title: string; text: string; actions?: React.ReactNode }) {
+  return (
+    <section className={styles.pageHero}>
+      <div className={styles.narrow}>
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <h1>{title}</h1>
+        <p>{text}</p>
+        {actions && <div className={styles.heroActions}>{actions}</div>}
+      </div>
+    </section>
+  );
+}
+
+export function Section({ eyebrow, title, text, children, tone = 'plain' }: { eyebrow?: string; title?: string; text?: string; children: React.ReactNode; tone?: 'plain' | 'soft' | 'green' | 'dark' }) {
+  return (
+    <section className={`${styles.section} ${styles[`tone_${tone}`]}`}>
+      <div className={styles.sectionInner}>
+        {(eyebrow || title || text) && <div className={styles.sectionHead}>
+          {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+          {title && <h2>{title}</h2>}
+          {text && <p>{text}</p>}
+        </div>}
+        {children}
+      </div>
+    </section>
+  );
+}
+
+export function FeatureGrid({ items }: { items: ReadonlyArray<{ icon: React.ReactNode; title: string; text: string }> }) {
+  return <div className={styles.featureGrid}>{items.map((item) => <article className={styles.feature} key={item.title}><div className={styles.featureIcon}>{item.icon}</div><h3>{item.title}</h3><p>{item.text}</p></article>)}</div>;
+}
+
+export function Split({ children }: { children: React.ReactNode }) {
+  return <div className={styles.split}>{children}</div>;
+}
+
+export function LinkButton({ href, children, secondary = false }: { href: string; children: React.ReactNode; secondary?: boolean }) {
+  return <Link className={secondary ? styles.secondaryButton : styles.primaryButton} href={href}>{children}{!secondary && <ArrowRight size={16} />}</Link>;
+}
+
+export function BulletList({ items }: { items: readonly string[] }) {
+  return <ul className={styles.bulletList}>{items.map((item) => <li key={item}><span aria-hidden="true">✓</span>{item}</li>)}</ul>;
+}
+
+export function InfoPanel({ children, label }: { children: React.ReactNode; label?: string }) {
+  return <div className={styles.infoPanel}>{label && <span className={styles.panelLabel}>{label}</span>}{children}</div>;
+}
+
+export function CtaBand({ title, text, href = '/register?role=homeowner', label = 'Kostenlos starten' }: { title: string; text: string; href?: string; label?: string }) {
+  return <section className={styles.ctaBand}><div><h2>{title}</h2><p>{text}</p></div><LinkButton href={href}>{label}</LinkButton></section>;
+}
+
+export function LegalNotice({ title, children }: { title: string; children: React.ReactNode }) {
+  return <div className={styles.legalNotice}><strong>{title}</strong><div>{children}</div></div>;
+}

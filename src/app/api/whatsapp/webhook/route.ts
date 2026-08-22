@@ -2,6 +2,7 @@ import { NextRequest,NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { answerHausmeisterQuestion,createHausmeisterRequest,type HausmeisterIntent } from '@/lib/orchestrator';
 import { claimWebhookEvent,completeWebhookEvent,releaseWebhookEvent,verifyMetaSignature } from '@/lib/security/webhooks';
+import { downloadWhatsAppMedia,whatsappMediaType } from '@/lib/whatsapp-media';
 
 function normalizePhone(v:string){return v.replace(/\D/g,'').replace(/^00/,'');}
 function explicitIntent(text:string):HausmeisterIntent|null{
@@ -31,38 +32,41 @@ export async function POST(req:NextRequest){
   try{payload=JSON.parse(rawBody);}catch{return new NextResponse('Invalid payload',{status:400});}
   const entries=payload?.entry||[];
   for(const entry of entries)for(const change of entry.changes||[])for(const msg of change.value?.messages||[]){
-    if(msg.type!=='text'||!msg.from||!msg.id)continue;
+    if(!msg.from||!msg.id)continue;
     if(!claimWebhookEvent('whatsapp',String(msg.id)))continue;
     try{
       const phone=normalizePhone(msg.from); const users=db.prepare("SELECT id,role,phone FROM users WHERE phone IS NOT NULL AND phone!=''").all() as any[];
       const user=users.find(u=>{const p=normalizePhone(u.phone||'');return p===phone||p.endsWith(phone.slice(-10))||phone.endsWith(p.slice(-10));});
       if(!user){await sendWhatsApp(msg.from,'Diese Nummer ist noch keinem Einfach-Hausen-Konto zugeordnet. Hinterlege sie bitte einmal in deinem App-Profil.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
       if(user.role!=='homeowner'){await sendWhatsApp(msg.from,'Partneranfragen und Aufträge werden in der Einfach-Hausen-Partner-App bearbeitet.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
-      const body=String(msg.text?.body||'').trim();
+      let body=''; let mediaPath:string|null=null;
+      if(msg.type==='text')body=String(msg.text?.body||'').trim();
+      else if(whatsappMediaType(msg.type)){
+        const media=await downloadWhatsAppMedia(msg);
+        if(!media){await sendWhatsApp(msg.from,'Ich konnte diese Datei nicht sicher übernehmen. Bitte sende ein Foto oder eine Sprachnachricht noch einmal oder nutze die Einfach-Hausen-App.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
+        body=media.body; mediaPath=media.path;
+      }else{
+        await sendWhatsApp(msg.from,'Ich kann hier Text, Fotos und Sprachnachrichten sicher übernehmen. Für andere Dateien nutze bitte die Einfach-Hausen-App.');completeWebhookEvent('whatsapp',String(msg.id));continue;
+      }
+      if(!body){await sendWhatsApp(msg.from,'Schreib mir bitte kurz, worum es geht, oder sende ein Foto bzw. eine Sprachnachricht.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
       const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='whatsapp' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
       const draft=thread?db.prepare('SELECT intent FROM assistant_drafts WHERE thread_id=?').get(thread.id) as {intent:HausmeisterIntent}|undefined:undefined;
       if(draft){
-        const result=await createHausmeisterRequest(user.id,body,'whatsapp',null,draft.intent,true,thread?.id);
-        await sendWhatsApp(msg.from,result.reply);
-        completeWebhookEvent('whatsapp',String(msg.id));
-        continue;
+        const result=await createHausmeisterRequest(user.id,body,'whatsapp',mediaPath,draft.intent,true,thread?.id);
+        await sendWhatsApp(msg.from,result.reply); completeWebhookEvent('whatsapp',String(msg.id)); continue;
       }
-
       const intent=explicitIntent(body);
       if(intent){
         const commandOnly=/^(ansprechpartner|kontakt|mensch|fachperson|auftrag|beauftragen|auftrag organisieren)$/i.test(body);
-        let topic=body; let topicPhoto:string|null=null;
+        let topic=body; let topicPhoto:string|null=mediaPath;
         if(commandOnly&&thread){
           const latest=db.prepare(`SELECT body,metadata_json FROM assistant_messages WHERE thread_id=? AND role='user' ORDER BY created_at DESC,id DESC LIMIT 1`).get(thread.id) as {body:string;metadata_json:string}|undefined;
           if(latest){topic=latest.body;try{const meta=JSON.parse(latest.metadata_json||'{}');if(typeof meta.photo==='string')topicPhoto=meta.photo;}catch{}}
         }
         const result=await createHausmeisterRequest(user.id,topic,'whatsapp',topicPhoto,intent,!commandOnly,thread?.id);
-        await sendWhatsApp(msg.from,result.reply);
-        completeWebhookEvent('whatsapp',String(msg.id));
-        continue;
+        await sendWhatsApp(msg.from,result.reply); completeWebhookEvent('whatsapp',String(msg.id)); continue;
       }
-
-      const answer=await answerHausmeisterQuestion(user.id,body,'whatsapp');
+      const answer=await answerHausmeisterQuestion(user.id,body,'whatsapp',mediaPath);
       await sendWhatsApp(msg.from,`${answer.reply}\n\nWenn du einen passenden Menschen sprechen möchtest, antworte ANSPRECHPARTNER. Wenn ich einen echten Auftrag organisieren soll, antworte AUFTRAG.`);
       completeWebhookEvent('whatsapp',String(msg.id));
     }catch{

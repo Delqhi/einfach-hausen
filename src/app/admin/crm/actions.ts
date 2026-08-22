@@ -6,7 +6,7 @@ import { headers } from 'next/headers';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/admin-auth';
 import { db } from '@/lib/db';
-import { addCrmLead,CRM_LEAD_TYPES,CRM_PERMISSIONS,CRM_SOURCES,CRM_STATUSES,importBusinessResearchLeads,updateCrmLead } from '@/lib/crm';
+import { addCrmLead,CRM_LEAD_TYPES,CRM_PERMISSIONS,CRM_SOURCES,CRM_STATUSES,ensureCrmSchema,importBusinessResearchLeads,updateCrmLead } from '@/lib/crm';
 import { checkRateLimit, consumeRateLimitAttempt, rateLimitBlockedEvent } from '@/lib/security/rate-limit';
 import { logAdminAudit, logSecurityEvent } from '@/lib/security/audit';
 
@@ -61,7 +61,33 @@ export async function addCrmLeadAction(fd:FormData){
   await consumeAdminMutation('crm');
   const parsed=addSchema.safeParse({leadType:value(fd,'leadType'),name:value(fd,'name'),companyName:value(fd,'companyName'),category:value(fd,'category'),locality:value(fd,'locality'),postcode:value(fd,'postcode'),country:value(fd,'country'),email:value(fd,'email'),phone:value(fd,'phone'),website:value(fd,'website'),profileUrl:value(fd,'profileUrl'),sourceType:value(fd,'sourceType'),sourceDetail:value(fd,'sourceDetail'),permission:value(fd,'permission')||'unknown',notes:value(fd,'notes')});
   if(!parsed.success){ logSecurityEvent('security_validation_reject','crm_add',`fields=${parsed.error.issues.length}`); logAdminAudit('admin','crm_lead_add_invalid','lead:new'); redirect('/admin/crm?error=invalid-lead'); }
-  // CRM mutation and its audit row commit atomically.
+  // CRM mutation and its audit row commit atomically. Public contact data does not
+  // imply consent: contact_permission remains the single source of truth.
+  ensureCrmSchema();
+  const normalizedEmail=(parsed.data.email||'').toLowerCase().replace(/\s+/g,'');
+  const normalizedPhone=(parsed.data.phone||'').replace(/\D/g,'');
+  const clauses:string[]=[];
+  const params:string[]=[];
+  if(normalizedEmail){clauses.push("LOWER(REPLACE(email,' ',''))=?");params.push(normalizedEmail);}
+  if(normalizedPhone){
+    clauses.push("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(phone,' ',''),'-',''),'(',''),')',''),'+',''),'/',''),'.','')=?");
+    params.push(normalizedPhone);
+  }
+  const existingLead=clauses.length
+    ? db.prepare(`SELECT id FROM crm_leads WHERE ${clauses.join(' OR ')} LIMIT 1`).get(...params) as {id:string}|undefined
+    : undefined;
+  if(existingLead){
+    db.transaction(()=>{
+      db.prepare(`UPDATE crm_leads SET name=?,company_name=?,category=?,locality=?,postcode=?,country=?,email=?,phone=?,website=?,profile_url=?,source_type=?,source_detail=?,contact_permission=?,notes=?,updated_at=CURRENT_TIMESTAMP,last_seen_at=CURRENT_TIMESTAMP WHERE id=?`).run(
+        parsed.data.name,parsed.data.companyName,parsed.data.category,parsed.data.locality,
+        parsed.data.postcode,parsed.data.country,parsed.data.email,parsed.data.phone,
+        parsed.data.website,parsed.data.profileUrl,parsed.data.sourceType,parsed.data.sourceDetail,
+        parsed.data.permission,parsed.data.notes,existingLead.id);
+      logAdminAudit('admin','crm_lead_duplicate',`lead:${existingLead.id}`,`matched=${normalizedEmail?'email':''}${normalizedEmail&&normalizedPhone?'+':''}${normalizedPhone?'phone':''}`);
+    })();
+    revalidatePath('/admin/crm');
+    redirect('/admin/crm?updated=1&duplicate=true');
+  }
   db.transaction(()=>{ addCrmLead(parsed.data); logAdminAudit('admin','crm_lead_add','lead:new',`source=${parsed.data.sourceType}`); })();
   revalidatePath('/admin/crm');
   redirect('/admin/crm?created=1');
