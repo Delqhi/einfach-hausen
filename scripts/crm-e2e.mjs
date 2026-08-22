@@ -11,7 +11,7 @@ try{
   await Promise.all([page.waitForURL('**/admin'),page.getByRole('button',{name:'Admin anmelden'}).click()]);
   await page.getByRole('link',{name:'Leads & CRM'}).click();
   await page.getByRole('heading',{name:'Leads & CRM'}).waitFor();
-  await page.getByRole('button',{name:/SIN Business Research synchronisieren/}).click();
+  await page.getByRole('button',{name:/Alle Research-Daten synchronisieren/}).click();
   await page.waitForURL(/\/admin\/crm\?sync=\d+&updated=\d+/,{timeout:120000});
   await page.getByText(/Leads$/).first().waitFor();
 

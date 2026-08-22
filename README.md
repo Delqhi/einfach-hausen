@@ -104,9 +104,13 @@ zunächst Leads und werden **nicht** künstlich als registrierte Partner angeleg
 - Pipeline von `Gesammelt` bis `Konvertiert`, plus `Nicht kontaktieren`
 - Kontaktfreigabe/Einwilligung getrennt vom Vertriebsstatus
 - Filter nach Leadtyp, Status, Gewerk, Firma, Ort und PLZ
+- öffentliche Bedarfssignale (`public_intent`) aus kostenlosen RSS-/Forum-Quellen
+  getrennt von identifizierten Eigentümer-Leads
+- nicht-personenbezogene Objektchancen (`property`) aus offenen Geodaten
 - manuelle Eigentümer-Leads aus Website, Empfehlung, Facebook-Gruppen, Foren,
   Communities und Kampagnen
-- keine automatische Social-Profil-Ernte oder Massen-DMs
+- ein idempotenter Research-Sync importiert Betriebe, Intent-Signale und Objektchancen
+- keine automatische Social-Profil-Ernte, Deanonymisierung oder Massen-DMs
 
 Betrieb und Datenmodell: [`docs/CRM.md`](docs/CRM.md).
 

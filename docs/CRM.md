@@ -8,8 +8,11 @@ is a lead, not a platform user or verified partner.
 ## Lead types
 
 - `provider` — trades, caretakers, service companies and other potential partners.
-- `homeowner` — prospective homeowner customers from inbound, referrals,
-  communities, campaigns or other documented sources.
+- `homeowner` — identified prospective homeowner customers from inbound, referrals,
+  communities or other documented sources.
+- `public_intent` — a public project/renovation signal such as an RSS/forum thread;
+  it is not treated as marketing consent and is not deanonymized into a private person record.
+- `property` — a non-personal property/building opportunity from open data.
 - `other` — exceptional manually classified leads.
 
 ## Pipeline
@@ -52,9 +55,10 @@ DATABASE_PATH=/path/to/einfach-hausen.db \
 python3 scripts/import-business-research.py
 ```
 
-The sync is idempotent. It refreshes public business facts and provenance but
-preserves the Einfach-Hausen CRM status, contact permission, notes and contact
-history.
+The sync is idempotent. It imports all available research tables: `leads`,
+`public_intents`, and `property_opportunities`. It refreshes public facts and
+provenance while preserving the Einfach-Hausen CRM status, contact permission,
+notes and contact history on existing records.
 
 The Admin UI also exposes a sync button when the source DB exists on the same
 host. Large first-time production syncs should use the CLI script so they are
@@ -65,6 +69,9 @@ not coupled to an HTTP request timeout.
 Admin users can manually record homeowner leads from `website`, `referral`,
 `facebook_group`, `forum`, `community`, `campaign`, `existing_customer` and
 other explicit sources, including the originating profile/community URL.
+Public forum/RSS discoveries stay `public_intent` until there is an appropriate
+reason to create an identified homeowner lead; the CRM does not infer a private
+address, email or real-world identity from a handle.
 
 This repository does **not** automate Facebook/Meta profile scraping, account
 harvesting, unsolicited bulk DMs or anti-bot evasion. Community acquisition

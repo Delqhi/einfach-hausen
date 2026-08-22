@@ -4,7 +4,7 @@ import { requireAdmin } from '@/lib/admin-auth';
 import { CRM_LEAD_TYPES,CRM_PERMISSIONS,CRM_SOURCES,CRM_STATUSES,crmCategories,crmStats,listCrmLeads } from '@/lib/crm';
 import { addCrmLeadAction,syncBusinessResearchAction,updateCrmLeadAction } from './actions';
 
-const labels:Record<string,string>={collected:'Gesammelt',contact_ready:'Kontakt bereit',contacted:'Kontaktiert',replied:'Geantwortet',qualified:'Qualifiziert',invited:'Eingeladen',converted:'Konvertiert',not_interested:'Kein Interesse',invalid:'Ungültig',do_not_contact:'Nicht kontaktieren',unknown:'Ungeklärt',allowed:'Erlaubt',consented:'Einwilligung',denied:'Nicht erlaubt',provider:'Handwerker / Partner',homeowner:'Eigentümer',other:'Sonstiger Lead',business_research:'SIN Business Research',website:'Website',referral:'Empfehlung',facebook_group:'Facebook-Gruppe',forum:'Forum',community:'Community',campaign:'Kampagne',manual:'Manuell',existing_customer:'Bestandskunde'};
+const labels:Record<string,string>={collected:'Gesammelt',contact_ready:'Kontakt bereit',contacted:'Kontaktiert',replied:'Geantwortet',qualified:'Qualifiziert',invited:'Eingeladen',converted:'Konvertiert',not_interested:'Kein Interesse',invalid:'Ungültig',do_not_contact:'Nicht kontaktieren',unknown:'Ungeklärt',allowed:'Erlaubt',consented:'Einwilligung',denied:'Nicht erlaubt',provider:'Handwerker / Partner',homeowner:'Eigentümer',public_intent:'Öffentliches Bedarfssignal',property:'Objektchance',other:'Sonstiger Lead',business_research:'SIN Business Research',business_research_intent:'Öffentliches Intent-Signal',business_research_property:'Offene Gebäudedaten',website:'Website',referral:'Empfehlung',facebook_group:'Facebook-Gruppe',forum:'Forum',community:'Community',campaign:'Kampagne',manual:'Manuell',existing_customer:'Bestandskunde'};
 const compact=(n:number)=>new Intl.NumberFormat('de-DE',{notation:n>9999?'compact':'standard',maximumFractionDigits:1}).format(n);
 
 export default async function CrmPage({searchParams}:{searchParams:Promise<Record<string,string|undefined>>}){
@@ -17,11 +17,11 @@ export default async function CrmPage({searchParams}:{searchParams:Promise<Recor
   return <main className="min-h-screen bg-[#f3f6f4] px-4 py-6 text-[#1d2a22] md:px-8">
     <div className="mx-auto max-w-[1500px]">
       <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div><Link href="/admin" className="mb-3 inline-flex items-center gap-2 text-sm font-semibold text-[#4d6654]"><ArrowLeft size={16}/>Admin</Link><h1 className="text-3xl font-black tracking-[-.04em]">Leads & CRM</h1><p className="mt-1 text-sm text-[#68756c]">Handwerker gewinnen, Eigentümer-Anfragen verwalten und jeden Kontakt sauber durch die Pipeline führen.</p></div>
-        <form action={syncBusinessResearchAction}><button className="inline-flex items-center gap-2 rounded-xl bg-[#183d25] px-4 py-3 text-sm font-bold text-white shadow-sm"><Database size={17}/>SIN Business Research synchronisieren</button></form>
+        <div><Link href="/admin" className="mb-3 inline-flex items-center gap-2 text-sm font-semibold text-[#4d6654]"><ArrowLeft size={16}/>Admin</Link><h1 className="text-3xl font-black tracking-[-.04em]">Leads & CRM</h1><p className="mt-1 text-sm text-[#68756c]">Handwerker, Eigentümer-Anfragen, öffentliche Bedarfssignale und Objektchancen in einer klaren Pipeline.</p></div>
+        <form action={syncBusinessResearchAction}><button className="inline-flex items-center gap-2 rounded-xl bg-[#183d25] px-4 py-3 text-sm font-bold text-white shadow-sm"><Database size={17}/>Alle Research-Daten synchronisieren</button></form>
       </header>
 
-      {(sp.sync||sp.created||sp.error)&&<div className={`mb-5 rounded-xl border px-4 py-3 text-sm ${sp.error?'border-red-200 bg-red-50 text-red-800':'border-green-200 bg-green-50 text-green-800'}`}>{sp.error?'Aktion fehlgeschlagen. Bitte Quelle bzw. Eingaben prüfen.':sp.sync?`${sp.sync} neue Leads importiert, ${sp.updated||0} aktualisiert.`:'Lead gespeichert.'}</div>}
+      {(sp.sync||sp.created||sp.error)&&<div className={`mb-5 rounded-xl border px-4 py-3 text-sm ${sp.error?'border-red-200 bg-red-50 text-red-800':'border-green-200 bg-green-50 text-green-800'}`}>{sp.error?'Aktion fehlgeschlagen. Bitte Quelle bzw. Eingaben prüfen.':sp.sync?`${sp.sync} neue Datensätze importiert, ${sp.updated||0} aktualisiert.`:'Lead gespeichert.'}</div>}
 
       <section className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         {[

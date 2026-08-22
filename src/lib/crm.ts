@@ -1,12 +1,11 @@
-import Database from 'better-sqlite3';
 import fs from 'node:fs';
 import path from 'node:path';
 import { db } from './db';
 
 export const CRM_STATUSES=['collected','contact_ready','contacted','replied','qualified','invited','converted','not_interested','invalid','do_not_contact'] as const;
 export const CRM_PERMISSIONS=['unknown','allowed','consented','denied','do_not_contact'] as const;
-export const CRM_LEAD_TYPES=['provider','homeowner','other'] as const;
-export const CRM_SOURCES=['business_research','website','referral','facebook_group','forum','community','campaign','manual','existing_customer'] as const;
+export const CRM_LEAD_TYPES=['provider','homeowner','public_intent','property','other'] as const;
+export const CRM_SOURCES=['business_research','business_research_intent','business_research_property','website','referral','facebook_group','forum','community','campaign','manual','existing_customer'] as const;
 
 type LeadStatus=(typeof CRM_STATUSES)[number];
 type Permission=(typeof CRM_PERMISSIONS)[number];
@@ -71,7 +70,6 @@ export function ensureCrmSchema(){
   crmReady=true;
 }
 
-function safeJson(value:string|undefined,fallback='[]'){try{return JSON.stringify(JSON.parse(value||fallback));}catch{return fallback;}}
 function stableManualId(input:{leadType:string;name:string;email?:string;phone?:string;profileUrl?:string;sourceType:string}){
   const raw=[input.leadType,input.name,input.email||'',input.phone||'',input.profileUrl||'',input.sourceType].join('|').toLowerCase();
   let h=2166136261; for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619);} return `manual:${(h>>>0).toString(16)}:${Buffer.from(raw).toString('base64url').slice(0,28)}`;
@@ -122,23 +120,71 @@ export function updateCrmLead(id:string,input:{status:LeadStatus;permission:Perm
   db.prepare("INSERT INTO crm_events(lead_id,event_type,channel,direction,note,metadata_json) VALUES(?,'status_changed',?,?,?,?)").run(id,input.channel||'',input.status==='contacted'?'outbound':'',input.notes||'',JSON.stringify({from:previous.status,to:input.status,permission}));
 }
 
+function attachedTableExists(name:string){
+  return Boolean(db.prepare("SELECT 1 FROM sin_research.sqlite_master WHERE type='table' AND name=?").get(name));
+}
+
+const CRM_REFRESH=`name=excluded.name,company_name=excluded.company_name,category=excluded.category,address=excluded.address,locality=excluded.locality,postcode=excluded.postcode,region=excluded.region,country=excluded.country,
+  email=CASE WHEN excluded.email!='' THEN excluded.email ELSE crm_leads.email END,
+  phone=CASE WHEN excluded.phone!='' THEN excluded.phone ELSE crm_leads.phone END,
+  website=CASE WHEN excluded.website!='' THEN excluded.website ELSE crm_leads.website END,
+  profile_url=CASE WHEN excluded.profile_url!='' THEN excluded.profile_url ELSE crm_leads.profile_url END,
+  socials_json=CASE WHEN excluded.socials_json!='[]' THEN excluded.socials_json ELSE crm_leads.socials_json END,
+  source_detail=excluded.source_detail,source_payload_json=excluded.source_payload_json,last_seen_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP`;
+
 export function importBusinessResearchLeads(sourcePath:string){
   ensureCrmSchema();
   const absolute=path.resolve(sourcePath.replace(/^~/,process.env.HOME||''));
   if(!fs.existsSync(absolute))throw new Error(`SIN-Business-Research DB fehlt: ${absolute}`);
-  const source=new Database(absolute,{readonly:true,fileMustExist:true});
-  const sourceRows=source.prepare(`SELECT id,name,category,address,locality,postcode,region,country,primary_email,primary_phone,primary_website,socials_json,status,contact_permission,source_provider,source_external_id,provenance_json,notes FROM leads WHERE entity_type='business'`).iterate() as Iterable<any>;
-  const existing=new Set((db.prepare("SELECT source_external_id FROM crm_leads WHERE source_type='business_research' AND source_external_id!=''").all() as Array<{source_external_id:string}>).map(x=>x.source_external_id));
-  const upsert=db.prepare(`INSERT INTO crm_leads(id,lead_type,name,company_name,category,address,locality,postcode,region,country,email,phone,website,profile_url,socials_json,status,contact_permission,source_type,source_detail,source_external_id,source_payload_json,notes)
-    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-    ON CONFLICT(id) DO UPDATE SET name=excluded.name,company_name=excluded.company_name,category=excluded.category,address=excluded.address,locality=excluded.locality,postcode=excluded.postcode,region=excluded.region,country=excluded.country,email=CASE WHEN excluded.email!='' THEN excluded.email ELSE crm_leads.email END,phone=CASE WHEN excluded.phone!='' THEN excluded.phone ELSE crm_leads.phone END,website=CASE WHEN excluded.website!='' THEN excluded.website ELSE crm_leads.website END,socials_json=CASE WHEN excluded.socials_json!='[]' THEN excluded.socials_json ELSE crm_leads.socials_json END,source_payload_json=excluded.source_payload_json,last_seen_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP`);
-  let inserted=0,updated=0;
-  const tx=db.transaction(()=>{
-    for(const r of sourceRows){
-      const socials=safeJson(r.socials_json); let profile=''; try{profile=(JSON.parse(socials)[0]||'');}catch{}
-      const id=`research:${r.id}`; const was=existing.has(r.id);
-      upsert.run(id,'provider',r.name,r.name,r.category||'',r.address||'',r.locality||'',r.postcode||'',r.region||'',r.country||'DE',r.primary_email||'',r.primary_phone||'',r.primary_website||'',profile,socials,r.status||'collected',r.contact_permission||'unknown','business_research',r.source_provider||'overture',r.id,JSON.stringify({provider:r.source_provider,externalId:r.source_external_id,provenance:safeJson(r.provenance_json)}),r.notes||'');
-      if(was)updated++;else{inserted++;existing.add(r.id);}
-    }
-  }); tx(); source.close(); return {inserted,updated,total:inserted+updated,source:absolute};
+
+  const before=new Map((db.prepare("SELECT source_type,count(*) n FROM crm_leads WHERE source_type LIKE 'business_research%' GROUP BY source_type").all() as Array<{source_type:string;n:number}>).map(x=>[x.source_type,x.n]));
+  let businesses=0,intents=0,properties=0;
+  try{
+    try{db.exec('DETACH DATABASE sin_research');}catch{}
+    db.prepare('ATTACH DATABASE ? AS sin_research').run(absolute);
+    const tx=db.transaction(()=>{
+      if(attachedTableExists('leads')){
+        businesses=(db.prepare("SELECT count(*) n FROM sin_research.leads WHERE entity_type='business'").get() as {n:number}).n;
+        db.exec(`INSERT INTO crm_leads(id,lead_type,name,company_name,category,address,locality,postcode,region,country,email,phone,website,profile_url,socials_json,status,contact_permission,source_type,source_detail,source_external_id,source_payload_json,notes)
+          SELECT 'research:'||id,'provider',name,name,coalesce(category,''),coalesce(address,''),coalesce(locality,''),coalesce(postcode,''),coalesce(region,''),coalesce(country,'DE'),
+            coalesce(primary_email,''),coalesce(primary_phone,''),coalesce(primary_website,''),
+            CASE WHEN json_valid(coalesce(socials_json,'[]')) THEN coalesce(json_extract(socials_json,'$[0]'),'') ELSE '' END,
+            CASE WHEN json_valid(coalesce(socials_json,'[]')) THEN socials_json ELSE '[]' END,
+            coalesce(status,'collected'),coalesce(contact_permission,'unknown'),'business_research',coalesce(source_provider,'overture'),id,
+            json_object('provider',source_provider,'externalId',source_external_id,'release',source_release,'provenance',CASE WHEN json_valid(coalesce(provenance_json,'[]')) THEN json(provenance_json) ELSE json('[]') END),coalesce(notes,'')
+          FROM sin_research.leads WHERE entity_type='business'
+          ON CONFLICT(id) DO UPDATE SET ${CRM_REFRESH}`);
+      }
+      if(attachedTableExists('public_intents')){
+        intents=(db.prepare('SELECT count(*) n FROM sin_research.public_intents').get() as {n:number}).n;
+        db.exec(`INSERT INTO crm_leads(id,lead_type,name,company_name,category,address,locality,postcode,region,country,email,phone,website,profile_url,socials_json,status,contact_permission,source_type,source_detail,source_external_id,source_payload_json,notes)
+          SELECT 'research-intent:'||id,'public_intent',coalesce(nullif(trim(title),''),'Öffentliches Bedarfssignal'),' ',coalesce(topic,''),'',coalesce(locality,''),'','','DE','','','',coalesce(source_url,''),'[]',
+            CASE status WHEN 'qualified' THEN 'qualified' WHEN 'converted' THEN 'converted' WHEN 'ignored' THEN 'not_interested' ELSE 'collected' END,
+            coalesce(contact_permission,'unknown'),'business_research_intent',coalesce(nullif(source_provider,''),nullif(source_kind,''),'public_web'),id,
+            json_object('provider',source_provider,'kind',source_kind,'url',source_url,'authorHandle',author_handle,'publishedAt',published_at,'intentScore',intent_score,'excerpt',body_excerpt,'provenance',CASE WHEN json_valid(coalesce(provenance_json,'{}')) THEN json(provenance_json) ELSE json('{}') END),
+            printf('Öffentliches Bedarfssignal · Intent-Score %.1f',coalesce(intent_score,0))
+          FROM sin_research.public_intents WHERE 1
+          ON CONFLICT(id) DO UPDATE SET ${CRM_REFRESH}`);
+      }
+      if(attachedTableExists('property_opportunities')){
+        properties=(db.prepare('SELECT count(*) n FROM sin_research.property_opportunities').get() as {n:number}).n;
+        db.exec(`INSERT INTO crm_leads(id,lead_type,name,company_name,category,address,locality,postcode,region,country,email,phone,website,profile_url,socials_json,status,contact_permission,source_type,source_detail,source_external_id,source_payload_json,notes)
+          SELECT 'research-property:'||id,'property',coalesce(nullif(trim(address),''),nullif(trim(coalesce(building_type,'')||' '||coalesce(postcode,'')||' '||coalesce(locality,'')),''),'Objektchance'),' ',coalesce(building_type,''),coalesce(address,''),coalesce(locality,''),coalesce(postcode,''),'',coalesce(country,'DE'),'','','','','[]',
+            CASE status WHEN 'target_area' THEN 'qualified' WHEN 'inbound' THEN 'replied' WHEN 'converted' THEN 'converted' WHEN 'excluded' THEN 'not_interested' ELSE 'collected' END,
+            'unknown','business_research_property',coalesce(source_provider,'open_data'),id,
+            json_object('provider',source_provider,'externalId',source_external_id,'lat',lat,'lon',lon,'attributes',CASE WHEN json_valid(coalesce(attributes_json,'{}')) THEN json(attributes_json) ELSE json('{}') END,'provenance',CASE WHEN json_valid(coalesce(provenance_json,'{}')) THEN json(provenance_json) ELSE json('{}') END),
+            'Nicht-personenbezogene Objektchance aus offenen Daten'
+          FROM sin_research.property_opportunities WHERE 1
+          ON CONFLICT(id) DO UPDATE SET ${CRM_REFRESH}`);
+      }
+    });
+    tx();
+  } finally {
+    try{db.exec('DETACH DATABASE sin_research');}catch{}
+  }
+
+  const after=new Map((db.prepare("SELECT source_type,count(*) n FROM crm_leads WHERE source_type LIKE 'business_research%' GROUP BY source_type").all() as Array<{source_type:string;n:number}>).map(x=>[x.source_type,x.n]));
+  const inserted=['business_research','business_research_intent','business_research_property'].reduce((n,k)=>n+Math.max(0,(after.get(k)||0)-(before.get(k)||0)),0);
+  const total=businesses+intents+properties;
+  return {inserted,updated:Math.max(0,total-inserted),total,businesses,intents,properties,source:absolute};
 }
