@@ -10,6 +10,10 @@ Der Pilot soll bewusst einfach bleiben: ein Next.js-Dienst, ein persistentes Dat
 
 Öffentlich: `https://einfachhausen.de`
 
+## Production handover
+
+For the current STRATO → Cloudflare cutover state, DNS propagation, rollback guardrails, Stripe verification and continuation checklist, read [`PRODUCTION_HANDOVER.md`](PRODUCTION_HANDOVER.md) before changing live infrastructure.
+
 ## Laufzeit
 
 - Code: `/srv/einfach-hausen`

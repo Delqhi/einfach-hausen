@@ -15,5 +15,6 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Graphify output is generated local state under `graphify-out/` and is intentionally not committed. Git hooks installed by Graphify refresh the graph after commit/checkout.
 - Before shipping application changes run `npm run lint`, `npm run build`, and the relevant E2E flow (`npm run test:e2e` for end-to-end product changes).
 - Reuse the existing OCI stack (OmniRoute, Supabase, Kestra, Cloudflare) instead of introducing parallel infrastructure unless there is a demonstrated gap.
+- **Production/domain continuation:** Before changing production infrastructure, DNS, Cloudflare, STRATO, Stripe or OCI routing, read `docs/PRODUCTION_HANDOVER.md` and `docs/OPERATIONS.md`. Treat handover status as a starting point only; verify live state before mutations.
 - Keep the customer and partner products radically simple. Do not add generic ERP-style roles, settings, dashboards, or configuration unless required by the product vision.
 
