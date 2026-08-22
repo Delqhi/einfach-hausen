@@ -1,6 +1,7 @@
 import { NextRequest,NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { answerHausmeisterQuestion,createHausmeisterRequest,type HausmeisterIntent } from '@/lib/orchestrator';
+import { claimWebhookEvent,completeWebhookEvent,releaseWebhookEvent,verifyMetaSignature } from '@/lib/security/webhooks';
 
 function normalizePhone(v:string){return v.replace(/\D/g,'').replace(/^00/,'');}
 function explicitIntent(text:string):HausmeisterIntent|null{
@@ -24,20 +25,26 @@ export async function GET(req:NextRequest){
 }
 
 export async function POST(req:NextRequest){
-  const payload=await req.json().catch(()=>null) as any; const entries=payload?.entry||[];
+  const rawBody=await req.text();
+  if(!verifyMetaSignature(rawBody,req.headers.get('x-hub-signature-256'),process.env.META_APP_SECRET))return new NextResponse('Invalid signature',{status:401});
+  let payload:any;
+  try{payload=JSON.parse(rawBody);}catch{return new NextResponse('Invalid payload',{status:400});}
+  const entries=payload?.entry||[];
   for(const entry of entries)for(const change of entry.changes||[])for(const msg of change.value?.messages||[]){
-    if(msg.type!=='text'||!msg.from)continue;
-    const phone=normalizePhone(msg.from); const users=db.prepare("SELECT id,role,phone FROM users WHERE phone IS NOT NULL AND phone!=''").all() as any[];
-    const user=users.find(u=>{const p=normalizePhone(u.phone||'');return p===phone||p.endsWith(phone.slice(-10))||phone.endsWith(p.slice(-10));});
-    if(!user){await sendWhatsApp(msg.from,'Diese Nummer ist noch keinem Einfach-Hausen-Konto zugeordnet. Hinterlege sie bitte einmal in deinem App-Profil.');continue;}
-    if(user.role!=='homeowner'){await sendWhatsApp(msg.from,'Partneranfragen und Aufträge werden in der Einfach-Hausen-Partner-App bearbeitet.');continue;}
-    const body=String(msg.text?.body||'').trim();
+    if(msg.type!=='text'||!msg.from||!msg.id)continue;
+    if(!claimWebhookEvent('whatsapp',String(msg.id)))continue;
     try{
+      const phone=normalizePhone(msg.from); const users=db.prepare("SELECT id,role,phone FROM users WHERE phone IS NOT NULL AND phone!=''").all() as any[];
+      const user=users.find(u=>{const p=normalizePhone(u.phone||'');return p===phone||p.endsWith(phone.slice(-10))||phone.endsWith(p.slice(-10));});
+      if(!user){await sendWhatsApp(msg.from,'Diese Nummer ist noch keinem Einfach-Hausen-Konto zugeordnet. Hinterlege sie bitte einmal in deinem App-Profil.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
+      if(user.role!=='homeowner'){await sendWhatsApp(msg.from,'Partneranfragen und Aufträge werden in der Einfach-Hausen-Partner-App bearbeitet.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
+      const body=String(msg.text?.body||'').trim();
       const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='whatsapp' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
       const draft=thread?db.prepare('SELECT intent FROM assistant_drafts WHERE thread_id=?').get(thread.id) as {intent:HausmeisterIntent}|undefined:undefined;
       if(draft){
         const result=await createHausmeisterRequest(user.id,body,'whatsapp',null,draft.intent,true,thread?.id);
         await sendWhatsApp(msg.from,result.reply);
+        completeWebhookEvent('whatsapp',String(msg.id));
         continue;
       }
 
@@ -51,12 +58,15 @@ export async function POST(req:NextRequest){
         }
         const result=await createHausmeisterRequest(user.id,topic,'whatsapp',topicPhoto,intent,!commandOnly,thread?.id);
         await sendWhatsApp(msg.from,result.reply);
+        completeWebhookEvent('whatsapp',String(msg.id));
         continue;
       }
 
       const answer=await answerHausmeisterQuestion(user.id,body,'whatsapp');
       await sendWhatsApp(msg.from,`${answer.reply}\n\nWenn du einen passenden Menschen sprechen möchtest, antworte ANSPRECHPARTNER. Wenn ich einen echten Auftrag organisieren soll, antworte AUFTRAG.`);
+      completeWebhookEvent('whatsapp',String(msg.id));
     }catch{
+      releaseWebhookEvent('whatsapp',String(msg.id));
       await sendWhatsApp(msg.from,'Ich konnte das gerade nicht vollständig verarbeiten. Öffne bitte die Einfach-Hausen-App; dein Hausmeisterservice und deine Hausakte bleiben dort verfügbar.');
     }
   }

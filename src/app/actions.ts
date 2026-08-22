@@ -71,7 +71,7 @@ export async function registerAction(fd: FormData) {
   if (db.prepare('SELECT id FROM users WHERE email=?').get(email)) { recordRateLimitFailure('register', ip); logSecurityEvent('security_validation_reject', 'register', 'duplicate_email'); redirect('/login?error=Konto%20existiert%20bereits'); }
   const d = parsed.data;
   const emergencyDays=fd.getAll('emergencyDay').map(String).filter(v=>/^[0-6]$/.test(v)).join(',')||'1,2,3,4,5';
-  const logoFile=fd.get('logo'); const logoPath=role==='provider'&&logoFile instanceof File&&logoFile.size?await saveUpload(logoFile):null;
+  const logoFile=fd.get('logo'); const logoPath=role==='provider'&&logoFile instanceof File&&logoFile.size?await savePublicImageUpload(logoFile):null;
   const hash = await bcrypt.hash(password, 12);
   const tx = db.transaction(() => {
     const r = db.prepare('INSERT INTO users(email,password_hash,role,first_name,last_name,phone) VALUES(?,?,?,?,?,?)').run(email,hash,role,first,last,d.phone||null);
@@ -150,7 +150,19 @@ export async function loginAction(fd: FormData) {
 }
 export async function logoutAction(){ await destroySession(); redirect('/'); }
 
-async function saveUpload(file: File | null) {
+async function savePublicImageUpload(file: File | null) {
+  if (!file || file.size===0) return null;
+  const types:Record<string,{ext:string,max:number}>={
+    'image/jpeg':{ext:'jpg',max:8*1024*1024},'image/png':{ext:'png',max:8*1024*1024},'image/webp':{ext:'webp',max:8*1024*1024},'image/heic':{ext:'heic',max:8*1024*1024},
+  };
+  const rule=types[file.type]; if(!rule||file.size>rule.max)throw new Error('Ungültige Bilddatei');
+  const name = `${Date.now()}-${randomUUID()}.${rule.ext}`;
+  const dir = path.join(process.cwd(),'public','uploads'); await fs.mkdir(dir,{recursive:true});
+  await fs.writeFile(path.join(dir,name),Buffer.from(await file.arrayBuffer()));
+  return `/uploads/${name}`;
+}
+
+async function savePrivateMediaUpload(file: File | null) {
   if (!file || file.size===0) return null;
   const types:Record<string,{ext:string,max:number}>={
     'image/jpeg':{ext:'jpg',max:8*1024*1024},'image/png':{ext:'png',max:8*1024*1024},'image/webp':{ext:'webp',max:8*1024*1024},'image/heic':{ext:'heic',max:8*1024*1024},
@@ -158,9 +170,9 @@ async function saveUpload(file: File | null) {
   };
   const rule=types[file.type]; if(!rule||file.size>rule.max)throw new Error('Ungültige Mediendatei');
   const name = `${Date.now()}-${randomUUID()}.${rule.ext}`;
-  const dir = path.join(process.cwd(),'public','uploads'); await fs.mkdir(dir,{recursive:true});
-  await fs.writeFile(path.join(dir,name),Buffer.from(await file.arrayBuffer()));
-  return `/uploads/${name}`;
+  const dir = path.join(process.cwd(),'data','private','job-media'); await fs.mkdir(dir,{recursive:true});
+  await fs.writeFile(path.join(dir,name),Buffer.from(await file.arrayBuffer()),{mode:0o600});
+  return `job-media/${name}`;
 }
 
 export async function sendHausmeisterAction(fd:FormData){
@@ -170,7 +182,7 @@ export async function sendHausmeisterAction(fd:FormData){
   const bounded=intakeDescriptionSchema.safeParse({description:submitted});
   if(!bounded.success){ logSecurityEvent('security_validation_reject','hausmeister_intake','invalid_description'); redirect('/app/hausmeister?error=Beschreib%20es%20bitte%20k%C3%BCrzer'); }
   const description=bounded.data.description;
-  const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null);
+  const photo=fd.get('photo'); const saved=await savePrivateMediaUpload(photo instanceof File?photo:null);
   const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='app' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
   const draft=thread?db.prepare('SELECT intent FROM assistant_drafts WHERE thread_id=?').get(thread.id) as {intent:HausmeisterIntent}|undefined:undefined;
   if(draft){
@@ -188,7 +200,7 @@ export async function createConsultationAction(fd:FormData){
   const bounded=intakeDescriptionSchema.safeParse({description:submitted});
   if(!bounded.success){ logSecurityEvent('security_validation_reject','consultation_intake','invalid_description'); redirect('/app/consultation?error=Beschreib%20es%20bitte%20k%C3%BCrzer'); }
   const description=bounded.data.description;
-  const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null); const result=await createHausmeisterRequest(user.id,description,'app',saved,'contact',true);
+  const photo=fd.get('photo'); const saved=await savePrivateMediaUpload(photo instanceof File?photo:null); const result=await createHausmeisterRequest(user.id,description,'app',saved,'contact',true);
   revalidatePath('/app');revalidatePath('/pro');revalidatePath('/notifications');
   redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app/hausmeister?clarify=1');
 }
@@ -217,7 +229,7 @@ export async function startHausmeisterRouteAction(intent:HausmeisterIntent){
 export async function createJobAction(fd: FormData) {
   const user=await requireUser('homeowner'); const submitted=text(fd,'description'); if(submitted.length<4)return;
   const bounded=intakeDescriptionSchema.safeParse({description:submitted}); if(!bounded.success){ logSecurityEvent('security_validation_reject','legacy_job','invalid_description'); return; }
-  const photo=fd.get('photo'); const saved=await saveUpload(photo instanceof File?photo:null);
+  const photo=fd.get('photo'); const saved=await savePrivateMediaUpload(photo instanceof File?photo:null);
   const result=await createHausmeisterRequest(user.id,bounded.data.description,'app',saved,'service',true);
   redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app/hausmeister?clarify=1');
 }
@@ -457,7 +469,7 @@ export async function saveProfileAction(fd:FormData){
     if(ctx.isOwner||ctx.canManageJobs){
       const current=db.prepare('SELECT business_name,trades,verified FROM provider_profiles WHERE user_id=?').get(ctx.providerId) as any;
       const businessName=text(fd,'businessName')||current?.business_name||ctx.businessName; const trades=text(fd,'trades')||current?.trades||'';
-      const logo=fd.get('logo'); const newLogo=logo instanceof File&&logo.size?await saveUpload(logo):null;
+      const logo=fd.get('logo'); const newLogo=logo instanceof File&&logo.size?await savePublicImageUpload(logo):null;
       db.prepare('UPDATE provider_profiles SET business_name=?,trades=?,postcode=?,radius_km=?,description=?,street_address=?,tax_id=?,vat_id=?,logo_path=COALESCE(?,logo_path) WHERE user_id=?').run(businessName,trades,text(fd,'postcode'),int(fd,'radius')||25,text(fd,'description'),text(fd,'streetAddress'),text(fd,'taxId'),text(fd,'vatId'),newLogo,ctx.providerId);
       const emergencyDays=fd.getAll('emergencyDay').map(String).filter(v=>/^[0-6]$/.test(v)).join(',')||'1,2,3,4,5';
       db.prepare(`INSERT INTO provider_preferences(provider_id,accepts_normal_jobs,accepts_short_notice,accepts_consultation,accepts_emergencies,emergency_mode,emergency_start,emergency_end,emergency_days,emergency_markup_bps,opening_hours_text,bookable_hours_text,instant_booking,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(provider_id) DO UPDATE SET accepts_normal_jobs=excluded.accepts_normal_jobs,accepts_short_notice=excluded.accepts_short_notice,accepts_consultation=excluded.accepts_consultation,accepts_emergencies=excluded.accepts_emergencies,emergency_mode=excluded.emergency_mode,emergency_start=excluded.emergency_start,emergency_end=excluded.emergency_end,emergency_days=excluded.emergency_days,emergency_markup_bps=excluded.emergency_markup_bps,opening_hours_text=excluded.opening_hours_text,bookable_hours_text=excluded.bookable_hours_text,instant_booking=excluded.instant_booking,updated_at=CURRENT_TIMESTAMP`).run(ctx.providerId,fd.get('acceptsNormalJobs')?1:0,fd.get('acceptsShortNotice')?1:0,fd.get('acceptsConsultation')?1:0,fd.get('acceptsEmergencies')?1:0,text(fd,'emergencyMode')==='24_7'?'24_7':'local',text(fd,'emergencyStart')||'18:00',text(fd,'emergencyEnd')||'22:00',emergencyDays,Math.max(0,Math.min(100,int(fd,'emergencyMarkup')||0))*100,text(fd,'openingHours'),text(fd,'bookableHours'),fd.get('instantBooking')?1:0);

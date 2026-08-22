@@ -14,7 +14,7 @@ import { invoiceStatusLabel } from '@/lib/invoices';
 export default async function ProJob({params,searchParams}:{params:Promise<{id:string}>,searchParams:Promise<Record<string,string>>}){
   const u=await requireUser('provider'); const {id}=await params; const sp=await searchParams; const jobId=Number(id);
   const ctx=canAccessProviderJob(u.id,jobId); if(!ctx)notFound();
-  const access=db.prepare(`SELECT d.status dispatch_status,d.distance_km,d.match_score,j.*,h.address,h.postcode homeowner_postcode,hu.first_name homeowner_first,hu.last_name homeowner_last,hu.phone homeowner_phone,(SELECT path FROM job_photos x WHERE x.job_id=j.id LIMIT 1) photo
+  const access=db.prepare(`SELECT d.status dispatch_status,d.distance_km,d.match_score,j.*,h.address,h.postcode homeowner_postcode,hu.first_name homeowner_first,hu.last_name homeowner_last,hu.phone homeowner_phone,(SELECT id FROM job_photos x WHERE x.job_id=j.id LIMIT 1) photo_id
     FROM job_dispatches d JOIN jobs j ON j.id=d.job_id JOIN homeowner_profiles h ON h.user_id=j.homeowner_id JOIN users hu ON hu.id=j.homeowner_id
     WHERE d.job_id=? AND d.provider_id=?`).get(jobId,ctx.providerId) as any; if(!access)notFound();
   const isContact=access.request_kind==='contact';
@@ -33,7 +33,7 @@ export default async function ProJob({params,searchParams}:{params:Promise<{id:s
 
   return <AppShell role="provider" active={isAccepted?'/pro/orders':'/pro'} title={isContact?'Kontaktanfrage':isAccepted?'Auftrag':'Anfrage'} subtitle={access.category}>
     {sp.error&&<div className="alert error">{sp.error}</div>}
-    <div className="detail-head pro-detail"><span className={`status ${access.status}`}>{isContact?(isAccepted?'Verbunden':'Kontakt gesucht'):statusLabel(access.status)}</span><h1>{access.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{access.description}</p><div className="meta-line"><span><MapPin/>{isAccepted&&access.address?access.address:access.postcode}</span>{!isContact&&<span><CalendarDays/>{dateLabel(access.preferred_date)}</span>}</div>{access.photo&&<JobMedia src={access.photo} alt="Foto oder Video zum Thema"/>}{!isContact&&<div className="budget-line"><small>Richtpreis</small><strong>{access.budget_min&&access.budget_max?`${euro(access.budget_min)} – ${euro(access.budget_max)}`:euro(access.budget_max)}</strong></div>}</div>
+    <div className="detail-head pro-detail"><span className={`status ${access.status}`}>{isContact?(isAccepted?'Verbunden':'Kontakt gesucht'):statusLabel(access.status)}</span><h1>{access.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{access.description}</p><div className="meta-line"><span><MapPin/>{isAccepted&&access.address?access.address:access.postcode}</span>{!isContact&&<span><CalendarDays/>{dateLabel(access.preferred_date)}</span>}</div>{access.photo_id&&<JobMedia src={`/api/job-media/${access.photo_id}`} alt="Foto oder Video zum Thema"/>}{!isContact&&<div className="budget-line"><small>Richtpreis</small><strong>{access.budget_min&&access.budget_max?`${euro(access.budget_min)} – ${euro(access.budget_max)}`:euro(access.budget_max)}</strong></div>}</div>
 
     {!isAccepted&&ctx.canManageJobs&&access.status!=='completed'&&isContact&&<>
       <div className="contact-request-note"><MessageCircle/><div><strong>Nur persönlicher Ansprechpartner gesucht</strong><p>Der Eigentümer möchte zunächst einen fachlichen Menschen sprechen. Es wird noch kein Auftrag und kein Preis vereinbart.</p></div></div>

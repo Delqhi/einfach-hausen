@@ -85,6 +85,7 @@ CREATE TABLE IF NOT EXISTS broker_lead_matches (id INTEGER PRIMARY KEY AUTOINCRE
 CREATE TABLE IF NOT EXISTS auth_rate_limits (kind TEXT NOT NULL,identifier TEXT NOT NULL,attempts INTEGER NOT NULL DEFAULT 0,window_start_at TEXT NOT NULL,blocked_until TEXT,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(kind,identifier));
 CREATE TABLE IF NOT EXISTS admin_audit_log (id INTEGER PRIMARY KEY AUTOINCREMENT,actor TEXT NOT NULL,action TEXT NOT NULL,target TEXT NOT NULL DEFAULT '',detail TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_admin_audit_created ON admin_audit_log(created_at DESC);
 CREATE TABLE IF NOT EXISTS security_events (id INTEGER PRIMARY KEY AUTOINCREMENT,kind TEXT NOT NULL,identifier TEXT NOT NULL DEFAULT '',detail TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP); CREATE INDEX IF NOT EXISTS idx_security_events_created ON security_events(created_at DESC);
+CREATE TABLE IF NOT EXISTS webhook_events (source TEXT NOT NULL CHECK(source IN ('whatsapp','stripe')),event_id TEXT NOT NULL,status TEXT NOT NULL CHECK(status IN ('processing','processed')),created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,processed_at TEXT,PRIMARY KEY(source,event_id)); CREATE INDEX IF NOT EXISTS idx_webhook_events_created ON webhook_events(created_at DESC);
 `));
 
 const seed=db.transaction(()=>{
