@@ -33,7 +33,7 @@ const managerCtx=await browser.newContext({viewport:{width:390,height:844}}); co
 await manager.goto(base+'/register?role=provider');
 await manager.getByLabel('Vorname').fill('Daniel'); await manager.getByLabel('Nachname').fill('Müller');
 await manager.getByLabel('E-Mail').fill(providerEmail); await manager.getByLabel('Passwort').fill(password);
-await manager.getByLabel('Firmenname').fill('Gartenbau Müller'); await manager.getByLabel('Gewerke').fill('Garten, Grünpflege, Heckenschnitt, Hausmeister'); await manager.getByLabel('PLZ').fill('46325');
+await manager.getByLabel('Firmenname').fill('Gartenbau Müller'); await manager.getByLabel('Gewerke').fill('Garten, Grünpflege, Heckenschnitt, Hausmeister'); await manager.getByLabel('PLZ').fill('46325'); await manager.getByLabel('Sofort buchbare Termine anbieten').check();
 await Promise.all([manager.waitForURL('**/pro'),manager.getByRole('button',{name:'Konto erstellen'}).click()]);
 await manager.goto(base+'/pro/profile');
 await manager.getByLabel('Nachweis').setInputFiles({name:'gewerbe.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n% Test\n')});
@@ -143,7 +143,7 @@ await owner.goto(base+'/app/jobs?tab=completed'); await waitText(owner,'Meine Au
 await manager.goto(base+'/pro/plans'); await waitText(manager,'0 % Provision'); for(const plan of ['Free','Start','Pro','Premium'])await manager.getByText(plan,{exact:true}).first().waitFor();
 
 // 9) Beratung und Notfall sind eigenständige, sehr einfache Einstiege.
-await owner.goto(base+'/app/consultation'); await owner.getByLabel('Wobei brauchst du Rat?').fill('Ich möchte kurz wissen, wie ich einen stark wachsenden Baum am besten prüfen lasse.'); await owner.getByRole('button',{name:'Ansprechpartner finden'}).click(); await owner.waitForURL(/\/app\/jobs\/\d+/); await waitText(owner,'noch kein Auftrag');
+await owner.goto(base+'/app/consultation'); await owner.getByLabel('Wobei brauchst du Rat?').fill('Ich möchte kurz wissen, wie ich einen stark wachsenden Baum am besten prüfen lasse.'); await owner.getByLabel('Foto oder Video').setInputFiles({name:'baum.mp4',mimeType:'video/mp4',buffer:Buffer.from('test-video')}); await owner.getByRole('button',{name:'Ansprechpartner finden'}).click(); await owner.waitForURL(/\/app\/jobs\/\d+/); await waitText(owner,'noch kein Auftrag'); if(await owner.locator('video.hero-photo').count()!==1)throw new Error('Consultation video must render on the resulting contact request');
 await owner.goto(base+'/app/emergency'); await owner.getByLabel('Notfall').selectOption('other'); await owner.getByLabel('Was ist passiert?').fill('Ein großer Ast ist nach einem Sturm abgebrochen und blockiert den Zugang zum Haus.'); await owner.getByRole('button',{name:'Jetzt Helfer suchen'}).click(); await owner.waitForURL(/\/app\/jobs\/\d+/); await waitText(owner,'NOTFALL'); await waitText(owner,'Wir suchen jetzt verfügbare Hilfe'); await manager.goto(base+'/pro'); await waitText(manager,'Notfall');
 
 // 10) Servicefall bleibt zentral unterstützbar, ohne den direkten Kontakt zu ersetzen.

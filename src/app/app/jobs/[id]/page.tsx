@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AlertTriangle,CalendarDays,CheckCircle2,Clock3,MapPin,MessageCircle,MessageSquare,Phone,ShieldCheck,Sparkles,Star,UserRound } from 'lucide-react';
 import { AppShell,SectionTitle } from '@/components/shell';
+import { JobMedia } from '@/components/job-media';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { acceptQuoteAction,cancelJobAction,createCheckoutAction,createClaimAction,reviewAction,sendMessageAction,sendSavedContactMessageAction,turnContactIntoServiceAction } from '@/app/actions';
@@ -34,7 +35,7 @@ export default async function JobDetail({params,searchParams}:{params:Promise<{i
     const messages=contact?db.prepare('SELECT * FROM contact_messages WHERE homeowner_id=? AND contact_user_id=? ORDER BY created_at').all(u.id,contact.contact_user_id) as any[]:[];
     const dispatches=db.prepare(`SELECT COUNT(*) total FROM job_dispatches WHERE job_id=?`).get(job.id) as any;
     return <AppShell role="homeowner" active="/app/jobs" title="Ansprechpartner" subtitle={job.category}>
-      <div className="detail-head"><span className={`status ${job.status}`}>{contact?'Verbunden':'Ansprechpartner gesucht'}</span><h1>{job.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{job.description}</p><div className="meta-line"><span><MapPin/>{job.postcode}</span></div>{job.photo&&<img className="hero-photo" src={job.photo} alt="Foto zum Thema"/>}</div>
+      <div className="detail-head"><span className={`status ${job.status}`}>{contact?'Verbunden':'Ansprechpartner gesucht'}</span><h1>{job.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{job.description}</p><div className="meta-line"><span><MapPin/>{job.postcode}</span></div>{job.photo&&<JobMedia src={job.photo} alt="Foto oder Video zum Thema"/>}</div>
       <div className="ai-summary"><Sparkles/><div><strong>Du hast nur einen Ansprechpartner gewählt</strong><p>Es wurde noch kein Auftrag vergeben und kein Preis vereinbart. Der Hausmeisterservice bleibt dabei und verbindet dich nur mit einem passenden Menschen.</p></div></div>
       {!contact?<div className="empty compact"><MessageCircle/><strong>Passender Ansprechpartner wird gesucht</strong><p>{dispatches.total||0} geprüfte regionale Partner wurden angefragt. Sobald ein Betrieb übernimmt, kannst du direkt schreiben oder anrufen.</p></div>:<>
         <SectionTitle>Dein persönlicher Ansprechpartner</SectionTitle>
@@ -56,7 +57,7 @@ export default async function JobDetail({params,searchParams}:{params:Promise<{i
   const available=quotes.filter(q=>q.available_at).sort((a,b)=>new Date(a.available_at).getTime()-new Date(b.available_at).getTime()); const fastest=available[0]?.id;
 
   return <AppShell role="homeowner" active="/app/jobs">
-    <div className="detail-head"><span className={`status ${job.status}`}>{statusLabel(job.status)}</span>{job.urgency==='emergency'&&<span className="emergency-inline-badge">NOTFALL</span>}<h1>{job.title}</h1><p>{job.description}</p><div className="meta-line"><span><MapPin/>{job.postcode}</span><span><CalendarDays/>{dateLabel(job.preferred_date)}</span></div>{job.photo&&<img className="hero-photo" src={job.photo} alt="Auftragsfoto"/>}</div>
+    <div className="detail-head"><span className={`status ${job.status}`}>{statusLabel(job.status)}</span>{job.urgency==='emergency'&&<span className="emergency-inline-badge">NOTFALL</span>}<h1>{job.title}</h1><p>{job.description}</p><div className="meta-line"><span><MapPin/>{job.postcode}</span><span><CalendarDays/>{dateLabel(job.preferred_date)}</span></div>{job.photo&&<JobMedia src={job.photo} alt="Foto oder Video zum Auftrag"/>}</div>
     {sp.error&&<div className="alert error">{sp.error}</div>}{sp.cancelled==='1'&&<div className="alert success">Auftrag wurde storniert.</div>}{sp.payment==='success'&&<div className="alert success">Zahlung erfolgreich verbucht.</div>}{sp.payment==='cancelled'&&<div className="alert error">Zahlung wurde abgebrochen. Es wurde nichts belastet.</div>}
 
     <div className={job.urgency==='emergency'?"ai-summary emergency-summary":"ai-summary"}><Sparkles/><div><strong>{job.urgency==='emergency'?'Wir suchen jetzt verfügbare Hilfe':'Einfach Hausen organisiert'}</strong><p>Richtpreis {job.budget_min&&job.budget_max?`${euro(job.budget_min)}–${euro(job.budget_max)}`:'wird ermittelt'}. {dispatches.total||0} vertragliche Partner wurden angefragt. Qualität und Kundenzufriedenheit haben Vorrang — kein Partner kann sich im Matching nach oben kaufen.</p></div></div>

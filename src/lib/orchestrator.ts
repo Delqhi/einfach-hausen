@@ -48,6 +48,11 @@ function berlinMinutesNow(){
   return hour*60+minute;
 }
 
+function berlinWeekday(){
+  const short=new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Berlin',weekday:'short'}).format(new Date());
+  return ({Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6} as Record<string,number>)[short] ?? 0;
+}
+
 function timeToMinutes(value:string|undefined|null){
   const match=String(value||'').match(/^(\d{1,2}):(\d{2})$/); if(!match)return null;
   const hour=Number(match[1]),minute=Number(match[2]); if(hour>23||minute>59)return null; return hour*60+minute;
@@ -55,6 +60,8 @@ function timeToMinutes(value:string|undefined|null){
 
 function emergencyAvailableNow(p:any){
   if(p.emergency_mode==='24_7')return true;
+  const days=String(p.emergency_days||'1,2,3,4,5,6,0').split(',').map(Number).filter(Number.isInteger);
+  if(!days.includes(berlinWeekday()))return false;
   const start=timeToMinutes(p.emergency_start),end=timeToMinutes(p.emergency_end); if(start===null||end===null)return false;
   const now=berlinMinutesNow(); if(start===end)return true;
   return start<end ? now>=start&&now<=end : now>=start||now<=end;
@@ -77,7 +84,7 @@ export function appendJobEvent(jobId:number,body:string,metadata:Record<string,u
 }
 
 async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jobPostcode:string,jobGeo:{lat:number;lon:number}|null,requestKind:HausmeisterIntent|'emergency'='service'){
-  const partners=db.prepare(`SELECT p.*,c.status contract_status,c.insurance_verified,c.qualification_verified,c.contract_verified,c.quality_standard_verified,c.customer_discount_bps,c.response_target_minutes,pref.accepts_normal_jobs,pref.accepts_short_notice,pref.accepts_consultation,pref.accepts_emergencies,pref.emergency_mode,pref.emergency_markup_bps,pref.emergency_start,pref.emergency_end,
+  const partners=db.prepare(`SELECT p.*,c.status contract_status,c.insurance_verified,c.qualification_verified,c.contract_verified,c.quality_standard_verified,c.customer_discount_bps,c.response_target_minutes,pref.accepts_normal_jobs,pref.accepts_short_notice,pref.accepts_consultation,pref.accepts_emergencies,pref.emergency_mode,pref.emergency_markup_bps,pref.emergency_start,pref.emergency_end,pref.emergency_days,
       CASE WHEN ps.id IS NULL THEN free.monthly_lead_limit ELSE paid.monthly_lead_limit END monthly_lead_limit,
       CASE WHEN ps.id IS NULL THEN 'free' ELSE ps.plan_slug END partner_plan
     FROM provider_profiles p JOIN partner_contracts c ON c.provider_id=p.user_id

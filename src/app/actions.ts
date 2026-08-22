@@ -70,6 +70,7 @@ export async function registerAction(fd: FormData) {
   const { role, email, password, firstName: first, lastName: last } = parsed.data;
   if (db.prepare('SELECT id FROM users WHERE email=?').get(email)) { recordRateLimitFailure('register', ip); logSecurityEvent('security_validation_reject', 'register', 'duplicate_email'); redirect('/login?error=Konto%20existiert%20bereits'); }
   const d = parsed.data;
+  const emergencyDays=fd.getAll('emergencyDay').map(String).filter(v=>/^[0-6]$/.test(v)).join(',')||'1,2,3,4,5';
   const logoFile=fd.get('logo'); const logoPath=role==='provider'&&logoFile instanceof File&&logoFile.size?await saveUpload(logoFile):null;
   const hash = await bcrypt.hash(password, 12);
   const tx = db.transaction(() => {
@@ -80,7 +81,7 @@ export async function registerAction(fd: FormData) {
       db.prepare('INSERT INTO provider_profiles(user_id,business_name,trades,postcode,radius_km,description,street_address,logo_path) VALUES(?,?,?,?,?,?,?,?)').run(id,d.businessName || `${first} ${last}`,d.trades,d.postcode,d.radius,d.description,d.streetAddress,logoPath);
       db.prepare("INSERT INTO partner_contracts(provider_id,status,commission_bps) VALUES(?,'pending',0)").run(id);
       db.prepare("INSERT INTO provider_members(provider_id,user_id,job_title,can_manage_jobs,active) VALUES(?,?,'Geschäftsführung',1,1)").run(id,id);
-      db.prepare(`INSERT INTO provider_preferences(provider_id,accepts_normal_jobs,accepts_short_notice,accepts_consultation,accepts_emergencies,emergency_mode,emergency_start,emergency_end,emergency_markup_bps,opening_hours_text,bookable_hours_text,instant_booking) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`).run(id,1,fd.get('acceptsShortNotice')?1:0,fd.get('acceptsConsultation')?1:0,fd.get('acceptsEmergencies')?1:0,d.emergencyMode==='24_7'?'24_7':'local',d.emergencyStart,d.emergencyEnd,d.emergencyMarkup*100,d.openingHours,d.bookableHours,fd.get('instantBooking')?1:0);
+      db.prepare(`INSERT INTO provider_preferences(provider_id,accepts_normal_jobs,accepts_short_notice,accepts_consultation,accepts_emergencies,emergency_mode,emergency_start,emergency_end,emergency_days,emergency_markup_bps,opening_hours_text,bookable_hours_text,instant_booking) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(id,1,fd.get('acceptsShortNotice')?1:0,fd.get('acceptsConsultation')?1:0,fd.get('acceptsEmergencies')?1:0,d.emergencyMode==='24_7'?'24_7':'local',d.emergencyStart,d.emergencyEnd,emergencyDays,d.emergencyMarkup*100,d.openingHours,d.bookableHours,fd.get('instantBooking')?1:0);
     }
     return id;
   });
@@ -151,9 +152,12 @@ export async function logoutAction(){ await destroySession(); redirect('/'); }
 
 async function saveUpload(file: File | null) {
   if (!file || file.size===0) return null;
-  if (!file.type.startsWith('image/') || file.size > 8*1024*1024) throw new Error('Ungültiges Bild');
-  const ext = file.name.split('.').pop()?.replace(/[^a-z0-9]/gi,'').slice(0,5) || 'jpg';
-  const name = `${Date.now()}-${randomUUID()}.${ext}`;
+  const types:Record<string,{ext:string,max:number}>={
+    'image/jpeg':{ext:'jpg',max:8*1024*1024},'image/png':{ext:'png',max:8*1024*1024},'image/webp':{ext:'webp',max:8*1024*1024},'image/heic':{ext:'heic',max:8*1024*1024},
+    'video/mp4':{ext:'mp4',max:25*1024*1024},'video/webm':{ext:'webm',max:25*1024*1024},'video/quicktime':{ext:'mov',max:25*1024*1024},'video/x-m4v':{ext:'m4v',max:25*1024*1024},
+  };
+  const rule=types[file.type]; if(!rule||file.size>rule.max)throw new Error('Ungültige Mediendatei');
+  const name = `${Date.now()}-${randomUUID()}.${rule.ext}`;
   const dir = path.join(process.cwd(),'public','uploads'); await fs.mkdir(dir,{recursive:true});
   await fs.writeFile(path.join(dir,name),Buffer.from(await file.arrayBuffer()));
   return `/uploads/${name}`;
@@ -455,7 +459,8 @@ export async function saveProfileAction(fd:FormData){
       const businessName=text(fd,'businessName')||current?.business_name||ctx.businessName; const trades=text(fd,'trades')||current?.trades||'';
       const logo=fd.get('logo'); const newLogo=logo instanceof File&&logo.size?await saveUpload(logo):null;
       db.prepare('UPDATE provider_profiles SET business_name=?,trades=?,postcode=?,radius_km=?,description=?,street_address=?,tax_id=?,vat_id=?,logo_path=COALESCE(?,logo_path) WHERE user_id=?').run(businessName,trades,text(fd,'postcode'),int(fd,'radius')||25,text(fd,'description'),text(fd,'streetAddress'),text(fd,'taxId'),text(fd,'vatId'),newLogo,ctx.providerId);
-      db.prepare(`INSERT INTO provider_preferences(provider_id,accepts_normal_jobs,accepts_short_notice,accepts_consultation,accepts_emergencies,emergency_mode,emergency_start,emergency_end,emergency_markup_bps,opening_hours_text,bookable_hours_text,instant_booking,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(provider_id) DO UPDATE SET accepts_normal_jobs=excluded.accepts_normal_jobs,accepts_short_notice=excluded.accepts_short_notice,accepts_consultation=excluded.accepts_consultation,accepts_emergencies=excluded.accepts_emergencies,emergency_mode=excluded.emergency_mode,emergency_start=excluded.emergency_start,emergency_end=excluded.emergency_end,emergency_markup_bps=excluded.emergency_markup_bps,opening_hours_text=excluded.opening_hours_text,bookable_hours_text=excluded.bookable_hours_text,instant_booking=excluded.instant_booking,updated_at=CURRENT_TIMESTAMP`).run(ctx.providerId,fd.get('acceptsNormalJobs')?1:0,fd.get('acceptsShortNotice')?1:0,fd.get('acceptsConsultation')?1:0,fd.get('acceptsEmergencies')?1:0,text(fd,'emergencyMode')==='24_7'?'24_7':'local',text(fd,'emergencyStart')||'18:00',text(fd,'emergencyEnd')||'22:00',Math.max(0,Math.min(100,int(fd,'emergencyMarkup')||0))*100,text(fd,'openingHours'),text(fd,'bookableHours'),fd.get('instantBooking')?1:0);
+      const emergencyDays=fd.getAll('emergencyDay').map(String).filter(v=>/^[0-6]$/.test(v)).join(',')||'1,2,3,4,5';
+      db.prepare(`INSERT INTO provider_preferences(provider_id,accepts_normal_jobs,accepts_short_notice,accepts_consultation,accepts_emergencies,emergency_mode,emergency_start,emergency_end,emergency_days,emergency_markup_bps,opening_hours_text,bookable_hours_text,instant_booking,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(provider_id) DO UPDATE SET accepts_normal_jobs=excluded.accepts_normal_jobs,accepts_short_notice=excluded.accepts_short_notice,accepts_consultation=excluded.accepts_consultation,accepts_emergencies=excluded.accepts_emergencies,emergency_mode=excluded.emergency_mode,emergency_start=excluded.emergency_start,emergency_end=excluded.emergency_end,emergency_days=excluded.emergency_days,emergency_markup_bps=excluded.emergency_markup_bps,opening_hours_text=excluded.opening_hours_text,bookable_hours_text=excluded.bookable_hours_text,instant_booking=excluded.instant_booking,updated_at=CURRENT_TIMESTAMP`).run(ctx.providerId,fd.get('acceptsNormalJobs')?1:0,fd.get('acceptsShortNotice')?1:0,fd.get('acceptsConsultation')?1:0,fd.get('acceptsEmergencies')?1:0,text(fd,'emergencyMode')==='24_7'?'24_7':'local',text(fd,'emergencyStart')||'18:00',text(fd,'emergencyEnd')||'22:00',emergencyDays,Math.max(0,Math.min(100,int(fd,'emergencyMarkup')||0))*100,text(fd,'openingHours'),text(fd,'bookableHours'),fd.get('instantBooking')?1:0);
       if(fd.get('providerCategoriesPresent')){
         const available=new Set((db.prepare(`SELECT slug FROM provider_categories WHERE active=1`).all() as Array<{slug:string}>).map(r=>r.slug));
         const selected=fd.getAll('providerCategory').map(String).filter(slug=>available.has(slug));

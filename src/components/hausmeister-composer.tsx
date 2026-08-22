@@ -22,7 +22,7 @@ export function HausmeisterComposer({continuingIntent,starterHint}:{continuingIn
   return <form action={sendHausmeisterAction} className="agent-composer">
     <textarea name="description" value={text} onChange={e=>setText(e.target.value)} rows={3} required placeholder={placeholder}/>
     <div className="agent-actions">
-      <label className="icon-action" title="Foto hinzufügen"><Camera size={19}/><span>Foto</span><input name="photo" type="file" accept="image/*"/></label>
+      <label className="icon-action" title="Foto oder Video hinzufügen"><Camera size={19}/><span>Medien</span><input name="photo" type="file" accept="image/*,video/mp4,video/webm,video/quicktime,video/x-m4v"/></label>
       <button className={listening?'icon-action recording':'icon-action'} type="button" onClick={toggleVoice}>{listening?<Square size={18}/>:<Mic size={19}/>}<span>{listening?'Stop':'Sprechen'}</span></button>
       <button className="send-action" type="submit" disabled={text.trim().length<4}><Send size={18}/><span>{continuingIntent?'Weiter':'Senden'}</span></button>
     </div>

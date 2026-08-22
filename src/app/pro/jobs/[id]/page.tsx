@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { CalendarDays,MapPin,MessageCircle,MessageSquare,Phone,ShieldCheck,UserRound,XCircle } from 'lucide-react';
 import { AppShell,SectionTitle } from '@/components/shell';
+import { JobMedia } from '@/components/job-media';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { acceptContactRequestAction,assignJobContactAction,declineDispatchAction,markCompleteAction,markInProgressAction,sendMessageAction,sendSavedContactMessageAction,submitQuoteAction } from '@/app/actions';
@@ -32,7 +33,7 @@ export default async function ProJob({params,searchParams}:{params:Promise<{id:s
 
   return <AppShell role="provider" active={isAccepted?'/pro/orders':'/pro'} title={isContact?'Kontaktanfrage':isAccepted?'Auftrag':'Anfrage'} subtitle={access.category}>
     {sp.error&&<div className="alert error">{sp.error}</div>}
-    <div className="detail-head pro-detail"><span className={`status ${access.status}`}>{isContact?(isAccepted?'Verbunden':'Kontakt gesucht'):statusLabel(access.status)}</span><h1>{access.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{access.description}</p><div className="meta-line"><span><MapPin/>{isAccepted&&access.address?access.address:access.postcode}</span>{!isContact&&<span><CalendarDays/>{dateLabel(access.preferred_date)}</span>}</div>{access.photo&&<img className="hero-photo" src={access.photo} alt="Foto zum Thema"/>}{!isContact&&<div className="budget-line"><small>Richtpreis</small><strong>{access.budget_min&&access.budget_max?`${euro(access.budget_min)} – ${euro(access.budget_max)}`:euro(access.budget_max)}</strong></div>}</div>
+    <div className="detail-head pro-detail"><span className={`status ${access.status}`}>{isContact?(isAccepted?'Verbunden':'Kontakt gesucht'):statusLabel(access.status)}</span><h1>{access.title.replace(/^Ansprechpartner:\s*/,'')}</h1><p>{access.description}</p><div className="meta-line"><span><MapPin/>{isAccepted&&access.address?access.address:access.postcode}</span>{!isContact&&<span><CalendarDays/>{dateLabel(access.preferred_date)}</span>}</div>{access.photo&&<JobMedia src={access.photo} alt="Foto oder Video zum Thema"/>}{!isContact&&<div className="budget-line"><small>Richtpreis</small><strong>{access.budget_min&&access.budget_max?`${euro(access.budget_min)} – ${euro(access.budget_max)}`:euro(access.budget_max)}</strong></div>}</div>
 
     {!isAccepted&&ctx.canManageJobs&&access.status!=='completed'&&isContact&&<>
       <div className="contact-request-note"><MessageCircle/><div><strong>Nur persönlicher Ansprechpartner gesucht</strong><p>Der Eigentümer möchte zunächst einen fachlichen Menschen sprechen. Es wird noch kein Auftrag und kein Preis vereinbart.</p></div></div>
