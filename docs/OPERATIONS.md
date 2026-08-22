@@ -8,7 +8,7 @@ Der Pilot soll bewusst einfach bleiben: ein Next.js-Dienst, ein persistentes Dat
 
 `Internet -> Cloudflare -> sin-kestra Tunnel -> 127.0.0.1:3010 -> einfach-hausen.service`
 
-Öffentlich: `https://einfach-hausen.delqhi.com`
+Öffentlich: `https://einfachhausen.de`
 
 ## Laufzeit
 
@@ -54,7 +54,7 @@ Kanonische Secrets in Infisical:
 - `EINFACH_HAUSEN_STRIPE_SECRET_KEY`
 - `EINFACH_HAUSEN_STRIPE_WEBHOOK_SECRET`
 
-Die OCI-Laufzeit mappt diese Werte auf `STRIPE_SECRET_KEY` und `STRIPE_WEBHOOK_SECRET` in `/etc/einfach-hausen.env`. Der öffentliche Webhook ist `https://einfach-hausen.delqhi.com/api/stripe/webhook`.
+Die OCI-Laufzeit mappt diese Werte auf `STRIPE_SECRET_KEY` und `STRIPE_WEBHOOK_SECRET` in `/etc/einfach-hausen.env`. Der öffentliche Webhook ist `https://einfachhausen.de/api/stripe/webhook`.
 
 Verifikation vom Mac-M1:
 
@@ -62,7 +62,7 @@ Verifikation vom Mac-M1:
 cd /Users/jeremy/dev/wow-my-zsh
 shared/skills/sin-stripe/scripts/sin-stripe ready --project einfach-hausen
 shared/skills/sin-stripe/scripts/sin-stripe doctor --project einfach-hausen \
-  --webhook-url https://einfach-hausen.delqhi.com/api/stripe/webhook
+  --webhook-url https://einfachhausen.de/api/stripe/webhook
 ```
 
 Die Geschäftsregel bleibt **0 % Provision auf Partneraufträge**. Einnahmen entstehen über Kunden-Mitgliedschaften, Partner-Tarife und definierte Service-/Jahrespakete.

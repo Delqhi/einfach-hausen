@@ -10,7 +10,7 @@ Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PROD
 
 ## Live Pilot
 
-- App: `https://einfach-hausen.delqhi.com`
+- App: `https://einfachhausen.de`
 - Runtime: OCI `sin-supabase`
 - Cloudflare: existing `sin-kestra` tunnel
 - Process supervisor: systemd (`einfach-hausen.service`)

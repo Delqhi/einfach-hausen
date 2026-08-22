@@ -10,6 +10,6 @@ Persistent state:
 
 Production environment file: `/etc/einfach-hausen.env` mode `0600`.
 
-Public route: `https://einfach-hausen.delqhi.com` → Cloudflare tunnel `simone-api` → `http://127.0.0.1:3010`.
+Public route: `https://einfachhausen.de` → Cloudflare tunnel `sin-kestra` → `http://127.0.0.1:3010`.
 
 Health endpoint: `/api/health`.
