@@ -20,7 +20,40 @@ node_major="$($NODE_BIN -p 'process.versions.node.split(".")[0]')"
 
 cd "$APP_DIR"
 [[ "$(git branch --show-current)" == "main" ]] || { echo 'Deployment requires the main branch.' >&2; exit 1; }
-[[ -z "$(git status --porcelain --untracked-files=all)" ]] || { echo 'Refusing deployment from a dirty working tree.' >&2; exit 1; }
+
+validate_runtime_path() {
+  local path="$1"
+  local expected_target="$2"
+
+  if [[ -L "$path" ]]; then
+    [[ "$(readlink "$path")" == "$expected_target" ]] || {
+      echo "Refusing unexpected runtime symlink: $path" >&2
+      exit 1
+    }
+  elif [[ -e "$path" && ! -d "$path" ]]; then
+    echo "Refusing unexpected runtime path type: $path" >&2
+    exit 1
+  fi
+}
+
+validate_runtime_path "$APP_DIR/data/private" "$PRIVATE_ROOT"
+validate_runtime_path "$APP_DIR/public/uploads" "$UPLOAD_ROOT"
+
+# Runtime media predates the persistent-storage migration on some hosts. Allow
+# only these two known untracked paths (or their legacy directory contents);
+# every tracked change and every other untracked path still blocks deployment.
+dirty_status="$(git status --porcelain --untracked-files=all | while IFS= read -r line; do
+  if [[ "$line" == "?? data/private" || "$line" == "?? public/uploads" ||
+        "$line" == "?? data/private/"* || "$line" == "?? public/uploads/"* ]]; then
+    continue
+  fi
+  printf '%s\n' "$line"
+done)"
+[[ -z "$dirty_status" ]] || {
+  echo 'Refusing deployment from a dirty working tree.' >&2
+  printf '%s\n' "$dirty_status" >&2
+  exit 1
+}
 
 sudo install -d -o ubuntu -g ubuntu -m 0750 "$PERSIST_ROOT" "$PRIVATE_ROOT" "$UPLOAD_ROOT" /var/backups/einfach-hausen
 
