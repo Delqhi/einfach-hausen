@@ -1,77 +1,121 @@
-# Einfach Hausen — Pilotbetrieb auf OCI
+# Einfach Hausen — OCI operations
 
-## Ziel
+## Production contract
 
-Der Pilot soll bewusst einfach bleiben: ein Next.js-Dienst, ein persistentes Datenverzeichnis, Cloudflare Tunnel davor und vorhandene SIN-Infrastruktur dort nutzen, wo sie Komplexität reduziert.
+The pilot remains one loopback-only Next.js service behind the existing Cloudflare tunnel:
 
-## Produktionsroute
+`Internet -> Cloudflare -> sin-kestra tunnel -> 127.0.0.1:3010 -> einfach-hausen.service`
 
-`Internet -> Cloudflare -> sin-kestra Tunnel -> 127.0.0.1:3010 -> einfach-hausen.service`
+Canonical runtime paths:
 
-Öffentlich: `https://einfachhausen.de`
+- code: `/srv/einfach-hausen`
+- environment: `/etc/einfach-hausen.env` (`0600`, never committed)
+- SQLite: `/var/lib/einfach-hausen/einfach-hausen.db`
+- private media: `/var/lib/einfach-hausen/private`
+- persistent legacy/public uploads: `/var/lib/einfach-hausen/uploads`
+- local verified backups: `/var/backups/einfach-hausen`
+- service: `einfach-hausen.service`
+- public health: `/api/health`
 
-## Production handover
+The application code still addresses private media as `data/private` and legacy uploads as `public/uploads`. `deploy/einfach-hausen.service` bind-mounts the persistent `/var/lib/einfach-hausen` directories onto those two runtime paths, so a Git update cannot replace customer files. `DATABASE_PATH` is forced to the persistent SQLite path at service start.
 
-For the current STRATO → Cloudflare cutover state, DNS propagation, rollback guardrails, Stripe verification and continuation checklist, read [`PRODUCTION_HANDOVER.md`](PRODUCTION_HANDOVER.md) before changing live infrastructure.
+## Node 22 requirement
 
-## Laufzeit
+Production build and runtime require Node **22.x**. The systemd unit and `deploy/update-on-oci.sh` use `/home/ubuntu/.nvm/versions/node/v22.23.0/bin`; the deployment script aborts unless the detected major version is exactly 22. Do not work around native-module failures by downgrading `better-sqlite3` or building with Node 20.
 
-- Code: `/srv/einfach-hausen`
-- Runtime-Konfiguration: `/etc/einfach-hausen.env` (nicht in Git)
-- Datenbank: `/var/lib/einfach-hausen/einfach-hausen.db`
-- Private Dateien: `/var/lib/einfach-hausen/private`
-- Persistente Uploads: `/var/lib/einfach-hausen/uploads`
-- Service: `einfach-hausen.service`
-- Public health: `/api/health`
-
-## Bestehende OCI-Bausteine
-
-### Supabase
-
-Für den Pilot bleibt die transaktionale App-Datenbank SQLite, weil sie bereits funktioniert und auf einer einzelnen OCI-Instanz die geringste Betriebs-Komplexität hat. Supabase wird sofort für private Backups innerhalb des bestehenden Storage-Stacks wiederverwendet. Eine spätere Migration auf Postgres/Supabase ist damit möglich, ohne jetzt Auth, SQL und sämtliche Workflows gleichzeitig umzubauen.
-
-Bucket: `einfach-hausen-backups` (privat)
-
-### Kestra
-
-Kestra überwacht den App-Health-Endpoint alle zehn Minuten über einen ausschließlich auf das private Kestra-Docker-Netz gebundenen systemd-Socket-Proxy. Der eigentliche Next.js-Dienst bleibt auf `127.0.0.1` gebunden. Geschäftliche Zeitpläne wie Wartungserinnerungen können später ebenfalls in Kestra ergänzt werden, statt eigene Cron-Frameworks in die App einzubauen.
-
-Flow: `einfach.hausen/einfach_hausen_health`
-
-Private Kestra-Route: `172.28.50.1:3010 -> systemd-socket-proxyd -> 127.0.0.1:3010`
-
-## Mobile PWA
-
-Die mobile Pilot-App ist dieselbe produktive Next.js-Anwendung und wird über denselben Cloudflare-Endpunkt ausgeliefert. Dadurch gibt es keine zweite API, keinen zweiten Auth-Stack und keine separate native Release-Pipeline.
-
-Der Service Worker cached bewusst **nur öffentliche App-Icons**. Authentifizierte HTML-Seiten, Nachrichten, Hausdaten, Aufträge und Dokumente werden nicht offline gespeichert. Bei Netzverlust erscheint lediglich eine statische Offline-Meldung. Das reduziert Datenschutz- und Stale-Data-Risiken erheblich.
-
-Installation:
-
-- iPhone/iPad: Safari → Teilen → „Zum Home-Bildschirm“
-- Android/Chromium: Browser-Menü oder Installationsprompt → „App installieren“
-
-## Stripe
-
-Stripe wird nicht als eigener neuer Backend-Dienst betrieben. Die App verwendet Stripe Checkout/Connect direkt; Betrieb, Diagnose und Webhook-Verwaltung laufen über den kanonischen `sin-stripe`-Skill in `wow-my-zsh`.
-
-Kanonische Secrets in Infisical:
-
-- `EINFACH_HAUSEN_STRIPE_SECRET_KEY`
-- `EINFACH_HAUSEN_STRIPE_WEBHOOK_SECRET`
-
-Die OCI-Laufzeit mappt diese Werte auf `STRIPE_SECRET_KEY` und `STRIPE_WEBHOOK_SECRET` in `/etc/einfach-hausen.env`. Der öffentliche Webhook ist `https://einfachhausen.de/api/stripe/webhook`.
-
-Verifikation vom Mac-M1:
+Safe probes:
 
 ```bash
-cd /Users/jeremy/dev/wow-my-zsh
-shared/skills/sin-stripe/scripts/sin-stripe ready --project einfach-hausen
-shared/skills/sin-stripe/scripts/sin-stripe doctor --project einfach-hausen \
-  --webhook-url https://einfachhausen.de/api/stripe/webhook
+/home/ubuntu/.nvm/versions/node/v22.23.0/bin/node --version
+systemctl cat einfach-hausen.service | grep '/node/v22\|/npm\|DATABASE_PATH\|BindPaths'
 ```
 
-Die Geschäftsregel bleibt **0 % Provision auf Partneraufträge**. Einnahmen entstehen über Kunden-Mitgliedschaften, Partner-Tarife und definierte Service-/Jahrespakete.
+## Health contract
+
+`GET /api/health` performs a bounded read against SQLite's schema and requires the core `users` table to be available. It returns HTTP 200 only when SQLite is ready, otherwise HTTP 503. The JSON exposes only service name, overall state, the categorical database state, and a timestamp; it never returns database paths, environment values, exception text, credentials, or connection details. Responses are `no-store`.
+
+Local service probe:
+
+```bash
+curl -fsS http://127.0.0.1:3010/api/health
+```
+
+Expected shape includes `"ok":true` and `"database":"ready"`.
+
+## Persistent storage bootstrap
+
+Before installing/restarting the updated service:
+
+```bash
+sudo install -d -o ubuntu -g ubuntu -m 0750 \
+  /var/lib/einfach-hausen \
+  /var/lib/einfach-hausen/private \
+  /var/lib/einfach-hausen/uploads \
+  /var/backups/einfach-hausen
+```
+
+`deploy/update-on-oci.sh` performs copy-only migration from the historical repo-relative private/upload directories using `rsync --ignore-existing`; it never deletes or overwrites files already present under `/var/lib/einfach-hausen`. Inspect conflicts before the first production restart if both old and persistent locations contain data.
+
+## Backup
+
+Canonical local backup:
+
+```bash
+sudo DATABASE_PATH=/var/lib/einfach-hausen/einfach-hausen.db \
+  PRIVATE_ROOT=/var/lib/einfach-hausen/private \
+  UPLOAD_ROOT=/var/lib/einfach-hausen/uploads \
+  BACKUP_ROOT=/var/backups/einfach-hausen \
+  /srv/einfach-hausen/scripts/backup-einfach-hausen.sh
+```
+
+Each backup is a new timestamped directory containing:
+
+- `einfach-hausen.db` created with SQLite's online backup API
+- `private.tar`
+- `uploads.tar`
+- `manifest.json` with SHA-256 hashes, byte sizes, and expected file counts
+
+The script runs `PRAGMA integrity_check` on the copied database before publishing the backup directory. It refuses to overwrite an existing backup.
+
+Nightly `einfach-hausen-backup.timer` calls `deploy/backup-to-supabase.sh`, which uses the same canonical backup first, bundles that verified directory, and uploads it to the private `einfach-hausen-backups` bucket. Supabase credentials are read from the existing protected runtime environment and are never printed.
+
+## Non-destructive restore proof
+
+Never test recovery by replacing the production database. Validate a backup in a temporary directory:
+
+```bash
+/srv/einfach-hausen/scripts/restore-einfach-hausen.sh \
+  /var/backups/einfach-hausen/einfach-hausen-YYYYMMDDTHHMMSSZ \
+  --dry-run
+```
+
+The dry-run verifies all manifest hashes/sizes, extracts database/private/uploads into a temporary directory, runs SQLite `PRAGMA integrity_check`, verifies private/upload file counts, then removes the temporary directory. Production paths are not touched.
+
+For an operator-inspectable recovery candidate, stage into a new empty directory:
+
+```bash
+/srv/einfach-hausen/scripts/restore-einfach-hausen.sh BACKUP_DIR --stage /var/tmp/eh-restore-review
+```
+
+The restore helper intentionally has no production overwrite mode. After human inspection and a fresh pre-change backup, production replacement is a separate maintenance action while the app is stopped.
+
+## Reproducible service, tunnel, and Kestra probes
+
+Run these without printing `/etc/einfach-hausen.env`:
+
+```bash
+systemctl is-active einfach-hausen.service
+systemctl is-active einfach-hausen-kestra-proxy.socket
+systemctl is-active einfach-hausen-backup.timer
+curl -fsS http://127.0.0.1:3010/api/health
+curl -fsS http://172.28.50.1:3010/api/health
+systemctl status cloudflared --no-pager
+cloudflared tunnel info sin-kestra
+```
+
+The first curl proves the app/service path. The second proves the private systemd socket proxy used by Kestra. `cloudflared tunnel info sin-kestra` proves the named tunnel connector state without exposing credentials.
+
+Kestra flow: `einfach.hausen/einfach_hausen_health` (`deploy/kestra/einfach-hausen-health.yml`) requests `http://172.28.50.1:3010/api/health` every ten minutes. Inspect recent executions in the existing Kestra UI/API and require successful `app_health` executions; do not expose Kestra tokens in shell output or evidence.
 
 ## Deployment
 
@@ -79,17 +123,15 @@ Die Geschäftsregel bleibt **0 % Provision auf Partneraufträge**. Einnahmen ent
 sudo /srv/einfach-hausen/deploy/update-on-oci.sh
 ```
 
-Der Ablauf ist absichtlich einfach: `fetch -> main -> npm ci -> build -> systemd restart -> health check`.
+The deployment script requires a clean `main`, verifies Node 22, prepares persistent directories, performs copy-only legacy-media migration, creates a pre-deploy online backup when the persistent DB already exists, fast-forwards to `origin/main`, builds against a disposable `/tmp` SQLite path, reloads systemd, restarts the service, and requires local health success. It does not use `git reset --hard` and does not delete production data.
 
-## Backup
+## Failure handling
 
-`einfach-hausen-backup.timer` erstellt nachts über SQLite Online Backup eine konsistente Kopie und lädt sie in den vorhandenen selbst gehosteten Supabase-Storage. Lokale Kopien werden sieben Tage behalten.
+If health fails, inspect service logs before changing data:
 
-## Recovery
+```bash
+sudo systemctl status einfach-hausen.service --no-pager
+sudo journalctl -u einfach-hausen.service -n 120 --no-pager
+```
 
-1. App stoppen.
-2. Gewünschtes Backup aus dem privaten Supabase-Bucket herunterladen.
-3. Als `/var/lib/einfach-hausen/einfach-hausen.db` einsetzen.
-4. Besitzer/Rechte prüfen.
-5. `systemctl start einfach-hausen`.
-6. `/api/health` und die öffentliche URL prüfen.
+Do not delete SQLite, WAL/SHM files, private media, or uploads as a troubleshooting step. Do not remove the old public fallback until the canonical domain/tunnel/Stripe/mail acceptance in `PRODUCTION_HANDOVER.md` is complete.

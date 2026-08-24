@@ -1,6 +1,6 @@
 # Einfach Hausen — Next-Agent Continuation Contract
 
-**Updated:** 2026-08-22
+**Updated:** 2026-08-23 (post-gauntlet reconciliation; see `.sin-after-work/handoff.md`)
 
 This is the operational entry point for the next agent. Read this file before changing code, tasks, production, or GitHub issues.
 
@@ -8,13 +8,13 @@ This is the operational entry point for the next agent. Read this file before ch
 
 - Repository: `Delqhi/einfach-hausen`
 - Branch: `main`
-- The local tree currently contains **uncommitted T-0004 intake/media work**. Preserve it. Do not run `git reset --hard` or `git clean -fd`.
-- Known current files include:
-  - `scripts/t0004-intake-regression.mjs`
-  - `src/lib/intake-media.ts`
-  - `src/lib/whatsapp-media.ts`
-  - changes to intake actions, WhatsApp webhook, job-media route/UI, DB/orchestrator and composer
-  - unrelated `.sin-after-work/` evidence must remain untouched unless explicitly reviewed.
+- HEAD: `3e7b1228` — `fix: serialize Next build workers on OCI` (11 commits since the 2026-08-21 baseline `3f2bd8ac`).
+- The local worktree contains **uncommitted T-0019 / T-0020 / T-0021 polish** alongside the now-committed T-0004 intake work. **Preserve it. Do not run `git reset --hard` or `git clean -fd`.**
+- Dirty surfaces (working tree, uncommitted):
+  - T-0019 (website): `src/app/page.tsx`, `src/components/marketing/{site-shell.tsx,ui.tsx,marketing.module.css}`
+  - T-0020 (homeowner): `src/app/app/**` (+ new untracked `src/components/homeowner/homeowner-hausmeister-composer.tsx`, `src/components/homeowner/state.tsx`)
+  - T-0021 (partner): `src/app/pro/**` (`jobs/[id]/page.tsx` modified; `src/components/provider/workspace.tsx` is committed)
+- `unrelated .sin-after-work/ evidence must remain untouched unless explicitly reviewed.`
 
 ## 2. Canonical task state
 
@@ -24,16 +24,20 @@ Use the task system, not memory:
 cd /Users/jeremy/dev/einfach-hausen
 sin-gpt-web-state --repo . summary
 sin-gpt-web-state --repo . next
-sin-gpt-web-state --repo . show T-0004
+sin-gpt-web-state --repo . show TASK-ID
 ```
 
-Current coordination state at this checkpoint:
+Current coordination state (canonical, from `.sin-gpt-web/taskplan.sqlite3`):
 
 - `T-0001` done — binding product spec and implementation DAG
 - `T-0002` done — security baseline; 133/133 regression checks
 - `T-0003` done — webhook/payment/private-media boundaries; 38/38 focused checks
-- `T-0004` **in progress** — text/photo/voice intake + WhatsApp media + catalog parity
-- `T-0005` onward remain in the DAG; do not skip validation/review tasks simply because individual features look implemented.
+- `T-0004` done — text/photo/voice intake + WhatsApp media + catalog parity (committed; `test:intake` 23/23)
+- `T-0005` done — maintenance, regional matching, emergency fidelity
+- `T-0016`, `T-0017`, `T-0018` done — website/homeowner/partner rebuilds
+- `T-0019`, `T-0020`, `T-0021` done (per worker reports) but their **uncommitted dirty work is preserved in the tree** — see §3A before claiming done.
+- `T-0006`–`T-0015` **cancelled** — superseded by the 2026-08-23 CEO-audit decomposition `T-0022`–`T-0043`. Do not re-open the legacy tasks.
+- Next eligible (backlog, unclaimed): `T-0022` website trust/IA/performance, `T-0023` homeowner first-task flows, `T-0024` partner operations (then `T-0025`–`T-0028`, each depending on 22–24).
 
 The authoritative sources are:
 
@@ -51,35 +55,37 @@ sin-gpt-web-state --repo . validate
 
 ## 3. Immediate next technical actions
 
-### A. Finish T-0004 without discarding current work
+### A. Green and commit the uncommitted T-0019/T-0020/T-0021 dirty work BEFORE any new dispatch
 
-Review the diff first:
+The dirty tree is **not** green. Reconcile it first (do not reset/clean — the work must be preserved):
 
 ```bash
 git diff -- src scripts package.json
-npm run test:intake
-npm run test:security
-npm run lint
-npm run build
+npm run test:intake      # 23/23 on committed T-0004 work
+npm run test:security    # 133/133
+npm run lint             # FAILS on dirty tree — see below
+npm run build            # FAILS on dirty tree — see below
 git diff --check
 ```
 
-Then inspect the implementation against T-0004 acceptance:
+Known dirty-tree gate failures (verified 2026-08-23, NOT committed):
 
-1. text intake works;
-2. photo/video/audio behavior is explicit and reaches request context where supported;
-3. voice has an accessible fallback;
-4. WhatsApp supported media is never silently dropped;
-5. unsupported media gets a clear response;
-6. service aliases/catalog cover the binding product vision.
+1. **Build fails:** `src/app/pro/jobs/[id]/page.tsx` (dirty T-0021) imports `ProviderAccessBoundary` and `ProviderNextStep` from `@/components/provider/workspace`, but the committed `workspace.tsx` only exports `ProviderSectionHeader` / `ProviderState`. Add the two missing exports to `workspace.tsx` (or align the import), then re-run `npm run build` until green.
+2. **Lint fails:** untracked `src/components/homeowner/homeowner-hausmeister-composer.tsx:27` triggers `react-hooks/set-state-in-effect` (`setSpeechSupported` inside a `useEffect`). Fix the effect, then `npx eslint src/app/app src/components/homeowner` until clean.
 
-Only then commit and push. Do not bundle unrelated `.sin-after-work/` evidence into the product commit.
+The T-0020 and T-0021 worker reports claim lint/build pass; that is not reproducible on the current working tree. Treat the reports as the worker's intended end state, not proof — green the tree yourself, then commit.
+
+Then land the three surfaces as **separate commits** (the gauntlet's disjoint-path rule):
+
+- commit 1 — T-0019: `src/app/page.tsx src/components/marketing/**`
+- commit 2 — T-0020: `src/app/app/** src/components/homeowner/**`
+- commit 3 — T-0021: `src/app/pro/** src/components/provider/**`
+
+Do **not** bundle `.sin-after-work/` evidence or `.sin-gpt-teamwork/` runtime state into product commits.
 
 ### B. Resume the DAG
 
-Next eligible tasks include `T-0006`, `T-0007`, and `T-0010`; dependencies and acceptance criteria are already in `TASKPLAN.md`. Follow the DAG rather than inventing a parallel plan.
-
-Before claiming a task:
+After Wave 1 (T-0019/0020/0021) is committed green, the next dispatchable tasks are `T-0022`, `T-0023`, `T-0024` (T-0025+ depend on them). Claim only one per wave and keep paths disjoint:
 
 ```bash
 sin-gpt-web-state --repo . next
@@ -87,7 +93,7 @@ sin-gpt-web-state --repo . show TASK-ID
 sin-gpt-web-state --repo . claim TASK-ID --owner chatgpt-web --actor chatgpt-web
 ```
 
-Record reproducible evidence and complete tasks only when acceptance is actually met.
+Record reproducible evidence and complete tasks only when acceptance is actually met and independently reproduced on the current tree.
 
 ## 4. Production / OCI state
 

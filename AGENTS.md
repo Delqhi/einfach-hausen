@@ -19,3 +19,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - **Production/domain continuation:** Before changing production infrastructure, DNS, Cloudflare, STRATO, Stripe or OCI routing, read `docs/PRODUCTION_HANDOVER.md` and `docs/OPERATIONS.md`. Treat handover status as a starting point only; verify live state before mutations.
 - Keep the customer and partner products radically simple. Do not add generic ERP-style roles, settings, dashboards, or configuration unless required by the product vision.
 
+## GitHub issue ↔ Notion completion rule
+
+- The canonical business task board is the Notion database **Einfachhausen – Aufgaben**: https://app.notion.com/p/912c28152aa04ada9d22147e44f0f2c3 . GitHub tracks engineering execution; Notion tracks business-visible completion. Do not create a second task database.
+- For GitHub work derived from that board, only execute the Jerry-owned checklist items named in the issue. Gina-owned and Gemeinsam-owned items are out of scope unless a separate task explicitly says otherwise.
+- When starting a Jerry item, use the configured **SIN Notion** integration to find the matching Notion task and set `Status = In Arbeit`.
+- Before closing/completing the GitHub item, use SIN Notion again to set every finished matching task to `Status = Erledigt` and append a short task-page note with: **Ergebnis**, **Nachweis** (files/routes/tests/commit or issue), and any durable **Betriebsinfo** another agent needs.
+- If a task is only partially complete or blocked by external authority, keep it `In Arbeit` and document the exact blocker/evidence on the Notion task page. Never mark a task done from assumption or from an issue title alone.
+- A GitHub issue is not complete until code/docs verification and the required Notion synchronization both succeed, except when the Notion service itself is unavailable; in that case leave explicit retry evidence in the issue.

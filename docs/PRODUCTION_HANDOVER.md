@@ -1,24 +1,24 @@
 # Einfach Hausen — Production Handover and Continuation Runbook
 
-**Status snapshot:** 2026-08-22, after the STRATO → Cloudflare cutover work.
+**Status snapshot:** 2026-08-24, after T-0037 operational hardening. Live production acceptance still requires the explicit checks below.
 
 This document is the canonical continuation point for a new agent. It deliberately records both completed work and the one known external propagation blocker. Do not infer that the public cutover is complete until the verification checklist below passes.
 
-## 0. Latest continuation checkpoint — 2026-08-22
+## 0. Latest continuation checkpoint — 2026-08-24
 
 **Canonical next-agent entry:** [`NEXT_AGENT.md`](NEXT_AGENT.md).
 
 ### Current code/worktree
 
-- The remote `main` baseline contains the completed security waves and previous production/documentation commits.
-- The local worktree contains uncommitted **T-0004 intake/media work**. Preserve it and inspect it before any cleanup.
-- T-0004 is explicitly marked `in_progress` in `.sin-gpt-web/taskplan.sqlite3`; use `sin-gpt-web-state` for all subsequent task changes.
+- The local tree is an active multi-worker gauntlet and contains substantial intentional uncommitted work from completed/in-progress tasks. Preserve and classify it before any cleanup.
+- T-0037 and T-0038 are the current critical in-progress gates at this snapshot; use `sin-gpt-web-state` as the only authority for subsequent task changes.
+- Do not infer deployability from this handover alone. T-0040/T-0044/T-0041 still gate independent acceptance, integration/push, and production deployment.
 
-### Latest deployment attempt — not yet production acceptance
+### Deployment contract — not yet production acceptance
 
-The last OCI deployment attempt stopped during the build because the deployment shell used **Node 20.20.2**, while `better-sqlite3@13` requires Node 22+. The systemd runtime already uses `/home/ubuntu/.nvm/versions/node/v22.23.0/bin`. No blind restart followed the failed build.
+A prior OCI deployment attempt failed because its build shell used Node 20.20.2 while `better-sqlite3@13` requires Node 22+. T-0037 hardens this contract: `deploy/update-on-oci.sh` now resolves the configured Node 22 binary directly, aborts unless its major version is 22, and `einfach-hausen.service` starts with the same Node 22 installation. The deployment build uses a disposable `/tmp` SQLite path rather than production data.
 
-**Next exact action:** repair/verify the deployment script environment so `npm ci` and `npm run build` execute with Node 22, then restart the existing service and run local + public smoke checks. Do not downgrade dependencies as a workaround.
+**Next exact action:** after the gauntlet-approved tree is committed and pushed, run the production deployment from T-0041, then execute the local service, persistent-storage, tunnel, Kestra, and public smoke checks. Do not downgrade dependencies as a workaround.
 
 ### Persistent storage checkpoint
 
@@ -63,8 +63,9 @@ The app must remain loopback-only. Do **not** expose port `3010` directly to the
 - Code: `/srv/einfach-hausen`
 - Environment: `/etc/einfach-hausen.env` (mode `0600`, never commit)
 - Database: `/var/lib/einfach-hausen/einfach-hausen.db`
-- Private media: `/srv/einfach-hausen/data/private`
-- Legacy/public upload area: `/srv/einfach-hausen/public/uploads`
+- Private media: `/var/lib/einfach-hausen/private`, bind-mounted to `/srv/einfach-hausen/data/private`
+- Legacy/public upload area: `/var/lib/einfach-hausen/uploads`, bind-mounted to `/srv/einfach-hausen/public/uploads`
+- Verified local backups: `/var/backups/einfach-hausen`
 - Service: `einfach-hausen.service`
 - Tunnel: `sin-kestra`
 - Health endpoint: `/api/health`
@@ -217,7 +218,7 @@ Deploy on OCI:
 sudo /srv/einfach-hausen/deploy/update-on-oci.sh
 ```
 
-Sequence: `git fetch -> reset main to origin/main -> npm ci -> build -> systemd restart -> local health check`.
+Sequence: `verify clean main + Node 22 -> prepare persistent paths -> copy-only legacy media migration -> pre-deploy online backup when DB exists -> git fetch -> fast-forward main -> npm ci -> disposable-DB build -> systemd reload/restart -> local DB-aware health check`. The script does not use `git reset --hard` and does not delete or overwrite production data.
 
 Diagnostics:
 
@@ -234,7 +235,9 @@ Backups:
 - timer: `einfach-hausen-backup.timer`
 - local retention: seven days by default
 - private bucket: `einfach-hausen-backups`
-- method: SQLite online backup before upload
+- canonical helper: `scripts/backup-einfach-hausen.sh`
+- method: SQLite online backup + `PRAGMA integrity_check`, private/upload archives, SHA-256 manifest before upload
+- recovery proof: `scripts/restore-einfach-hausen.sh BACKUP_DIR --dry-run` validates checksums, SQLite integrity and private/upload file counts in a temporary directory; it has no production-overwrite mode
 
 ## 10. Verification baseline already achieved
 
@@ -249,7 +252,7 @@ On the current baseline before this handover:
 
 ## 11. Repository hygiene and in-progress work
 
-At handover creation, the working tree contains unrelated/in-progress intake/media changes and local agent evidence. **Do not run `git reset --hard` or `git clean -fd` blindly.** Preserve or inspect that work before cleanup.
+At this 2026-08-24 snapshot, the working tree contains substantial intentional multi-task gauntlet changes and local teamwork evidence. **Do not run `git reset --hard` or `git clean -fd` blindly.** Use the canonical taskplan and final integration task to classify every path before cleanup.
 
 Primary continuation documents:
 
