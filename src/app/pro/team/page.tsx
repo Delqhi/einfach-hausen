@@ -1,6 +1,6 @@
 import { CheckCircle2, ShieldCheck, UserPlus, Users } from 'lucide-react';
 import { AppShell } from '@/components/shell';
-import { ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
+import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { addProviderMemberAction, updateProviderMemberAction } from '@/app/actions';
 import { getProviderContext, getProviderMembers } from '@/lib/provider';
@@ -19,6 +19,8 @@ export default async function Team({ searchParams }: { searchParams: Promise<Rec
         title="Menschen statt Rollenmatrix"
         description="Ein Unternehmen. Ein Team. Ein Schalter: Aufträge verwalten AN oder AUS. Jeder Ansprechpartner hat einen eigenen App-Zugang."
       />
+
+      <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
       {sp.error && <div className="alert error" role="alert">{sp.error}</div>}
       {sp.member === 'created' && <div className="alert success" role="status"><CheckCircle2 /> Ansprechpartner wurde angelegt und kann sich direkt einloggen.</div>}

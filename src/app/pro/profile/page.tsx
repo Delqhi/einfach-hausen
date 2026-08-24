@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { BadgeCheck,CreditCard,FileCheck2,ShieldAlert,ShieldCheck,UsersRound,WalletCards } from 'lucide-react';
 import { AppShell,SectionTitle } from '@/components/shell';
-import { ProviderPageIntro,ProviderState } from '@/components/provider/workspace';
+import { ProviderAccessBoundary,ProviderPageIntro,ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { createStripeOnboardingAction,logoutAction,saveProfileAction,submitVerificationAction } from '@/app/actions';
+import { createStripeOnboardingAction,logoutAction } from '@/app/actions';
+import { saveProviderProfileLifecycleAction,submitProviderVerificationAction } from './actions';
 import { statusLabel } from '@/lib/format';
 import { getProviderContext } from '@/lib/provider';
+import { getPartnerActivationCheck } from '@/lib/partner-config';
 import { InstallAppCard } from '@/components/install-app-card';
 
 export default async function ProProfile({searchParams}:{searchParams:Promise<Record<string,string>>}){
@@ -15,6 +17,7 @@ export default async function ProProfile({searchParams}:{searchParams:Promise<Re
   const p=db.prepare(`SELECT p.*,c.status contract_status,c.customer_discount_bps,c.insurance_verified,c.qualification_verified,c.contract_verified,c.quality_standard_verified,c.response_target_minutes,c.notes contract_notes
     FROM provider_profiles p LEFT JOIN partner_contracts c ON c.provider_id=p.user_id WHERE p.user_id=?`).get(ctx.providerId) as any;
   const v=db.prepare('SELECT * FROM verification_requests WHERE provider_id=?').get(ctx.providerId) as any;
+  const activation=getPartnerActivationCheck(ctx.providerId);
   const subscription=db.prepare(`SELECT s.status,s.plan_slug,s.trial_end,p.title FROM partner_subscriptions s JOIN partner_plans p ON p.slug=s.plan_slug WHERE s.provider_id=?`).get(ctx.providerId) as any;
   const prefs=db.prepare('SELECT * FROM provider_preferences WHERE provider_id=?').get(ctx.providerId) as any;
   const emergencyDays=new Set(String(prefs?.emergency_days||'1,2,3,4,5,6,0').split(','));
@@ -25,27 +28,31 @@ export default async function ProProfile({searchParams}:{searchParams:Promise<Re
   const brokerProfile=db.prepare(`SELECT * FROM broker_search_profiles WHERE provider_id=?`).get(ctx.providerId) as any;
   return <AppShell role="provider" active="/pro/profile" title="Profil & Vertrauen" subtitle={p?.business_name||ctx.businessName}>
     <ProviderPageIntro eyebrow="Unternehmen" title="Profil & Vertrauen" description="Verifizierung, Vertrag, Auszahlungen und Leistungsprofil an einem Ort. Änderungen an Firma und Einsatzgebiet sind nur für berechtigte Ansprechpartner verfügbar."/>
+    <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
     <InstallAppCard />
-    {sp.verification==='submitted'&&<div className="alert success"><ShieldCheck/>Unternehmensnachweise wurden eingereicht.</div>}
+    {sp.verification==='submitted'&&<div className="alert success" role="status"><ShieldCheck/>Unternehmensnachweise wurden eingereicht. Bis zur erneuten Freigabe werden keine neuen Anfragen verteilt.</div>}
+    {sp.verification==='file'&&<div className="alert error" role="alert">Bitte lade ein PDF, JPG, PNG oder WebP bis 12 MB hoch.</div>}
     {sp.verification==='owner'&&<div className="alert error">Unternehmensnachweise kann nur der Firmeninhaber verwalten.</div>}
+    {sp.profile==='saved'&&<div className="alert success" role="status">Profil und Anfrage-Einstellungen wurden gespeichert.</div>}
+    {sp.profile==='review'&&<div className="alert error" role="status">Firmen- oder Leistungsdaten wurden geändert. Die Partnerfreigabe ist pausiert, bis die Nachweise und Vertrags-/Qualitätschecks erneut bestätigt sind.</div>}
     {sp.stripe==='ready'&&<div className="alert success"><CreditCard/>Auszahlungen sind vollständig eingerichtet.</div>}
     {sp.stripe==='incomplete'&&<div className="alert error">Stripe-Onboarding ist noch nicht vollständig abgeschlossen.</div>}
     {sp.stripe==='missing'&&<ProviderState icon={<CreditCard size={21}/>} title="Auszahlungen derzeit nicht verfügbar" description="Die Stripe-Integration ist auf der Plattform noch nicht vollständig konfiguriert. Es wurde nichts an deinem Auszahlungsstatus geändert." tone="unavailable"/>}
     {sp.stripe==='owner'&&<div className="alert error">Auszahlungen kann nur der Firmeninhaber einrichten.</div>}
 
     <div className={p?.verified?'verification-card verified':'verification-card'}>{p?.verified?<ShieldCheck/>:<ShieldAlert/>}<div><strong>{p?.verified?'Unternehmen geprüft':'Unternehmensprüfung erforderlich'}</strong><p>{p?.verified?'Identität und eingereichte Unternehmensnachweise sind geprüft.':v?`Prüfstatus: ${statusLabel(v.status)}`:'Gewerbe-, Qualifikations- und Versicherungsnachweise müssen geprüft werden.'}</p>{v?.admin_note&&<small>Rückmeldung: {v.admin_note}</small>}</div></div>
-    {ctx.isOwner&&!p?.verified&&<><SectionTitle>Nachweise einreichen</SectionTitle><form action={submitVerificationAction} className="document-form"><label>Nachweis<input type="file" name="document" accept="application/pdf,image/*" required/></label><label>Hinweis<textarea name="note" rows={3} placeholder="Gewerbeanmeldung, Meister-/Qualifikationsnachweis, Versicherung …"/></label><button className="btn light">Zur Prüfung einreichen</button></form></>}
+    {ctx.isOwner&&!p?.verified&&<><SectionTitle>Nachweise einreichen</SectionTitle><form action={submitProviderVerificationAction} className="document-form"><label>Nachweis<input type="file" name="document" accept="application/pdf,image/jpeg,image/png,image/webp" required/></label><label>Hinweis<textarea name="note" rows={3} placeholder="Gewerbeanmeldung, Meister-/Qualifikationsnachweis, Versicherung …"/></label><button className="btn light">Zur Prüfung einreichen</button></form></>}
 
-    <SectionTitle>Partnervertrag & Standards</SectionTitle><div className={p?.contract_status==='active'?'verification-card verified':'verification-card'}>{p?.contract_status==='active'?<BadgeCheck/>:<FileCheck2/>}<div><strong>{p?.contract_status==='active'?'Aktiver Einfach-Hausen-Vertragspartner':`Vertragsstatus: ${statusLabel(p?.contract_status||'pending')}`}</strong><p>Nur aktive, geprüfte Vertragspartner erhalten passende regionale Kundenanfragen. Das Qualitätsmatching ist unabhängig vom gebuchten Partner-Tarif.</p><div className="contract-checks"><span className={p?.insurance_verified?'ok':''}>{p?.insurance_verified?'✓':'○'} Versicherung</span><span className={p?.qualification_verified?'ok':''}>{p?.qualification_verified?'✓':'○'} Qualifikation</span><span className={p?.contract_verified?'ok':''}>{p?.contract_verified?'✓':'○'} Partnervertrag</span><span className={p?.quality_standard_verified?'ok':''}>{p?.quality_standard_verified?'✓':'○'} Qualitätsstandard</span></div>{p?.contract_status==='active'&&<small>0 % Provision · Reaktionsziel {p.response_target_minutes} Min.</small>}</div></div>
+    <SectionTitle>Partnervertrag & Standards</SectionTitle><div className={activation.receivesNewJobs?'verification-card verified':'verification-card'}>{activation.receivesNewJobs?<BadgeCheck/>:<FileCheck2/>}<div><strong>{activation.receivesNewJobs?'Aktiver Einfach-Hausen-Vertragspartner':p?.contract_status==='active'?'Freigabe unvollständig':`Vertragsstatus: ${statusLabel(p?.contract_status||'pending')}`}</strong><p>Neue Anfragen gibt es nur bei freigegebener Unternehmensprüfung, aktivem Vertrag und vollständig bestätigten Qualitätschecks. Das Qualitätsmatching ist unabhängig vom gebuchten Partner-Tarif.</p><div className="contract-checks"><span className={activation.insuranceVerified?'ok':''}>{activation.insuranceVerified?'✓':'○'} Versicherung</span><span className={activation.qualificationVerified?'ok':''}>{activation.qualificationVerified?'✓':'○'} Qualifikation</span><span className={activation.contractVerified?'ok':''}>{activation.contractVerified?'✓':'○'} Partnervertrag</span><span className={activation.qualityStandardVerified?'ok':''}>{activation.qualityStandardVerified?'✓':'○'} Qualitätsstandard</span></div>{activation.missing.length>0&&<small>Noch offen: {activation.missing.join(' · ')}</small>}{activation.receivesNewJobs&&<small>0 % Provision · Reaktionsziel {p.response_target_minutes} Min.</small>}</div></div>
 
     <SectionTitle>Partner-Tarif</SectionTitle><Link href="/pro/plans" className="verification-card verified"><WalletCards/><div><strong>{subscription?.title||'Free'}</strong><p>{subscription?.status==='trialing'?'Kostenlose Testphase aktiv.':subscription?.status==='active'?'Tarif aktiv.':'Free ist der Standardtarif.'} Alle Tarife: 0 % Provision und keine Gebühr pro Auftrag.</p><small>Tarife ansehen oder ändern</small></div></Link>
 
-    <SectionTitle>Team</SectionTitle><Link href="/pro/team" className="verification-card verified"><UsersRound/><div><strong>Ansprechpartner verwalten</strong><p>Eigener App-Zugang für jeden Ansprechpartner. Nur ein Schalter entscheidet, wer neue Aufträge annehmen und verteilen darf.</p><small>Team öffnen</small></div></Link>
+    <SectionTitle>Team</SectionTitle><Link href="/pro/team" className="verification-card verified"><UsersRound/><div><strong>{ctx.canManageJobs?'Ansprechpartner verwalten':'Team ansehen'}</strong><p>{ctx.canManageJobs?'Eigener App-Zugang für jeden Ansprechpartner. Nur ein Schalter entscheidet, wer neue Aufträge annehmen und verteilen darf.':'Du kannst die Ansprechpartner des Betriebs sehen. Änderungen an Zugängen und Auftragsberechtigungen sind für dich nicht verfügbar.'}</p><small>Team öffnen</small></div></Link>
 
     {ctx.isOwner&&<><SectionTitle>Auszahlungen</SectionTitle><div className={p?.stripe_onboarded?'verification-card verified':'verification-card'}><CreditCard/><div><strong>{p?.stripe_onboarded?'Stripe Connect aktiv':'Stripe Connect einrichten'}</strong><p>{p?.stripe_onboarded?'Der Betrieb erhält 100 % des Auftragswertes. Einfach Hausen berechnet keine Auftragsprovision.':'Für zentrale Plattformzahlungen muss der Firmeninhaber das Auszahlungs-Onboarding abschließen.'}</p>{!p?.stripe_onboarded&&<form action={createStripeOnboardingAction}><button className="btn light">Stripe einrichten</button></form>}</div></div></>}
 
     <SectionTitle>Mein Profil</SectionTitle>
-    <form action={saveProfileAction} className="profile-form pro-form">
+    <form action={saveProviderProfileLifecycleAction} className="profile-form pro-form">
       <div className="two"><label>Vorname<input name="firstName" defaultValue={u.first_name}/></label><label>Nachname<input name="lastName" defaultValue={u.last_name}/></label></div>
       <label>Telefon<input name="phone" defaultValue={u.phone||''}/></label>
       {ctx.canManageJobs&&<>

@@ -44,6 +44,43 @@ const DUMMY_PASSWORD_HASH = '$2b$12$VewcCr68WsM1v4sD7Ot47uLqRUkRC3CSJFtnhMGlvkMQ
 function text(fd: FormData, key: string) { return String(fd.get(key) ?? '').trim(); }
 function int(fd: FormData, key: string) { const n = Number(fd.get(key)); return Number.isFinite(n) ? n : null; }
 
+type HomeownerServiceAction = 'consultation' | 'hausmeister_route' | 'insurance_support';
+const HOMEOWNER_SERVICE_WINDOW_MS = 15 * 60_000;
+
+function consumeHomeownerServiceLimit(action: HomeownerServiceAction, userId: number, maxAttempts = 8) {
+  const kind = 'homeowner_service';
+  const identifier = `${action}:${userId}`;
+  const now = Date.now();
+  try {
+    const verdict = db.transaction(() => {
+      const row = db.prepare('SELECT attempts,window_start_at,blocked_until FROM auth_rate_limits WHERE kind=? AND identifier=?').get(kind, identifier) as {attempts:number;window_start_at:string;blocked_until:string|null}|undefined;
+      if (row?.blocked_until) {
+        const blockedUntil = new Date(row.blocked_until).getTime();
+        if (!Number.isFinite(blockedUntil)) return { allowed: false, retryAfterSeconds: 30 };
+        if (blockedUntil > now) return { allowed: false, retryAfterSeconds: Math.max(1, Math.ceil((blockedUntil - now) / 1000)) };
+      }
+      const windowStart = row ? new Date(row.window_start_at).getTime() : Number.NaN;
+      const fresh = row && Number.isFinite(windowStart) && now - windowStart <= HOMEOWNER_SERVICE_WINDOW_MS;
+      const attempts = fresh ? row.attempts + 1 : 1;
+      const blocked = attempts > maxAttempts;
+      const blockedUntil = blocked ? new Date(now + HOMEOWNER_SERVICE_WINDOW_MS).toISOString() : null;
+      const windowIso = fresh ? row.window_start_at : new Date(now).toISOString();
+      db.prepare(`INSERT INTO auth_rate_limits(kind,identifier,attempts,window_start_at,blocked_until,updated_at)
+        VALUES(?,?,?,?,?,CURRENT_TIMESTAMP)
+        ON CONFLICT(kind,identifier) DO UPDATE SET attempts=excluded.attempts,window_start_at=excluded.window_start_at,blocked_until=excluded.blocked_until,updated_at=CURRENT_TIMESTAMP`)
+        .run(kind, identifier, attempts, windowIso, blockedUntil);
+      return blocked
+        ? { allowed: false, retryAfterSeconds: Math.ceil(HOMEOWNER_SERVICE_WINDOW_MS / 1000) }
+        : { allowed: true, retryAfterSeconds: 0 };
+    }).immediate();
+    if (!verdict.allowed) logSecurityEvent('rate_limit_blocked_request', `${kind}:${identifier}`, `retry_after_s=${verdict.retryAfterSeconds}`);
+    return verdict;
+  } catch {
+    logSecurityEvent('security_validation_reject', `${kind}:${identifier}`, 'rate_limit_state_error');
+    return { allowed: false, retryAfterSeconds: 30 };
+  }
+}
+
 // The last XFF hop is the only entry a directly connected trusted proxy adds;
 // leftmost values are client-controlled. Deployment must ensure the edge proxy
 // overwrites/appends X-Forwarded-For and blocks direct origin access.
@@ -185,12 +222,23 @@ export async function sendHausmeisterAction(fd:FormData){
 }
 
 export async function createConsultationAction(fd:FormData){
-  const user=await requireUser('homeowner'); const submitted=text(fd,'description'); if(submitted.length<4)redirect('/app/consultation?error=Beschreib%20kurz,%20wobei%20du%20Rat%20brauchst');
+  const user=await requireUser('homeowner');
+  const limit=consumeHomeownerServiceLimit('consultation',user.id);
+  if(!limit.allowed)redirect('/app/consultation?error=Zu%20viele%20Anfragen.%20Bitte%20versuche%20es%20sp%C3%A4ter%20erneut');
+  const submitted=text(fd,'description');
+  if(submitted.length<4)redirect('/app/consultation?error=Beschreib%20kurz,%20wobei%20du%20Rat%20brauchst');
   const bounded=intakeDescriptionSchema.safeParse({description:submitted});
   if(!bounded.success){ logSecurityEvent('security_validation_reject','consultation_intake','invalid_description'); redirect('/app/consultation?error=Beschreib%20es%20bitte%20k%C3%BCrzer'); }
-  const description=bounded.data.description;
-  const photo=fd.get('photo'); const saved=await savePrivateMediaUpload(photo instanceof File?photo:null); const result=await createHausmeisterRequest(user.id,description,'app',saved,'contact',true);
-  revalidatePath('/app');revalidatePath('/pro');revalidatePath('/notifications');
+  let saved:string|null=null;
+  try{
+    const photo=fd.get('photo');
+    saved=await savePrivateMediaUpload(photo instanceof File?photo:null);
+  }catch{
+    logSecurityEvent('security_validation_reject','consultation_intake','invalid_media');
+    redirect('/app/consultation?error=Das%20Foto%20oder%20Video%20konnte%20nicht%20sicher%20%C3%BCbernommen%20werden.%20Bitte%20pr%C3%BCfe%20Dateityp%20und%20Gr%C3%B6%C3%9Fe');
+  }
+  const result=await createHausmeisterRequest(user.id,bounded.data.description,'app',saved,'contact',true);
+  revalidatePath('/app');revalidatePath('/app/consultation');revalidatePath('/pro');revalidatePath('/notifications');
   redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app/hausmeister?clarify=1');
 }
 
@@ -204,12 +252,23 @@ export async function createEmergencyAction(fd:FormData){
 
 export async function startHausmeisterRouteAction(intent:HausmeisterIntent){
   const user=await requireUser('homeowner');
+  if(intent!=='contact'&&intent!=='service'){
+    logSecurityEvent('security_validation_reject','hausmeister_route','invalid_intent');
+    redirect('/app/hausmeister?error=Diese%20Aktion%20ist%20nicht%20verf%C3%BCgbar');
+  }
+  const limit=consumeHomeownerServiceLimit('hausmeister_route',user.id);
+  if(!limit.allowed)redirect('/app/hausmeister?error=Zu%20viele%20Anfragen.%20Bitte%20versuche%20es%20sp%C3%A4ter%20erneut');
   const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='app' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
   if(!thread)redirect('/app/hausmeister?error=Beschreib%20dein%20Thema%20zuerst%20kurz%20dem%20Hausmeister');
   const latest=db.prepare(`SELECT body,metadata_json FROM assistant_messages WHERE thread_id=? AND role='user' ORDER BY created_at DESC,id DESC LIMIT 1`).get(thread.id) as {body:string;metadata_json:string}|undefined;
   if(!latest)redirect('/app/hausmeister?error=Beschreib%20dein%20Thema%20zuerst%20kurz%20dem%20Hausmeister');
-  let photo:string|null=null; try{const metadata=JSON.parse(latest.metadata_json||'{}');if(typeof metadata.photo==='string')photo=metadata.photo;}catch{}
-  const result=await createHausmeisterRequest(user.id,latest.body,'app',photo,intent,false);
+  const bounded=intakeDescriptionSchema.safeParse({description:latest.body});
+  if(!bounded.success){
+    logSecurityEvent('security_validation_reject','hausmeister_route','invalid_description');
+    redirect('/app/hausmeister?error=Die%20letzte%20Nachricht%20konnte%20nicht%20sicher%20%C3%BCbernommen%20werden');
+  }
+  let photo:string|null=null; try{const metadata=JSON.parse(latest.metadata_json||'{}');if(typeof metadata.photo==='string'&&metadata.photo.startsWith('job-media/'))photo=metadata.photo;}catch{}
+  const result=await createHausmeisterRequest(user.id,bounded.data.description,'app',photo,intent,false);
   revalidatePath('/app'); revalidatePath('/app/hausmeister'); revalidatePath('/pro'); revalidatePath('/notifications');
   redirect(result.jobId?`/app/jobs/${result.jobId}`:'/app/hausmeister?clarify=1');
 }
@@ -476,8 +535,8 @@ export async function saveProfileAction(fd:FormData){
         const serviceTx=db.transaction(()=>{db.prepare(`DELETE FROM provider_service_offerings WHERE provider_id=?`).run(ctx.providerId);const insert=db.prepare(`INSERT INTO provider_service_offerings(provider_id,service_slug,active) VALUES(?,?,1)`);for(const slug of selectedServices)insert.run(ctx.providerId,slug);});serviceTx();
       }
       if(fd.get('brokerProfilePresent')){
-        const euroToCents=(key:string)=>{const value=Number(String(fd.get(key)||'').replace(',','.'));return Number.isFinite(value)&&value>=0?Math.round(value*100):null;};
-        const area=(key:string)=>{const value=Number(String(fd.get(key)||'').replace(',','.'));return Number.isFinite(value)&&value>=0?value:null;};
+        const euroToCents=(key:string)=>{const raw=String(fd.get(key)||'').trim().replace(',','.');if(!raw)return null;const value=Number(raw);return Number.isFinite(value)&&value>=0?Math.round(value*100):null;};
+        const area=(key:string)=>{const raw=String(fd.get(key)||'').trim().replace(',','.');if(!raw)return null;const value=Number(raw);return Number.isFinite(value)&&value>=0?value:null;};
         db.prepare(`INSERT INTO broker_search_profiles(provider_id,regions_text,property_types_text,min_price,max_price,min_living_area,max_living_area,min_plot_area,max_plot_area,residential,commercial,specialties,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(provider_id) DO UPDATE SET regions_text=excluded.regions_text,property_types_text=excluded.property_types_text,min_price=excluded.min_price,max_price=excluded.max_price,min_living_area=excluded.min_living_area,max_living_area=excluded.max_living_area,min_plot_area=excluded.min_plot_area,max_plot_area=excluded.max_plot_area,residential=excluded.residential,commercial=excluded.commercial,specialties=excluded.specialties,updated_at=CURRENT_TIMESTAMP`).run(ctx.providerId,text(fd,'brokerRegions'),text(fd,'brokerPropertyTypes'),euroToCents('brokerMinPrice'),euroToCents('brokerMaxPrice'),area('brokerMinLivingArea'),area('brokerMaxLivingArea'),area('brokerMinPlotArea'),area('brokerMaxPlotArea'),fd.get('brokerResidential')?1:0,fd.get('brokerCommercial')?1:0,text(fd,'brokerSpecialties').slice(0,1000));
       }
       if(current?.verified && (current.business_name!==businessName || current.trades!==trades)){
@@ -543,7 +602,17 @@ export async function acceptHouseTransferAction(token:string){
     const contacts=db.prepare(`SELECT * FROM homeowner_contacts WHERE property_id=? AND homeowner_id=?`).all(propertyId,transfer.homeowner_id) as any[];
     const upsertContact=db.prepare(`INSERT INTO homeowner_contacts(homeowner_id,provider_id,contact_user_id,category,last_job_id,property_id,updated_at) VALUES(?,?,?,?,NULL,?,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id,contact_user_id) DO UPDATE SET provider_id=excluded.provider_id,category=excluded.category,property_id=excluded.property_id,updated_at=CURRENT_TIMESTAMP`);
     for(const contact of contacts)upsertContact.run(user.id,contact.provider_id,contact.contact_user_id,contact.category,propertyId);
-    db.prepare(`DELETE FROM homeowner_contacts WHERE property_id=? AND homeowner_id=?`).run(propertyId,transfer.homeowner_id);
+    // House-related contacts are copied to the buyer, but the prior owner's private
+    // conversation relationship remains theirs. Detach it from the transferred house
+    // instead of deleting it so historical private messages stay accessible only to
+    // the previous homeowner.
+    db.prepare(`UPDATE homeowner_contacts SET property_id=NULL,updated_at=CURRENT_TIMESTAMP WHERE property_id=? AND homeowner_id=?`).run(propertyId,transfer.homeowner_id);
+    // Ownership transfer invalidates every sale-purpose broker permission granted by
+    // the previous owner. Keep this inside the same transaction as the ownership
+    // mutation so a broker can never observe the transferred property with a stale
+    // active share. The buyer must explicitly create a new sale share if desired.
+    db.prepare(`UPDATE property_shares SET status='revoked',revoked_at=CURRENT_TIMESTAMP WHERE property_id=? AND purpose='sale' AND status='active'`).run(propertyId);
+    db.prepare(`UPDATE broker_lead_matches SET status='revoked',updated_at=CURRENT_TIMESTAMP WHERE sale_lead_id IN (SELECT id FROM sale_leads WHERE property_id=?) AND status NOT IN ('sold','rejected','revoked')`).run(propertyId);
     db.prepare(`UPDATE house_transfers SET status='accepted',accepted_by_user_id=?,accepted_at=CURRENT_TIMESTAMP WHERE id=?`).run(user.id,transfer.id);
   });tx();
   createNotification(transfer.homeowner_id,'Hausakte übergeben',`${user.first_name} ${user.last_name} hat die Hausakte übernommen.`,'/app/home/history','house_transfer'); revalidatePath('/app/home');revalidatePath('/app/home/history');revalidatePath('/app/year');revalidatePath('/app/messages');redirect('/app/home?transfer=accepted');
@@ -648,6 +717,41 @@ export async function adminReviewVerificationAction(requestId:number,fd:FormData
   const tx=db.transaction(()=>{db.prepare('UPDATE verification_requests SET status=?,admin_note=?,reviewed_at=CURRENT_TIMESTAMP WHERE id=?').run(decision,adminNote,requestId);db.prepare('UPDATE provider_profiles SET verified=? WHERE user_id=?').run(decision==='approved'?1:0,row.provider_id);logAdminAudit('admin','verification_review',`provider:${row.provider_id}`,`request=${requestId};decision=${decision}`);}); tx();
   createNotification(row.provider_id,decision==='approved'?'Unternehmensprüfung bestanden':'Unternehmensprüfung abgelehnt',decision==='approved'?'Deine Unternehmensnachweise sind geprüft. Für Kundenanfragen muss zusätzlich der Einfach-Hausen-Partnervertrag aktiv sein.':(adminNote||'Bitte prüfe deine Nachweise und reiche sie erneut ein.'),'/pro/profile','verification');
   revalidatePath('/admin'); revalidatePath('/pro/profile'); revalidatePath('/pro'); revalidatePath('/notifications');
+}
+
+export async function createInsuranceSupportAction(jobId:number,fd:FormData){
+  const user=await requireUser('homeowner');
+  if(!Number.isSafeInteger(jobId)||jobId<=0){
+    logSecurityEvent('security_validation_reject','insurance_support','invalid_job');
+    redirect('/app/insurance?error=Der%20Auftrag%20ist%20ung%C3%BCltig');
+  }
+  const limit=consumeHomeownerServiceLimit('insurance_support',user.id);
+  if(!limit.allowed)redirect('/app/insurance?error=Zu%20viele%20Anfragen.%20Bitte%20versuche%20es%20sp%C3%A4ter%20erneut');
+  const submitted=text(fd,'description');
+  const bounded=intakeDescriptionSchema.safeParse({description:submitted});
+  if(!bounded.success||bounded.data.description.length<20){
+    logSecurityEvent('security_validation_reject','insurance_support','invalid_description');
+    redirect('/app/insurance?error=Beschreib%20den%20Schadenfall%20bitte%20mit%20mindestens%2020%20Zeichen');
+  }
+  const row=db.prepare(`SELECT j.homeowner_id,j.status,j.request_kind,q.provider_id,c.id claim_id
+    FROM jobs j
+    JOIN quotes q ON q.id=j.accepted_quote_id
+    LEFT JOIN claims c ON c.job_id=j.id
+    WHERE j.id=? AND j.homeowner_id=?`).get(jobId,user.id) as {homeowner_id:number;status:string;request_kind:string;provider_id:number;claim_id:number|null}|undefined;
+  if(!row||row.homeowner_id!==user.id||row.request_kind!=='service'||!['accepted','in_progress','completed'].includes(row.status)){
+    logSecurityEvent('security_validation_reject','insurance_support',`unauthorized_job=${jobId}`);
+    redirect('/app/insurance?error=F%C3%BCr%20diesen%20Auftrag%20kann%20keine%20Versicherungsunterst%C3%BCtzung%20angelegt%20werden');
+  }
+  if(row.claim_id)redirect('/app/insurance?error=Zu%20diesem%20Auftrag%20gibt%20es%20bereits%20einen%20Servicefall');
+  const description=`Versicherungsunterstützung: ${bounded.data.description}`.slice(0,4000);
+  const created=db.prepare(`INSERT OR IGNORE INTO claims(job_id,homeowner_id,provider_id,description,status) VALUES(?,?,?,?,'pending')`).run(jobId,user.id,row.provider_id,description);
+  if(created.changes!==1)redirect('/app/insurance?error=Der%20Servicefall%20wurde%20bereits%20angelegt');
+  const assigned=db.prepare('SELECT contact_user_id FROM job_assignments WHERE job_id=?').get(jobId) as {contact_user_id:number}|undefined;
+  const recipients=new Set<number>([...getProviderManagerIds(row.provider_id),...(assigned?[assigned.contact_user_id]:[])]);
+  for(const recipient of recipients)createNotification(recipient,'Versicherungsunterstützung angefragt',`Der Kunde hat zu Auftrag #${jobId} einen Servicefall zur Versicherungsunterstützung übergeben.`,`/pro/jobs/${jobId}`,'claim');
+  createNotification(user.id,'Servicefall übernommen',`Die Versicherungsunterstützung zu Auftrag #${jobId} wurde intern übernommen. Eine Versicherung wurde nicht automatisch kontaktiert.`,`/app/jobs/${jobId}`,'claim');
+  revalidatePath('/app/insurance'); revalidatePath(`/app/jobs/${jobId}`); revalidatePath(`/pro/jobs/${jobId}`); revalidatePath('/admin'); revalidatePath('/notifications');
+  redirect(`/app/insurance?success=${jobId}`);
 }
 
 export async function createClaimAction(jobId:number,fd:FormData){

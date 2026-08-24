@@ -1,31 +1,121 @@
-import { Building2,CheckCircle2,ChevronRight,KeyRound,LockKeyhole,ShieldCheck,TrendingUp,UserRound } from 'lucide-react';
-import { AppShell,SectionTitle } from '@/components/shell';
+import Link from 'next/link';
+import { Building2, CheckCircle2, ChevronRight, KeyRound, LockKeyhole, MessageCircle, RefreshCw, ShieldCheck, TrendingUp, UserRound } from 'lucide-react';
+import { AppShell, SectionTitle } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { primaryProperty } from '@/lib/properties';
 import { euro } from '@/lib/format';
-import { grantBrokerContactAction,revokeBrokerContactAction,savePropertyValuationAction,startSaleProcessAction } from '@/app/actions';
+import { startSaleProcessAction } from '@/app/actions';
+import { isBrokerEligibleForProperty } from '@/lib/broker-matching';
+import { approveBrokerShareAction, requestPropertyValuationAction, revokeBrokerShareAction, storeExistingValuationAction } from './actions';
+import styles from './sale.module.css';
 
-export default async function Sale(){
-  const user=await requireUser('homeowner'); const property=primaryProperty(user.id); if(!property)return <AppShell role="homeowner" active="/app/home"><div className="empty"><Building2/><strong>Hausprofil fehlt</strong><p>Lege zuerst dein Zuhause unter „Mein Haus“ an.</p></div></AppShell>;
-  const valuations=db.prepare(`SELECT * FROM property_valuations WHERE property_id=? ORDER BY created_at DESC LIMIT 5`).all(property.id) as any[];
-  const lead=db.prepare(`SELECT * FROM sale_leads WHERE property_id=? AND homeowner_id=? AND status NOT IN ('cancelled') ORDER BY id DESC LIMIT 1`).get(property.id,user.id) as any;
-  const matches=lead?db.prepare(`SELECT m.*,p.business_name,p.rating,p.rating_count,s.status share_status FROM broker_lead_matches m JOIN provider_profiles p ON p.user_id=m.provider_id LEFT JOIN property_shares s ON s.property_id=? AND s.provider_id=m.provider_id AND s.purpose='sale' AND s.status='active' WHERE m.sale_lead_id=? ORDER BY m.match_score DESC`).all(property.id,lead.id) as any[]:[];
+const valuationTypeLabels: Record<string, string> = {
+  orientation: 'Orientierungswert',
+  expert: 'Sachverständigenbewertung',
+  market: 'Makler-Marktwert',
+};
+
+const saleStages = [
+  ['interested', 'Verkaufsinteresse'],
+  ['matched', 'Passende Makler'],
+  ['contact_released', 'Kontakt freigegeben'],
+  ['inspection', 'Besichtigung'],
+  ['mandate', 'Maklerauftrag'],
+  ['sold', 'Verkauft'],
+] as const;
+
+const saleStatusLabels = Object.fromEntries(saleStages) as Record<string, string>;
+
+function formatDate(value: string | null | undefined) {
+  if (!value) return '';
+  return new Date(value).toLocaleDateString('de-DE');
+}
+
+function permissionLabels(value: string | null | undefined) {
+  let permissions: string[] = [];
+  try { permissions = JSON.parse(value || '[]'); } catch {}
+  const labels: Record<string, string> = {
+    property_summary: 'Objektzusammenfassung',
+    owner_contact: 'Kontaktdaten',
+  };
+  return permissions.map((permission) => labels[permission] || permission);
+}
+
+export default async function Sale() {
+  const user = await requireUser('homeowner');
+  const property = primaryProperty(user.id);
+  if (!property) {
+    return <AppShell role="homeowner" active="/app/home"><div className="empty owner-empty-action"><Building2 aria-hidden="true" /><strong>Hausprofil fehlt</strong><p>Lege zuerst dein Zuhause an. Danach kannst du Bewertung und Verkauf vorbereitet organisieren.</p><Link className="btn primary" href="/app/home">Mein Haus einrichten</Link></div></AppShell>;
+  }
+
+  const valuations = db.prepare(`SELECT * FROM property_valuations WHERE property_id=? AND homeowner_id=? ORDER BY created_at DESC LIMIT 10`).all(property.id, user.id) as any[];
+  const lead = db.prepare(`SELECT * FROM sale_leads WHERE property_id=? AND homeowner_id=? AND status!='cancelled' ORDER BY id DESC LIMIT 1`).get(property.id, user.id) as any;
+  const rawMatches = lead ? db.prepare(`SELECT m.*,p.business_name,p.rating,p.rating_count,
+      s.status share_status,s.permissions_json,s.granted_at,s.revoked_at
+    FROM broker_lead_matches m
+    JOIN provider_profiles p ON p.user_id=m.provider_id
+    LEFT JOIN property_shares s ON s.id=(
+      SELECT ps.id FROM property_shares ps
+      WHERE ps.property_id=? AND ps.provider_id=m.provider_id AND ps.purpose='sale' AND ps.status='active'
+      ORDER BY ps.id DESC LIMIT 1
+    )
+    WHERE m.sale_lead_id=?
+    ORDER BY m.match_score DESC,m.id ASC`).all(property.id, lead.id) as any[] : [];
+  const matches = rawMatches
+    .map((match) => ({ ...match, eligibleNow: isBrokerEligibleForProperty(match.provider_id, property) }))
+    .filter((match) => match.share_status === 'active' || (match.status !== 'revoked' && match.eligibleNow));
+
+  const currentStage = lead ? Math.max(0, saleStages.findIndex(([status]) => status === lead.status)) : -1;
+
   return <AppShell role="homeowner" active="/app/home" title="Verkauf & Bewertung" subtitle="Du entscheidest, was geteilt wird">
-    <div className="sale-hero"><KeyRound/><div><span>Dein Haus bleibt dein Datensatz</span><h1>Bewerten, verkaufen, passende Makler finden.</h1><p>Hausdaten werden übernommen. Private Rechnungen, Dokumente und Nachrichten bleiben gesperrt, bis du etwas ausdrücklich freigibst.</p></div></div>
+    <div className="sale-hero"><KeyRound aria-hidden="true" /><div><span>Dein Haus bleibt dein Datensatz</span><h1>Bewerten, verkaufen, passende Makler finden.</h1><p>Hausdaten werden übernommen. Private Rechnungen, Dokumente, Zahlungen und Nachrichten bleiben außerhalb des Verkaufsprozesses.</p></div></div>
 
-    <section className="property-sale-summary"><div><small>Immobilie</small><strong>{property.address||property.postcode||'Mein Zuhause'}</strong><span>{property.property_type||'Eigenheim'}{property.living_area?` · ${property.living_area} m²`:''}</span></div><div><small>Orientierungswert</small><strong>{property.estimated_value_min!=null&&property.estimated_value_max!=null?`${euro(property.estimated_value_min)} – ${euro(property.estimated_value_max)}`:'Noch nicht hinterlegt'}</strong></div></section>
+    <section className="property-sale-summary"><div><small>Immobilie</small><strong>{property.address || property.postcode || 'Mein Zuhause'}</strong><span>{property.property_type || 'Eigenheim'}{property.living_area ? ` · ${property.living_area} m²` : ''}</span></div><div><small>Orientierungswert</small><strong>{property.estimated_value_min != null && property.estimated_value_max != null ? `${euro(property.estimated_value_min)} – ${euro(property.estimated_value_max)}` : 'Noch nicht hinterlegt'}</strong></div></section>
 
     <SectionTitle>Immobilienbewertung</SectionTitle>
-    <form action={savePropertyValuationAction} className="valuation-form"><div><strong>Bewertung anfragen oder vorhandenen Wert speichern</strong><p>Ohne Wertangabe wird eine Bewertungsanfrage vorgemerkt. Wenn dir bereits eine Einschätzung vorliegt, speichere die Spanne direkt in der Hausakte.</p></div><div className="two"><label>Von € <small>(optional)</small><input name="estimatedMin" type="number" min="0" step="1000"/></label><label>Bis € <small>(optional)</small><input name="estimatedMax" type="number" min="0" step="1000"/></label></div><label>Art<select name="valuationType" defaultValue="orientation"><option value="orientation">Orientierungswert</option><option value="expert">Sachverständigenbewertung</option><option value="market">Makler-Marktwert</option></select></label><label>Hinweis<textarea name="notes" rows={3} placeholder="Optional: Besonderheiten, Modernisierungen oder Quelle der vorhandenen Bewertung"/></label><button className="btn ghost">Bewertung speichern / anfragen</button></form>
-    {valuations.length>0&&<div className="valuation-history">{valuations.map(v=><div key={v.id}><TrendingUp/><span className="grow"><strong>{v.status==='completed'&&v.estimated_min!=null&&v.estimated_max!=null?`${euro(v.estimated_min)} – ${euro(v.estimated_max)}`:'Bewertung angefragt'}</strong><small>{new Date(v.created_at).toLocaleDateString('de-DE')} · {v.valuation_type}</small></span><span className={`status ${v.status}`}>{v.status==='completed'?'Gespeichert':'Offen'}</span></div>)}</div>}
+    <div className={styles.valuationChoices}>
+      <form action={requestPropertyValuationAction} className={`valuation-form ${styles.valuationCard}`}>
+        <div><span className={styles.eyebrow}>Neue Bewertung</span><strong>Bewertung anfragen</strong><p>Lege einen offenen Bewertungsvorgang an. Dabei wird kein vorhandener Wert behauptet oder gespeichert.</p></div>
+        <label>Gewünschte Art<select name="valuationType" defaultValue="orientation"><option value="orientation">Orientierungswert</option><option value="expert">Sachverständigenbewertung</option><option value="market">Makler-Marktwert</option></select></label>
+        <label>Hinweis<textarea name="notes" rows={3} placeholder="Optional: Besonderheiten oder Modernisierungen" /></label>
+        <button className="btn primary">Bewertung anfragen</button>
+      </form>
+
+      <form action={storeExistingValuationAction} className={`valuation-form ${styles.valuationCard}`}>
+        <div><span className={styles.eyebrow}>Vorhandene Einschätzung</span><strong>Bestehende Bewertung speichern</strong><p>Nutze diesen Weg nur, wenn dir bereits eine konkrete Wertspanne vorliegt.</p></div>
+        <div className="two"><label>Von €<input name="estimatedMin" type="number" min="0" step="1000" required /></label><label>Bis €<input name="estimatedMax" type="number" min="0" step="1000" required /></label></div>
+        <label>Quelle / Art<select name="valuationType" defaultValue="market"><option value="orientation">Orientierungswert</option><option value="expert">Sachverständigenbewertung</option><option value="market">Makler-Marktwert</option></select></label>
+        <label>Hinweis<textarea name="notes" rows={3} placeholder="Optional: Quelle, Datum oder Besonderheiten" /></label>
+        <button className="btn ghost">Vorhandene Bewertung speichern</button>
+      </form>
+    </div>
+
+    <div className={styles.historyHeader}><strong>Bewertungsverlauf</strong><span>{valuations.length} {valuations.length === 1 ? 'Vorgang' : 'Vorgänge'}</span></div>
+    {valuations.length > 0 ? <div className="valuation-history">{valuations.map((valuation) => {
+      const completed = valuation.status === 'completed' && valuation.estimated_min != null && valuation.estimated_max != null;
+      return <div key={valuation.id}><TrendingUp aria-hidden="true" /><span className="grow"><strong>{completed ? `${euro(valuation.estimated_min)} – ${euro(valuation.estimated_max)}` : valuation.status === 'cancelled' ? 'Bewertung abgebrochen' : 'Bewertung angefragt'}</strong><small>{formatDate(valuation.created_at)} · {valuationTypeLabels[valuation.valuation_type] || valuation.valuation_type}{valuation.notes ? ` · ${valuation.notes}` : ''}</small></span><span className={`status ${valuation.status}`}>{completed ? 'Gespeichert' : valuation.status === 'cancelled' ? 'Abgebrochen' : 'Anfrage offen'}</span></div>;
+    })}</div> : <div className={styles.compactEmpty}><TrendingUp aria-hidden="true" /><div><strong>Noch keine Bewertung</strong><p>Eine Anfrage und eine bereits vorhandene Einschätzung werden getrennt im Verlauf dokumentiert.</p></div></div>}
 
     <SectionTitle>Ich möchte verkaufen</SectionTitle>
-    {!lead||lead.status==='cancelled'?<div className="sale-start-card"><Building2/><div className="grow"><strong>Passende Makler für dein Haus finden</strong><p>Wir vergleichen Suchprofile mit Lage, Immobilientyp, Fläche und – falls vorhanden – Wert. Noch werden keine Kontaktdaten an Makler weitergegeben.</p></div><form action={startSaleProcessAction}><button className="btn primary">Makler finden</button></form></div>:<>
-      <div className="privacy-banner"><LockKeyhole/><div><strong>Eigentümer entscheidet über jede Freigabe</strong><p>Makler werden zunächst nur dir vorgeschlagen. Erst mit „Kontakt freigeben“ sieht genau dieser Makler deine Kontaktdaten und eine begrenzte Objektzusammenfassung. Dokumente bleiben privat.</p></div></div>
-      <div className="broker-match-list">{matches.map((m:any)=><article key={m.id}><div className="broker-score"><span>{Math.round(m.match_score)}%</span><small>Passung</small></div><div className="grow"><strong>{m.business_name}</strong><p><ShieldCheck/> Geprüfter Partner · {m.rating_count?`${Number(m.rating).toFixed(1)} ★`:'neu im Netzwerk'}</p><small>Abgleich aus Suchgebiet, Immobilientyp, Flächen und Preisprofil.</small></div>{m.share_status==='active'?<form action={revokeBrokerContactAction.bind(null,m.id)}><button className="btn ghost">Freigabe widerrufen</button></form>:<form action={grantBrokerContactAction.bind(null,m.id)}><button className="btn primary">Kontakt freigeben</button></form>}</article>)}{matches.length===0&&<div className="empty"><UserRound/><strong>Noch kein passender Makler im Netzwerk</strong><p>Deine Verkaufsabsicht bleibt gespeichert. Neue passende Anbieter können später automatisch berücksichtigt werden.</p></div>}</div>
+    {!lead ? <div className="sale-start-card"><Building2 aria-hidden="true" /><div className="grow"><strong>Passende Makler für dein Haus finden</strong><p>Wir vergleichen aktive, geprüfte Makler-Suchprofile mit Lage, Immobilientyp, Nutzung, Fläche und – falls vorhanden – Wert. Noch werden keine Kontaktdaten weitergegeben.</p></div><form action={startSaleProcessAction}><button className="btn primary">Makler finden</button></form></div> : <>
+      <section className={styles.lifecycle} aria-labelledby="sale-status-title">
+        <div className={styles.lifecycleHead}><div><small id="sale-status-title">Aktueller Verkaufsstatus</small><strong>{saleStatusLabels[lead.status] || lead.status}</strong><span>Aktualisiert am {formatDate(lead.updated_at)}</span></div>{lead.status !== 'sold' && <form action={startSaleProcessAction}><button className="btn ghost"><RefreshCw size={16} aria-hidden="true" /> Maklerabgleich aktualisieren</button></form>}</div>
+        <ol>{saleStages.map(([status, label], index) => <li key={status} data-state={index < currentStage ? 'done' : index === currentStage ? 'current' : 'next'}><span>{index + 1}</span><div><strong>{label}</strong>{index === currentStage && <small>Aktueller Schritt</small>}</div></li>)}</ol>
+      </section>
+
+      <div className="privacy-banner"><LockKeyhole aria-hidden="true" /><div><strong>Du entscheidest über jede Freigabe</strong><p>Makler werden zunächst nur dir vorgeschlagen. Eine Freigabe gilt ausschließlich für die Verkaufsanbahnung und kann jederzeit widerrufen werden.</p></div></div>
+
+      <div className="broker-match-list">{matches.map((match: any) => {
+        const activeShare = match.share_status === 'active';
+        const permissions = permissionLabels(match.permissions_json);
+        return <article key={match.id} className={styles.brokerCard}><div className="broker-score"><span>{Math.round(match.match_score)}%</span><small>Passung</small></div><div className="grow"><strong>{match.business_name}</strong><p><ShieldCheck aria-hidden="true" /> Geprüfter Partner · {match.rating_count ? `${Number(match.rating).toFixed(1)} ★` : 'neu im Netzwerk'}</p><small>Abgleich aus Suchgebiet, Immobilientyp, Nutzung, Flächen und Preisprofil.</small>
+          {activeShare && <div className={styles.shareDetails}><span><b>Zweck:</b> Verkaufsanbahnung</span><span><b>Freigegeben:</b> {permissions.length ? permissions.join(', ') : 'keine Berechtigungen'}</span><span><b>Seit:</b> {formatDate(match.granted_at)}</span><span><b>Nicht enthalten:</b> private Nachrichten, Zahlungen, Rechnungen, Versicherungen und Hausdokumente</span></div>}
+          {activeShare && !match.eligibleNow && <p className={styles.warning}>Dieser Anbieter ist derzeit nicht für neue Makler-Matches freigegeben. Deine bestehende Freigabe bleibt deshalb sichtbar, damit du sie widerrufen kannst.</p>}
+        </div>{activeShare ? <form action={revokeBrokerShareAction.bind(null, match.id)}><button className="btn ghost">Freigabe widerrufen</button></form> : <form action={approveBrokerShareAction.bind(null, match.id)} className={styles.approvalForm}><label><input type="checkbox" name="confirmShare" value="yes" required /><span>Ich gebe {match.business_name} meine Kontaktdaten und die Objektzusammenfassung ausdrücklich für die Verkaufsanbahnung frei.</span></label><button className="btn primary">Freigabe erteilen</button></form>}</article>;
+      })}{matches.length === 0 && <div className="empty owner-empty-action"><UserRound aria-hidden="true" /><strong>Noch kein passender Makler im Netzwerk</strong><p>Deine Verkaufsabsicht bleibt gespeichert. Ohne passenden aktiven und geprüften Suchprofil-Treffer werden keine Kontaktdaten freigegeben.</p><Link className="btn ghost" href="/app/hausmeister"><MessageCircle size={16} aria-hidden="true" /> Frage zum Verkauf klären</Link></div>}</div>
     </>}
 
-    <div className="privacy-rules"><CheckCircle2/><div><strong>Was ein Makler niemals automatisch sieht</strong><p>Rechnungen, Versicherungen, private Nachrichten, Zahlungsdaten und vollständige Dokumente der Hausakte werden nicht freigegeben. Jede Freigabe ist zweckgebunden und widerrufbar.</p></div><ChevronRight/></div>
+    <div className="privacy-rules"><CheckCircle2 aria-hidden="true" /><div><strong>Klare Grenze der Verkaufsfreigabe</strong><p>Freigegeben werden nur Objektzusammenfassung und Kontaktdaten für den Zweck „Verkaufsanbahnung“. Private Nachrichten, Zahlungen, Rechnungen, Versicherungen und vollständige Dokumente bleiben außerhalb des Verkaufshandoffs.</p></div><ChevronRight aria-hidden="true" /></div>
   </AppShell>;
 }

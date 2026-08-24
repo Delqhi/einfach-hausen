@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import styles from './marketing.module.css';
 
@@ -43,7 +42,7 @@ export function Split({ children }: { children: React.ReactNode }) {
 }
 
 export function LinkButton({ href, children, secondary = false }: { href: string; children: React.ReactNode; secondary?: boolean }) {
-  return <Link className={secondary ? styles.secondaryButton : styles.primaryButton} href={href}>{children}{!secondary && <ArrowRight size={16} />}</Link>;
+  return <a className={secondary ? styles.secondaryButton : styles.primaryButton} href={href}>{children}{!secondary && <ArrowRight size={16} />}</a>;
 }
 
 export function BulletList({ items }: { items: readonly string[] }) {

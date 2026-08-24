@@ -36,6 +36,10 @@
   transform: translateY(0);
 }
 
+.mainAnchor:focus {
+  outline: none;
+}
+
 .ownerScope :global(.app-page) {
   background: var(--owner-bg);
   color: var(--owner-text);
@@ -241,6 +245,18 @@
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
+}
+
+.ownerScope :global(.owner-passport-empty) {
+  min-height: 60vh;
+}
+
+.ownerScope :global(.owner-passport-empty > svg) {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 12px;
+  color: var(--owner-green-700);
 }
 
 .ownerScope :global(.owner-loading-state) {
@@ -1195,6 +1211,28 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.ownerScope :global(.asset-form label) {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+  color: var(--owner-text);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.ownerScope :global(.asset-form label > span) {
+  padding-inline: 2px;
+}
+
+.ownerScope :global(.asset-form label small) {
+  color: var(--owner-muted);
+  font-weight: 500;
+}
+
+.ownerScope :global(.asset-form .btn) {
+  align-self: end;
+}
+
 .ownerScope :global(.house-history-list) {
   border-top: 1px solid var(--owner-border-strong);
 }
@@ -1370,6 +1408,32 @@
   color: var(--owner-green-700);
 }
 
+.ownerScope :global(.owner-empty-action) {
+  align-items: flex-start;
+}
+
+.ownerScope :global(.owner-empty-action .btn) {
+  width: auto;
+  min-height: 44px;
+  margin-top: 8px;
+}
+
+.ownerScope :global(.chat-form) {
+  min-width: 0;
+}
+
+.ownerScope :global(.chat-form input) {
+  min-width: 0;
+}
+
+.ownerScope :global(.claim-form label) {
+  display: grid;
+  gap: 7px;
+  color: var(--owner-text);
+  font-size: 13px;
+  font-weight: 650;
+}
+
 .ownerScope :global(.alert) {
   min-height: 46px;
   border-radius: 12px;
@@ -1527,8 +1591,18 @@
     justify-self: start;
   }
 
+  .ownerScope :global(.owner-empty-action .btn) {
+    width: 100%;
+    justify-content: center;
+  }
+
   .ownerScope :global(.asset-form) {
     grid-template-columns: 1fr;
+  }
+
+  .ownerScope :global(.asset-form .btn) {
+    width: 100%;
+    justify-content: center;
   }
 
   .ownerScope :global(.consultation-points),

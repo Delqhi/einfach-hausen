@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import styles from './marketing.module.css';
@@ -66,23 +65,25 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
       <a className={styles.skipLink} href="#main-content">Zum Inhalt springen</a>
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <Link className={styles.logoLink} href="/" aria-label="Einfach Hausen Startseite">
+          {/* Native navigation is intentional here to keep the public marketing shell hydration-free. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a className={styles.logoLink} href="/" aria-label="einfachhausen Startseite">
             <Logo />
-          </Link>
+          </a>
           <nav className={styles.desktopNav} aria-label="Hauptnavigation">
-            {primary.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}
+            {primary.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
           </nav>
           <div className={styles.headerActions}>
-            <Link className={styles.loginLink} href="/login">Einloggen</Link>
-            <Link className={styles.primaryButton} href="/register?role=homeowner">Kostenlos starten <ArrowRight size={16} /></Link>
+            <a className={styles.loginLink} href="/login">Einloggen</a>
+            <a className={styles.primaryButton} href="/register?role=homeowner">Kostenlos starten <ArrowRight size={16} /></a>
           </div>
           <details className={styles.mobileMenu}>
             <summary aria-label="Menü öffnen"><Menu className={styles.menuIcon} size={22} /><X className={styles.closeIcon} size={22} /></summary>
             <nav aria-label="Mobile Navigation">
-              {[...primary, ...mobileMore].map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}
+              {[...primary, ...mobileMore].map(([label, href]) => <a key={href} href={href}>{label}</a>)}
               <div className={styles.mobileMenuActions}>
-                <Link className={styles.secondaryButton} href="/login">Einloggen</Link>
-                <Link className={styles.primaryButton} href="/register?role=homeowner">Kostenlos starten</Link>
+                <a className={styles.secondaryButton} href="/login">Einloggen</a>
+                <a className={styles.primaryButton} href="/register?role=homeowner">Kostenlos starten</a>
               </div>
             </nav>
           </details>
@@ -92,7 +93,8 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
           <div className={styles.footerBrand}>
-            <Link href="/" aria-label="Einfach Hausen Startseite"><Logo /></Link>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a href="/" aria-label="einfachhausen Startseite"><Logo /></a>
             <p>Eine Anlaufstelle für alles rund ums Eigenheim: Anliegen einordnen, passende Menschen finden, Aufträge organisieren und Hauswissen behalten.</p>
             <span>© 2026 Einfach Hausen</span>
           </div>
@@ -101,7 +103,7 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
               <section key={group.title}>
                 <h2>{group.title}</h2>
                 <nav aria-label={group.title}>
-                  {group.links.map(([label, href]) => <Link key={`${group.title}-${href}-${label}`} href={href}>{label}</Link>)}
+                  {group.links.map(([label, href]) => <a key={`${group.title}-${href}-${label}`} href={href}>{label}</a>)}
                 </nav>
               </section>
             ))}
@@ -109,7 +111,7 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
         </div>
         <div className={styles.footerBottom}>
           <p>Einfach Hausen organisiert digital. Ausgeführt wird durch eigenständige, geprüfte Partnerbetriebe.</p>
-          <Link href="/kontakt">Kontakt</Link>
+          <a href="/kontakt">Kontakt</a>
         </div>
       </footer>
     </div>

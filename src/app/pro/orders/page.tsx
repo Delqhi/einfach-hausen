@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, ClipboardList, MessageCircle, UserRound } from 'lucide-react';
 import { AppShell } from '@/components/shell';
-import { ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
+import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { euro, statusLabel } from '@/lib/format';
@@ -31,6 +31,8 @@ export default async function Orders() {
         title="Aufträge & Kontakte"
         description={ctx.canManageJobs ? 'Vom gesendeten Angebot bis zur laufenden Arbeit: jeder Vorgang zeigt den aktuellen Stand und genau den nächsten sinnvollen Schritt.' : 'Du siehst ausschließlich Vorgänge, bei denen du als Ansprechpartner zugewiesen bist.'}
       />
+
+      <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
       <ProviderSectionHeader title="Arbeitsliste" description={`${rows.length} ${rows.length === 1 ? 'Vorgang' : 'Vorgänge'} im aktuellen Zugriff.`} />
       <div className="stack">

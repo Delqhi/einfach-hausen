@@ -2,24 +2,58 @@
 
 import { useEffect } from 'react';
 
+type InstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+};
+
 declare global {
   interface Window {
-    __ehInstallPrompt?: Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }> };
+    __ehInstallPrompt?: InstallPromptEvent;
   }
 }
 
-export function PwaRegister(){
-  useEffect(()=>{
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('/sw.js').catch(()=>{});
+function emit(name: 'eh-install-ready' | 'eh-install-complete' | 'eh-service-worker-ready') {
+  window.dispatchEvent(new Event(name));
+}
+
+export function PwaRegister() {
+  useEffect(() => {
+    let cancelled = false;
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js', { scope: '/', updateViaCache: 'none' })
+        .then(() => navigator.serviceWorker.ready)
+        .then(() => {
+          if (!cancelled) emit('eh-service-worker-ready');
+        })
+        .catch(() => {
+          // Registration failure must not break the web app. The settings page
+          // reports whether this browser is actually controlled by the worker.
+        });
     }
-    const onInstallPrompt=(event:Event)=>{
+
+    const onInstallPrompt = (event: Event) => {
       event.preventDefault();
-      window.__ehInstallPrompt=event as Window['__ehInstallPrompt'];
-      window.dispatchEvent(new Event('eh-install-ready'));
+      window.__ehInstallPrompt = event as InstallPromptEvent;
+      emit('eh-install-ready');
     };
-    window.addEventListener('beforeinstallprompt',onInstallPrompt);
-    return ()=>window.removeEventListener('beforeinstallprompt',onInstallPrompt);
-  },[]);
+
+    const onInstalled = () => {
+      window.__ehInstallPrompt = undefined;
+      emit('eh-install-complete');
+    };
+
+    window.addEventListener('beforeinstallprompt', onInstallPrompt);
+    window.addEventListener('appinstalled', onInstalled);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener('beforeinstallprompt', onInstallPrompt);
+      window.removeEventListener('appinstalled', onInstalled);
+    };
+  }, []);
+
   return null;
 }

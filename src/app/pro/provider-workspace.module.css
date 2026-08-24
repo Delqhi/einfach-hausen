@@ -1300,6 +1300,246 @@
   color: var(--provider-text);
 }
 
+
+.providerScope :global(.provider-access-boundary) {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: -12px 0 24px;
+  border: 1px solid var(--provider-border);
+  border-radius: 14px;
+  background: var(--provider-surface);
+  padding: 13px 15px;
+}
+
+.providerScope :global(.provider-access-boundary.is-on) {
+  border-color: #cfe2d5;
+  background: var(--provider-green-50);
+}
+
+.providerScope :global(.provider-access-boundary.is-off) {
+  background: #f5f6f5;
+}
+
+.providerScope :global(.provider-access-icon) {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--provider-green-100);
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.provider-access-boundary.is-off .provider-access-icon) {
+  background: #e8ebe9;
+  color: #59635d;
+}
+
+.providerScope :global(.provider-access-boundary strong) {
+  display: block;
+  color: var(--provider-text);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.providerScope :global(.provider-access-boundary p) {
+  margin: 3px 0 0;
+  color: var(--provider-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.providerScope :global(.provider-next-step) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 1.15fr);
+  align-items: start;
+  gap: 20px;
+  margin: 22px 0;
+  border: 1px solid #c9dfd0;
+  border-radius: 18px;
+  background: var(--provider-green-50);
+  padding: 20px;
+}
+
+.providerScope :global(.provider-next-step-single) {
+  grid-template-columns: 1fr;
+}
+
+.providerScope :global(.provider-next-step > div:first-child > span) {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--provider-green-700);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.providerScope :global(.provider-next-step > div:first-child > strong) {
+  display: block;
+  max-width: 520px;
+  color: var(--provider-text);
+  font-size: 17px;
+  line-height: 1.45;
+  font-weight: 650;
+}
+
+.providerScope :global(.provider-next-step-action) {
+  min-width: 0;
+}
+
+.providerScope :global(.provider-next-step-action > form),
+.providerScope :global(.provider-next-step-action > a) {
+  margin: 0;
+}
+
+.providerScope :global(.provider-next-step-action .provider-primary-form) {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.providerScope :global(.provider-next-step-action .quote-form) {
+  display: grid;
+  gap: 12px;
+}
+
+.providerScope :global(.provider-next-step-action .quote-form label),
+.providerScope :global(.provider-next-step-action .assign-form label) {
+  min-width: 0;
+}
+
+.providerScope :global(.provider-state-compact) {
+  min-height: 0;
+  align-items: center;
+  border-style: solid;
+  padding: 15px 16px;
+}
+
+.providerScope :global(.provider-state-compact .provider-state-icon) {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+
+.providerScope :global(.provider-state-compact strong) {
+  font-size: 14px;
+}
+
+.providerScope :global(.provider-state-compact p) {
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+.providerScope :global(.provider-disclosure) {
+  margin: 12px 0 20px;
+  border: 1px solid var(--provider-border);
+  border-radius: 14px;
+  background: var(--provider-surface);
+}
+
+.providerScope :global(.provider-disclosure > summary) {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+  padding: 12px 14px;
+  color: var(--provider-text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.providerScope :global(.provider-disclosure > summary::-webkit-details-marker) {
+  display: none;
+}
+
+.providerScope :global(.provider-disclosure > summary::after) {
+  content: '+';
+  margin-left: auto;
+  color: var(--provider-muted);
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.providerScope :global(.provider-disclosure[open] > summary::after) {
+  content: '−';
+}
+
+.providerScope :global(.provider-disclosure > .assign-form),
+.providerScope :global(.provider-form-disclosure > form) {
+  margin: 0;
+  border-width: 1px 0 0;
+  border-radius: 0 0 14px 14px;
+}
+
+.providerScope :global(.provider-disclosure-icon) {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--provider-green-100);
+  color: var(--provider-green-700);
+}
+
+.providerScope :global(.provider-form-disclosure > summary > span:last-child) {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.providerScope :global(.provider-form-disclosure > summary strong) {
+  color: var(--provider-text);
+  font-size: 13px;
+}
+
+.providerScope :global(.provider-form-disclosure > summary small) {
+  color: var(--provider-muted);
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.providerScope :global(.member-head),
+.providerScope :global(.contact-row),
+.providerScope :global(.pro-contact-card),
+.providerScope :global(.pro-request),
+.providerScope :global(.pro-appointment) {
+  min-width: 0;
+}
+
+.providerScope :global(.member-head small),
+.providerScope :global(.contact-row strong),
+.providerScope :global(.contact-row small),
+.providerScope :global(.contact-row p),
+.providerScope :global(.pro-contact-card strong),
+.providerScope :global(.pro-contact-card p),
+.providerScope :global(.pro-request strong),
+.providerScope :global(.pro-request small),
+.providerScope :global(.pro-appointment strong),
+.providerScope :global(.pro-appointment p) {
+  overflow-wrap: anywhere;
+}
+
+.providerScope :global(.document-form input[type='file']) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.providerScope :global(.direct-contact-actions) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 @media (max-width: 900px) {
   .providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
     padding-inline: 28px;
@@ -1311,6 +1551,30 @@
 }
 
 @media (max-width: 720px) {
+  .providerScope :global(.provider-next-step) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 17px;
+  }
+
+  .providerScope :global(.provider-next-step-action .btn),
+  .providerScope :global(.provider-next-step-action .provider-primary-action),
+  .providerScope :global(.provider-next-step-action form) {
+    width: 100%;
+  }
+
+  .providerScope :global(.provider-access-boundary) {
+    margin-top: -8px;
+  }
+
+  .providerScope :global(.provider-form-disclosure > summary) {
+    align-items: flex-start;
+  }
+
+  .providerScope :global(.provider-disclosure > .assign-form) {
+    padding: 14px;
+  }
+
   .providerScope :global(.provider-messages-layout) {
     grid-template-columns: 1fr;
     gap: 30px;

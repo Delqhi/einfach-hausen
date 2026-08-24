@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:e2e": "node scripts/e2e.mjs",
-    "test:security": "node scripts/security-regression.mjs",
+    "test:security": "node scripts/security-regression.mjs && node scripts/t0003-security-regression.mjs",
     "graph:update": "graphify update .",
     "graph:check": "graphify check-update .",
     "graph:install": "graphify hook install && graphify update .",
@@ -16,6 +16,7 @@
     "test:crm": "node scripts/crm-e2e.mjs",
     "test:e2e:architecture": "node scripts/e2e-architecture.mjs",
     "test:intake": "node scripts/t0004-intake-regression.mjs",
+    "test:matching": "node scripts/t0005-regression.mjs && node scripts/t0005-plus-regression.mjs",
     "test:t0005": "node scripts/t0005-plus-regression.mjs"
   },
   "dependencies": {

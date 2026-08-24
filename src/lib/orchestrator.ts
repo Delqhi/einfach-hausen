@@ -1,7 +1,9 @@
 import { db } from './db';
 import { analyzeRequest, answerHouseQuestion } from './request-ai';
 import { geocodePostcode, distanceKm, regionalPostcodeGeo } from './geocode';
-import { emergencyResponseScore, preferredRequestWindow } from './matching';
+import { berlinRequestTimestamp, emergencyAvailableAt, emergencyResponseScore, preferredRequestWindow } from './matching';
+import { resolveDispatchService, type DispatchService } from './dispatch-config';
+import { providerSupportsService } from './provider-directory';
 import { createNotification } from './notifications';
 import { getProviderManagerIds } from './provider';
 import { primaryProperty } from './properties';
@@ -10,64 +12,11 @@ export type HausmeisterIntent='service'|'contact';
 export type HausmeisterResult = { jobId:number; threadId:number; reply:string; providerCount:number; intent:HausmeisterIntent };
 export type HausmeisterAnswer = { threadId:number; reply:string };
 
-type ServiceRow={slug:string;title:string;category:string;keywords:string;estimate_min:number;estimate_max:number;requires_license:number};
+type ServiceRow=DispatchService&{estimate_min:number;estimate_max:number;requires_license:number};
 
-function findService(text:string, parsedCategory:string):ServiceRow{
+function findService(text:string,parsedCategory:string):ServiceRow{
   const services=db.prepare('SELECT * FROM service_catalog WHERE active=1').all() as ServiceRow[];
-  const normalized=text.toLowerCase();
-  let best:{row:ServiceRow;score:number}|null=null;
-  for(const row of services){
-    const words=row.keywords.split(',').map(x=>x.trim()).filter(Boolean);
-    let score=words.reduce((n,w)=>n+(normalized.includes(w)?3:0),0);
-    if(parsedCategory && row.category===parsedCategory) score+=2;
-    if(!best||score>best.score)best={row,score};
-  }
-  return best?.score ? best.row : (services.find(s=>s.slug==='sonstiges')||services[0]);
-}
-
-function partnerTradeMatch(trades:string,service:ServiceRow){
-  const text=(trades||'').toLowerCase();
-  if(!text)return false;
-  const category=service.category.toLowerCase();
-  const words=service.keywords.split(',').map(x=>x.trim().toLowerCase());
-  const aliases:Record<string,string[]>= {
-    'garten & außenbereich':['garten','galabau','landschaft','grünpflege','hausmeister'],
-    'reinigung':['reinigung','gebäudereinigung','putz','clean','fensterreinigung'],
-    'elektro':['elektro','elektrik','elektriker'],
-    'sanitär & heizung':['sanitär','shk','heizung','wärmepumpe'],
-    'montage & reparatur':['montage','reparatur','handwerk','hausmeister'],
-    'dach & fassade':['dach','dachdecker','fassade'],
-    'maler & ausbau':['maler','malerei','trockenbau','ausbau','renovierung'],
-    'umzug & transport':['umzug','transport','entrümpelung','spedition'],
-    'energie & smart home':['pv','photovoltaik','solar','energie','smart home','wallbox'],
-    'hausmeister & sonstiges':['hausmeister','service','allround','montage']
-  };
-  return text.includes(category)||[...(aliases[category]||[]),...words].some(w=>text.includes(w));
-}
-
-function berlinMinutesNow(){
-  const parts=new Intl.DateTimeFormat('de-DE',{timeZone:'Europe/Berlin',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
-  const hour=Number(parts.find(p=>p.type==='hour')?.value||0); const minute=Number(parts.find(p=>p.type==='minute')?.value||0);
-  return hour*60+minute;
-}
-
-function berlinWeekday(){
-  const short=new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Berlin',weekday:'short'}).format(new Date());
-  return ({Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6} as Record<string,number>)[short] ?? 0;
-}
-
-function timeToMinutes(value:string|undefined|null){
-  const match=String(value||'').match(/^(\d{1,2}):(\d{2})$/); if(!match)return null;
-  const hour=Number(match[1]),minute=Number(match[2]); if(hour>23||minute>59)return null; return hour*60+minute;
-}
-
-function emergencyAvailableNow(p:any){
-  if(p.emergency_mode==='24_7')return true;
-  const days=String(p.emergency_days||'1,2,3,4,5,6,0').split(',').map(Number).filter(Number.isInteger);
-  if(!days.includes(berlinWeekday()))return false;
-  const start=timeToMinutes(p.emergency_start),end=timeToMinutes(p.emergency_end); if(start===null||end===null)return false;
-  const now=berlinMinutesNow(); if(start===end)return true;
-  return start<end ? now>=start&&now<=end : now>=start||now<=end;
+  return resolveDispatchService(services,text,parsedCategory) as ServiceRow;
 }
 
 function getThread(userId:number,channel:'app'|'whatsapp'){
@@ -101,16 +50,19 @@ async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jo
   const preferredProviders=new Set((db.prepare('SELECT DISTINCT provider_id FROM homeowner_contacts WHERE homeowner_id=?').all(homeownerId) as Array<{provider_id:number}>).map(r=>r.provider_id));
   const jobTiming=db.prepare('SELECT preferred_date,preferred_time FROM jobs WHERE id=?').get(jobId) as {preferred_date:string|null;preferred_time:string|null}|undefined;
   const timingWindow=preferredRequestWindow({preferredDate:jobTiming?.preferred_date,preferredTime:jobTiming?.preferred_time});
+  if(requestKind==='service'&&timingWindow.expired)return 0;
   const shortNotice=timingWindow.shortNotice;
   const matches:{p:any;distance:number|null;score:number}[]=[];
   const jobPoint=jobGeo||regionalPostcodeGeo(jobPostcode);
+  const alreadyDispatched=new Set((db.prepare('SELECT provider_id FROM job_dispatches WHERE job_id=?').all(jobId) as Array<{provider_id:number}>).map(row=>row.provider_id));
   for(const p of partners){
+    if(alreadyDispatched.has(p.user_id))continue;
     const offerings=(db.prepare(`SELECT service_slug FROM provider_service_offerings WHERE provider_id=? AND active=1`).all(p.user_id) as Array<{service_slug:string}>).map(r=>r.service_slug);
-    if(offerings.length){if(!offerings.includes(service.slug)&&!offerings.includes('sonstiges'))continue;}else if(!partnerTradeMatch(p.trades,service))continue;
+    if(!providerSupportsService(offerings,p.trades,service))continue;
     if(requestKind==='contact'&&p.accepts_consultation===0)continue;
     if(requestKind==='service'&&p.accepts_normal_jobs===0)continue;
     if(requestKind==='service'&&shortNotice&&p.accepts_short_notice===0)continue;
-    if(requestKind==='emergency'&&(p.accepts_emergencies!==1||!emergencyAvailableNow(p)))continue;
+    if(requestKind==='emergency'&&(p.accepts_emergencies!==1||!emergencyAvailableAt({emergencyMode:p.emergency_mode,emergencyDays:p.emergency_days,emergencyStart:p.emergency_start,emergencyEnd:p.emergency_end})))continue;
     if(Number.isFinite(p.monthly_lead_limit)){
       const used=(db.prepare(`SELECT COUNT(*) c FROM job_dispatches WHERE provider_id=? AND sent_at>=datetime('now','start of month')`).get(p.user_id) as {c:number}).c;
       if(used>=Number(p.monthly_lead_limit))continue;
@@ -131,7 +83,7 @@ async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jo
     const score=quality*15+distanceScore+ratingScore+existingRelationship+capacityScore+emergencyScore;
     matches.push({p,distance,score});
   }
-  matches.sort((a,b)=>b.score-a.score);
+  matches.sort((a,b)=>b.score-a.score||((a.distance??Number.POSITIVE_INFINITY)-(b.distance??Number.POSITIVE_INFINITY))||Number(a.p.user_id)-Number(b.p.user_id));
   const insert=db.prepare(`INSERT OR IGNORE INTO job_dispatches(job_id,provider_id,status,match_score,distance_km) VALUES(?,?,'sent',?,?)`);
   let created=0;
   const limit=requestKind==='contact'?8:requestKind==='emergency'?12:30;
@@ -230,7 +182,8 @@ export async function createEmergencyRequest(userId:number,emergencyType:string,
   const label=labels[emergencyType]||labels.other; const combined=`${label}. ${description}`.trim(); const parsed=await analyzeRequest(combined); const service=findService(combined,parsed.category); const postcode=parsed.postcode||user.postcode||'';
   let geo=Number.isFinite(user.lat)&&Number.isFinite(user.lon)?{lat:user.lat,lon:user.lon}:null; if(!geo&&postcode)geo=await geocodePostcode(postcode);
   const property=primaryProperty(userId);
-  const result=db.prepare(`INSERT INTO jobs(homeowner_id,title,description,category,postcode,preferred_date,preferred_time,budget_min,budget_max,service_slug,source_channel,request_kind,lat,lon,urgency,emergency_type,property_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'emergency',?,?)`).run(userId,`Notfall: ${label}`,combined,service.category,postcode,new Date().toISOString().slice(0,10),new Date().toTimeString().slice(0,5),service.estimate_min,service.estimate_max,service.slug,'app','service',geo?.lat??null,geo?.lon??null,emergencyType,property?.id??null);
+  const emergencyNow=berlinRequestTimestamp();
+  const result=db.prepare(`INSERT INTO jobs(homeowner_id,title,description,category,postcode,preferred_date,preferred_time,budget_min,budget_max,service_slug,source_channel,request_kind,lat,lon,urgency,emergency_type,property_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'emergency',?,?)`).run(userId,`Notfall: ${label}`,combined,service.category,postcode,emergencyNow.date,emergencyNow.time,service.estimate_min,service.estimate_max,service.slug,'app','service',geo?.lat??null,geo?.lon??null,emergencyType,property?.id??null);
   const jobId=Number(result.lastInsertRowid); const providerCount=await dispatchJob(jobId,userId,service,postcode,geo,'emergency');
   createNotification(userId,'Notfallsuche gestartet',providerCount?`${providerCount} passende Helfer in deiner Region wurden sofort angefragt.`:'Aktuell ist kein freigegebener Notfallhelfer automatisch verfügbar. Dein Vorgang bleibt offen.',`/app/jobs/${jobId}`,'emergency');
   return {jobId,providerCount};

@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { ArrowRight, Building2, CalendarDays, ClipboardList, MapPin, MessageSquare, ShieldAlert, ShieldCheck, UserRound, Users } from 'lucide-react';
 import { AppShell } from '@/components/shell';
-import { ProviderPageIntro, ProviderSectionHeader, ProviderState, ProviderStatusLine } from '@/components/provider/workspace';
+import { JobMedia } from '@/components/job-media';
+import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, ProviderState, ProviderStatusLine } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel, euro, statusLabel } from '@/lib/format';
+import { mediaKindFromPath } from '@/lib/intake-media';
 import { getProviderContext } from '@/lib/provider';
 import { providerHasCategory } from '@/lib/provider-categories';
 
@@ -47,10 +49,13 @@ export default async function Pro() {
   }
 
   const requests = ctx.canManageJobs
-    ? db.prepare(`SELECT d.id dispatch_id,d.status dispatch_status,d.match_score,d.distance_km,d.sent_at,j.*,(SELECT path FROM job_photos x WHERE x.job_id=j.id LIMIT 1) photo,(SELECT amount FROM quotes q WHERE q.job_id=j.id AND q.provider_id=?) my_quote FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status IN ('sent','viewed','quoted') AND j.status IN ('open','quoted') ORDER BY d.sent_at DESC LIMIT 30`).all(ctx.providerId, ctx.providerId) as any[]
+    ? db.prepare(`SELECT d.id dispatch_id,d.status dispatch_status,d.match_score,d.distance_km,d.sent_at,j.*,(SELECT id FROM job_photos x WHERE x.job_id=j.id LIMIT 1) photo_id,(SELECT path FROM job_photos x WHERE x.job_id=j.id LIMIT 1) photo_path,(SELECT amount FROM quotes q WHERE q.job_id=j.id AND q.provider_id=?) my_quote FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status IN ('sent','viewed','quoted') AND j.status IN ('open','quoted') ORDER BY d.sent_at DESC LIMIT 30`).all(ctx.providerId, ctx.providerId) as any[]
     : [];
   const assigned = db.prepare(`SELECT j.*,q.amount,u.first_name homeowner_first,u.last_name homeowner_last FROM job_assignments a JOIN jobs j ON j.id=a.job_id LEFT JOIN quotes q ON q.id=j.accepted_quote_id JOIN users u ON u.id=j.homeowner_id WHERE a.provider_id=? AND a.contact_user_id=? AND j.status IN ('accepted','in_progress') ORDER BY j.updated_at DESC LIMIT 30`).all(ctx.providerId, u.id) as any[];
-  const companyOpen = (db.prepare(`SELECT COUNT(*) c FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status='accepted' AND j.status!='completed'`).get(ctx.providerId) as any).c;
+  const companyOpen = ctx.canManageJobs
+    ? (db.prepare(`SELECT COUNT(*) c FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status='accepted' AND j.status!='completed'`).get(ctx.providerId) as any).c
+    : 0;
+  const assignedInProgress = assigned.filter((job) => job.status === 'in_progress').length;
   const today = (db.prepare(`SELECT COUNT(*) c FROM appointments WHERE contact_user_id=? AND date(start_at)=date('now','localtime') AND status='confirmed'`).get(u.id) as any).c;
   const sub = db.prepare(`SELECT s.status,p.title FROM partner_subscriptions s JOIN partner_plans p ON p.slug=s.plan_slug WHERE s.provider_id=?`).get(ctx.providerId) as any;
   const broker = providerHasCategory(ctx.providerId, 'makler');
@@ -68,6 +73,8 @@ export default async function Pro() {
         action={ctx.canManageJobs && newRequestCount > 0 ? { href: `/pro/jobs/${requests.find((job) => job.dispatch_status === 'sent')?.id}`, label: 'Nächste Anfrage prüfen' } : assigned[0] ? { href: `/pro/jobs/${assigned[0].id}`, label: 'Nächsten Auftrag öffnen' } : undefined}
       />
 
+      <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
+
       <div className="partner-standard-banner">
         <ShieldCheck size={19} />
         <div>
@@ -78,7 +85,7 @@ export default async function Pro() {
 
       <div className="provider-summary" aria-label="Arbeitsüberblick">
         <div><small>{ctx.canManageJobs ? 'Neue Anfragen' : 'Meine Aufträge'}</small><strong>{ctx.canManageJobs ? newRequestCount : assigned.length}</strong></div>
-        <div><small>Offen im Betrieb</small><strong>{companyOpen}</strong></div>
+        <div><small>{ctx.canManageJobs ? 'Offen im Betrieb' : 'Davon in Arbeit'}</small><strong>{ctx.canManageJobs ? companyOpen : assignedInProgress}</strong></div>
         <div><small>Meine Termine heute</small><strong>{today}</strong></div>
       </div>
 
@@ -117,7 +124,7 @@ export default async function Pro() {
                     <small><ClipboardList /> {job.description.length > 96 ? `${job.description.slice(0, 96)}…` : job.description}</small>
                     <span className="provider-next-action">{nextAction} <ArrowRight size={14} /></span>
                   </div>
-                  {job.photo && <img src={job.photo} alt="" />}
+                  {job.photo_id && <JobMedia src={`/api/job-media/${job.photo_id}`} alt="Foto, Video oder Sprachnachricht zur Anfrage" kind={mediaKindFromPath(job.photo_path)} />}
                   <div className="provider-row-side">
                     <span className={`status ${job.dispatch_status}`}>{job.my_quote ? 'Angebot gesendet' : 'Offen'}</span>
                     <strong>{job.request_kind === 'contact' ? 'Kein Preis nötig' : job.my_quote ? euro(job.my_quote) : job.budget_min && job.budget_max ? `${euro(job.budget_min)} – ${euro(job.budget_max)}` : euro(job.budget_max)}</strong>

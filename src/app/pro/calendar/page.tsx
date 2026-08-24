@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, CalendarDays, UserRound } from 'lucide-react';
 import { AppShell } from '@/components/shell';
-import { ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
+import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel, statusLabel } from '@/lib/format';
@@ -23,6 +23,8 @@ export default async function ProCalendar() {
         title="Termine"
         description={ctx.canManageJobs ? 'Bestätigte Kundentermine des Betriebs in einer ruhigen Arbeitsliste.' : 'Nur bestätigte Termine, bei denen du als Ansprechpartner hinterlegt bist.'}
       />
+      <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
+
       <ProviderSectionHeader title="Bevorstehend" description={`${rows.length} ${rows.length === 1 ? 'Termin' : 'Termine'}`} />
       <div className="stack">
         {rows.map((row) => (

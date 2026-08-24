@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { AlertTriangle, ArrowRight, CalendarDays, CheckCircle2, House, MessageCircle, ShieldCheck, Wrench } from 'lucide-react';
 import { AppShell } from '@/components/shell';
-import { HausmeisterComposer } from '@/components/hausmeister-composer';
+import { HomeownerHausmeisterComposer } from '@/components/homeowner/homeowner-hausmeister-composer';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel } from '@/lib/format';
@@ -31,7 +31,7 @@ export default async function Dashboard() {
             <p>Schreib, sprich oder zeig per Foto, was los ist. Wir klären zuerst dein Anliegen. Einen Ansprechpartner oder Auftrag startest du nur, wenn du das ausdrücklich auswählst.</p>
           </div>
           <div id="dashboard-composer" className="owner-dashboard-composer">
-            <HausmeisterComposer />
+            <HomeownerHausmeisterComposer />
           </div>
           <div className="owner-copilot-meta">
             <span><ShieldCheck aria-hidden="true" /> Kein Auftrag ohne deine Freigabe</span>
@@ -83,7 +83,7 @@ export default async function Dashboard() {
               )}
             </div>
           ) : (
-            <div className="owner-calm-state">
+            <div className="owner-calm-state" role="status">
               <CheckCircle2 aria-hidden="true" />
               <div><strong>Gerade ist nichts dringend.</strong><p>Wenn etwas auftaucht, beschreib es oben einfach in deinen eigenen Worten.</p></div>
             </div>

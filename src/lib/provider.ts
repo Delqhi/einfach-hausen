@@ -14,7 +14,13 @@ export function getProviderContext(userId:number):ProviderContext|null{
   const row=db.prepare(`SELECT m.user_id,m.provider_id,m.job_title,m.can_manage_jobs,m.active,p.business_name
     FROM provider_members m JOIN provider_profiles p ON p.user_id=m.provider_id
     WHERE m.user_id=? LIMIT 1`).get(userId) as any;
-  if(row)return {userId,providerId:row.provider_id,isOwner:row.provider_id===userId,canManageJobs:!!row.can_manage_jobs,jobTitle:row.job_title||'',active:!!row.active,businessName:row.business_name};
+  // App-Zugang AUS is an authority boundary, not merely a UI preference.
+  // Returning no context makes every existing provider action/page that relies on
+  // this helper fail closed for deactivated team members.
+  if(row){
+    if(!row.active)return null;
+    return {userId,providerId:row.provider_id,isOwner:row.provider_id===userId,canManageJobs:!!row.can_manage_jobs,jobTitle:row.job_title||'',active:true,businessName:row.business_name};
+  }
   const own=db.prepare('SELECT business_name FROM provider_profiles WHERE user_id=?').get(userId) as {business_name:string}|undefined;
   if(!own)return null;
   db.prepare(`INSERT OR IGNORE INTO provider_members(provider_id,user_id,job_title,can_manage_jobs,active) VALUES(?,?,'Geschäftsführung',1,1)`).run(userId,userId);
