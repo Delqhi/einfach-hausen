@@ -18,6 +18,14 @@ done
 node_major="$($NODE_BIN -p 'process.versions.node.split(".")[0]')"
 [[ "$node_major" == "22" ]] || { echo "Deployment requires Node 22; found major $node_major" >&2; exit 1; }
 
+# npm itself uses `#!/usr/bin/env node`; prepend the validated Node 22 runtime so
+# npm lifecycle scripts and Next.js workers cannot fall back to /usr/bin/node.
+export PATH="$NODE_BIN_DIR:$PATH"
+[[ "$(node -p 'process.versions.node.split(".")[0]')" == "22" ]] || {
+  echo 'Failed to activate Node 22 for the deployment process.' >&2
+  exit 1
+}
+
 cd "$APP_DIR"
 [[ "$(git branch --show-current)" == "main" ]] || { echo 'Deployment requires the main branch.' >&2; exit 1; }
 
