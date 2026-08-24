@@ -8,6 +8,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const scratch=fs.mkdtempSync(path.join(os.tmpdir(),'eh-t0004-src-'));
 const dbDir=fs.mkdtempSync(path.join(os.tmpdir(),'eh-t0004-db-'));
 process.env.DATABASE_PATH=path.join(dbDir,'regression.db');
+process.chdir(dbDir);
 fs.symlinkSync(path.join(root,'node_modules'),path.join(scratch,'node_modules'),'dir');
 for(const rel of ['src/lib/db.ts','src/lib/request-ai.ts','src/lib/intake-media.ts','src/lib/whatsapp-media.ts']){
   const src=fs.readFileSync(path.join(root,rel),'utf8');
@@ -55,7 +56,7 @@ try{
   check('WhatsApp verifies signature before handling media',wa.indexOf('verifyMetaSignature(rawBody')<wa.indexOf('downloadWhatsAppMedia(msg)'));
   check('WhatsApp answers first and requires an explicit intent',wa.includes("answerHausmeisterQuestion(user.id,body,'whatsapp',mediaPath)")&&wa.includes('const intent=explicitIntent(body)'));
   const mediaRoute=fs.readFileSync(path.join(root,'src/app/api/job-media/[id]/route.ts'),'utf8');
-  check('private media route returns audio MIME types',mediaRoute.includes("e==='.ogg'?'audio/ogg'")&&mediaRoute.includes("e==='.mp3'?'audio/mpeg'"));
+  check('private media route returns audio MIME types',mediaRoute.includes("ext==='.ogg'?'audio/ogg'")&&mediaRoute.includes("ext==='.mp3'?'audio/mpeg'"));
 
   console.log(`\n${passed} passed, ${failures.length} failed`);
   if(failures.length){console.error(failures.map(f=>` - ${f}`).join('\n'));process.exitCode=1;}

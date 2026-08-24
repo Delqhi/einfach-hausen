@@ -9,6 +9,7 @@ const scratch=fs.mkdtempSync(path.join(os.tmpdir(),'eh-t0005-src-'));
 const dbDir=fs.mkdtempSync(path.join(os.tmpdir(),'eh-t0005-db-'));
 process.env.DATABASE_PATH=path.join(dbDir,'regression.db');
 process.env.NODE_ENV='production';
+process.chdir(dbDir);
 fs.symlinkSync(path.join(root,'node_modules'),path.join(scratch,'node_modules'),'dir');
 for(const rel of ['src/lib/db.ts','src/lib/maintenance.ts','src/lib/geocode.ts','src/lib/matching.ts']){
   const src=fs.readFileSync(path.join(root,rel),'utf8');

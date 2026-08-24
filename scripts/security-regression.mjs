@@ -12,6 +12,7 @@
 // multi-writer limiter contention, concurrent session rotation, and populated
 // legacy-schema migration — not just in-process helper calls.
 import { execFileSync, spawn } from 'node:child_process';
+import { randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -75,7 +76,9 @@ if (!process.env.EH_SEC_SCRATCH) {
 
 const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'eh-security-'));
 process.env.DATABASE_PATH = path.join(tmpDir, 'regression.db');
+process.chdir(tmpDir);
 const SCRATCH = process.env.EH_SEC_SCRATCH;
+const fixtureAdminPassword = `SecurityE2E!${randomBytes(18).toString('base64url')}`;
 
 let passed = 0;
 const failures = [];
@@ -91,6 +94,7 @@ function childEnv(extra = {}) {
 // Run a short module snippet as a separate OS process using the scratch modules.
 function runNode(code, extraEnv = {}, stdio = ['ignore', 'pipe', 'pipe']) {
   return execFileSync(process.execPath, ['--input-type=module', '-e', code], {
+    cwd: SCRATCH,
     env: childEnv(extraEnv), encoding: 'utf8', stdio,
   });
 }
@@ -299,9 +303,9 @@ function constraintThrowedCheck(v) { return v; }
 
 console.log('\n[AC03] Admin credential comparison + audit events');
 {
-  process.env.ADMIN_PASSWORD = 'correct-horse-battery-staple';
-  check('correct password accepted', adminAuth.adminPasswordMatches('correct-horse-battery-staple') === true);
-  check('wrong password rejected', adminAuth.adminPasswordMatches('wrong-horse-battery-staple') === false);
+  process.env.ADMIN_PASSWORD = fixtureAdminPassword;
+  check('correct password accepted', adminAuth.adminPasswordMatches(fixtureAdminPassword) === true);
+  check('wrong password rejected', adminAuth.adminPasswordMatches(`wrong-${fixtureAdminPassword}`) === false);
   check('short input rejected without length oracle shortcut', adminAuth.adminPasswordMatches('x') === false);
   check('oversized input rejected', adminAuth.adminPasswordMatches('x'.repeat(500)) === false);
 }
@@ -333,7 +337,7 @@ console.log('\n[AC03] Admin credential comparison + audit events');
   const rows = db.prepare("SELECT actor,action,target,detail FROM admin_audit_log ORDER BY id DESC LIMIT 2").all();
   check('authority events audited', rows.length === 2 && rows[1].action === 'login_fail' && rows[0].action === 'verification_review');
   const blob = JSON.stringify(rows);
-  check('audit stores no password/token material', !blob.includes('correct-horse') && !blob.includes('password'));
+  check('audit stores no password/token material', !blob.includes(fixtureAdminPassword) && !blob.includes('password'));
   logSecurityEvent('security_validation_reject', 'register', 'x'.repeat(2000));
   const ev = db.prepare("SELECT detail FROM security_events WHERE kind='security_validation_reject' ORDER BY id DESC LIMIT 1").get();
   check('security event details bounded', ev.detail.length <= 500);
@@ -475,7 +479,7 @@ console.log('\n[AC05] Global security headers + preserved cache rules');
      const hsts=g.headers.find(h=>h.key==='Strict-Transport-Security');
      const pp=g.headers.find(h=>h.key==='Permissions-Policy').value;
      console.log(JSON.stringify({hasHsts:!!hsts,csp:g.headers.some(h=>h.key==='Content-Security-Policy'),pp}));`,
-  ], { cwd: root, encoding: 'utf8' });
+  ], { cwd: SCRATCH, encoding: 'utf8' });
   const devResult = JSON.parse(devProbe.trim().split('\n').pop());
   check('HSTS omitted in development', devResult.hasHsts === false && devResult.csp === true);
   check('microphone self-scoped also in development', devResult.pp.includes('microphone=(self)'));

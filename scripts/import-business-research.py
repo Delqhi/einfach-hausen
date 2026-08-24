@@ -24,13 +24,17 @@ CREATE TABLE IF NOT EXISTS crm_leads (
   email TEXT NOT NULL DEFAULT '', phone TEXT NOT NULL DEFAULT '', website TEXT NOT NULL DEFAULT '', profile_url TEXT NOT NULL DEFAULT '', socials_json TEXT NOT NULL DEFAULT '[]',
   status TEXT NOT NULL DEFAULT 'collected', contact_permission TEXT NOT NULL DEFAULT 'unknown', source_type TEXT NOT NULL DEFAULT 'manual', source_detail TEXT NOT NULL DEFAULT '',
   source_external_id TEXT NOT NULL DEFAULT '', source_payload_json TEXT NOT NULL DEFAULT '{}', notes TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, last_seen_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, last_contacted_at TEXT, converted_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, last_seen_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, last_contacted_at TEXT, next_follow_up_at TEXT, converted_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  normalized_email TEXT NOT NULL DEFAULT '', normalized_phone TEXT NOT NULL DEFAULT '', normalized_profile_url TEXT NOT NULL DEFAULT ''
 );
 CREATE INDEX IF NOT EXISTS idx_crm_status ON crm_leads(status,updated_at DESC);
 CREATE INDEX IF NOT EXISTS idx_crm_type ON crm_leads(lead_type,status);
 CREATE INDEX IF NOT EXISTS idx_crm_location ON crm_leads(country,postcode,locality);
 CREATE INDEX IF NOT EXISTS idx_crm_category ON crm_leads(category);
 CREATE INDEX IF NOT EXISTS idx_crm_source_external ON crm_leads(source_type,source_external_id);
+CREATE INDEX IF NOT EXISTS idx_crm_normalized_email ON crm_leads(normalized_email) WHERE normalized_email!='';
+CREATE INDEX IF NOT EXISTS idx_crm_normalized_phone ON crm_leads(normalized_phone) WHERE normalized_phone!='';
+CREATE INDEX IF NOT EXISTS idx_crm_normalized_profile ON crm_leads(normalized_profile_url) WHERE normalized_profile_url!='';
 CREATE TABLE IF NOT EXISTS crm_events (
   id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id TEXT NOT NULL REFERENCES crm_leads(id) ON DELETE CASCADE, event_type TEXT NOT NULL,
   channel TEXT NOT NULL DEFAULT '', direction TEXT NOT NULL DEFAULT '', note TEXT NOT NULL DEFAULT '', metadata_json TEXT NOT NULL DEFAULT '{}', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -56,6 +60,41 @@ def count_by_source(c: sqlite3.Connection) -> dict[str, int]:
     return dict(c.execute("SELECT source_type,count(*) FROM crm_leads WHERE source_type LIKE 'business_research%' GROUP BY source_type"))
 
 
+def ensure_crm_columns(c: sqlite3.Connection) -> None:
+    existing = {row[1] for row in c.execute("PRAGMA table_info('crm_leads')")}
+    additions = {
+        "next_follow_up_at": "next_follow_up_at TEXT",
+        "normalized_email": "normalized_email TEXT NOT NULL DEFAULT ''",
+        "normalized_phone": "normalized_phone TEXT NOT NULL DEFAULT ''",
+        "normalized_profile_url": "normalized_profile_url TEXT NOT NULL DEFAULT ''",
+    }
+    for name, definition in additions.items():
+        if name not in existing:
+            c.execute(f"ALTER TABLE crm_leads ADD COLUMN {definition}")
+    c.executescript("""
+      CREATE INDEX IF NOT EXISTS idx_crm_normalized_email ON crm_leads(normalized_email) WHERE normalized_email!='';
+      CREATE INDEX IF NOT EXISTS idx_crm_normalized_phone ON crm_leads(normalized_phone) WHERE normalized_phone!='';
+      CREATE INDEX IF NOT EXISTS idx_crm_normalized_profile ON crm_leads(normalized_profile_url) WHERE normalized_profile_url!='';
+    """)
+
+
+def refresh_normalized_identity(c: sqlite3.Connection) -> None:
+    rows = c.execute("SELECT id,email,phone,profile_url FROM crm_leads").fetchall()
+    update = "UPDATE crm_leads SET normalized_email=?,normalized_phone=?,normalized_profile_url=? WHERE id=?"
+    for lead_id, email, phone, profile_url in rows:
+        normalized_email = "".join(str(email or "").strip().lower().split())
+        if "@" not in normalized_email:
+            normalized_email = ""
+        normalized_phone = "".join(ch for ch in str(phone or "") if ch.isdigit())
+        if normalized_phone.startswith("00"):
+            normalized_phone = normalized_phone[2:]
+        if len(normalized_phone) < 7:
+            normalized_phone = ""
+        normalized_profile = str(profile_url or "").strip().lower().rstrip("/")
+        c.execute(update, (normalized_email, normalized_phone, normalized_profile, lead_id))
+    c.execute("UPDATE crm_leads SET status='do_not_contact',contact_permission='do_not_contact',next_follow_up_at=NULL WHERE status='do_not_contact' OR contact_permission='do_not_contact'")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", default=DEFAULT_SOURCE)
@@ -77,7 +116,10 @@ def main() -> int:
     c.execute("PRAGMA temp_store=MEMORY")
     c.execute("PRAGMA foreign_keys=ON")
     c.executescript(SCHEMA)
+    ensure_crm_columns(c)
+    refresh_normalized_identity(c)
     before = count_by_source(c)
+    source_before = {row[0]: (row[1], row[2]) for row in c.execute("SELECT id,source_type,source_detail FROM crm_leads WHERE source_type LIKE 'business_research%'")}
     c.execute("ATTACH DATABASE ? AS research", (str(source),))
 
     lim = f" LIMIT {int(args.limit)}" if args.limit else ""
@@ -110,6 +152,12 @@ def main() -> int:
                     'unknown','business_research_property',coalesce(source_provider,'open_data'),id,json_object('provider',source_provider,'externalId',source_external_id,'lat',lat,'lon',lon),
                     'Nicht-personenbezogene Objektchance aus offenen Daten'
                   FROM research.property_opportunities WHERE 1{lim} ON CONFLICT(id) DO UPDATE SET {REFRESH}""")
+        with c:
+            refresh_normalized_identity(c)
+            for lead_id, source_type, source_detail in c.execute("SELECT id,source_type,source_detail FROM crm_leads WHERE source_type LIKE 'business_research%'").fetchall():
+                previous = source_before.get(lead_id)
+                if previous and previous != (source_type, source_detail):
+                    c.execute("INSERT INTO crm_events(lead_id,event_type,note,metadata_json) VALUES(?,'source_changed','Research-Quelle aktualisiert',?)", (lead_id, json.dumps({"from": previous, "to": [source_type, source_detail]}, ensure_ascii=False)))
         after = count_by_source(c)
     finally:
         c.execute("DETACH DATABASE research")

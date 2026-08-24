@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { createHmac } from 'node:crypto';
+import { createHmac,randomBytes } from 'node:crypto';
 import { fileURLToPath,pathToFileURL } from 'node:url';
 import { stripTypeScriptTypes } from 'node:module';
 
@@ -9,6 +9,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const scratch=fs.mkdtempSync(path.join(os.tmpdir(),'eh-t0003-src-'));
 const dbDir=fs.mkdtempSync(path.join(os.tmpdir(),'eh-t0003-db-'));
 process.env.DATABASE_PATH=path.join(dbDir,'regression.db');
+process.chdir(dbDir);
 fs.symlinkSync(path.join(root,'node_modules'),path.join(scratch,'node_modules'),'dir');
 
 const sources=['src/lib/db.ts','src/lib/security/webhooks.ts','src/lib/security/private-files.ts'];
@@ -28,7 +29,7 @@ try{
 
   console.log('\n[WhatsApp signature + no-state-change]');
   const raw=JSON.stringify({entry:[{changes:[{value:{messages:[{id:'wamid.1',from:'491234',type:'text',text:{body:'Hallo'}}]}}]}]});
-  const secret='fixture-meta-secret';
+  const secret=randomBytes(24).toString('hex');
   const good=`sha256=${createHmac('sha256',secret).update(raw).digest('hex')}`;
   const before=db.prepare('SELECT COUNT(*) c FROM webhook_events').get().c;
   check('missing Meta signature rejected',hooks.verifyMetaSignature(raw,null,secret)===false);
@@ -41,6 +42,25 @@ try{
   check('WhatsApp replay claim is denied',hooks.claimWebhookEvent('whatsapp','wamid.1')===false);
   hooks.completeWebhookEvent('whatsapp','wamid.1');
   check('WhatsApp claim persisted processed state',db.prepare("SELECT status FROM webhook_events WHERE source='whatsapp' AND event_id='wamid.1'").get()?.status==='processed');
+
+
+  console.log('\n[WhatsApp collision-safe account resolution]');
+  const waSource=fs.readFileSync(path.join(root,'src/app/api/whatsapp/webhook/route.ts'),'utf8');
+  const helperMatch=waSource.match(/function normalizePhone[\s\S]*?function resolveWhatsAppUser[\s\S]*?\n}\n/);
+  if(!helperMatch)throw new Error('WhatsApp phone resolver source not found');
+  const helperModule=stripTypeScriptTypes(`${helperMatch[0]}\nexport { resolveWhatsAppUser };`);
+  const helperPath=path.join(scratch,'whatsapp-resolver.mjs');fs.writeFileSync(helperPath,helperModule);
+  const {resolveWhatsAppUser}=await import(pathToFileURL(helperPath).href);
+  const users=[
+    {id:1,role:'homeowner',phone:'+49 151 12345678'},
+    {id:2,role:'homeowner',phone:'+43 151 12345678'},
+    {id:3,role:'provider',phone:'+49 170 22223333'},
+  ];
+  check('exact normalized WhatsApp phone resolves uniquely',resolveWhatsAppUser(users,'004915112345678')?.id===1);
+  check('ambiguous 10-digit suffix fails closed',resolveWhatsAppUser(users,'15112345678')===null);
+  check('short incoming phone fails closed',resolveWhatsAppUser(users,'1234567')===null);
+  check('duplicate exact stored phone fails closed',resolveWhatsAppUser([...users,{id:4,role:'homeowner',phone:'+49 151 12345678'}],'4915112345678')===null);
+  check('unique provider phone still resolves for role separation',resolveWhatsAppUser(users,'4917022223333')?.id===3);
 
   console.log('\n[Stripe authoritative replay idempotency]');
   db.exec(`CREATE TABLE mutation_probe(id INTEGER PRIMARY KEY,value INTEGER NOT NULL); INSERT INTO mutation_probe(id,value) VALUES(1,0);`);
@@ -71,7 +91,7 @@ try{
   check('admin allowed explicitly',files.canReadJobMedia(null,10,false,true)===true);
 
   console.log('\n[Route/source authority invariants]');
-  const wa=fs.readFileSync(path.join(root,'src/app/api/whatsapp/webhook/route.ts'),'utf8');
+  const wa=waSource;
   check('WhatsApp reads raw body before JSON parse',wa.indexOf('await req.text()')<wa.indexOf('JSON.parse(rawBody)'));
   check('WhatsApp verifies signature before message iteration',wa.indexOf('verifyMetaSignature')<wa.indexOf('for(const entry'));
   const stripeRoute=fs.readFileSync(path.join(root,'src/app/api/stripe/webhook/route.ts'),'utf8');
@@ -82,9 +102,10 @@ try{
     check(`${rel} exposes configured/unconfigured outcome`,source.includes('configured')&&source.includes('unavailable'));
   }
   const actions=fs.readFileSync(path.join(root,'src/app/actions.ts'),'utf8');
-  check('new job media is stored below data/private',actions.includes("'data','private','job-media'")&&!actions.includes("saveUpload(photo"));
+  const intakeMedia=fs.readFileSync(path.join(root,'src/lib/intake-media.ts'),'utf8');
+  check('new job media is stored below data/private',actions.includes("from '@/lib/intake-media'")&&actions.includes('savePrivateMediaUpload')&&intakeMedia.includes("'data', 'private', 'job-media'")&&!actions.includes('saveUpload(photo'));
   const jobMedia=fs.readFileSync(path.join(root,'src/app/api/job-media/[id]/route.ts'),'utf8');
-  check('job media route authenticates and fails cross-user closed',jobMedia.includes('getCurrentUser')&&jobMedia.includes('canReadJobMedia')&&jobMedia.includes("status:403")&&jobMedia.includes('resolvePrivatePath'));
+  check('job media route authenticates and fails cross-user closed',jobMedia.includes('getCurrentUser')&&jobMedia.includes('canReadJobMedia')&&jobMedia.includes('return notFound()')&&jobMedia.includes('resolvePrivateFile'));
 
   console.log(`\n${passed} passed, ${failures.length} failed`);
   if(failures.length){console.error(failures.map(f=>` - ${f}`).join('\n'));process.exitCode=1;}
