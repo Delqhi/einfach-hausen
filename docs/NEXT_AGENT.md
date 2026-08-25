@@ -87,6 +87,10 @@ Technical completion does not authorize invention of legal/business facts. `docs
 
 These external-owner items do not constitute an unfinished technical engineering task.
 
+## 6a. Finisher wave checkpoint — 2026-08-25
+
+Canonical tasks T-0003, T-0006, T-0007 and T-0008 are resolved by `einfach-hausen-finisher`: production live-check PASS at release `dcd53ca1` (no redeploy needed for `f0198ee`), Domain-Cutover issue [#16](https://github.com/Delqhi/einfach-hausen/issues/16) created, STRATO mailbox recorded as external blocker `EH-O01`, and the Archify sync design classified as adopted/implemented. Details: `.sin-gpt-web/reports/COMPLETION-FINAL.md`. Taskplan: backlog=0.
+
 ## 7. Resume rule
 
 If canonical taskplan validation shows `backlog=0`, `in_progress=0`, `blocked=0`, **stop**. Do not manufacture follow-up implementation. A new engineering task requires a newly reproduced defect, changed product requirement or explicit user instruction.
