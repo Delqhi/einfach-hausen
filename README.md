@@ -8,6 +8,19 @@ Einfach Hausen ist die zentrale Anlaufstelle für Eigenheimbesitzer. Der Kunde b
 
 Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md). Das langlebige Daten- und Berechtigungsmodell steht in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
+## Agenten & kanonischer Arbeitsstand
+
+Alle Agents arbeiten in diesem Repository **am selben Ziel**. Es gibt keinen zweiten Engineering-Taskplan in README, Issues oder Worker-Reports. Der verbindliche Einstieg ist [`docs/NEXT_AGENT.md`](docs/NEXT_AGENT.md); der transaktionale Taskstatus liegt in `.sin-gpt-web/taskplan.sqlite3` und wird nach `.sin-gpt-web/TASKPLAN.md` gerendert.
+
+Aktueller Endpfad: **T-0042 Final Acceptance → T-0043 Final Convergence/Handover**. Bereits erledigte oder abgelöste Wellen werden nicht erneut begonnen. Neue Implementierungsarbeit entsteht nur aus einem reproduzierbaren Acceptance-Fehler und wird als kanonischer Remediation-Task erfasst.
+
+## Systemübersicht
+
+![Einfach Hausen Plattformarchitektur](docs/diagrams/platform-architecture.svg)
+
+[Interaktive Architektur öffnen](docs/diagrams/platform-architecture.html) · Detailansichten: [Eigentümer-Serviceflow](docs/diagrams/homeowner-service-flow.html), [Partner-/Auftrags-Lifecycle](docs/diagrams/partner-job-lifecycle.html), [Hausakte & Datenschutz](docs/diagrams/property-privacy-dataflow.html), [Zahlungen](docs/diagrams/payment-lifecycle.html), [CRM & Outreach](docs/diagrams/crm-outreach-flow.html), [Production & Recovery](docs/diagrams/production-recovery-flow.html).
+
+
 ## Live Pilot
 
 - App: `https://einfachhausen.de`
@@ -99,11 +112,11 @@ Für den Pilot ist das absichtlich einfacher als zwei separate native Codebasen.
 
 Jahrespakete sind zusätzlich möglich und erzeugen konkrete Aufgaben im Hausjahresplan.
 
-## Admin CRM & Leadgewinnung
+## CRM & Leadgewinnung
 
-Unter `/admin/crm` gibt es ein schlankes internes CRM für die Akquise und
-Betreuung von Partner- und Eigentümer-Leads. Recherchierte Betriebe bleiben
-zunächst Leads und werden **nicht** künstlich als registrierte Partner angelegt.
+Das dedizierte Akquise-/Outreach-Control-Plane liegt im separaten Repository `einfach-hausen-crm` und wird standalone unter `https://crm.einfachhausen.de` betrieben. Cloudflare Worker + D1 übernehmen dort Dedupe, Queue/Claims, Contact-History, Inbox/Replies und Follow-ups. Generic Research/Outreach bleibt in den gemeinsamen SIN-Fähigkeiten; es wird nicht in diesem Repo dupliziert.
+
+Die Hauptanwendung enthält weiterhin `/admin/crm` und das SQLite-Leadmodell als ursprüngliche plattformintegrierte Operator-/Konvertierungsoberfläche und als Quellbestand für die erste verifizierte D1-Migration. Beide dürfen **nicht als zwei konkurrierende CRMs** weiterentwickelt werden. Recherchierte Betriebe bleiben zunächst Leads und werden **nicht** künstlich als registrierte Partner angelegt.
 
 - Projektneutrale Handwerker-/Hausmeister-Recherche über `SIN-Business-Research`
 - Deutschlandweiter Overture-Import mit E-Mail, Telefon, Website, Social-Links
@@ -246,3 +259,14 @@ graphify query "where is partner assignment handled?"
 
 The local Graphify post-commit and post-checkout hooks keep `graphify-out/graph.json` current for agent architecture queries. Product truth remains `docs/PRODUCT_VISION.md`; Graphify is a technical code/dependency graph, not product or customer data storage.
 
+<!-- SIN-GPT-WEB-HANDOVER:BEGIN -->
+## SIN GPT Web completion / handover sync
+
+- Last synchronized task: `T-0049`
+- Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
+- Canonical repo goal: Einfach Hausen vollständig fertigstellen und vor allem App und Website auf Produktionsqualität verbessern
+- Resume rule: read/validate the canonical taskplan and continue its highest-priority eligible task; do not create a competing roadmap.
+- Taskplan sync: `pass`
+- Synchronized at: `2026-08-25T20:47:34+00:00`
+- Contract: `sin-gpt-web-completion-handover-v1`
+<!-- SIN-GPT-WEB-HANDOVER:END -->

@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Production, Backup & Recovery",
+    "subtitle": "Backup zuerst, Node 22 Build, kontrollierter Restart und nicht-destruktiver Restore"
+  },
+  "lanes": [
+    {
+      "id": "git",
+      "label": "GitHub / Release"
+    },
+    {
+      "id": "deploy",
+      "label": "Deployment"
+    },
+    {
+      "id": "runtime",
+      "label": "OCI Runtime"
+    },
+    {
+      "id": "recovery",
+      "label": "Recovery",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "prepare",
+      "label": "Vorbereiten",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "deployphase",
+      "label": "Bauen & starten",
+      "fromCol": 2,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "prove",
+      "label": "Beweisen",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "main",
+    "backup",
+    "build",
+    "service",
+    "tunnel",
+    "health"
+  ],
+  "nodes": [
+    {
+      "id": "main",
+      "lane": "git",
+      "col": 0,
+      "type": "external",
+      "label": "main",
+      "sublabel": "verifizierter Commit"
+    },
+    {
+      "id": "backup",
+      "lane": "deploy",
+      "col": 1,
+      "type": "database",
+      "label": "Backup",
+      "sublabel": "SQLite + private + uploads",
+      "width": 50
+    },
+    {
+      "id": "build",
+      "lane": "deploy",
+      "col": 2,
+      "type": "backend",
+      "label": "Build",
+      "sublabel": "disposable DB",
+      "width": 50
+    },
+    {
+      "id": "service",
+      "lane": "runtime",
+      "col": 3,
+      "type": "backend",
+      "label": "App",
+      "sublabel": "127.0.0.1:3010",
+      "width": 40
+    },
+    {
+      "id": "tunnel",
+      "lane": "runtime",
+      "col": 4,
+      "type": "cloud",
+      "label": "Tunnel",
+      "sublabel": "TLS Eingang",
+      "width": 40
+    },
+    {
+      "id": "health",
+      "lane": "runtime",
+      "col": 5,
+      "type": "security",
+      "label": "Health + Smoke",
+      "sublabel": "DB ready · no secrets"
+    },
+    {
+      "id": "dryrun",
+      "lane": "recovery",
+      "col": 4,
+      "type": "backend",
+      "label": "Dry-run",
+      "sublabel": "Tempdir + integrity_check",
+      "width": 70
+    },
+    {
+      "id": "stage",
+      "lane": "recovery",
+      "col": 5,
+      "type": "database",
+      "label": "Stage Restore",
+      "sublabel": "nie Produktion überschreiben"
+    }
+  ],
+  "edges": [
+    {
+      "from": "main",
+      "to": "backup",
+      "label": "before deploy",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "drop"
+    },
+    {
+      "from": "backup",
+      "to": "build",
+      "variant": "emphasis"
+    },
+    {
+      "from": "build",
+      "to": "service",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "drop"
+    },
+    {
+      "from": "service",
+      "to": "tunnel",
+      "variant": "emphasis"
+    },
+    {
+      "from": "tunnel",
+      "to": "health",
+      "label": "external smoke",
+      "variant": "security",
+      "labelAt": [
+        563,
+        407
+      ]
+    },
+    {
+      "from": "health",
+      "to": "dryrun",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "drop"
+    },
+    {
+      "from": "dryrun",
+      "to": "stage",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Persistenz",
+      "items": [
+        "DB: /var/lib/einfach-hausen/einfach-hausen.db",
+        "Private Dateien und Uploads liegen außerhalb des Git-Deployments",
+        "Jedes Backup enthält Hashes, Größen und File-Counts"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Recovery-Regel",
+      "items": [
+        "Restore-Test überschreibt nie Produktionsdaten",
+        "Erst dry-run, dann optional separater Stage-Pfad",
+        "Fehlgeschlagener Healthcheck führt zu Diagnose – nicht zu Datenlöschung"
+      ]
+    }
+  ]
+}

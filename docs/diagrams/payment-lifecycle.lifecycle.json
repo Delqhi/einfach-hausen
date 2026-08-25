@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Zahlungs-Lifecycle",
+    "subtitle": "Stripe-Webhook ist die Autorität – Browser-Redirects ändern keinen Zahlungsstatus"
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "Zahlungsphasen"
+    },
+    {
+      "id": "waiting",
+      "label": "Asynchrone Wahrheit"
+    },
+    {
+      "id": "terminal",
+      "label": "Ergebnis"
+    }
+  ],
+  "states": [
+    {
+      "id": "checkout",
+      "type": "start",
+      "label": "Checkout",
+      "sublabel": "Abo / Paket / Rechnung",
+      "lane": "main",
+      "col": 0,
+      "step": "01"
+    },
+    {
+      "id": "pending",
+      "type": "active",
+      "label": "Pending",
+      "sublabel": "noch nicht bezahlt",
+      "lane": "main",
+      "col": 1,
+      "step": "02"
+    },
+    {
+      "id": "webhook",
+      "type": "decision",
+      "label": "Signierter Webhook",
+      "sublabel": "event-id dedupliziert",
+      "lane": "main",
+      "col": 2,
+      "step": "03"
+    },
+    {
+      "id": "reconcile",
+      "type": "active",
+      "label": "Reconcile",
+      "sublabel": "Status + Geschwisterversuche",
+      "lane": "main",
+      "col": 3,
+      "step": "04"
+    },
+    {
+      "id": "redirect",
+      "type": "waiting",
+      "label": "Browser Erfolg",
+      "sublabel": "nur Anzeige – keine Autorität",
+      "lane": "waiting",
+      "col": 0,
+      "tag": "no mutation"
+    },
+    {
+      "id": "paid",
+      "type": "success",
+      "label": "Bezahlt",
+      "sublabel": "autorisiert durch Stripe",
+      "lane": "terminal",
+      "col": 0,
+      "tag": "terminal"
+    },
+    {
+      "id": "failed",
+      "type": "failure",
+      "label": "Fehlgeschlagen",
+      "sublabel": "retry möglich",
+      "lane": "terminal",
+      "col": 2,
+      "tag": "terminal"
+    },
+    {
+      "id": "refunded",
+      "type": "neutral",
+      "label": "Erstattet",
+      "sublabel": "kein Downgrade zu pending",
+      "lane": "terminal",
+      "col": 1,
+      "tag": "terminal"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "checkout",
+      "to": "pending",
+      "variant": "emphasis"
+    },
+    {
+      "from": "pending",
+      "to": "webhook",
+      "variant": "emphasis"
+    },
+    {
+      "from": "webhook",
+      "to": "reconcile",
+      "variant": "emphasis"
+    },
+    {
+      "from": "pending",
+      "to": "redirect",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "drop"
+    },
+    {
+      "from": "reconcile",
+      "to": "paid",
+      "label": "payment success",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "bottom-channel",
+      "channelY": 535,
+      "labelAt": [
+        360,
+        540
+      ]
+    },
+    {
+      "from": "reconcile",
+      "to": "failed",
+      "label": "failure",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "drop",
+      "labelAt": [
+        520,
+        310
+      ]
+    },
+    {
+      "from": "paid",
+      "to": "refunded",
+      "label": "refund",
+      "variant": "default",
+      "route": "straight",
+      "fromSide": "right",
+      "toSide": "left",
+      "labelAt": [
+        325,
+        520
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Authority",
+      "items": [
+        "Stripe-Signatur ist Pflicht",
+        "Replay desselben Event-IDs ist idempotent",
+        "Browser success markiert niemals eigenständig bezahlt"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Rechnung",
+      "items": [
+        "Rechnungsnummern steigen je Anbieter monoton",
+        "Zahlungszustände bleiben auch bei spätem Webhook kohärent"
+      ]
+    }
+  ]
+}

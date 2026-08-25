@@ -1,31 +1,31 @@
 # Einfach Hausen — Production Handover and Continuation Runbook
 
-**Status snapshot:** 2026-08-24, after T-0037 operational hardening. Live production acceptance still requires the explicit checks below.
+**Status snapshot:** 2026-08-25 production cutover remains verified for release `dcd53ca1f463e9d64ee3fc6838d1cdb3fb2bb557` under T-0041.
 
-This document is the canonical continuation point for a new agent. It deliberately records both completed work and the one known external propagation blocker. Do not infer that the public cutover is complete until the verification checklist below passes.
+This document is the canonical **production operations** continuation point. Repository/agent continuation starts at [`NEXT_AGENT.md`](NEXT_AGENT.md). All agents share one engineering goal and one transactional taskplan; remaining release-wide work is strictly T-0042 Final Acceptance followed by T-0043 Final Convergence/Handover unless acceptance creates a canonical remediation task.
 
-## 0. Latest continuation checkpoint — 2026-08-24
+## 0. Latest continuation checkpoint — 2026-08-25
 
 **Canonical next-agent entry:** [`NEXT_AGENT.md`](NEXT_AGENT.md).
 
 ### Current code/worktree
 
-- The local tree is an active multi-worker gauntlet and contains substantial intentional uncommitted work from completed/in-progress tasks. Preserve and classify it before any cleanup.
-- T-0037 and T-0038 are the current critical in-progress gates at this snapshot; use `sin-gpt-web-state` as the only authority for subsequent task changes.
-- Do not infer deployability from this handover alone. T-0040/T-0044/T-0041 still gate independent acceptance, integration/push, and production deployment.
+- Production release remains `dcd53ca1f463e9d64ee3fc6838d1cdb3fb2bb557` from T-0041.
+- Local Mac `main` at the 2026-08-25 coordination checkpoint is `16fad400812c5fe4299e163396809a45fbf17714`, one local commit ahead of `origin/main` (`dcd53ca1f463e9d64ee3fc6838d1cdb3fb2bb557`). Final T-0043 convergence must fetch and re-verify all three states instead of assuming equality.
+- The local worktree currently contains documentation/Archify coordination changes plus generated runtime/cache paths. Preserve and classify them; do not blindly reset/clean.
+- Production intentionally retains only the two runtime media links `data/private -> /var/lib/einfach-hausen/private` and `public/uploads -> /var/lib/einfach-hausen/uploads` as untracked paths. `deploy/update-on-oci.sh` permits only these verified paths and still fails closed on every other tracked/untracked change.
+- T-0040 independent gauntlet, T-0044 integration/push and T-0041 production deployment are complete. **T-0042 is the sole current execution target, followed by T-0043.** Use `sin-gpt-web-state` as the only authority for task changes.
 
-### Deployment contract — not yet production acceptance
+### Deployment contract — production verified
 
-A prior OCI deployment attempt failed because its build shell used Node 20.20.2 while `better-sqlite3@13` requires Node 22+. T-0037 hardens this contract: `deploy/update-on-oci.sh` now resolves the configured Node 22 binary directly, aborts unless its major version is 22, and `einfach-hausen.service` starts with the same Node 22 installation. The deployment build uses a disposable `/tmp` SQLite path rather than production data.
-
-**Next exact action:** after the gauntlet-approved tree is committed and pushed, run the production deployment from T-0041, then execute the local service, persistent-storage, tunnel, Kestra, and public smoke checks. Do not downgrade dependencies as a workaround.
+Two deployment edge cases were found and fixed before acceptance. Commit `cf56a824` permits only the canonical persistent runtime symlinks during the clean-tree gate. Commit `dcd53ca1` prepends the validated Node 22 directory to `PATH`, because npm uses `#!/usr/bin/env node`; this prevents npm lifecycle/Next.js workers from silently falling back to `/usr/bin/node` 20.20.2. The successful production build and runtime both used Node `v22.23.0` and the build used a disposable `/tmp` SQLite path rather than production data.
 
 ### Persistent storage checkpoint
 
 - Database: `/var/lib/einfach-hausen/einfach-hausen.db`
 - Private files: `/var/lib/einfach-hausen/private`
 - Upload persistence: `/var/lib/einfach-hausen/uploads`
-- Pre-deploy SQLite backup: `/var/lib/einfach-hausen/backups/pre-e3a5343.db`
+- Verified pre-deploy backup: `/var/backups/einfach-hausen/einfach-hausen-20260824T220100Z` (manifest + SQLite + private/upload archives; restore dry-run PASS)
 
 Do not overwrite or delete these paths during deployment.
 
@@ -33,16 +33,15 @@ Do not overwrite or delete these paths during deployment.
 
 | Area | State | Evidence / next action |
 |---|---|---|
-| Repository | Healthy baseline | `main` contains `612ca4b Switch production docs to einfachhausen.de` after security hardening `4628c27` |
-| Production runtime | Healthy | OCI service `einfach-hausen.service` and local `http://127.0.0.1:3010/api/health` returned OK in the last verified run |
-| Production app URL | Configured | `NEXT_PUBLIC_APP_URL=https://einfachhausen.de` on OCI |
-| Cloudflare tunnel | Configured | `einfachhausen.de` and `www.einfachhausen.de` route to `http://127.0.0.1:3010` through `sin-kestra` |
-| Cloudflare zone | Prepared | DNS, TLS and security settings prepared; public activation depends on authoritative NS delegation |
-| STRATO registrar change | Submitted/saved | STRATO accepted Cloudflare nameservers; registry propagation was still pending at the last check |
-| Public DNS at last check | **Not switched yet** | `.de` parent and public resolvers still returned `docks12.rzone.de` and `shades08.rzone.de` |
-| Old temporary route | Healthy fallback | `einfach-hausen.delqhi.com/api/health` returned OK; do not remove before new domain is fully verified |
-| Mail DNS | Prepared for migration | STRATO MX/DKIM/DMARC/autoconfig/autodiscover values were copied/prepared in Cloudflare; re-check after activation |
-| Stripe | New canonical URL documented | `https://einfachhausen.de/api/stripe/webhook`; verify the live Stripe endpoint and signing secret after DNS activation |
+| Repository | Release deployed | `main`, `origin/main`, and OCI all matched `dcd53ca1f463e9d64ee3fc6838d1cdb3fb2bb557` |
+| Production runtime | Healthy | `einfach-hausen.service`, Kestra proxy socket and backup timer active; local and Kestra-path health returned `ok=true`, `database=ready` |
+| Production app URL | Live | `https://einfachhausen.de` serves the new release; `/sicherheit`, `/app/settings`, `/app/insurance`, `/partner`, `/impressum`, `/datenschutz` all returned HTTP 200 |
+| Cloudflare tunnel | Healthy | `cloudflared` active; DNS, QUIC, HTTP/2 and Cloudflare API prechecks PASS |
+| Cloudflare zone / DNS | Active publicly | 1.1.1.1 and 8.8.8.8 returned `aaron.ns.cloudflare.com` + `josephine.ns.cloudflare.com`; canonical HTTPS works through Cloudflare |
+| `www` | Healthy | `https://www.einfachhausen.de/` resolves to final `https://einfachhausen.de/` with HTTP 200 |
+| Old temporary route | Healthy fallback | `einfach-hausen.delqhi.com/api/health` still returned HTTP 200 during acceptance; retain until final release handover decides removal |
+| Mail DNS | Verified live | MX, DMARC, DKIM selector, autodiscover SRV and autoconfig CNAME all match the intended STRATO configuration |
+| Stripe | Verified live | `sin-stripe ready` PASS; doctor reports charges/payouts enabled and canonical live webhook present, enabled and subscribed to required events |
 
 ## 2. Target architecture
 
@@ -81,16 +80,7 @@ The existing Kestra health path remains private:
 - `aaron.ns.cloudflare.com`
 - `josephine.ns.cloudflare.com`
 
-The STRATO nameserver change was saved/submitted before this handover.
-
-### Last observed authoritative public delegation
-
-The last checks against `a.nic.de`, `1.1.1.1`, and `8.8.8.8` still returned:
-
-- `docks12.rzone.de`
-- `shades08.rzone.de`
-
-This means **do not mark the domain live yet** solely because the STRATO UI accepted the change.
+The STRATO nameserver change has propagated publicly. During T-0041, both 1.1.1.1 and 8.8.8.8 returned the two Cloudflare nameservers above, and the canonical HTTPS routes were served successfully through the active Cloudflare tunnel. A direct `a.nic.de` short query returned no lines in that specific probe, so public resolver + working HTTPS/tunnel evidence is retained rather than inventing registrar output.
 
 ### Required Cloudflare records
 
@@ -212,10 +202,10 @@ Do not remove `einfach-hausen.delqhi.com` until the new domain, health endpoint,
 
 ## 9. Deployment and recovery
 
-Deploy on OCI:
+Deploy on OCI as the `ubuntu` application owner (the script elevates only the privileged filesystem/systemd steps itself):
 
 ```bash
-sudo /srv/einfach-hausen/deploy/update-on-oci.sh
+/srv/einfach-hausen/deploy/update-on-oci.sh
 ```
 
 Sequence: `verify clean main + Node 22 -> prepare persistent paths -> copy-only legacy media migration -> pre-deploy online backup when DB exists -> git fetch -> fast-forward main -> npm ci -> disposable-DB build -> systemd reload/restart -> local DB-aware health check`. The script does not use `git reset --hard` and does not delete or overwrite production data.
@@ -241,18 +231,22 @@ Backups:
 
 ## 10. Verification baseline already achieved
 
-On the current baseline before this handover:
+Release verification retained from the independent convergence gauntlet and refreshed in production:
 
-- `npm run lint` passed
-- `npm run build` passed
+- `npm run lint` passed on the accepted application tree
+- production `npm ci` reported 0 vulnerabilities
+- production `npm run build` passed on Node `v22.23.0` and generated all 60 pages
 - focused security suite: **133 passed, 0 failed**
-- webhook/private-media suite: **38 passed, 0 failed**
-- production local health returned OK after rebuild/restart
-- old public fallback health returned OK
+- T-0003 webhook/private-media suite: **43 passed, 0 failed**
+- pre-deploy backup `einfach-hausen-20260824T220100Z` passed non-destructive restore dry-run
+- pre-/post-deploy SQLite `PRAGMA integrity_check`: `ok`; table count 59 -> 59, users 4 -> 4, jobs 0 -> 0
+- local and Kestra-path health both returned `ok=true` with `database=ready`
+- public canonical routes and `www` redirect passed; old fallback health remained HTTP 200
+- Stripe readiness/doctor passed for the canonical live webhook without issuing a real charge
 
 ## 11. Repository hygiene and in-progress work
 
-At this 2026-08-24 snapshot, the working tree contains substantial intentional multi-task gauntlet changes and local teamwork evidence. **Do not run `git reset --hard` or `git clean -fd` blindly.** Use the canonical taskplan and final integration task to classify every path before cleanup.
+After T-0041, tracked release work is committed. The Mac controller still has local generated coordination/cache directories (`.sin-gpt-teamwork/`, `scripts/__pycache__/`) to classify in final convergence. Production intentionally has only the two canonical untracked runtime symlinks described above. **Do not run `git reset --hard` or `git clean -fd` blindly.**
 
 Primary continuation documents:
 
@@ -267,15 +261,27 @@ Primary continuation documents:
 
 The migration is complete only when all are true:
 
-- [ ] `.de` delegation returns `aaron.ns.cloudflare.com` and `josephine.ns.cloudflare.com`
-- [ ] Cloudflare marks the zone active
-- [ ] `https://einfachhausen.de` loads
-- [ ] `/api/health` returns OK publicly
-- [ ] `www` redirects to apex
-- [ ] Cloudflare TLS/security settings are verified live
-- [ ] STRATO mail DNS is verified live
-- [ ] Stripe webhook endpoint and signing secret are verified
-- [ ] old fallback is retained until all checks pass
-- [ ] DNSSEC is configured only after Cloudflare provides exact DS instructions
+- [x] public resolvers return `aaron.ns.cloudflare.com` and `josephine.ns.cloudflare.com`
+- [x] Cloudflare-backed canonical HTTPS is active and tunnel prechecks pass
+- [x] `https://einfachhausen.de` loads
+- [x] `/api/health` returns OK publicly with `database=ready`
+- [x] `www` redirects to apex
+- [x] active Cloudflare tunnel transport checks pass
+- [x] STRATO mail DNS is verified live
+- [x] canonical Stripe live webhook is present/enabled and Stripe readiness/doctor pass
+- [x] old fallback remained available through production acceptance
+- [x] DNSSEC was not guessed or changed without an exact Cloudflare/registrar DS workflow
 
-Until then, report the state as **cutover pending DNS propagation**, not “fully live”.
+T-0041 production cutover is complete. Any optional DNSSEC enablement or fallback retirement is an explicit post-release operator hardening action, not an unreported application deployment gap.
+
+<!-- SIN-GPT-WEB-HANDOVER:BEGIN -->
+## SIN GPT Web completion / handover sync
+
+- Last synchronized task: `T-0049`
+- Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
+- Canonical repo goal: Einfach Hausen vollständig fertigstellen und vor allem App und Website auf Produktionsqualität verbessern
+- Resume rule: read/validate the canonical taskplan and continue its highest-priority eligible task; do not create a competing roadmap.
+- Taskplan sync: `pass`
+- Synchronized at: `2026-08-25T20:47:34+00:00`
+- Contract: `sin-gpt-web-completion-handover-v1`
+<!-- SIN-GPT-WEB-HANDOVER:END -->

@@ -43,6 +43,16 @@ Die Startseite soll daher eher sagen **„Ein Ansprechpartner für alles rund um
 9. **0 % Auftragsprovision.** Partner behalten 100 % ihres Auftragswertes. Partnerumsatz entsteht über planbare Monatsabos, nicht über eine Gebühr pro Auftrag.
 10. **Region für Region.** Erst ein dichtes hochwertiges Netzwerk in einer Region, dann Expansion.
 
+## Visueller Kernablauf
+
+![Eigentümer-Serviceflow](diagrams/homeowner-service-flow.svg)
+
+[Interaktiven Serviceflow öffnen](diagrams/homeowner-service-flow.html)
+
+![Partner- und Auftrags-Lifecycle](diagrams/partner-job-lifecycle.svg)
+
+[Interaktiven Partner-Lifecycle öffnen](diagrams/partner-job-lifecycle.html)
+
 ## Kundenerlebnis
 
 ### 1. Hausmeisterservice

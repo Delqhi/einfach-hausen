@@ -1,5 +1,11 @@
 # Einfach Hausen — OCI operations
 
+## Visueller Deploy- und Recovery-Flow
+
+![Production, Backup und Recovery](diagrams/production-recovery-flow.svg)
+
+[Interaktiven Deploy-/Recovery-Flow öffnen](diagrams/production-recovery-flow.html)
+
 ## Production contract
 
 The pilot remains one loopback-only Next.js service behind the existing Cloudflare tunnel:
@@ -21,7 +27,7 @@ The application code still addresses private media as `data/private` and legacy 
 
 ## Node 22 requirement
 
-Production build and runtime require Node **22.x**. The systemd unit and `deploy/update-on-oci.sh` use `/home/ubuntu/.nvm/versions/node/v22.23.0/bin`; the deployment script aborts unless the detected major version is exactly 22. Do not work around native-module failures by downgrading `better-sqlite3` or building with Node 20.
+Production build and runtime require Node **22.x**. The systemd unit and `deploy/update-on-oci.sh` use `/home/ubuntu/.nvm/versions/node/v22.23.0/bin`; the deployment script aborts unless the detected major version is exactly 22. Because npm itself uses `#!/usr/bin/env node`, the deploy script also prepends this validated Node 22 directory to `PATH` before `npm ci`/build so lifecycle workers cannot fall back to `/usr/bin/node` 20. Do not work around native-module failures by downgrading `better-sqlite3` or building with Node 20.
 
 Safe probes:
 
@@ -54,7 +60,7 @@ sudo install -d -o ubuntu -g ubuntu -m 0750 \
   /var/backups/einfach-hausen
 ```
 
-`deploy/update-on-oci.sh` performs copy-only migration from the historical repo-relative private/upload directories using `rsync --ignore-existing`; it never deletes or overwrites files already present under `/var/lib/einfach-hausen`. Inspect conflicts before the first production restart if both old and persistent locations contain data.
+`deploy/update-on-oci.sh` performs copy-only migration from the historical repo-relative private/upload directories using `rsync --ignore-existing`; it never deletes or overwrites files already present under `/var/lib/einfach-hausen`. Production may retain the canonical untracked runtime links `data/private -> /var/lib/einfach-hausen/private` and `public/uploads -> /var/lib/einfach-hausen/uploads`; the deploy cleanliness gate permits only those verified paths and fails closed on any other dirty entry. Inspect conflicts before the first production restart if both old and persistent locations contain data.
 
 ## Backup
 
@@ -119,11 +125,13 @@ Kestra flow: `einfach.hausen/einfach_hausen_health` (`deploy/kestra/einfach-haus
 
 ## Deployment
 
+Run the deployment as the `ubuntu` application owner; the script elevates only its filesystem/systemd operations:
+
 ```bash
-sudo /srv/einfach-hausen/deploy/update-on-oci.sh
+/srv/einfach-hausen/deploy/update-on-oci.sh
 ```
 
-The deployment script requires a clean `main`, verifies Node 22, prepares persistent directories, performs copy-only legacy-media migration, creates a pre-deploy online backup when the persistent DB already exists, fast-forwards to `origin/main`, builds against a disposable `/tmp` SQLite path, reloads systemd, restarts the service, and requires local health success. It does not use `git reset --hard` and does not delete production data.
+The deployment script requires `main` with no changes except the two verified runtime media links, verifies and activates Node 22 for npm and child processes, prepares persistent directories, performs copy-only legacy-media migration, creates a pre-deploy online backup when the persistent DB already exists, fast-forwards to `origin/main`, builds against a disposable `/tmp` SQLite path, reloads systemd, restarts the service, and requires local health success. It does not use `git reset --hard` and does not delete production data.
 
 ## Failure handling
 

@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Hausakte & Datenschutz – Datenfluss",
+    "subtitle": "Hausbezogene Daten bleiben langlebig; private Daten werden nur zweckgebunden freigegeben",
+    "viewBox": [
+      1120,
+      760
+    ]
+  },
+  "stages": [
+    {
+      "label": "Eingang"
+    },
+    {
+      "label": "Hausakte"
+    },
+    {
+      "label": "Freigabe"
+    },
+    {
+      "label": "Ausführung"
+    },
+    {
+      "label": "Nutzung"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "owner",
+      "type": "frontend",
+      "label": "Eigentümer",
+      "sublabel": "Eingaben + Entscheidungen",
+      "stage": 0,
+      "row": 1
+    },
+    {
+      "id": "property",
+      "type": "database",
+      "label": "Immobilie",
+      "sublabel": "property_id + Historie",
+      "stage": 1,
+      "row": 1
+    },
+    {
+      "id": "private",
+      "type": "security",
+      "label": "Private Daten",
+      "sublabel": "Nachrichten · Zahlungen · Dokumente",
+      "stage": 1,
+      "row": 3
+    },
+    {
+      "id": "share",
+      "type": "security",
+      "label": "Freigabe-Gate",
+      "sublabel": "Zweck + Rechte + Widerruf",
+      "stage": 2,
+      "row": 1
+    },
+    {
+      "id": "matching",
+      "type": "backend",
+      "label": "Matching",
+      "sublabel": "nur notwendige Fakten",
+      "stage": 3,
+      "row": 0
+    },
+    {
+      "id": "provider",
+      "type": "frontend",
+      "label": "Partner",
+      "sublabel": "Auftrag / Ansprechpartner",
+      "stage": 4,
+      "row": 0
+    },
+    {
+      "id": "broker",
+      "type": "frontend",
+      "label": "Makler",
+      "sublabel": "Verkaufsfreigabe",
+      "stage": 4,
+      "row": 2
+    },
+    {
+      "id": "newowner",
+      "type": "frontend",
+      "label": "Neuer Eigentümer",
+      "sublabel": "Hausakte ohne private Altkommunikation",
+      "stage": 4,
+      "row": 4
+    }
+  ],
+  "flows": [
+    {
+      "from": "owner",
+      "to": "property",
+      "label": "Hausdaten",
+      "classification": "personen-/objektbezogen",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelAt": [
+        208,
+        314
+      ]
+    },
+    {
+      "from": "property",
+      "to": "share",
+      "label": "Objektzusammenfassung",
+      "classification": "freigabepflichtig",
+      "variant": "security",
+      "route": "straight",
+      "labelAt": [
+        423,
+        314
+      ]
+    },
+    {
+      "from": "share",
+      "to": "matching",
+      "label": "erlaubte Matchingdaten",
+      "classification": "minimal",
+      "variant": "security",
+      "route": "vertical-channel",
+      "labelAt": [
+        650,
+        210
+      ],
+      "fromSide": "right",
+      "toSide": "left",
+      "channelX": 640
+    },
+    {
+      "from": "matching",
+      "to": "provider",
+      "label": "Auftragsdaten",
+      "classification": "need-to-know",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "from": "share",
+      "to": "broker",
+      "label": "Verkaufsdaten",
+      "classification": "explizit freigegeben",
+      "variant": "security",
+      "fromSide": "right",
+      "toSide": "left",
+      "route": "vertical-channel",
+      "channelX": 800
+    },
+    {
+      "from": "property",
+      "to": "newowner",
+      "label": "Haus-Historie",
+      "classification": "Eigentumsübergabe",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "bottom-channel",
+      "channelY": 660
+    },
+    {
+      "from": "owner",
+      "to": "private",
+      "label": "private Kommunikation",
+      "classification": "privat",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "vertical-channel",
+      "channelX": 240
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Fail closed",
+      "items": [
+        "Private Nachrichten, Zahlungen und Versicherungen werden nicht automatisch geteilt",
+        "Widerruf und Eigentümerwechsel entziehen alte Freigaben sofort",
+        "Dateien werden nur über authentifizierte private Routen ausgeliefert"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Langlebige Hausakte",
+      "items": [
+        "Anlagen, Wartungen und Historie hängen an property_id",
+        "Eigentümerhistorie ersetzt das Kopieren eines Hauses"
+      ]
+    }
+  ]
+}

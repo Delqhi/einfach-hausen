@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Eigentümer-Serviceflow",
+    "subtitle": "Von der Hausfrage bis zum menschlichen Ansprechpartner oder erledigten Auftrag"
+  },
+  "lanes": [
+    {
+      "id": "owner",
+      "label": "Eigentümer"
+    },
+    {
+      "id": "platform",
+      "label": "Einfach Hausen"
+    },
+    {
+      "id": "provider",
+      "label": "Geprüfter Partner"
+    }
+  ],
+  "phases": [
+    {
+      "id": "understand",
+      "label": "Verstehen",
+      "fromCol": 0,
+      "toCol": 2
+    },
+    {
+      "id": "organize",
+      "label": "Organisieren",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "emphasis"
+    },
+    {
+      "id": "remember",
+      "label": "Merken",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "need",
+    "assist",
+    "choice",
+    "match",
+    "human",
+    "history"
+  ],
+  "nodes": [
+    {
+      "id": "need",
+      "lane": "owner",
+      "col": 0,
+      "type": "external",
+      "label": "Anliegen",
+      "sublabel": "Text · Foto · Sprache"
+    },
+    {
+      "id": "assist",
+      "lane": "platform",
+      "col": 1,
+      "type": "backend",
+      "label": "Hausmeisterservice",
+      "sublabel": "antwortet + ordnet ein",
+      "width": 130
+    },
+    {
+      "id": "choice",
+      "lane": "owner",
+      "col": 2,
+      "type": "security",
+      "label": "Bewusste Wahl",
+      "sublabel": "Frage · Kontakt · Auftrag"
+    },
+    {
+      "id": "match",
+      "lane": "platform",
+      "col": 3,
+      "type": "backend",
+      "label": "Passende Hilfe",
+      "sublabel": "Region · Qualität · Verfügbarkeit"
+    },
+    {
+      "id": "human",
+      "lane": "provider",
+      "col": 4,
+      "type": "frontend",
+      "label": "Mensch übernimmt",
+      "sublabel": "Kontakt / Angebot / Termin",
+      "width": 122
+    },
+    {
+      "id": "history",
+      "lane": "platform",
+      "col": 5,
+      "type": "database",
+      "label": "Hausakte",
+      "sublabel": "Kontakt · Arbeit · Dokumente"
+    }
+  ],
+  "edges": [
+    {
+      "from": "need",
+      "to": "assist",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "drop"
+    },
+    {
+      "from": "assist",
+      "to": "choice",
+      "variant": "emphasis",
+      "fromSide": "top",
+      "toSide": "left",
+      "route": "drop"
+    },
+    {
+      "from": "choice",
+      "to": "match",
+      "label": "Kontakt oder Auftrag",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "drop"
+    },
+    {
+      "from": "match",
+      "to": "human",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "drop"
+    },
+    {
+      "from": "human",
+      "to": "history",
+      "label": "dauerhafte Beziehung",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "left",
+      "route": "drop"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Einfach für Eigentümer",
+      "items": [
+        "Kein Auftrag entsteht aus einer normalen Frage",
+        "Ansprechpartner kann ohne Preis/Buchung übernehmen",
+        "Ein Kontakt kann später separat zum Auftrag werden"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Matching",
+      "items": [
+        "Angebote nach Preis, Termin, Entfernung und Qualität vergleichbar",
+        "Notfälle berücksichtigen Bereitschaft und Reaktionsverhalten",
+        "Tarife verbessern nicht künstlich das Ranking"
+      ]
+    }
+  ]
+}

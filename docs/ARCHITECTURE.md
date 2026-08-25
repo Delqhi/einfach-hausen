@@ -8,29 +8,17 @@ Komplexität gehört in die Technik, nicht in die Benutzeroberfläche. Ein Eigen
 
 ## Kernmodell
 
-```text
-User
-├─ Eigentümerprofil
-│  └─ Property Ownership ──> Immobilie
-│                         ├─ Haus-Historie
-│                         ├─ Anlagen / Technik
-│                         ├─ Wartungen
-│                         ├─ Aufträge
-│                         ├─ Rechnungen
-│                         ├─ Ansprechpartner
-│                         ├─ Bewertungen
-│                         ├─ Bewertungen / Verkauf
-│                         └─ Eigentümerhistorie
-└─ Anbieterzugang
-   └─ Provider Profile
-      ├─ Provider Categories (1..n)
-      ├─ Service Offerings (1..n)
-      ├─ Team / Ansprechpartner
-      ├─ Verfügbarkeit / Notfall / Beratung
-      └─ optionale Fachprofile, z. B. Makler-Suchprofil
-```
+![Plattformarchitektur](diagrams/platform-architecture.svg)
+
+[Interaktive Architektur öffnen](diagrams/platform-architecture.html)
 
 Die Immobilie ist ein eigener Datensatz. Sie gehört nicht technisch für immer zu einem einzelnen User. `property_ownerships` bildet den zeitlichen Eigentumsverlauf ab.
+
+## Eigentümer-Serviceflow
+
+![Eigentümer-Serviceflow](diagrams/homeowner-service-flow.svg)
+
+[Interaktiven Serviceflow öffnen](diagrams/homeowner-service-flow.html)
 
 ## Anbieter: ein Login, flexible Tätigkeiten
 
@@ -69,6 +57,12 @@ Eine Übergabe erzeugt **keine neue Kopie des Hauses**. Die bestehende Immobilie
 4. hausbezogene Anlagen, Wartungen und Ansprechpartner gehen mit,
 5. private alte Nachrichten, Zahlungen und persönliche Kommunikation werden nicht übertragen.
 
+## Zahlungs-Lifecycle
+
+![Zahlungs-Lifecycle](diagrams/payment-lifecycle.svg)
+
+[Interaktiven Zahlungs-Lifecycle öffnen](diagrams/payment-lifecycle.html)
+
 ## Rechnungen
 
 Der ausführende Partner kann direkt am Auftrag eine Rechnung erstellen und senden. Rechnungen enthalten Rechnungsnummer, Leistungs-/Rechnungsdatum, Zahlungsziel, Rechnungssteller/-empfänger, Positionen, Netto, Umsatzsteuer und Brutto. Der Eigentümer erhält die Rechnung in seiner Dokumentenansicht. Bei eingerichtetem Stripe Connect ist direkte Zahlung möglich; Einfach Hausen behält **0 % Auftragsprovision**.
@@ -76,6 +70,12 @@ Der ausführende Partner kann direkt am Auftrag eine Rechnung erstellen und send
 ## Beratung und Notfall
 
 Beratung und Auftrag sind getrennte Absichten. Eine Beratung verbindet zunächst nur mit einem passenden Menschen. Notfallanfragen berücksichtigen zusätzlich aktuelle Bereitschaft, Entfernung, Qualifikation, Bewertung und hinterlegten Notfallzuschlag. 24/7-Anbieter und Anbieter mit eigenen Notfallzeiten verwenden dasselbe Partnerkonto.
+
+## Datenschutz-Dataflow
+
+![Hausakte und Datenschutz](diagrams/property-privacy-dataflow.svg)
+
+[Interaktiven Datenschutz-Dataflow öffnen](diagrams/property-privacy-dataflow.html)
 
 ## Datenschutz und Freigaben
 
@@ -97,6 +97,17 @@ Immobilienbewertungen sind eigene Datensätze in der Hausakte. Bei Verkaufsinter
 
 Leadstatus sind messbar: vorgeschlagen → Kontakt freigegeben → Interesse → Besichtigung → Auftrag → verkauft bzw. abgelehnt/widerrufen.
 
+## CRM- und Outreach-Grenze
+
+Die Plattformanwendung und das Akquise-/Outreach-Control-Plane sind bewusst getrennt, aber arbeiten auf einem gemeinsamen fachlichen Lead-Lifecycle:
+
+- `einfach-hausen` besitzt Nutzer/Provider-Konvertierung, plattforminterne CRM-Referenzen und den ursprünglichen SQLite-Leadbestand.
+- `einfach-hausen-crm` besitzt die standalone Operator-/Agent-Oberfläche auf `crm.einfachhausen.de`, Cloudflare-D1-Queue, Dedupe, Lease-Claims, Contact-History, Inbox und Follow-ups.
+- Generische Recherche-/Outreach-/Connectorlogik bleibt in den gemeinsamen SIN-Fähigkeiten und wird nicht in einem der beiden Produktrepos kopiert.
+- Während der initialen D1-Konvergenz wird der bestehende Haupt-App-Leadbestand idempotent in D1 synchronisiert. Unbekannte Kontaktfreigabe bleibt unbekannt; `do_not_contact` bleibt fail-closed.
+
+Agents dürfen daraus **keine zwei konkurrierenden CRMs** machen. Repository-Ziele und aktuelle Fortsetzung stehen jeweils in `docs/NEXT_AGENT.md` und dem kanonischen `.sin-gpt-web`-Taskplan des Repos.
+
 ## Pilot-Infrastruktur
 
 Für den Pilot wird vorhandene Infrastruktur wiederverwendet:
@@ -110,3 +121,15 @@ Für den Pilot wird vorhandene Infrastruktur wiederverwendet:
 - Stripe/Connect für Abos und Zahlungen
 
 Keine neue Infrastruktur wird eingeführt, wenn die vorhandene Lösung das Problem bereits zuverlässig löst.
+
+<!-- SIN-GPT-WEB-HANDOVER:BEGIN -->
+## SIN GPT Web completion / handover sync
+
+- Last synchronized task: `T-0049`
+- Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
+- Canonical repo goal: Einfach Hausen vollständig fertigstellen und vor allem App und Website auf Produktionsqualität verbessern
+- Resume rule: read/validate the canonical taskplan and continue its highest-priority eligible task; do not create a competing roadmap.
+- Taskplan sync: `pass`
+- Synchronized at: `2026-08-25T20:47:34+00:00`
+- Contract: `sin-gpt-web-completion-handover-v1`
+<!-- SIN-GPT-WEB-HANDOVER:END -->

@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "CRM & Outreach Flow",
+    "subtitle": "Recherche bleibt getrennt von Einwilligung und Kontakt – jeder Lead hat genau einen nächsten Schritt"
+  },
+  "lanes": [
+    {
+      "id": "research",
+      "label": "Recherche"
+    },
+    {
+      "id": "crm",
+      "label": "CRM"
+    },
+    {
+      "id": "agent",
+      "label": "Agent / Outreach"
+    },
+    {
+      "id": "inbox",
+      "label": "Inbox / Antwort"
+    }
+  ],
+  "phases": [
+    {
+      "id": "collect",
+      "label": "Sammeln",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "decide",
+      "label": "Prüfen & claimen",
+      "fromCol": 2,
+      "toCol": 4,
+      "variant": "security"
+    },
+    {
+      "id": "contact",
+      "label": "Kontakt",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "emphasis"
+    }
+  ],
+  "mainPath": [
+    "discover",
+    "dedupe",
+    "permission",
+    "queue",
+    "claim",
+    "contact"
+  ],
+  "nodes": [
+    {
+      "id": "discover",
+      "lane": "research",
+      "col": 0,
+      "type": "external",
+      "label": "Discovery",
+      "sublabel": "SIN-Business-Research"
+    },
+    {
+      "id": "dedupe",
+      "lane": "crm",
+      "col": 1,
+      "type": "database",
+      "label": "Dedupe",
+      "sublabel": "E-Mail · Telefon · Domain",
+      "width": 50
+    },
+    {
+      "id": "permission",
+      "lane": "crm",
+      "col": 2,
+      "type": "security",
+      "label": "Freigabe",
+      "sublabel": "Einwilligung / DNC",
+      "width": 50
+    },
+    {
+      "id": "queue",
+      "lane": "crm",
+      "col": 3,
+      "type": "messagebus",
+      "label": "Queue",
+      "sublabel": "ein nächster Schritt"
+    },
+    {
+      "id": "claim",
+      "lane": "agent",
+      "col": 4,
+      "type": "backend",
+      "label": "Atomic Claim",
+      "sublabel": "kein Doppelkontakt"
+    },
+    {
+      "id": "contact",
+      "lane": "agent",
+      "col": 5,
+      "type": "external",
+      "label": "Kontakt",
+      "sublabel": "richtiger Connector"
+    }
+  ],
+  "edges": [
+    {
+      "from": "discover",
+      "to": "dedupe",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "drop"
+    },
+    {
+      "from": "dedupe",
+      "to": "permission",
+      "variant": "security"
+    },
+    {
+      "from": "permission",
+      "to": "queue",
+      "variant": "security"
+    },
+    {
+      "from": "queue",
+      "to": "claim",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "drop"
+    },
+    {
+      "from": "claim",
+      "to": "contact",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Consent first",
+      "items": [
+        "Öffentliche Kontaktdaten sind keine Werbeeinwilligung",
+        "do_not_contact bleibt dauerhaft fail-closed",
+        "Discovery und Outreach bleiben getrennt"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Agentensicherheit",
+      "items": [
+        "Atomic claim verhindert parallelen Doppelkontakt",
+        "contact_history ist Duplicate-Prevention-Wahrheit",
+        "Antworten erzeugen Follow-up oder Terminalstatus"
+      ]
+    }
+  ]
+}

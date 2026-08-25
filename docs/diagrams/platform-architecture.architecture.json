@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Einfach Hausen – Plattformarchitektur",
+    "subtitle": "Ein einfacher Einstieg, eine langlebige Hausakte und getrennte Vertrauensgrenzen"
+  },
+  "layout": {
+    "mode": "grid",
+    "origin": [
+      40,
+      110
+    ],
+    "cols": 6,
+    "gapX": 30,
+    "gapY": 56,
+    "cellW": 132,
+    "cellH": 64
+  },
+  "components": [
+    {
+      "id": "people",
+      "type": "external",
+      "label": "Eigentümer",
+      "sublabel": "Web / PWA",
+      "row": 1,
+      "col": 0
+    },
+    {
+      "id": "edge",
+      "type": "cloud",
+      "label": "Cloudflare",
+      "sublabel": "TLS + Tunnel",
+      "row": 1,
+      "col": 1
+    },
+    {
+      "id": "app",
+      "type": "backend",
+      "label": "Next.js App",
+      "sublabel": "Website + Owner + Pro + Admin",
+      "row": 1,
+      "col": 2
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "SQLite + WAL",
+      "sublabel": "Transaktionale Wahrheit",
+      "row": 1,
+      "col": 3
+    },
+    {
+      "id": "partners",
+      "type": "frontend",
+      "label": "Partner & Admin",
+      "sublabel": "gemeinsames Kontomodell",
+      "row": 1,
+      "col": 4
+    },
+    {
+      "id": "private",
+      "type": "security",
+      "label": "Private Dateien",
+      "sublabel": "Haus / Job / Verifikation",
+      "row": 2,
+      "col": 3
+    },
+    {
+      "id": "stripe",
+      "type": "external",
+      "label": "Stripe",
+      "sublabel": "Checkout + Connect",
+      "row": 0,
+      "col": 3
+    },
+    {
+      "id": "whatsapp",
+      "type": "external",
+      "label": "WhatsApp",
+      "sublabel": "signierter Intake",
+      "row": 0,
+      "col": 2
+    },
+    {
+      "id": "ai",
+      "type": "external",
+      "label": "OmniRoute",
+      "sublabel": "optionale KI-Assistenz",
+      "row": 2,
+      "col": 2
+    },
+    {
+      "id": "ops",
+      "type": "cloud",
+      "label": "Kestra + Supabase",
+      "sublabel": "Health + Backups",
+      "row": 2,
+      "col": 4
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "OCI Runtime",
+      "wraps": [
+        "app",
+        "db",
+        "private"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "people",
+      "to": "edge",
+      "label": "HTTPS",
+      "variant": "emphasis",
+      "route": "orthogonal-h"
+    },
+    {
+      "from": "edge",
+      "to": "app",
+      "variant": "emphasis",
+      "route": "orthogonal-h"
+    },
+    {
+      "from": "app",
+      "to": "db",
+      "label": "SQL",
+      "variant": "emphasis",
+      "route": "orthogonal-h"
+    },
+    {
+      "from": "app",
+      "to": "partners",
+      "variant": "default",
+      "route": "orthogonal-h"
+    },
+    {
+      "from": "app",
+      "to": "private",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "orthogonal-v"
+    },
+    {
+      "from": "stripe",
+      "to": "app",
+      "variant": "security",
+      "fromSide": "left",
+      "toSide": "top",
+      "route": "orthogonal-v"
+    },
+    {
+      "from": "whatsapp",
+      "to": "app",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "orthogonal-v"
+    },
+    {
+      "from": "app",
+      "to": "ai",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "orthogonal-v"
+    },
+    {
+      "from": "db",
+      "to": "ops",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "route": "orthogonal-v"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Produktkern",
+      "items": [
+        "Hausmeisterservice beantwortet zuerst Fragen",
+        "Kontakt und Auftrag bleiben eine bewusste Eigentümerentscheidung",
+        "Hausdaten bleiben an der Immobilie statt an einem Screen"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Vertrauen",
+      "items": [
+        "Private Dateien werden authentifiziert ausgeliefert",
+        "Freigaben sind zweckgebunden und widerrufbar",
+        "Stripe-Webhooks sind Zahlungsautorität"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Betrieb",
+      "items": [
+        "Ein OCI-Knoten für den Pilot",
+        "Persistente SQLite-/Dateipfade",
+        "Kestra-Checks und verifizierte Backups"
+      ]
+    }
+  ]
+}

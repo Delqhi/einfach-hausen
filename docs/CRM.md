@@ -1,9 +1,16 @@
 # Einfach Hausen CRM
 
-The Admin CRM at `/admin/crm` is the internal acquisition and relationship
-workspace for Einfach Hausen. It intentionally sits **before** the operational
-`users` / `provider_profiles` model: a researched company or inbound homeowner
-is a lead, not a platform user or verified partner.
+The dedicated acquisition/outreach control plane is the standalone repository `einfach-hausen-crm`, deployed at `https://crm.einfachhausen.de`. It owns the production CRM Worker/API and Cloudflare D1 lifecycle for dedupe, queue claims, contact history, inbox/replies and follow-ups.
+
+The main application still contains `/admin/crm` and its SQLite `crm_leads` model as the original platform-integrated lead/operator surface. During the standalone CRM convergence it is also the canonical source dataset for the first verified D1 backfill. **Do not evolve the two surfaces as competing CRMs.** New outreach-control-plane work belongs in `einfach-hausen-crm`; platform user/provider conversion boundaries remain in this repository.
+
+A researched company or inbound homeowner intentionally sits **before** the operational `users` / `provider_profiles` model: a lead is not a platform user or verified partner.
+
+## Visueller CRM-Flow
+
+![CRM und Outreach](diagrams/crm-outreach-flow.svg)
+
+[Interaktiven CRM-/Outreach-Flow öffnen](diagrams/crm-outreach-flow.html)
 
 ## Lead types
 
@@ -82,12 +89,14 @@ referrals and inbound requests. If a person objects, set `do_not_contact`.
 
 - CRM leads are not automatically `users`.
 - Research leads are not automatically verified partners.
-- No CRM action sends email, phone calls, WhatsApp or social DMs yet.
+- The embedded `/admin/crm` does not become a second outreach transport layer. Outbound/inbound connector execution belongs to `einfach-hausen-crm` through the shared authenticated SIN connector/runtime paths.
 - Contact events/status are tracked independently from discovery provenance.
-- `crm_events` is the audit history for status/contact changes.
-- Runtime SQLite files stay under `data/` and are excluded from Git.
+- `crm_events` remains the main-app audit history for platform-side status/contact/conversion changes; standalone CRM contact/inbox history lives in its D1 lifecycle.
+- Runtime SQLite files stay under `data/` and are excluded from Git; standalone CRM production state stays in its configured Cloudflare D1.
 
 ## Verification
+
+Main application boundary:
 
 ```bash
 npm run lint
@@ -95,5 +104,12 @@ npm run build
 python3 scripts/import-business-research.py --limit 100
 ```
 
-The full Germany production dataset is currently sourced from the generic
-`SIN-Business-Research` database; it is runtime data and must not be committed.
+Standalone outreach CRM boundary (run in `einfach-hausen-crm`):
+
+```bash
+npm test
+npm run check
+npm run cf:dry-run
+```
+
+The full Germany lead dataset is runtime data and must not be committed. During the current migration/convergence wave the main-app SQLite CRM dataset is synced idempotently to standalone D1; `contact_permission=unknown` is never promoted to consent by import.

@@ -1,0 +1,53 @@
+{
+  "diagrams": [
+    {
+      "name": "platform architecture",
+      "type": "architecture",
+      "source": "docs/diagrams/platform-architecture.architecture.json",
+      "html": "docs/diagrams/platform-architecture.html",
+      "svg": "docs/diagrams/platform-architecture.svg"
+    },
+    {
+      "name": "homeowner service flow",
+      "type": "workflow",
+      "source": "docs/diagrams/homeowner-service-flow.workflow.json",
+      "html": "docs/diagrams/homeowner-service-flow.html",
+      "svg": "docs/diagrams/homeowner-service-flow.svg"
+    },
+    {
+      "name": "partner job lifecycle",
+      "type": "lifecycle",
+      "source": "docs/diagrams/partner-job-lifecycle.lifecycle.json",
+      "html": "docs/diagrams/partner-job-lifecycle.html",
+      "svg": "docs/diagrams/partner-job-lifecycle.svg"
+    },
+    {
+      "name": "property privacy dataflow",
+      "type": "dataflow",
+      "source": "docs/diagrams/property-privacy-dataflow.dataflow.json",
+      "html": "docs/diagrams/property-privacy-dataflow.html",
+      "svg": "docs/diagrams/property-privacy-dataflow.svg"
+    },
+    {
+      "name": "payment lifecycle",
+      "type": "lifecycle",
+      "source": "docs/diagrams/payment-lifecycle.lifecycle.json",
+      "html": "docs/diagrams/payment-lifecycle.html",
+      "svg": "docs/diagrams/payment-lifecycle.svg"
+    },
+    {
+      "name": "crm outreach flow",
+      "type": "workflow",
+      "source": "docs/diagrams/crm-outreach-flow.workflow.json",
+      "html": "docs/diagrams/crm-outreach-flow.html",
+      "svg": "docs/diagrams/crm-outreach-flow.svg"
+    },
+    {
+      "name": "production recovery flow",
+      "type": "workflow",
+      "source": "docs/diagrams/production-recovery-flow.workflow.json",
+      "html": "docs/diagrams/production-recovery-flow.html",
+      "svg": "docs/diagrams/production-recovery-flow.svg"
+    }
+  ]
+}
