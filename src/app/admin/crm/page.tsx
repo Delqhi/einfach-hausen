@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowLeft,CheckCircle2,Database,Mail,MessageCircle,Phone,Search,ShieldCheck,UserRoundPlus,UsersRound,Globe2 } from 'lucide-react';
 import { requireAdmin } from '@/lib/admin-auth';
-import { CRM_LEAD_TYPES,CRM_PERMISSIONS,CRM_SOURCES,CRM_STATUSES,crmCategories,crmStats,listCrmLeads } from '@/lib/crm';
+import { CRM_LEAD_TYPES,CRM_PERMISSIONS,CRM_SOURCES,CRM_STATUSES,crmCategories,crmStats,listCrmLeads,recentCrmInboxEvents } from '@/lib/crm';
 import { addCrmLeadAction,syncBusinessResearchAction,updateCrmLeadAction } from './actions';
 
 const labels:Record<string,string>={collected:'Gesammelt',contact_ready:'Kontakt bereit',contacted:'Kontaktiert',replied:'Geantwortet',qualified:'Qualifiziert',invited:'Eingeladen',converted:'Konvertiert',not_interested:'Kein Interesse',invalid:'Ungültig',do_not_contact:'Nicht kontaktieren',unknown:'Ungeklärt',allowed:'Erlaubt',consented:'Einwilligung',denied:'Nicht erlaubt',provider:'Handwerker / Partner',homeowner:'Eigentümer',public_intent:'Öffentliches Bedarfssignal',property:'Objektchance',other:'Sonstiger Lead',business_research:'SIN Business Research',business_research_intent:'Öffentliches Intent-Signal',business_research_property:'Offene Gebäudedaten',website:'Website',referral:'Empfehlung',facebook_group:'Facebook-Gruppe',forum:'Forum',community:'Community',campaign:'Kampagne',manual:'Manuell',existing_customer:'Bestandskunde'};
@@ -14,6 +14,7 @@ export default async function CrmPage({searchParams}:{searchParams:Promise<Recor
   const stats=crmStats();
   const result=listCrmLeads({q:sp.q,status:sp.status,type:sp.type,category:sp.category,page,limit:60});
   const categories=crmCategories();
+  const inbox=recentCrmInboxEvents(10);
   return <main className="min-h-screen bg-[#f3f6f4] px-4 py-6 text-[#1d2a22] md:px-8">
     <div className="mx-auto max-w-[1500px]">
       <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -25,7 +26,7 @@ export default async function CrmPage({searchParams}:{searchParams:Promise<Recor
 
       <section className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         {[
-          ['Gesamt',stats.total,UsersRound],['E-Mail',stats.email,Mail],['Telefon',stats.phone,Phone],['Website',stats.website,Globe2],['Social',stats.social,MessageCircle],['Antworten',(stats.byStatus.find(x=>x.status==='replied')?.count||0),CheckCircle2]
+          ['Gesamt',stats.total,UsersRound],['E-Mail',stats.email,Mail],['Social',stats.social,MessageCircle],['Kontaktiert',stats.contacted,CheckCircle2],['Neue Antworten',stats.inbox,MessageCircle],['Qualifiziert',(stats.byStatus.find(x=>x.status==='qualified')?.count||0),CheckCircle2]
         ].map(([label,value,Icon]:any)=><article key={label} className="rounded-2xl border border-[#dfe6e0] bg-white p-4 shadow-[0_8px_28px_rgba(28,52,35,.04)]"><Icon size={18} className="mb-5 text-[#2e7a3f]"/><div className="text-2xl font-black">{compact(value)}</div><div className="mt-1 text-[11px] font-bold uppercase tracking-[.08em] text-[#7b887f]">{label}</div></article>)}
       </section>
 
@@ -52,6 +53,10 @@ export default async function CrmPage({searchParams}:{searchParams:Promise<Recor
         </section>
 
         <aside className="space-y-5">
+          <section className="rounded-2xl border border-[#dfe6e0] bg-white p-5 shadow-sm">
+            <div className="mb-3 flex items-center justify-between"><h2 className="font-black">Posteingang</h2><span className="rounded-full bg-[#eef5ef] px-2 py-1 text-[10px] font-black text-[#31623a]">{stats.inbox} neu</span></div>
+            <div className="space-y-3">{inbox.length?inbox.map(item=><div key={`${item.provider}:${item.account}:${item.external_id}`} className="rounded-xl bg-[#f8faf8] p-3"><div className="flex items-center justify-between gap-2"><strong className="truncate text-xs">{item.sender_label||item.sender_key||item.provider}</strong><span className="text-[9px] font-bold uppercase text-[#7b887f]">{item.provider} · {item.event_kind}</span></div>{item.subject&&<p className="mt-1 truncate text-[11px] font-semibold">{item.subject}</p>}<p className="mt-1 line-clamp-2 text-[10px] leading-4 text-[#6d7971]">{item.body_excerpt||'Neue Aktivität'}</p>{item.message_url&&<a href={item.message_url} target="_blank" rel="noreferrer" className="mt-2 inline-block text-[10px] font-bold text-[#286435]">Öffnen</a>}</div>):<p className="text-xs text-[#718077]">Keine neuen Antworten.</p>}</div>
+          </section>
           <section className="rounded-2xl border border-[#dfe6e0] bg-white p-5 shadow-sm"><div className="mb-4 flex items-start gap-3"><div className="rounded-xl bg-[#e9f3e8] p-2 text-[#2b6a37]"><UserRoundPlus size={18}/></div><div><h2 className="font-black">Lead hinzufügen</h2><p className="text-xs leading-5 text-[#718077]">Für Eigentümer z. B. Website-Anfrage, Empfehlung, Facebook-Gruppe, Forum oder Community dokumentieren.</p></div></div><form action={addCrmLeadAction} className="space-y-3">
             <div className="grid grid-cols-2 gap-2"><select name="leadType" defaultValue="provider" className="rounded-lg border p-2 text-xs">{CRM_LEAD_TYPES.map(x=><option key={x} value={x}>{labels[x]}</option>)}</select><select name="sourceType" defaultValue="manual" className="rounded-lg border p-2 text-xs">{CRM_SOURCES.map(x=><option key={x} value={x}>{labels[x]||x}</option>)}</select></div>
             <input name="name" required minLength={2} className="w-full rounded-lg border p-2.5 text-xs" placeholder="Name / Ansprechpartner"/><input name="companyName" className="w-full rounded-lg border p-2.5 text-xs" placeholder="Firma (optional)"/><input name="category" className="w-full rounded-lg border p-2.5 text-xs" placeholder="Gewerk / Interesse"/><div className="grid grid-cols-2 gap-2"><input name="postcode" className="rounded-lg border p-2.5 text-xs" placeholder="PLZ"/><input name="locality" className="rounded-lg border p-2.5 text-xs" placeholder="Ort"/></div><input type="hidden" name="country" value="DE"/><input name="email" type="email" className="w-full rounded-lg border p-2.5 text-xs" placeholder="E-Mail"/><input name="phone" className="w-full rounded-lg border p-2.5 text-xs" placeholder="Telefon"/><input name="website" className="w-full rounded-lg border p-2.5 text-xs" placeholder="Website"/><input name="profileUrl" className="w-full rounded-lg border p-2.5 text-xs" placeholder="Social-/Community-Profil URL"/><input name="sourceDetail" className="w-full rounded-lg border p-2.5 text-xs" placeholder="Quelle, Gruppe oder Kampagne"/><select name="permission" defaultValue="unknown" className="w-full rounded-lg border p-2.5 text-xs">{CRM_PERMISSIONS.map(x=><option key={x} value={x}>{labels[x]||x}</option>)}</select><textarea name="notes" rows={3} className="w-full rounded-lg border p-2.5 text-xs" placeholder="Interesse, Kontext, nächste Aktion …"/><button className="w-full rounded-xl bg-[#183d25] px-4 py-3 text-xs font-extrabold text-white">Lead speichern</button>

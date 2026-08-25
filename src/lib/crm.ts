@@ -66,6 +66,42 @@ export function ensureCrmSchema(){
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX IF NOT EXISTS idx_crm_events_lead ON crm_events(lead_id,created_at DESC);
+    CREATE TABLE IF NOT EXISTS crm_identity_keys (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id TEXT NOT NULL REFERENCES crm_leads(id) ON DELETE CASCADE,
+      key_type TEXT NOT NULL, key_value TEXT NOT NULL, platform TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(key_type,key_value,platform)
+    );
+    CREATE INDEX IF NOT EXISTS idx_crm_identity_lead ON crm_identity_keys(lead_id);
+    CREATE TABLE IF NOT EXISTS crm_duplicate_links (
+      duplicate_lead_id TEXT NOT NULL REFERENCES crm_leads(id) ON DELETE CASCADE, canonical_lead_id TEXT NOT NULL REFERENCES crm_leads(id) ON DELETE CASCADE,
+      key_type TEXT NOT NULL, key_value TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY(duplicate_lead_id,canonical_lead_id,key_type,key_value)
+    );
+    CREATE TABLE IF NOT EXISTS crm_campaigns (
+      id TEXT PRIMARY KEY, name TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'active', notes TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE TABLE IF NOT EXISTS crm_contact_history (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id TEXT NOT NULL REFERENCES crm_leads(id) ON DELETE CASCADE, campaign_id TEXT NOT NULL DEFAULT '',
+      channel TEXT NOT NULL, platform TEXT NOT NULL DEFAULT '', direction TEXT NOT NULL, destination TEXT NOT NULL DEFAULT '', destination_key TEXT NOT NULL DEFAULT '',
+      contact_kind TEXT NOT NULL DEFAULT 'initial', sequence_no INTEGER NOT NULL DEFAULT 0, external_message_id TEXT NOT NULL DEFAULT '', status TEXT NOT NULL DEFAULT 'recorded',
+      message_hash TEXT NOT NULL DEFAULT '', note TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS uq_crm_contact_delivery ON crm_contact_history(channel,destination_key,contact_kind,sequence_no) WHERE direction='outbound' AND destination_key!='';
+    CREATE INDEX IF NOT EXISTS idx_crm_contact_lead ON crm_contact_history(lead_id,created_at DESC);
+    CREATE TABLE IF NOT EXISTS crm_agent_locks (
+      lead_id TEXT PRIMARY KEY REFERENCES crm_leads(id) ON DELETE CASCADE, agent_id TEXT NOT NULL, claimed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, expires_at TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS crm_inbox_events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, provider TEXT NOT NULL, account TEXT NOT NULL DEFAULT '', external_id TEXT NOT NULL, lead_id TEXT REFERENCES crm_leads(id) ON DELETE SET NULL,
+      event_kind TEXT NOT NULL DEFAULT 'reply', sender_key TEXT NOT NULL DEFAULT '', sender_label TEXT NOT NULL DEFAULT '', subject TEXT NOT NULL DEFAULT '', body_excerpt TEXT NOT NULL DEFAULT '',
+      message_url TEXT NOT NULL DEFAULT '', received_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, processed_at TEXT, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(provider,account,external_id)
+    );
+    CREATE INDEX IF NOT EXISTS idx_crm_inbox_unprocessed ON crm_inbox_events(processed_at,received_at DESC);
+    CREATE TABLE IF NOT EXISTS crm_followups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, lead_id TEXT NOT NULL REFERENCES crm_leads(id) ON DELETE CASCADE, campaign_id TEXT NOT NULL DEFAULT '', channel TEXT NOT NULL,
+      sequence_no INTEGER NOT NULL, due_at TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'queued', created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, UNIQUE(lead_id,channel,sequence_no)
+    );
   `);
   crmReady=true;
 }
@@ -81,7 +117,9 @@ export function crmStats(){
   const byStatus=db.prepare('SELECT status,count(*) count FROM crm_leads GROUP BY status ORDER BY count DESC').all() as Array<{status:string;count:number}>;
   const byType=db.prepare('SELECT lead_type,count(*) count FROM crm_leads GROUP BY lead_type ORDER BY count DESC').all() as Array<{lead_type:string;count:number}>;
   const contact=db.prepare(`SELECT count(*) FILTER(WHERE email!='') email,count(*) FILTER(WHERE phone!='') phone,count(*) FILTER(WHERE website!='') website,count(*) FILTER(WHERE profile_url!='' OR socials_json!='[]') social FROM crm_leads`).get() as {email:number;phone:number;website:number;social:number};
-  return {total,byStatus,byType,...contact};
+  const inbox=(db.prepare('SELECT count(*) n FROM crm_inbox_events WHERE processed_at IS NULL').get() as {n:number}).n;
+  const contacted=(db.prepare("SELECT count(*) n FROM crm_contact_history WHERE direction='outbound'").get() as {n:number}).n;
+  return {total,byStatus,byType,...contact,inbox,contacted};
 }
 
 export function listCrmLeads(input:{q?:string;status?:string;type?:string;category?:string;page?:number;limit?:number}){
@@ -187,4 +225,10 @@ export function importBusinessResearchLeads(sourcePath:string){
   const inserted=['business_research','business_research_intent','business_research_property'].reduce((n,k)=>n+Math.max(0,(after.get(k)||0)-(before.get(k)||0)),0);
   const total=businesses+intents+properties;
   return {inserted,updated:Math.max(0,total-inserted),total,businesses,intents,properties,source:absolute};
+}
+
+export type CrmInboxEvent={id:number;provider:string;account:string;external_id:string;lead_id:string|null;event_kind:string;sender_key:string;sender_label:string;subject:string;body_excerpt:string;message_url:string;received_at:string;processed_at:string|null};
+export function recentCrmInboxEvents(limit=12){
+  ensureCrmSchema();
+  return db.prepare(`SELECT * FROM crm_inbox_events ORDER BY CASE WHEN processed_at IS NULL THEN 0 ELSE 1 END,received_at DESC LIMIT ?`).all(Math.max(1,Math.min(limit,50))) as CrmInboxEvent[];
 }
