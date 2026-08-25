@@ -57,3 +57,8 @@ next-env.d.ts
 /.sin-after-work/
 /.issue9-logo.png
 /src/app/pro/.t0018-final-start.log
+# local generated agent/code-intelligence state + Python bytecode
+/.gitnexus/
+/.sin-gpt-teamwork/
+__pycache__/
+*.py[cod]
