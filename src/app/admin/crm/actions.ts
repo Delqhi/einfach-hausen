@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/admin-auth';
-import { addCrmLead,CRM_LEAD_TYPES,CRM_PERMISSIONS,CRM_SOURCES,CRM_STATUSES,importBusinessResearchLeads,updateCrmLead } from '@/lib/crm';
+import { addCrmLead,CRM_LEAD_TYPES,CRM_PERMISSIONS,CRM_SOURCES,CRM_STATUSES,importBusinessResearchLeads,seedCrmQueue,updateCrmLead } from '@/lib/crm';
 
 const addSchema=z.object({
   leadType:z.enum(CRM_LEAD_TYPES),
@@ -58,4 +58,12 @@ export async function syncBusinessResearchAction(){
   try{ result=importBusinessResearchLeads(source); }catch{ redirect('/admin/crm?error=sync-failed'); }
   revalidatePath('/admin/crm');
   redirect(`/admin/crm?sync=${result.inserted}&updated=${result.updated}`);
+}
+
+export async function seedCrmQueueAction(){
+  await requireAdmin();
+  const result=seedCrmQueue();
+  revalidatePath('/admin/crm');
+  const queued=result.byState.find(x=>x.state==='queued')?.count||0;
+  redirect(`/admin/crm?queue=${queued}&duplicates=${result.duplicates}`);
 }
