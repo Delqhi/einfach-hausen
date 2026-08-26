@@ -239,6 +239,23 @@ await tech.goto(base+`/pro/jobs/${jobId}`); const documentDisclosure=tech.locato
 await owner.goto(base+'/app/messages'); await waitText(owner,'Thomas Weber'); await waitText(owner,'Bestehende Kundenbeziehung');
 await owner.goto(base+'/app/documents'); await waitText(owner,'Leistungsnachweis Heckenschnitt');
 
+// 7a) Notification Center: server-side read-state sync, per-item toggles, pagination chrome.
+await manager.goto(base+'/notifications'); await waitText(manager,'Angebote, Disposition');
+const notifRows=manager.locator('.notification-row'); if(await notifRows.count()===0)throw new Error('Manager should have dispatch notifications by now');
+const firstRow=notifRows.first();
+const wasUnread=(await firstRow.getAttribute('class'))?.includes('unread');
+if(wasUnread){
+  await clickServerAction(manager,firstRow.getByRole('button',{name:/^Als gelesen markieren/}));
+  await waitText(manager,'Alle gelesen');
+}
+await manager.reload();
+const cls=await notifRows.first().getAttribute('class'); if(cls?.includes('unread'))throw new Error('Read state did not persist across reload');
+// Toggle back to unread keeps the center honest in both directions.
+await clickServerAction(manager,notifRows.first().getByRole('button',{name:/^Als ungelesen markieren/}));
+await manager.waitForFunction(()=>document.querySelector('.notification-row')?.classList.contains('unread')===true,{timeout:10000});
+const cls2=await notifRows.first().getAttribute('class'); if(!cls2?.includes('unread'))throw new Error('Unread toggle did not apply');
+await assertNoOverflow(manager,'Mobile notification center');
+
 // 8) Hausakte und Tarife entsprechen dem Geschäftsmodell.
 await owner.goto(base+'/app/home'); await waitText(owner,'Gebäude & Räume'); await assertNoOverflow(owner,'Mobile house file'); await owner.locator('.house-menu details > summary').click(); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche m²').fill('145'); await owner.getByLabel('Grundstück m²').fill('620'); await clickServerAction(owner,owner.getByRole('button',{name:'Hausprofil speichern'}));
 const assetForm=owner.locator('.asset-form'); await assetForm.locator('select[name="kind"]').selectOption('pv'); await assetForm.locator('input[name="name"]').fill('PV-Anlage 10 kWp'); await clickServerAction(owner,assetForm.getByRole('button',{name:'Hinzufügen'})); await waitText(owner,'PV-Anlage und Ertrag prüfen');
