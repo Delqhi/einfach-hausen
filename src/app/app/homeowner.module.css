@@ -1733,3 +1733,37 @@
     padding-inline: 12px;
   }
 }
+
+/* Jobs: quiet comparison surfaces and an easy-to-scan status journey. */
+.ownerScope :global(.mobile-job-list) {
+  display: grid;
+  gap: 12px;
+  border-top: 0;
+}
+.ownerScope :global(.mobile-job-card) {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--owner-border);
+  border-radius: 18px;
+  background: var(--owner-surface);
+  box-shadow: 0 8px 24px rgba(18, 60, 42, 0.04);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.ownerScope :global(.mobile-job-card:hover) {
+  border-color: #b8d9c5;
+  box-shadow: 0 12px 30px rgba(18, 60, 42, 0.08);
+  transform: translateY(-1px);
+}
+.ownerScope :global(.detail-head) {
+  padding: 24px;
+  border: 1px solid var(--owner-border);
+  border-radius: 20px;
+  background: var(--owner-surface);
+}
+.ownerScope :global(.detail-head + .ai-summary) {
+  margin-top: 16px;
+}
+@media (max-width: 520px) {
+  .ownerScope :global(.mobile-job-card) { padding: 16px; border-radius: 16px; }
+  .ownerScope :global(.detail-head) { padding: 20px 16px; border-radius: 18px; }
+}
