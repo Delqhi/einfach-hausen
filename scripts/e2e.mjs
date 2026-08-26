@@ -29,7 +29,8 @@ function browserExecutable(){
   const bundled=typeof chromium.executablePath==='function'?chromium.executablePath():'';
   const candidates=[process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,process.env.CHROME_PATH,bundled,
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome','/Applications/Chromium.app/Contents/MacOS/Chromium',
-    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge','/opt/google/chrome/chrome','/usr/bin/google-chrome',
+    '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge','/opt/google/chrome/chrome',
+    '/snap/chromium/current/usr/lib/chromium-browser/chrome','/usr/bin/google-chrome',
     '/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser','/snap/bin/chromium'].filter(Boolean);
   const found=candidates.find(candidate=>fs.existsSync(candidate));
   if(!found)throw new Error('No Chromium-family browser found; set PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH or CHROME_PATH');
@@ -128,6 +129,7 @@ await clickAndWaitUrl(manager,manager.getByRole('button',{name:'Zur Prüfung ein
 const adminCtx=await browser.newContext({viewport:{width:1180,height:1000}}); const admin=await adminCtx.newPage(); trackPage(admin,'admin');
 await admin.goto(base+'/admin/login'); await admin.getByLabel('Admin-Passwort').fill(adminPassword);
 await Promise.all([admin.waitForURL('**/admin'),admin.getByRole('button',{name:'Admin anmelden'}).click()]);
+await admin.getByRole('heading',{name:'Betriebsübersicht'}).waitFor(); await waitText(admin,'Nutzer'); await waitText(admin,'Anfragen'); await waitText(admin,'Bookings'); await waitText(admin,'Matching'); await waitText(admin,'Benachrichtigungen'); await admin.getByRole('heading',{name:'Bewertungen'}).waitFor();
 let companyCard=admin.locator('.admin-card').filter({hasText:'Gartenbau Müller'}).first();
 await clickServerAction(admin,companyCard.getByRole('button',{name:'Unternehmen freigeben'})); await companyCard.locator('.status.approved').waitFor();
 companyCard=admin.locator('.admin-card').filter({hasText:'Gartenbau Müller'}).first();
