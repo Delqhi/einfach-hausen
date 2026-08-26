@@ -87,7 +87,25 @@ export type MatchScoreComponents = {
   existingRelationship: boolean;
   openJobs: number;
   emergencyPoints: number;
+  // Availability-data freshness (EH T-0109): how recently the partner
+  // confirmed their availability/capacity settings. Stale data is penalized
+  // instead of trusted blindly.
+  availabilityFreshness?: AvailabilityFreshness;
 };
+
+export type AvailabilityFreshness = 'fresh' | 'stale' | 'unknown';
+
+export const AVAILABILITY_FRESH_DAYS = 90;
+
+// Classifies preference-data staleness. Unknown timestamps count as unknown
+// (mild fallback penalty), never as fresh.
+export function classifyAvailabilityFreshness(prefsUpdatedAt: string | null | undefined, now: Date = new Date()): AvailabilityFreshness {
+  if (!prefsUpdatedAt) return 'unknown';
+  const updated = Date.parse(prefsUpdatedAt.endsWith('Z') || prefsUpdatedAt.includes('+') ? prefsUpdatedAt : `${prefsUpdatedAt}Z`);
+  if (!Number.isFinite(updated)) return 'unknown';
+  const ageDays = (now.getTime() - updated) / 86_400_000;
+  return ageDays <= AVAILABILITY_FRESH_DAYS ? 'fresh' : 'stale';
+}
 
 // Builds the human-readable reason list for a candidate score. Points per
 // reason sum exactly to the final score, so UI and trace can never disagree
@@ -102,6 +120,8 @@ export function explainMatchScore(c: MatchScoreComponents): { reasons: MatchReas
   if (c.existingRelationship) reasons.push({ key: 'relationship', label: 'Bewährter Ansprechpartner des Eigentümers', points: 30 });
   const capacityScore = Math.max(-20, 10 - (Number(c.openJobs) || 0) * 2);
   reasons.push({ key: 'capacity', label: `${c.openJobs} offene Aufträge`, points: capacityScore });
+  if (c.availabilityFreshness === 'stale') reasons.push({ key: 'availability_freshness', label: 'Verfügbarkeit seit über 90 Tagen nicht bestätigt', points: -6 });
+  else if (c.availabilityFreshness === 'unknown') reasons.push({ key: 'availability_freshness', label: 'Verfügbarkeit nie explizit bestätigt', points: -3 });
   if (c.emergencyPoints !== 0) reasons.push({ key: 'emergency', label: 'Notfall-Reaktionsstärke', points: Math.round(c.emergencyPoints * 10) / 10 });
   reasons.sort((a, b) => Math.abs(b.points) - Math.abs(a.points) || a.key.localeCompare(b.key));
   const score = reasons.reduce((sum, r) => sum + r.points, 0);

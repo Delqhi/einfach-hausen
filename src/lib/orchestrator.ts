@@ -1,7 +1,7 @@
 import { db } from './db';
 import { analyzeRequest, answerHouseQuestion } from './request-ai';
 import { geocodePostcode, distanceKm, regionalPostcodeGeo } from './geocode';
-import { berlinRequestTimestamp, emergencyAvailableAt, emergencyResponseScore, explainMatchScore, preferredRequestWindow, type MatchReason } from './matching';
+import { berlinRequestTimestamp, classifyAvailabilityFreshness, emergencyAvailableAt, emergencyResponseScore, explainMatchScore, preferredRequestWindow, type MatchReason } from './matching';
 import { resolveDispatchService, type DispatchService } from './dispatch-config';
 import { providerSupportsService } from './provider-directory';
 import { createNotification } from './notifications';
@@ -36,7 +36,7 @@ export function appendJobEvent(jobId:number,body:string,metadata:Record<string,u
 }
 
 async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jobPostcode:string,jobGeo:{lat:number;lon:number}|null,requestKind:HausmeisterIntent|'emergency'='service'){
-  const partners=db.prepare(`SELECT p.*,c.status contract_status,c.insurance_verified,c.qualification_verified,c.contract_verified,c.quality_standard_verified,c.customer_discount_bps,c.response_target_minutes,pref.accepts_normal_jobs,pref.accepts_short_notice,pref.accepts_consultation,pref.accepts_emergencies,pref.emergency_mode,pref.emergency_markup_bps,pref.emergency_start,pref.emergency_end,pref.emergency_days,
+  const partners=db.prepare(`SELECT p.*,c.status contract_status,c.insurance_verified,c.qualification_verified,c.contract_verified,c.quality_standard_verified,c.customer_discount_bps,c.response_target_minutes,pref.accepts_normal_jobs,pref.accepts_short_notice,pref.accepts_consultation,pref.accepts_emergencies,pref.emergency_mode,pref.emergency_markup_bps,pref.emergency_start,pref.emergency_end,pref.emergency_days,pref.updated_at pref_updated_at,
       (SELECT AVG((julianday(d2.responded_at)-julianday(d2.sent_at))*1440.0) FROM job_dispatches d2 WHERE d2.provider_id=p.user_id AND d2.responded_at IS NOT NULL AND d2.sent_at>=datetime('now','-90 days')) average_response_minutes,
       (SELECT COUNT(*) FROM job_dispatches d3 WHERE d3.provider_id=p.user_id AND d3.responded_at IS NOT NULL AND d3.sent_at>=datetime('now','-90 days')) response_samples,
       CASE WHEN ps.id IS NULL THEN free.monthly_lead_limit ELSE paid.monthly_lead_limit END monthly_lead_limit,
@@ -79,7 +79,8 @@ async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jo
     const quality=[p.insurance_verified,p.qualification_verified,p.contract_verified,p.quality_standard_verified].filter(Boolean).length;
     const openJobs=(db.prepare(`SELECT COUNT(*) c FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status='accepted' AND j.status IN ('accepted','in_progress')`).get(p.user_id) as {c:number}).c;
     const emergencyScore=requestKind==='emergency'?emergencyResponseScore({averageResponseMinutes:p.average_response_minutes,responseSamples:p.response_samples,responseTargetMinutes:p.response_target_minutes,emergencyMode:p.emergency_mode}):0;
-    const explained=explainMatchScore({qualityVerified:quality,distanceKm:distance,rating:Number(p.rating)||0,existingRelationship:preferredProviders.has(p.user_id),openJobs,emergencyPoints:emergencyScore});
+    const availabilityFreshness=classifyAvailabilityFreshness(p.pref_updated_at ?? p.updated_at);
+    const explained=explainMatchScore({qualityVerified:quality,distanceKm:distance,rating:Number(p.rating)||0,existingRelationship:preferredProviders.has(p.user_id),openJobs,emergencyPoints:emergencyScore,availabilityFreshness});
     matches.push({p,distance,score:explained.score,reasons:explained.reasons});
   }
   matches.sort((a,b)=>b.score-a.score||((a.distance??Number.POSITIVE_INFINITY)-(b.distance??Number.POSITIVE_INFINITY))||Number(a.p.user_id)-Number(b.p.user_id));

@@ -39,6 +39,18 @@ try {
 
   const overloaded = m.explainMatchScore({ qualityVerified: 0, distanceKm: null, rating: 0, existingRelationship: false, openJobs: 30, emergencyPoints: 0 });
   check('capacity penalty clamps at -20', overloaded.reasons.find(r => r.key === 'capacity')?.points === -20);
+
+  // Availability freshness (EH T-0109): stale data is penalized, fresh is free.
+  check('fresh classification within 90 days', m.classifyAvailabilityFreshness('2026-08-01 00:00:00', new Date('2026-08-26T12:00:00Z')) === 'fresh');
+  check('stale beyond 90 days', m.classifyAvailabilityFreshness('2026-01-15 00:00:00', new Date('2026-08-26T12:00:00Z')) === 'stale');
+  check('missing timestamp classifies unknown', m.classifyAvailabilityFreshness(null) === 'unknown' && m.classifyAvailabilityFreshness('garbage') === 'unknown');
+  const stale = m.explainMatchScore({ qualityVerified: 2, distanceKm: null, rating: 0, existingRelationship: false, openJobs: 0, emergencyPoints: 0, availabilityFreshness: 'stale' });
+  check('stale availability penalized -6 with honest label', stale.reasons.find(r => r.key === 'availability_freshness')?.points === -6 && stale.reasons.find(r => r.key === 'availability_freshness')?.label.includes('90 Tagen'));
+  const unknown = m.explainMatchScore({ qualityVerified: 2, distanceKm: null, rating: 0, existingRelationship: false, openJobs: 0, emergencyPoints: 0, availabilityFreshness: 'unknown' });
+  check('unknown availability mildly penalized -3', unknown.reasons.find(r => r.key === 'availability_freshness')?.points === -3);
+  const fresh = m.explainMatchScore({ qualityVerified: 2, distanceKm: null, rating: 0, existingRelationship: false, openJobs: 0, emergencyPoints: 0, availabilityFreshness: 'fresh' });
+  check('fresh availability adds no reason and no points', !fresh.reasons.some(r => r.key === 'availability_freshness'));
+  check('points still sum to score with freshness penalties', [stale, unknown, fresh].every(x => Math.round(x.reasons.reduce((s, r) => s + r.points, 0) * 10) / 10 === x.score));
 } catch (error) {
   failures.push(`module load failed :: ${error.message}`);
   console.error(error);
