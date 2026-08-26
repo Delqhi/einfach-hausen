@@ -1767,3 +1767,35 @@
   .ownerScope :global(.mobile-job-card) { padding: 16px; border-radius: 16px; }
   .ownerScope :global(.detail-head) { padding: 20px 16px; border-radius: 18px; }
 }
+
+/* Mein Haus: a durable house record, grouped by human concepts. */
+.ownerScope :global(.house-cover-card) {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid var(--owner-border);
+  border-radius: 22px;
+  background: var(--owner-surface);
+  box-shadow: 0 10px 30px rgba(18, 60, 42, 0.05);
+}
+.ownerScope :global(.house-cover-art) {
+  flex: 0 0 auto;
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  background: var(--owner-green-100);
+  color: var(--owner-green-700);
+}
+.ownerScope :global(.house-cover-copy) { min-width: 0; display: grid; gap: 4px; }
+.ownerScope :global(.house-cover-copy small) { color: var(--owner-green-700); font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .05em; }
+.ownerScope :global(.house-cover-copy strong) { overflow: hidden; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
+.ownerScope :global(.house-menu > a:hover),
+.ownerScope :global(.house-menu > details > summary:hover) { background: var(--owner-green-50); border-radius: 12px; }
+.ownerScope :global(.year-preview-card) { border-radius: 16px; padding-inline: 16px; background: var(--owner-green-50); border: 1px solid var(--owner-border); }
+.ownerScope :global(.asset-grid article),
+.ownerScope :global(.maintenance-row) { min-height: 70px; }
+@media (max-width: 520px) {
+  .ownerScope :global(.house-cover-card) { padding: 18px; border-radius: 18px; }
+  .ownerScope :global(.house-cover-art) { width: 50px; height: 50px; border-radius: 14px; }
+}
