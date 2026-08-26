@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { createE2EFixture } from './e2e-fixtures.mjs';
+const { db } = await import('../src/lib/db.ts');
+const fixture = createE2EFixture(db, { namespace: 'acceptance' });
+assert.equal(db.prepare('SELECT role FROM users WHERE id=?').get(fixture.homeownerId).role, 'homeowner');
+assert.equal(db.prepare('SELECT verified FROM provider_profiles WHERE user_id=?').get(fixture.providerId).verified, 1);
+assert.equal(db.prepare('SELECT COUNT(*) c FROM properties WHERE id=?').get(fixture.propertyId).c, 1);
+assert.equal(db.prepare('SELECT status FROM jobs WHERE id=?').get(fixture.jobId).status, 'accepted');
+assert.equal(db.prepare('SELECT COUNT(*) c FROM job_dispatches WHERE job_id=?').get(fixture.jobId).c, 1);
+assert.equal(db.prepare('SELECT COUNT(*) c FROM appointments WHERE id=?').get(fixture.appointmentId).c, 1);
+assert.equal(db.prepare('SELECT COUNT(*) c FROM reviews WHERE job_id=?').get(fixture.jobId).c, 1);
+console.log(JSON.stringify({ ok: true, fixture }));
