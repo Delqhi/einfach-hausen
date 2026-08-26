@@ -181,7 +181,10 @@ addColumnIfMissing('house_transfers','property_id','property_id INTEGER REFERENC
 addColumnIfMissing('sessions','issued_at','issued_at TEXT');
 addColumnIfMissing('admin_sessions','issued_at','issued_at TEXT');
 // First-run onboarding state for homeowners (EH T-0101). 'done' keeps every
-// Explainable matching (EH T-0107): per-dispatch decision trace.
+// Post-job review eligibility + verified data model (EH T-0110).
+addColumnIfMissing('reviews','verified','verified INTEGER NOT NULL DEFAULT 1');
+addColumnIfMissing('reviews','eligibility_reason','eligibility_reason TEXT');
+/* Explainable matching (EH T-0107): per-dispatch decision trace.*/
 db.exec(`CREATE TABLE IF NOT EXISTS match_decision_trace (id INTEGER PRIMARY KEY AUTOINCREMENT,job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,provider_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,decision TEXT NOT NULL CHECK(decision IN ('dispatched','excluded')),reason_key TEXT NOT NULL,detail TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)`);
 db.exec(`CREATE INDEX IF NOT EXISTS idx_match_trace_job ON match_decision_trace(job_id,created_at DESC)`);
 addColumnIfMissing('job_dispatches','reasons_json','reasons_json TEXT');

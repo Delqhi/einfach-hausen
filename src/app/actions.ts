@@ -497,9 +497,12 @@ export async function createInvoiceCheckoutAction(invoiceId:number){
 
 export async function reviewAction(jobId:number, fd:FormData){
   const user=await requireUser('homeowner'); const rating=Math.max(1,Math.min(5,int(fd,'rating')||5));
-  const row=db.prepare(`SELECT j.homeowner_id,q.provider_id FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=? AND j.status='completed'`).get(jobId) as any;
-  if(!row || row.homeowner_id!==user.id) return;
-  db.prepare('INSERT OR REPLACE INTO reviews(job_id,homeowner_id,provider_id,rating,comment) VALUES(?,?,?,?,?)').run(jobId,user.id,row.provider_id,rating,text(fd,'comment'));
+  const { resolveReviewContext } = await import('@/lib/review-eligibility');
+  const eligible = resolveReviewContext(db, jobId, user.role ?? null, user.id);
+  if (!eligible.allowed) redirect(`/app/jobs/${jobId}?error=${encodeURIComponent(eligible.reason)}`);
+  const row=db.prepare('SELECT j.homeowner_id,q.provider_id FROM jobs j LEFT JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=?').get(jobId) as any;
+  if (!row || !row.provider_id || row.homeowner_id !== user.id) redirect(`/app/jobs/${jobId}?error=Selbstbewertung%20nicht%20erlaubt`);
+  db.prepare('INSERT OR REPLACE INTO reviews(job_id,homeowner_id,provider_id,rating,comment,verified,eligibility_reason) VALUES(?,?,?,?,?,?,?)').run(jobId, user.id, row.provider_id, rating, text(fd, 'comment'), 1, eligible.reason);
   const agg=db.prepare('SELECT AVG(rating) avg,COUNT(*) count FROM reviews WHERE provider_id=?').get(row.provider_id) as any;
   db.prepare('UPDATE provider_profiles SET rating=?,rating_count=? WHERE user_id=?').run(agg.avg||0,agg.count||0,row.provider_id);
   const assigned=db.prepare('SELECT contact_user_id FROM job_assignments WHERE job_id=?').get(jobId) as {contact_user_id:number}|undefined; const recipients=new Set<number>([...getProviderManagerIds(row.provider_id),...(assigned?[assigned.contact_user_id]:[])]); for(const recipient of recipients)createNotification(recipient,'Neue Bewertung',`Der Auftrag hat eine ${rating}-Sterne-Bewertung erhalten.`,`/pro/orders`,'review');
