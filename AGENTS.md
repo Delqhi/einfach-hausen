@@ -170,3 +170,150 @@ updated: 2026-08-26T14:27:32+00:00
 actor: local-agent
 evidence-sha256: a73593c023c7d82fc6306ea2fce3f45eaac6fe94ff94c60589a048581736f648
 -->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0164
+updated: 2026-08-26T15:43:26+00:00
+actor: local-agent
+evidence-sha256: 6e808dd8296359a6ed71a9bc0233622843628ce933fabc8f2bd6be9c18a06087
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0165
+updated: 2026-08-26T15:44:24+00:00
+actor: local-agent
+evidence-sha256: 35e2db2bb0dd5858f605cfd6057a51bd5a2cc1733437cbe03b37f501140d5259
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0167
+updated: 2026-08-26T17:58:59+00:00
+actor: local-agent
+evidence-sha256: fbb81df390757352fa4b5eef8a9d588c872e51e967bf063af55523cd0790203a
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0168
+updated: 2026-08-26T18:04:35+00:00
+actor: local-agent
+evidence-sha256: cddef743ddcbea9daa1ac14e2f401c5e68470280862077bedb48542798d521e3
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0169
+updated: 2026-08-26T18:10:05+00:00
+actor: local-agent
+evidence-sha256: 9e54c89cf783fdec3bfac2b296c5cf87812231375dc96e2f9f25c4b4aa627210
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0173
+updated: 2026-08-26T18:18:41+00:00
+actor: local-agent
+evidence-sha256: 3b42e8e7560437f09e36c1c1afc42223cc10fc5140880d68b9edab0e386d9c4d
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0170
+updated: 2026-08-26T18:23:00+00:00
+actor: local-agent
+evidence-sha256: 3301600a2ffff136c37ca355c7a51268296d9f2959e02ab5de8480a77935685f
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0171
+updated: 2026-08-26T18:44:41+00:00
+actor: local-agent
+evidence-sha256: fd8973c6f65fbc9de171997c767818934e0bcd1b2dd47cb00d312955bb498efa
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0140
+updated: 2026-08-26T18:58:51+00:00
+actor: local-agent
+evidence-sha256: 9a98b49675963b2ea908a68a789931a1ce3a120c18862d3fba049bda0fb087c7
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0141
+updated: 2026-08-26T19:03:51+00:00
+actor: local-agent
+evidence-sha256: d2ac93b376b977a7e8c1e97fa78f2e3cc4a6fa132413259427293fa43456d185
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0172
+updated: 2026-08-26T19:25:24+00:00
+actor: local-agent
+evidence-sha256: dcd867da25695f1168a7f176d082ca52bdc934dcb9e40f949e46251cbed16821
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0174
+updated: 2026-08-26T19:25:24+00:00
+actor: local-agent
+evidence-sha256: e1e1520308294faa680b6bcbe176f96dc1d6131f95d218cc19ab176a39d3e9e9
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0175
+updated: 2026-08-26T19:25:24+00:00
+actor: local-agent
+evidence-sha256: da531fc298590aed92dd381b806c51d629170dc0414b589bddcdb3ac7a92d208
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0176
+updated: 2026-08-26T19:25:25+00:00
+actor: local-agent
+evidence-sha256: 48a6469d9986ed404e1e7aeabe1156491db410f54682f13015cd57bb8a212e48
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0177
+updated: 2026-08-26T19:30:34+00:00
+actor: local-agent
+evidence-sha256: 9b8b11fb86f4f29f8111ff8159cfd63f0d8147ad9c9fe8172abe609087578c9e
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0148
+updated: 2026-08-26T19:30:47+00:00
+actor: local-agent
+evidence-sha256: 4ef622af886af3eec0fcee15e0c9b6f3701562e2b54c557679f7865d0015c705
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0149
+updated: 2026-08-26T19:30:48+00:00
+actor: local-agent
+evidence-sha256: ee7dd33a827a4186797e2e9fd11b46d1d34b100736afd7c3edb1ecccd9661465
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0150
+updated: 2026-08-26T19:36:09+00:00
+actor: local-agent
+evidence-sha256: 8408674ed32c856ac5fa4c249f081c989efe634068d4e1c18a36080b76426a4d
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0158
+updated: 2026-08-26T19:38:16+00:00
+actor: local-agent
+evidence-sha256: 1334808461c1eefcd702dde2d78c41249acef0f3a9ad16fb200938bea3b44d16
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0159
+updated: 2026-08-26T19:38:17+00:00
+actor: local-agent
+evidence-sha256: 4f805b7450d7a6291c49d70fbd741f091ce1c5cbd8e5e3de65e85b8daa1590aa
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0135
+updated: 2026-08-26T20:15:45+00:00
+actor: local-agent
+evidence-sha256: 8cc3663b0397c2fbcef390d333845930ad753ab448184830a67735e6b2b43ac0
+-->
