@@ -93,3 +93,10 @@ This project is indexed by GitNexus as **einfach-hausen** (1910 symbols, 4420 re
 - Synchronized at: `2026-08-25T20:59:52+00:00`
 - Contract: `sin-gpt-web-completion-handover-v1`
 <!-- SIN-GPT-WEB-HANDOVER:END -->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0100
+updated: 2026-08-26T11:54:15+00:00
+actor: local-agent
+evidence-sha256: f42a70c09249785cee78d453593730b02e462563c2ea52dd3f96ff13d447e5a6
+-->
