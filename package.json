@@ -17,7 +17,8 @@
     "test:e2e:architecture": "node scripts/e2e-architecture.mjs",
     "test:intake": "node scripts/t0004-intake-regression.mjs",
     "test:matching": "node scripts/t0005-regression.mjs && node scripts/t0005-plus-regression.mjs",
-    "test:t0005": "node scripts/t0005-plus-regression.mjs"
+    "test:t0005": "node scripts/t0005-plus-regression.mjs",
+    "test:onboarding": "node scripts/t0103-onboarding-regression.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
