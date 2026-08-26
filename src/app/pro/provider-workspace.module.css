@@ -1775,3 +1775,78 @@
     transition: none !important;
   }
 }
+
+/* Provider uses the shared light product language; only data density differs. */
+.providerScope :global(.app-shell-v3.pro-theme),
+.providerScope :global(.app-shell-v3.pro-theme .workspace-shell),
+.providerScope :global(.app-shell-v3.pro-theme .workspace-main),
+.providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
+  background: var(--provider-canvas);
+  color: var(--provider-text);
+}
+.providerScope :global(.app-shell-v3.pro-theme .desktop-sidebar) {
+  background: var(--provider-surface);
+  border-color: var(--provider-border);
+  padding: 14px 10px;
+}
+.providerScope :global(.app-shell-v3.pro-theme .topbar-v3) {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--provider-border);
+  color: var(--provider-text);
+}
+.providerScope :global(.app-shell-v3.pro-theme .app-menu summary) {
+  min-height: 44px;
+  border-radius: 12px;
+  color: var(--provider-green-900);
+}
+.providerScope :global(.app-shell-v3.pro-theme .app-menu summary:hover),
+.providerScope :global(.app-shell-v3.pro-theme .app-menu[open] .app-menu-summary) {
+  background: var(--provider-green-50);
+}
+.providerScope :global(.app-shell-v3.pro-theme .app-menu[open] .sidebar-nav a.active) {
+  background: var(--provider-green-100);
+  color: var(--provider-green-900);
+}
+.providerScope :global(.app-shell-v3.pro-theme .app-menu[open] .sidebar-nav a:hover) {
+  background: var(--provider-subtle);
+}
+.providerScope :global(.app-shell-v3.pro-theme .workspace-shell) {
+  grid-template-columns: 72px minmax(0, 1fr);
+}
+.providerScope :global(.app-shell-v3.pro-theme .workspace-shell:has(.app-menu[open])) {
+  grid-template-columns: 236px minmax(0, 1fr);
+}
+.providerScope :global(.app-shell-v3.pro-theme .app-menu:not([open]) .app-menu-content),
+.providerScope :global(.app-shell-v3.pro-theme .app-menu:not([open]) .sidebar-brand),
+.providerScope :global(.app-shell-v3.pro-theme .app-menu:not([open]) .sidebar-footer) {
+  display: none;
+}
+.providerScope :global(.app-shell-v3.pro-theme .app-menu:not([open]) .sidebar-nav a) {
+  justify-content: center;
+  padding-inline: 4px;
+}
+.providerScope :global(.app-shell-v3.pro-theme .app-menu:not([open]) .sidebar-nav a > span:not(.sidebar-icon)) {
+  display: none;
+}
+.providerScope :global(.app-shell-v3.pro-theme .metrics),
+.providerScope :global(.app-shell-v3.pro-theme .pro-request),
+.providerScope :global(.app-shell-v3.pro-theme .quote-form),
+.providerScope :global(.app-shell-v3.pro-theme .pro-form),
+.providerScope :global(.app-shell-v3.pro-theme .document-form),
+.providerScope :global(.app-shell-v3.pro-theme .contact-request-note) {
+  background: var(--provider-surface);
+  color: var(--provider-text);
+  border-color: var(--provider-border);
+}
+.providerScope :global(.app-shell-v3.pro-theme .pro-request) {
+  border-top-color: var(--provider-border);
+}
+.providerScope :global(.app-shell-v3.pro-theme .bottom-nav) {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: var(--provider-border);
+}
+@media (max-width: 720px) {
+  .providerScope :global(.app-shell-v3.pro-theme .workspace-shell) {
+    grid-template-columns: 1fr;
+  }
+}

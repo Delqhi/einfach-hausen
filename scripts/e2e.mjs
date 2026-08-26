@@ -134,7 +134,7 @@ companyCard=admin.locator('.admin-card').filter({hasText:'Gartenbau Müller'}).f
 await companyCard.getByLabel('Status').selectOption('active');
 for(const name of ['Betriebshaftpflicht geprüft','Qualifikation/Zulassung geprüft','Partnervertrag unterschrieben','Qualitätsstandard akzeptiert']) await companyCard.getByLabel(name).check();
 await clickServerAction(admin,companyCard.getByRole('button',{name:'Partnervertrag speichern'})); await companyCard.getByText(/Vertrag Aktiv/).waitFor();
-await manager.goto(base+'/pro/profile'); await waitText(manager,'Aktiver Einfach-Hausen-Vertragspartner'); await waitText(manager,'0 % Provision');
+await manager.goto(base+'/pro/profile'); await waitText(manager,'Aktiver Einfach-Hausen-Vertragspartner'); await waitText(manager,'0 % Provision'); const providerCanvas=await manager.locator('.app-page').evaluate(el=>getComputedStyle(el).backgroundColor); if(providerCanvas==='rgb(17, 21, 18)')throw new Error('Provider app must use shared light canvas'); const providerMenu=manager.locator('.mobile-menu'); await providerMenu.locator('summary').click(); if(!(await providerMenu.locator('.mobile-menu-panel').isVisible()))throw new Error('Provider mobile menu did not open'); await providerMenu.locator('summary').click();
 await manager.getByLabel('Firmenanschrift').fill('Gartenstraße 12, 46325 Borken'); await manager.getByLabel('Steuernummer').fill('307/1234/5678');
 // Partner onboarding completeness: region radius, weekly capacity, availability, team.
 const radiusInput=manager.getByLabel(/Einsatzradius/); if(await radiusInput.count())await radiusInput.fill('40');
