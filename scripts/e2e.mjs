@@ -173,6 +173,7 @@ await Promise.all([owner.waitForURL('**/app?onboarding=done'),owner.waitForLoadS
 if(await owner.locator('.owner-onboarding-banner').count())throw new Error('Onboarding banner shown after completion');
 await assertNoOverflow(owner,'Mobile customer app');
 await owner.locator('.bottom-nav a').first().waitFor(); const ownerNavCount=await owner.locator('.bottom-nav a').count(); if(ownerNavCount!==5)throw new Error(`Mobile homeowner navigation must expose five primary destinations, got ${ownerNavCount}`);
+const mobileMenu=owner.locator('.mobile-menu'); await mobileMenu.locator('summary').click(); if(!(await mobileMenu.locator('.mobile-menu-panel').isVisible()))throw new Error('Mobile menu did not open'); if(await mobileMenu.locator('.mobile-menu-panel a').count()!==5)throw new Error('Mobile menu must expose five homeowner destinations'); await mobileMenu.locator('summary').click(); if(await mobileMenu.locator('.mobile-menu-panel').isVisible())throw new Error('Mobile menu did not close');
 await waitText(owner,'Dringender Notfall'); await waitText(owner,'Direkt einen Menschen fragen'); await owner.locator('.bottom-nav').getByText('Ansprechpartner',{exact:true}).waitFor();
 await owner.goto(base+'/app/profile'); await waitText(owner,'Einfach Hausen aufs Handy'); await assertNoOverflow(owner,'Mobile customer profile');
 await owner.goto(base+'/app/hausmeister'); await assertNoOverflow(owner,'Mobile housemaster');
