@@ -77,6 +77,22 @@ try {
   r = n.dispatchDueNotifications(Date.now());
   check('dead letters are never re-dispatched', r.dead === 0 && r.sent === 0 && r.retried === 0);
 
+  // Channel adapters + delivery receipts (EH T-0106).
+  const sentReceipts = n.deliveryReceipts(nid);
+  check('successful delivery writes a receipt', sentReceipts.length === 1 && sentReceipts[0].state === 'sent' && sentReceipts[0].channel === 'in_app');
+  const failedHistory = n.deliveryReceipts(badId);
+  check('every failed attempt is receipted in order', failedHistory.length === 3
+    && failedHistory[0].state === 'failed' && failedHistory[1].state === 'failed' && failedHistory[2].state === 'dead');
+  check('failure receipts explain the cause', failedHistory.every(r => r.detail.includes('adapter')));
+  check('unknown channel is detectable', n.knownChannel('email') === false && n.knownChannel('in_app') === true);
+  const seen = [];
+  n.registerChannelAdapter('test_channel', () => { seen.push(1); return 'sent'; });
+  const testId = n.enqueueNotification({ userId, title: 'adapter test', kind: 'info', channel: 'in_app' });
+  db.prepare("UPDATE notifications SET channel='test_channel' WHERE id=?").run(testId);
+  const r2 = n.dispatchDueNotifications(Date.now());
+  check('registered adapter delivers its channel', r2.sent === 1 && seen.length === 1);
+  check('custom adapter delivery leaves a sent receipt', n.deliveryReceipts(testId)[0]?.state === 'sent');
+
   // Legacy createNotification keeps working on top of the unified stack.
   n.createNotification(userId, 'Legacy', 'body', '/app');
   check('legacy insert still delivered', db.prepare("SELECT COUNT(*) c FROM notifications WHERE title='Legacy' AND status='sent'").get().c === 1);

@@ -74,31 +74,60 @@ export function enqueueNotification(input: EnqueueNotificationInput): number {
   return Number(info.lastInsertRowid);
 }
 
-// Deliver every due pending notification. In-app messages are delivered by
-// flipping to sent (the inbox reads the table directly); unknown channels
-// fail so the retry/backoff/dead-letter path stays honest.
+// --- Channel adapters (EH T-0106) ------------------------------------------
+// Each channel delivers one message and reports success or failure. In-app is
+// delivered by the row itself; external channels register adapters here as
+// they become available. Unknown channels fail honestly so retries stay real.
+export type ChannelAdapter = (message: { userId: number; title: string; body: string; href: string; kind: string }) => 'sent' | 'failed';
+
+const channelAdapters = new Map<string, ChannelAdapter>([
+  ['in_app', () => 'sent'],
+]);
+
+export function registerChannelAdapter(channel: string, adapter: ChannelAdapter): void {
+  channelAdapters.set(channel, adapter);
+}
+
+export function knownChannel(channel: string): boolean {
+  return channelAdapters.has(channel);
+}
+
+function recordReceipt(notificationId: number, channel: string, state: 'sent' | 'failed' | 'dead', detail: string): void {
+  db.prepare('INSERT INTO notification_receipts(notification_id,channel,state,detail) VALUES(?,?,?,?)').run(notificationId, channel, state, detail.slice(0, 300));
+}
+
+export function deliveryReceipts(notificationId: number): Array<{ channel: string; state: string; detail: string; created_at: string }> {
+  return db.prepare('SELECT channel,state,detail,created_at FROM notification_receipts WHERE notification_id=? ORDER BY created_at ASC, id ASC').all(notificationId) as any;
+}
+
+// Deliver every due pending notification through its channel adapter.
 export function dispatchDueNotifications(nowMs: number = Date.now()): { sent: number; retried: number; dead: number } {
   const due = db
-    .prepare("SELECT id,channel,retry_count FROM notifications WHERE status='pending' AND (next_retry_at IS NULL OR next_retry_at<=?) ORDER BY priority ASC, created_at ASC LIMIT 200")
-    .all(new Date(nowMs).toISOString()) as Array<{ id: number; channel: string; retry_count: number }>;
+    .prepare("SELECT id,user_id,kind,title,body,href,channel,retry_count FROM notifications WHERE status='pending' AND (next_retry_at IS NULL OR next_retry_at<=?) ORDER BY priority ASC, created_at ASC LIMIT 200")
+    .all(new Date(nowMs).toISOString()) as Array<{ id: number; user_id: number; kind: string; title: string; body: string; href: string; channel: string; retry_count: number }>;
   let sent = 0;
   let retried = 0;
   let dead = 0;
   for (const row of due) {
-    if (row.channel === 'in_app') {
+    const adapter = channelAdapters.get(row.channel);
+    const outcome = adapter ? adapter({ userId: row.user_id, title: row.title, body: row.body, href: row.href, kind: row.kind }) : 'failed';
+    if (outcome === 'sent') {
       db.prepare("UPDATE notifications SET status='sent' WHERE id=? AND status='pending'").run(row.id);
+      recordReceipt(row.id, row.channel, 'sent', 'delivered');
       sent++;
+      continue;
+    }
+    const attempts = row.retry_count + 1;
+    if (attempts >= MAX_NOTIFICATION_RETRIES) {
+      db.prepare("UPDATE notifications SET status='dead',retry_count=?,next_retry_at=NULL WHERE id=?").run(attempts, row.id);
+      recordReceipt(row.id, row.channel, 'dead', `no adapter for channel after ${attempts} attempts`);
+      dead++;
     } else {
-      const attempts = row.retry_count + 1;
-      if (attempts >= MAX_NOTIFICATION_RETRIES) {
-        db.prepare("UPDATE notifications SET status='dead',retry_count=?,next_retry_at=NULL WHERE id=?").run(attempts, row.id);
-        dead++;
-      } else {
-        const backoffSeconds = NOTIFICATION_RETRY_BASE_SECONDS * 2 ** (attempts - 1);
-        const nextRetry = new Date(nowMs + backoffSeconds * 1000).toISOString();
-        db.prepare("UPDATE notifications SET retry_count=?,next_retry_at=? WHERE id=? AND status='pending'").run(attempts, nextRetry, row.id);
-        retried++;
-      }
+      const backoffSeconds = NOTIFICATION_RETRY_BASE_SECONDS * 2 ** (attempts - 1);
+      const nextRetry = new Date(nowMs + backoffSeconds * 1000).toISOString();
+      db.prepare("UPDATE notifications SET retry_count=?,next_retry_at=? WHERE id=? AND status='pending'").run(attempts, nextRetry, row.id);
+      recordReceipt(row.id, row.channel, 'failed', adapter ? 'adapter reported failure' : 'no adapter registered');
+      retried++;
     }
   }
   return { sent, retried, dead };

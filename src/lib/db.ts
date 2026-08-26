@@ -184,6 +184,9 @@ addColumnIfMissing('admin_sessions','issued_at','issued_at TEXT');
 // Durable notification outbox (EH T-0104): domain events plus per-message
 // channel/priority/status/retry state. Historical rows count as delivered.
 db.exec(`CREATE TABLE IF NOT EXISTS notification_events (id INTEGER PRIMARY KEY AUTOINCREMENT,event_type TEXT NOT NULL,payload_json TEXT NOT NULL DEFAULT '{}',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,processed_at TEXT)`);
+// Per-attempt delivery receipts make every outbox attempt auditable (EH T-0106).
+db.exec(`CREATE TABLE IF NOT EXISTS notification_receipts (id INTEGER PRIMARY KEY AUTOINCREMENT,notification_id INTEGER NOT NULL REFERENCES notifications(id) ON DELETE CASCADE,channel TEXT NOT NULL,state TEXT NOT NULL CHECK(state IN ('sent','failed','dead')),detail TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)`);
+db.exec(`CREATE INDEX IF NOT EXISTS idx_notification_receipts_msg ON notification_receipts(notification_id,created_at DESC)`);
 addColumnIfMissing('notifications','channel',"channel TEXT NOT NULL DEFAULT 'in_app'");
 addColumnIfMissing('notifications','priority','priority INTEGER NOT NULL DEFAULT 5');
 addColumnIfMissing('notifications','status',"status TEXT NOT NULL DEFAULT 'sent'");
