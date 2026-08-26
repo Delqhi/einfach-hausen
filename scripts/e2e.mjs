@@ -5,9 +5,12 @@ import path from 'node:path';
 import { randomBytes } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { chromium } from 'playwright-core';
+import { chromium, firefox, webkit } from 'playwright-core';
 
 const repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const browserName=process.env.E2E_BROWSER||'chromium';
+const browserType={chromium,firefox,webkit}[browserName];
+if(!browserType)throw new Error(`Unsupported E2E_BROWSER: ${browserName}`);
 const tempRoot=fs.mkdtempSync(path.join(os.tmpdir(),'einfach-hausen-full-e2e-'));
 const projectRoot=path.join(tempRoot,'project');
 const databasePath=path.join(tempRoot,'app.sqlite3');
@@ -26,7 +29,11 @@ const serverLog=[];
 process.on('exit',()=>{try{if(server&&!server.killed)server.kill('SIGKILL');}catch{}try{fs.rmSync(tempRoot,{recursive:true,force:true});}catch{}});
 
 function browserExecutable(){
-  const bundled=typeof chromium.executablePath==='function'?chromium.executablePath():'';
+  const bundled=typeof browserType.executablePath==='function'?browserType.executablePath():'';
+  if(browserName!=='chromium'){
+    if(!bundled||!fs.existsSync(bundled))throw new Error(`No ${browserName} browser found; install the Playwright browser for E2E_BROWSER=${browserName}`);
+    return bundled;
+  }
   const candidates=[process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,process.env.CHROME_PATH,bundled,
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome','/Applications/Chromium.app/Contents/MacOS/Chromium',
     '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge','/opt/google/chrome/chrome',
@@ -89,7 +96,7 @@ await runChild([nextBin,'build','--webpack'],{cwd:projectRoot,env:runtimeEnv,tim
 server=spawn(process.execPath,[nextBin,'start','-H','127.0.0.1','-p',String(port)],{cwd:projectRoot,env:runtimeEnv,stdio:['ignore','pipe','pipe']});
 for(const stream of [server.stdout,server.stderr])stream.on('data',chunk=>{serverLog.push(chunk.toString());if(serverLog.length>300)serverLog.shift();});
 await waitForServer(`${base}/`);
-browser=await chromium.launch({headless:true,executablePath:browserExecutable()});
+browser=await browserType.launch({headless:true,executablePath:browserExecutable()});
 
 try {
 // 0) Öffentliche Website ist mobile-first, nutzenorientiert und als PWA installierbar.
