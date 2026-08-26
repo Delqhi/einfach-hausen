@@ -35,6 +35,7 @@ function browserExecutable(){
     '/Applications/Chromium.app/Contents/MacOS/Chromium',
     '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
     '/opt/google/chrome/chrome',
+    '/snap/chromium/current/usr/lib/chromium-browser/chrome',
     '/usr/bin/google-chrome',
     '/usr/bin/google-chrome-stable',
     '/usr/bin/chromium',
