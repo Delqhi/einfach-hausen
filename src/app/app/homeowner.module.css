@@ -1685,3 +1685,51 @@
     display: none !important;
   }
 }
+
+
+/* Notion-aligned owner shell: menu state is explicit, compact when closed. */
+.ownerScope :global(.app-shell-v3 .workspace-shell) {
+  grid-template-columns: 72px minmax(0, 1fr);
+}
+.ownerScope :global(.app-shell-v3 .workspace-shell:has(.app-menu[open])) {
+  grid-template-columns: 236px minmax(0, 1fr);
+}
+.ownerScope :global(.app-shell-v3 .desktop-sidebar) {
+  padding: 14px 10px;
+}
+.ownerScope :global(.app-shell-v3 .app-menu summary) {
+  min-height: 44px;
+  border-radius: 12px;
+}
+.ownerScope :global(.app-shell-v3 .app-menu[open] .sidebar-nav a) {
+  min-height: 44px;
+}
+.ownerScope :global(.app-shell-v3 .app-menu:not([open]) .sidebar-nav a) {
+  justify-content: center;
+  padding-inline: 4px;
+}
+.ownerScope :global(.app-shell-v3 .app-menu:not([open]) .sidebar-nav a > span:not(.sidebar-icon)) {
+  display: none;
+}
+.ownerScope :global(.app-shell-v3 .app-menu:not([open]) .sidebar-brand),
+.ownerScope :global(.app-shell-v3 .app-menu:not([open]) .sidebar-footer) {
+  display: none;
+}
+.ownerScope :global(.app-shell-v3 .owner-dashboard) {
+  gap: 44px;
+}
+.ownerScope :global(.app-shell-v3 .owner-copilot) {
+  border-radius: 24px;
+  box-shadow: 0 12px 36px rgba(18, 60, 42, 0.06);
+}
+.ownerScope :global(.app-shell-v3 .owner-dashboard-composer .agent-composer textarea) {
+  min-height: 96px;
+}
+@media (max-width: 720px) {
+  .ownerScope :global(.app-shell-v3 .workspace-shell) {
+    grid-template-columns: 1fr;
+  }
+  .ownerScope :global(.app-shell-v3 .topbar-v3) {
+    padding-inline: 12px;
+  }
+}
