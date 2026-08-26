@@ -5,6 +5,10 @@ const DEV_COOKIE = 'mh_admin_session';
 const PROD_COOKIE = '__Host-mh_admin_session';
 
 function cookieName(): string {
+  // Test seam: E2E serves the production build over http://127.0.0.1 where
+  // Chromium rejects __Host- prefixed cookies. Production default stays __Host-.
+  const override = process.env.SESSION_COOKIE_NAME;
+  if (override) return override.startsWith('__Host-') ? override : `${override}_admin`;
   return process.env.NODE_ENV === 'production' ? PROD_COOKIE : DEV_COOKIE;
 }
 

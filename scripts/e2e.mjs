@@ -56,8 +56,19 @@ function trackPage(page,label){
   page.on('console',message=>{if(message.type()==='error'){const text=message.text();const location=message.location();const source=location?.url?` source=${location.url}`:'';if(!/ERR_INTERNET_DISCONNECTED|Failed to load resource.*503/i.test(text))runtimeErrors.push(`${label}: console: ${text}${source}`);}});
 }
 async function assertKeyboardFocus(page,label){
-  await page.locator('body').press('Tab');
-  const focused=await page.evaluate(()=>{const el=document.activeElement;return {tag:el?.tagName||'',href:el instanceof HTMLAnchorElement?el.getAttribute('href'):'',text:(el?.textContent||'').trim().slice(0,120)};});
+  // Headless Chromium on Linux can swallow the very first Tab (no prior user
+  // activation). Try up to three tabs before declaring the page unfocusable;
+  // any non-BODY activeElement still proves a focus target exists.
+  // The service-worker shell can briefly serve an unhydrated loading state;
+  // keep tabbing for up to ~8s until a real focus target appears.
+  const deadline=Date.now()+8000;
+  let focused={tag:'',href:'',text:''};
+  while(Date.now()<deadline){
+    await page.locator('body').press('Tab');
+    focused=await page.evaluate(()=>{const el=document.activeElement;return {tag:el?.tagName||'',href:el instanceof HTMLAnchorElement?el.getAttribute('href'):'',text:(el?.textContent||'').trim().slice(0,120)};});
+    if(focused.tag&&focused.tag!=='BODY')break;
+    await new Promise(resolve=>setTimeout(resolve,250));
+  }
   if(!focused.tag||focused.tag==='BODY')throw new Error(`${label} has no keyboard focus target after Tab`);
 }
 async function clickAndWaitUrl(page,locator,matcher,timeout=30000){await Promise.all([page.waitForURL(matcher,{timeout}),locator.click()]);}
@@ -72,7 +83,7 @@ const sanitizedEnv={...process.env};
 for(const key of Object.keys(sanitizedEnv)){
   if(/(?:STRIPE|WHATSAPP|META_|OPENAI|OPENROUTER|SILICONFLOW|OMNIROUTE|API_KEY|ACCESS_TOKEN|AUTH_TOKEN|WEBHOOK_SECRET)/i.test(key))delete sanitizedEnv[key];
 }
-const runtimeEnv={...sanitizedEnv,DATABASE_PATH:databasePath,ADMIN_PASSWORD:adminPassword,NEXT_PUBLIC_APP_URL:base,NODE_ENV:'production'};
+const runtimeEnv={...sanitizedEnv,DATABASE_PATH:databasePath,ADMIN_PASSWORD:adminPassword,NEXT_PUBLIC_APP_URL:base,NODE_ENV:'production',SESSION_COOKIE_NAME:'e2e_mh_session'};
 await runChild([nextBin,'build','--webpack'],{cwd:projectRoot,env:runtimeEnv,timeoutMs:240000});
 server=spawn(process.execPath,[nextBin,'start','-H','127.0.0.1','-p',String(port)],{cwd:projectRoot,env:runtimeEnv,stdio:['ignore','pipe','pipe']});
 for(const stream of [server.stdout,server.stderr])stream.on('data',chunk=>{serverLog.push(chunk.toString());if(serverLog.length>300)serverLog.shift();});
