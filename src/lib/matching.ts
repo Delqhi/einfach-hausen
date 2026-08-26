@@ -76,3 +76,34 @@ export function emergencyResponseScore(input:EmergencyResponseInput){
   const declared=Number.isFinite(target)&&target>0?clamp(18-target*0.08,2,16):8;
   return declared+(input.emergencyMode==='24_7'?2:0);
 }
+
+// --- Explainable match scoring (EH T-0107) ---------------------------------
+export type MatchReason = { key: string; label: string; points: number };
+
+export type MatchScoreComponents = {
+  qualityVerified: number;
+  distanceKm: number | null;
+  rating: number;
+  existingRelationship: boolean;
+  openJobs: number;
+  emergencyPoints: number;
+};
+
+// Builds the human-readable reason list for a candidate score. Points per
+// reason sum exactly to the final score, so UI and trace can never disagree
+// with the ranking math.
+export function explainMatchScore(c: MatchScoreComponents): { reasons: MatchReason[]; score: number } {
+  const reasons: MatchReason[] = [];
+  reasons.push({ key: 'quality', label: `Verifizierte Qualitätschecks ${c.qualityVerified}/4`, points: c.qualityVerified * 15 });
+  const distanceScore = c.distanceKm === null ? 10 : Math.max(0, 30 - c.distanceKm);
+  reasons.push({ key: 'distance', label: c.distanceKm === null ? 'Regionale Zuordnung ohne exakte Distanz' : `Entfernung ~${Math.round(c.distanceKm * 10) / 10} km`, points: Math.round(distanceScore * 10) / 10 });
+  const ratingScore = (Number(c.rating) || 0) * 8;
+  if (ratingScore > 0) reasons.push({ key: 'rating', label: `Bewertung ${c.rating}`, points: Math.round(ratingScore * 10) / 10 });
+  if (c.existingRelationship) reasons.push({ key: 'relationship', label: 'Bewährter Ansprechpartner des Eigentümers', points: 30 });
+  const capacityScore = Math.max(-20, 10 - (Number(c.openJobs) || 0) * 2);
+  reasons.push({ key: 'capacity', label: `${c.openJobs} offene Aufträge`, points: capacityScore });
+  if (c.emergencyPoints !== 0) reasons.push({ key: 'emergency', label: 'Notfall-Reaktionsstärke', points: Math.round(c.emergencyPoints * 10) / 10 });
+  reasons.sort((a, b) => Math.abs(b.points) - Math.abs(a.points) || a.key.localeCompare(b.key));
+  const score = reasons.reduce((sum, r) => sum + r.points, 0);
+  return { reasons, score: Math.round(score * 10) / 10 };
+}

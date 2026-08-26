@@ -1,7 +1,7 @@
 import { db } from './db';
 import { analyzeRequest, answerHouseQuestion } from './request-ai';
 import { geocodePostcode, distanceKm, regionalPostcodeGeo } from './geocode';
-import { berlinRequestTimestamp, emergencyAvailableAt, emergencyResponseScore, preferredRequestWindow } from './matching';
+import { berlinRequestTimestamp, emergencyAvailableAt, emergencyResponseScore, explainMatchScore, preferredRequestWindow, type MatchReason } from './matching';
 import { resolveDispatchService, type DispatchService } from './dispatch-config';
 import { providerSupportsService } from './provider-directory';
 import { createNotification } from './notifications';
@@ -52,45 +52,45 @@ async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jo
   const timingWindow=preferredRequestWindow({preferredDate:jobTiming?.preferred_date,preferredTime:jobTiming?.preferred_time});
   if(requestKind==='service'&&timingWindow.expired)return 0;
   const shortNotice=timingWindow.shortNotice;
-  const matches:{p:any;distance:number|null;score:number}[]=[];
+  type Candidate={p:any;distance:number|null;score:number;reasons:MatchReason[]};
+  const matches:Candidate[]=[];
+  const traceInsert=db.prepare(`INSERT INTO match_decision_trace(job_id,provider_id,decision,reason_key,detail) VALUES(?,?,?,?,?)`);
+  const exclude=(providerId:number,reasonKey:string,detail='')=>traceInsert.run(jobId,providerId,'excluded',reasonKey,detail);
   const jobPoint=jobGeo||regionalPostcodeGeo(jobPostcode);
   const alreadyDispatched=new Set((db.prepare('SELECT provider_id FROM job_dispatches WHERE job_id=?').all(jobId) as Array<{provider_id:number}>).map(row=>row.provider_id));
   for(const p of partners){
-    if(alreadyDispatched.has(p.user_id))continue;
+    if(alreadyDispatched.has(p.user_id)){exclude(p.user_id,'already_dispatched','bereits für diesen Auftrag angefragt');continue;}
     const offerings=(db.prepare(`SELECT service_slug FROM provider_service_offerings WHERE provider_id=? AND active=1`).all(p.user_id) as Array<{service_slug:string}>).map(r=>r.service_slug);
-    if(!providerSupportsService(offerings,p.trades,service))continue;
-    if(requestKind==='contact'&&p.accepts_consultation===0)continue;
-    if(requestKind==='service'&&p.accepts_normal_jobs===0)continue;
-    if(requestKind==='service'&&shortNotice&&p.accepts_short_notice===0)continue;
-    if(requestKind==='emergency'&&(p.accepts_emergencies!==1||!emergencyAvailableAt({emergencyMode:p.emergency_mode,emergencyDays:p.emergency_days,emergencyStart:p.emergency_start,emergencyEnd:p.emergency_end})))continue;
+    if(!providerSupportsService(offerings,p.trades,service)){exclude(p.user_id,'unsupported_service',`Gewerke passt nicht zu ${service.title}`);continue;}
+    if(requestKind==='contact'&&p.accepts_consultation===0){exclude(p.user_id,'consultation_off','Beratungen abgelehnt');continue;}
+    if(requestKind==='service'&&p.accepts_normal_jobs===0){exclude(p.user_id,'normal_jobs_off','Aufträge abgelehnt');continue;}
+    if(requestKind==='service'&&shortNotice&&p.accepts_short_notice===0){exclude(p.user_id,'short_notice_off','Kurzfristige Termine abgelehnt');continue;}
+    if(requestKind==='emergency'&&(p.accepts_emergencies!==1||!emergencyAvailableAt({emergencyMode:p.emergency_mode,emergencyDays:p.emergency_days,emergencyStart:p.emergency_start,emergencyEnd:p.emergency_end}))){exclude(p.user_id,'emergency_off','Keine Notfall-Bereitschaft im Zeitfenster');continue;}
     if(Number.isFinite(p.monthly_lead_limit)){
       const used=(db.prepare(`SELECT COUNT(*) c FROM job_dispatches WHERE provider_id=? AND sent_at>=datetime('now','start of month')`).get(p.user_id) as {c:number}).c;
-      if(used>=Number(p.monthly_lead_limit))continue;
+      if(used>=Number(p.monthly_lead_limit)){exclude(p.user_id,'lead_limit_reached',`Monatslimit ${used}/${p.monthly_lead_limit} erreicht`);continue;}
     }
     let distance:number|null=null;
     const providerPoint=Number.isFinite(p.lat)&&Number.isFinite(p.lon)?{lat:Number(p.lat),lon:Number(p.lon)}:regionalPostcodeGeo(String(p.postcode||''));
     if(jobPoint&&providerPoint)distance=distanceKm(jobPoint,providerPoint);
-    if(distance!==null&&distance>p.radius_km)continue;
+    if(distance!==null&&distance>p.radius_km){exclude(p.user_id,'out_of_radius',`${Math.round(distance)} km > Einsatzradius ${p.radius_km} km`);continue;}
     // If neither an exact nor a regional centroid can be resolved, fail closed for narrow-radius matching.
-    if(distance===null&&Number(p.radius_km)<50)continue;
+    if(distance===null&&Number(p.radius_km)<50){exclude(p.user_id,'no_geo_fail_closed',`Keine Geo-Auflösung bei Radius ${p.radius_km} km`);continue;}
     const quality=[p.insurance_verified,p.qualification_verified,p.contract_verified,p.quality_standard_verified].filter(Boolean).length;
-    const distanceScore=distance===null?10:Math.max(0,30-distance);
-    const ratingScore=(Number(p.rating)||0)*8;
-    const existingRelationship=preferredProviders.has(p.user_id)?30:0;
     const openJobs=(db.prepare(`SELECT COUNT(*) c FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status='accepted' AND j.status IN ('accepted','in_progress')`).get(p.user_id) as {c:number}).c;
-    const capacityScore=Math.max(-20,10-openJobs*2);
     const emergencyScore=requestKind==='emergency'?emergencyResponseScore({averageResponseMinutes:p.average_response_minutes,responseSamples:p.response_samples,responseTargetMinutes:p.response_target_minutes,emergencyMode:p.emergency_mode}):0;
-    const score=quality*15+distanceScore+ratingScore+existingRelationship+capacityScore+emergencyScore;
-    matches.push({p,distance,score});
+    const explained=explainMatchScore({qualityVerified:quality,distanceKm:distance,rating:Number(p.rating)||0,existingRelationship:preferredProviders.has(p.user_id),openJobs,emergencyPoints:emergencyScore});
+    matches.push({p,distance,score:explained.score,reasons:explained.reasons});
   }
   matches.sort((a,b)=>b.score-a.score||((a.distance??Number.POSITIVE_INFINITY)-(b.distance??Number.POSITIVE_INFINITY))||Number(a.p.user_id)-Number(b.p.user_id));
-  const insert=db.prepare(`INSERT OR IGNORE INTO job_dispatches(job_id,provider_id,status,match_score,distance_km) VALUES(?,?,'sent',?,?)`);
+  const insert=db.prepare(`INSERT OR IGNORE INTO job_dispatches(job_id,provider_id,status,match_score,distance_km,reasons_json) VALUES(?,?,'sent',?,?,?)`);
   let created=0;
   const limit=requestKind==='contact'?8:requestKind==='emergency'?12:30;
   for(const m of matches.slice(0,limit)){
-    const result=insert.run(jobId,m.p.user_id,m.score,m.distance);
+    const result=insert.run(jobId,m.p.user_id,m.score,m.distance,JSON.stringify(m.reasons));
     if(result.changes){
       created++;
+      traceInsert.run(jobId,m.p.user_id,'dispatched',m.reasons[0]?.key||'score',m.reasons.map(r=>`${r.key}:${r.points}`).join(' '));
       const title=requestKind==='contact'?'Neue Beratungsanfrage':requestKind==='emergency'?'🚨 Neue Notfallanfrage':'Neue passende Anfrage';
       const body=requestKind==='contact'?`Ein Eigentümer sucht einen fachlichen Ansprechpartner für ${service.title} in ${jobPostcode||'deiner Region'}. Kein Auftrag nötig.`:requestKind==='emergency'?`Dringende ${service.title}-Anfrage in ${jobPostcode||'deiner Region'}. Bitte nur annehmen, wenn du kurzfristig helfen kannst.`:`${service.title} in ${jobPostcode||'deiner Region'} wartet auf deine Rückmeldung.`;
       for(const managerId of getProviderManagerIds(m.p.user_id))createNotification(managerId,title,body,`/pro/jobs/${jobId}`,'dispatch');

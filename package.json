@@ -19,7 +19,8 @@
     "test:matching": "node scripts/t0005-regression.mjs && node scripts/t0005-plus-regression.mjs",
     "test:t0005": "node scripts/t0005-plus-regression.mjs",
     "test:onboarding": "node scripts/t0103-onboarding-regression.mjs",
-    "test:notifications": "node scripts/t0104-notification-regression.mjs"
+    "test:notifications": "node scripts/t0104-notification-regression.mjs",
+    "test:matching:t0107": "node scripts/t0107-matching-regression.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
