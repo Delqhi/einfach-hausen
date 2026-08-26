@@ -115,7 +115,7 @@ export async function registerAction(fd: FormData) {
   const tx = db.transaction(() => {
     const r = db.prepare('INSERT INTO users(email,password_hash,role,first_name,last_name,phone) VALUES(?,?,?,?,?,?)').run(email,hash,role,first,last,d.phone||null);
     const id = Number(r.lastInsertRowid);
-    if (role==='homeowner') db.prepare('INSERT INTO homeowner_profiles(user_id,postcode,address) VALUES(?,?,?)').run(id,d.postcode,d.address);
+    if (role==='homeowner') db.prepare('INSERT INTO homeowner_profiles(user_id,postcode,address,onboarding_step) VALUES(?,?,?,\'profile\')').run(id,d.postcode,d.address);
     else {
       db.prepare('INSERT INTO provider_profiles(user_id,business_name,trades,postcode,radius_km,description,street_address,logo_path) VALUES(?,?,?,?,?,?,?,?)').run(id,d.businessName || `${first} ${last}`,d.trades,d.postcode,d.radius,d.description,d.streetAddress,logoPath);
       db.prepare("INSERT INTO partner_contracts(provider_id,status,commission_bps) VALUES(?,'pending',0)").run(id);
@@ -148,7 +148,7 @@ export async function registerAction(fd: FormData) {
     const bounded=intakeDescriptionSchema.safeParse({description:initialRequest});
     if(bounded.success){await answerHausmeisterQuestion(id,bounded.data.description,'app');}
   }
-  await createSession(id); redirect(role==='provider'?'/pro':initialRequest?'/app/hausmeister?answered=1':'/app');
+  await createSession(id); redirect(role==='provider'?'/pro':initialRequest?'/app/hausmeister?answered=1':'/app/onboarding');
 }
 
 export async function loginAction(fd: FormData) {

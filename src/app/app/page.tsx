@@ -8,7 +8,8 @@ import { dateLabel } from '@/lib/format';
 
 export default async function Dashboard() {
   const user = await requireUser('homeowner');
-  const profile = db.prepare('SELECT address,postcode FROM homeowner_profiles WHERE user_id=?').get(user.id) as any;
+  const profile = db.prepare('SELECT address,postcode,onboarding_step FROM homeowner_profiles WHERE user_id=?').get(user.id) as any;
+  const onboardingPending = profile?.onboarding_step && profile.onboarding_step !== 'done';
   const nextAppointment = db.prepare(`SELECT a.*,j.title,p.business_name FROM appointments a JOIN jobs j ON j.id=a.job_id JOIN provider_profiles p ON p.user_id=a.provider_id WHERE a.homeowner_id=? AND a.status='confirmed' AND datetime(a.start_at)>=datetime('now') ORDER BY a.start_at LIMIT 1`).get(user.id) as any;
   const openOffer = db.prepare(`SELECT id,title FROM jobs WHERE homeowner_id=? AND request_kind='service' AND status='quoted' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as any;
   const activeJob = db.prepare(`SELECT id,title,status FROM jobs WHERE homeowner_id=? AND request_kind='service' AND status IN ('accepted','in_progress') ORDER BY updated_at DESC LIMIT 1`).get(user.id) as any;
@@ -23,6 +24,13 @@ export default async function Dashboard() {
           <h1>Hallo, {user.first_name}.</h1>
           <p><House aria-hidden="true" /> {profile?.address || profile?.postcode || 'Hausprofil noch nicht vollständig'}</p>
         </header>
+
+        {onboardingPending && (
+          <section className="owner-onboarding-banner" aria-label="Einrichtung unvollständig">
+            <p>Du hast die Ersteinrichtung noch nicht abgeschlossen.</p>
+            <a href="/app/onboarding">Jetzt weiter einrichten</a>
+          </section>
+        )}
 
         <section className="owner-copilot" aria-labelledby="owner-copilot-title">
           <div className="owner-copilot-copy">

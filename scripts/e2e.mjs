@@ -151,7 +151,19 @@ await thomasCard.getByLabel('Aufträge verwalten').uncheck(); await clickServerA
 const ownerCtx=await browser.newContext({viewport:{width:390,height:844}}); const owner=await ownerCtx.newPage(); trackPage(owner,'homeowner');
 await owner.goto(base+'/register?role=homeowner');
 await owner.getByLabel('Vorname').fill('Maria'); await owner.getByLabel('Nachname').fill('Test'); await owner.getByLabel('E-Mail').fill(ownerEmail); await owner.getByLabel('Passwort').fill(password); await owner.getByLabel('PLZ').fill('46325');
-await Promise.all([owner.waitForURL('**/app'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
+await Promise.all([owner.waitForURL('**/app/onboarding'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
+await waitText(owner,'Damit Partner in deiner Region arbeiten können');
+// Resume works: leaving mid-onboarding and returning keeps the saved step.
+await owner.goto(base+'/app'); await waitText(owner,'Jetzt weiter einrichten');
+await clickAndWaitUrl(owner,owner.getByRole('link',{name:'Jetzt weiter einrichten'}),/\/app\/onboarding$/);
+await waitText(owner,'Damit Partner in deiner Region arbeiten können');
+await owner.getByLabel('Straße und Hausnummer').fill('Gartenweg 12');
+await clickServerAction(owner,owner.getByRole('button',{name:'Weiter'})); await waitText(owner,'Worum geht es bei deinem Haus?');
+// Optional steps are skippable.
+await owner.getByRole('button',{name:'Überspringen'}).click(); await waitText(owner,'Wie dürfen wir dich erreichen?');
+await owner.getByRole('button',{name:'Überspringen'}).click();
+await Promise.all([owner.waitForURL('**/app?onboarding=done'),owner.waitForLoadState('load')]);
+if(await owner.locator('.owner-onboarding-banner').count())throw new Error('Onboarding banner shown after completion');
 await assertNoOverflow(owner,'Mobile customer app');
 await owner.locator('.bottom-nav a').first().waitFor(); const ownerNavCount=await owner.locator('.bottom-nav a').count(); if(ownerNavCount!==5)throw new Error(`Mobile homeowner navigation must expose five primary destinations, got ${ownerNavCount}`);
 await waitText(owner,'Dringender Notfall'); await waitText(owner,'Direkt einen Menschen fragen'); await owner.locator('.bottom-nav').getByText('Ansprechpartner',{exact:true}).waitFor();
@@ -241,9 +253,23 @@ await admin.goto(base+'/admin'); const claimCard=admin.locator('.admin-card').fi
 // 11) CRM-Lifecycle ist im integrierten Produkt erreichbar und kennt den registrierten Partner.
 await admin.goto(base+`/admin/crm?q=${encodeURIComponent('Gartenbau Müller')}`); await waitText(admin,'Leads & CRM'); await waitText(admin,'Gartenbau Müller'); await assertNoOverflow(admin,'Admin CRM');
 
-// 12) Hausakte kann kontrolliert übergeben werden, private Vorgänge bleiben beim bisherigen Eigentümer.
 const buyerCtx=await browser.newContext({viewport:{width:390,height:844}}); const buyer=await buyerCtx.newPage(); trackPage(buyer,'homeowner-buyer');
-await buyer.goto(base+'/register?role=homeowner'); await buyer.getByLabel('Vorname').fill('Ben'); await buyer.getByLabel('Nachname').fill('Käufer'); await buyer.getByLabel('E-Mail').fill(buyerEmail); await buyer.getByLabel('Passwort').fill(password); await buyer.getByLabel('PLZ').fill('46325'); await Promise.all([buyer.waitForURL('**/app'),buyer.getByRole('button',{name:'Konto erstellen'}).click()]);
+// 12a) First-run onboarding: guided steps, skippable optionals, resumable progress.
+await buyer.goto(base+'/register?role=homeowner'); await buyer.getByLabel('Vorname').fill('Ben'); await buyer.getByLabel('Nachname').fill('Käufer'); await buyer.getByLabel('E-Mail').fill(buyerEmail); await buyer.getByLabel('Passwort').fill(password); await buyer.getByLabel('PLZ').fill('46325'); await Promise.all([buyer.waitForURL('**/app/onboarding'),buyer.getByRole('button',{name:'Konto erstellen'}).click()]);
+await waitText(buyer,'Damit Partner in deiner Region arbeiten können');
+await buyer.getByLabel('Straße und Hausnummer').fill('Kaistraße 7');
+await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Weiter'}),/\/app\/onboarding$/);
+await waitText(buyer,'Worum geht es bei deinem Haus?');
+await buyer.reload(); await waitText(buyer,'Worum geht es bei deinem Haus?');
+await buyer.getByLabel(new RegExp('Garten')).check();
+await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Weiter'}),/\/app\/onboarding$/);
+await waitText(buyer,'Wie dürfen wir dich erreichen?');
+await buyer.getByRole('button',{name:'Überspringen'}).click();
+await Promise.all([buyer.waitForURL('**/app?onboarding=done'),buyer.waitForLoadState('load')]);
+await waitText(buyer,'Was ist bei deinem Haus gerade wichtig?');
+if(await buyer.locator('.owner-onboarding-banner').count())throw new Error('Onboarding banner still shown after completion');
+await buyer.reload(); if(await buyer.locator('.owner-onboarding-banner').count())throw new Error('Onboarding state did not persist after reload');
+// 12) Hausakte kann kontrolliert übergeben werden, private Vorgänge bleiben beim bisherigen Eigentümer.
 await owner.goto(base+'/app/home/history'); await owner.getByLabel('E-Mail des Käufers').fill(buyerEmail); await clickAndWaitUrl(owner,owner.getByRole('button',{name:'Übergabe vorbereiten'}),/transfer=/); const transferToken=new URL(owner.url()).searchParams.get('transfer'); if(!transferToken)throw new Error('House transfer token missing');
 await buyer.goto(base+`/transfer/${transferToken}`); await waitText(buyer,'Hausakte übernehmen'); await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Hausakte jetzt übernehmen'}),/\/app\/home\?transfer=accepted/);
 await buyer.goto(base+'/app/home/history'); await waitText(buyer,'Dachsanierung 2025'); await waitText(buyer,'Maria Test'); await waitText(buyer,'Ben Käufer'); await assertNoOverflow(buyer,'Transferred house history');

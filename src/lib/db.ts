@@ -178,6 +178,11 @@ addColumnIfMissing('provider_invites','property_id','property_id INTEGER REFEREN
 addColumnIfMissing('house_transfers','property_id','property_id INTEGER REFERENCES properties(id)');
 addColumnIfMissing('sessions','issued_at','issued_at TEXT');
 addColumnIfMissing('admin_sessions','issued_at','issued_at TEXT');
+// First-run onboarding state for homeowners (EH T-0101). 'done' keeps every
+// pre-existing account unaffected; fresh registrations start at 'profile'.
+addColumnIfMissing('homeowner_profiles','onboarding_step',"onboarding_step TEXT NOT NULL DEFAULT 'done'");
+addColumnIfMissing('homeowner_profiles','interests',"interests TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing('homeowner_profiles','preferred_channel',"preferred_channel TEXT NOT NULL DEFAULT ''");
 
 // One-time security migration: sessions predating issued_at have unknown
 // provenance and cannot satisfy the single-live-session invariant, so they are
