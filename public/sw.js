@@ -61,7 +61,11 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
   if (PUBLIC_SHELL_SET.has(url.pathname)) {
-    event.respondWith(caches.match(request).then((cached) => cached || fetch(request)));
+    event.respondWith(
+      caches.match(request)
+        .then((cached) => cached || fetch(request))
+        .catch(() => offlineResponse()),
+    );
     return;
   }
 

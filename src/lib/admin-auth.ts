@@ -16,7 +16,7 @@ function cookieName(): string {
 export function adminCookiePolicy() {
   return {
     name: cookieName(),
-    options: { httpOnly: true, sameSite: 'strict' as const, secure: process.env.NODE_ENV === 'production', path: '/', expires: new Date() },
+    options: { httpOnly: true, sameSite: 'strict' as const, secure: process.env.NODE_ENV === 'production' && process.env.E2E_INSECURE_COOKIES !== '1', path: '/', expires: new Date() },
   };
 }
 
@@ -72,7 +72,7 @@ export function rotateAndIssueAdminSession(): { token: string; expires: Date } {
 
 async function clearLegacyCookies(current: string): Promise<void> {
   const store = await jar();
-  const expired = { httpOnly: true, sameSite: 'strict' as const, secure: process.env.NODE_ENV === 'production', path: '/', expires: new Date(0) };
+  const expired = { httpOnly: true, sameSite: 'strict' as const, secure: process.env.NODE_ENV === 'production' && process.env.E2E_INSECURE_COOKIES !== '1', path: '/', expires: new Date(0) };
   for (const name of [DEV_COOKIE, PROD_COOKIE]) {
     if (name === current) continue;
     try { store.set(name, '', expired); } catch {}
@@ -83,7 +83,7 @@ export async function createAdminSession() {
   const { token, expires } = rotateAndIssueAdminSession();
   const name = cookieName();
   const store = await jar();
-  store.set(name, token, { httpOnly: true, sameSite: 'strict' as const, secure: process.env.NODE_ENV === 'production', path: '/', expires });
+  store.set(name, token, { httpOnly: true, sameSite: 'strict' as const, secure: process.env.NODE_ENV === 'production' && process.env.E2E_INSECURE_COOKIES !== '1', path: '/', expires });
   await clearLegacyCookies(name);
 }
 

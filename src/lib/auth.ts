@@ -26,7 +26,7 @@ export function sessionCookiePolicy() {
 }
 
 function cookieOptions(expires: Date) {
-  return { httpOnly: true, sameSite: 'lax' as const, secure: process.env.NODE_ENV === 'production', path: '/', expires };
+  return { httpOnly: true, sameSite: 'lax' as const, secure: process.env.NODE_ENV === 'production' && process.env.E2E_INSECURE_COOKIES !== '1', path: '/', expires };
 }
 
 // Lazily resolved so this module stays importable outside Next's request context.
