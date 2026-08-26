@@ -181,6 +181,15 @@ addColumnIfMissing('house_transfers','property_id','property_id INTEGER REFERENC
 addColumnIfMissing('sessions','issued_at','issued_at TEXT');
 addColumnIfMissing('admin_sessions','issued_at','issued_at TEXT');
 // First-run onboarding state for homeowners (EH T-0101). 'done' keeps every
+// Durable notification outbox (EH T-0104): domain events plus per-message
+// channel/priority/status/retry state. Historical rows count as delivered.
+db.exec(`CREATE TABLE IF NOT EXISTS notification_events (id INTEGER PRIMARY KEY AUTOINCREMENT,event_type TEXT NOT NULL,payload_json TEXT NOT NULL DEFAULT '{}',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,processed_at TEXT)`);
+addColumnIfMissing('notifications','channel',"channel TEXT NOT NULL DEFAULT 'in_app'");
+addColumnIfMissing('notifications','priority','priority INTEGER NOT NULL DEFAULT 5');
+addColumnIfMissing('notifications','status',"status TEXT NOT NULL DEFAULT 'sent'");
+addColumnIfMissing('notifications','retry_count','retry_count INTEGER NOT NULL DEFAULT 0');
+addColumnIfMissing('notifications','next_retry_at','next_retry_at TEXT');
+addColumnIfMissing('notifications','event_id','event_id INTEGER REFERENCES notification_events(id)');
 // pre-existing account unaffected; fresh registrations start at 'profile'.
 addColumnIfMissing('homeowner_profiles','onboarding_step',"onboarding_step TEXT NOT NULL DEFAULT 'done'");
 addColumnIfMissing('homeowner_profiles','interests',"interests TEXT NOT NULL DEFAULT ''");
