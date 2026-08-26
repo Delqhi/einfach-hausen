@@ -165,6 +165,8 @@ addColumnIfMissing('provider_profiles','street_address',"street_address TEXT NOT
 addColumnIfMissing('provider_profiles','tax_id',"tax_id TEXT NOT NULL DEFAULT ''");
 addColumnIfMissing('provider_profiles','vat_id',"vat_id TEXT NOT NULL DEFAULT ''");
 addColumnIfMissing('provider_preferences','emergency_days',"emergency_days TEXT NOT NULL DEFAULT '1,2,3,4,5,6,0'");
+// Weekly job capacity cap (EH T-0102 partner onboarding); NULL = no explicit cap set.
+addColumnIfMissing('provider_preferences','weekly_capacity','weekly_capacity INTEGER');
 addColumnIfMissing('jobs','urgency',"urgency TEXT NOT NULL DEFAULT 'normal'");
 addColumnIfMissing('jobs','emergency_type','emergency_type TEXT');
 addColumnIfMissing('payments','invoice_id','invoice_id INTEGER REFERENCES invoices(id)');

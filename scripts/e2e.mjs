@@ -136,7 +136,14 @@ for(const name of ['Betriebshaftpflicht geprüft','Qualifikation/Zulassung gepr�
 await clickServerAction(admin,companyCard.getByRole('button',{name:'Partnervertrag speichern'})); await companyCard.getByText(/Vertrag Aktiv/).waitFor();
 await manager.goto(base+'/pro/profile'); await waitText(manager,'Aktiver Einfach-Hausen-Vertragspartner'); await waitText(manager,'0 % Provision');
 await manager.getByLabel('Firmenanschrift').fill('Gartenstraße 12, 46325 Borken'); await manager.getByLabel('Steuernummer').fill('307/1234/5678');
+// Partner onboarding completeness: region radius, weekly capacity, availability, team.
+const radiusInput=manager.getByLabel(/Einsatzradius/); if(await radiusInput.count())await radiusInput.fill('40');
+await manager.getByLabel('Wöchentliche Kapazität (Aufträge)').fill('12');
 const emergencyToggle=manager.getByLabel('Notfälle',{exact:true}); if(!(await emergencyToggle.isChecked()))await emergencyToggle.check(); await manager.getByLabel('Modell').selectOption('24_7'); await manager.getByLabel('Max. Notfallzuschlag %').fill('20'); await clickServerAction(manager,manager.getByRole('button',{name:'Profil speichern'}));
+await waitText(manager,'Aktiver Einfach-Hausen-Vertragspartner');
+await manager.reload();
+const capacityAfterReload=await manager.getByLabel('Wöchentliche Kapazität (Aufträge)').inputValue(); if(capacityAfterReload!=='12')throw new Error(`Weekly capacity did not persist, got ${capacityAfterReload}`);
+const radiusAfterReload=await manager.getByLabel(/Einsatzradius/).inputValue(); if(radiusAfterReload!=='40')throw new Error(`Service radius did not persist, got ${radiusAfterReload}`);
 
 // 2) Firma legt einen echten Ansprechpartner an. Nur ein Schalter für Auftragsverwaltung.
 await manager.goto(base+'/pro/team'); await manager.getByRole('heading',{name:'Menschen statt Rollenmatrix'}).waitFor(); await waitText(manager,'Aufträge verwalten AN'); await assertNoOverflow(manager,'Mobile partner team');
