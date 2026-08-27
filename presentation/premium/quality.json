@@ -2,14 +2,29 @@
   "expectedSlides": 15,
   "width": 1280,
   "height": 720,
-  "footerSafePx": 50,
-  "maxContentImages": 4,
+  "footerSafePx": 72,
+  "maxContentImages": 3,
   "slideSelector": ".slide",
   "phoneSelector": ".phone",
-  "footerSelector": ".foot",
+  "footerSelector": ".footer",
+  "contentZoneSelector": "[data-zone=\"content\"]",
+  "visualZoneSelector": "[data-zone=\"visual\"]",
+  "requireSemanticZones": true,
+  "collisionTolerancePx": 3,
+  "minTextFontPx": 15,
+  "minVisualWidthPx": 120,
+  "minVisualHeightPx": 110,
+  "fontSizeExemptSelectors": [
+    ".footer",
+    ".kicker",
+    ".browser-bar",
+    ".browser-url",
+    "[data-qa-small]",
+    ".check"
+  ],
   "phoneRatio": {
-    "min": 1.7,
-    "max": 2.35
+    "min": 1.9,
+    "max": 2.15
   },
   "sourceCommit": "3a8aa93054df7ec897c1dc3fec200ecf8526965a",
   "bannedCopy": [
@@ -32,6 +47,26 @@
     {
       "text": "App-Screens (vollständig)",
       "why": "irreführend bei kuratierter Übersicht"
+    },
+    {
+      "text": "Profil ist Qualitätsversprechen",
+      "why": "sprachlich unvollständig"
+    },
+    {
+      "text": "läuft zuerst durch Prüfung",
+      "why": "sperrige interne Prozesssprache"
+    },
+    {
+      "text": "GitHub main ≡ OCI-Produktion",
+      "why": "Deployment-SHA nicht belegt"
+    },
+    {
+      "text": "Produktionsstand · live verifiziert",
+      "why": "zu starke Deployment-Identitätsaussage"
+    },
+    {
+      "text": "Produktionsstand verifiziert",
+      "why": "zu starke Deployment-Identitätsaussage"
     }
   ]
 }

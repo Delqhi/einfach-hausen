@@ -1,57 +1,78 @@
-# T-0165 · Design-Review Premium-Präsentation einfachhausen.de
+# T-0165 · Premium presentation remediation V2
 
-Stand: finaler Review nach Umsetzung. Quelle ist `deck.html`; gerenderte Abnahmebasis sind `rendered/slide-01.png` bis `rendered/slide-15.png` bei 1280×720.
+This document supersedes the earlier acceptance. User-provided photos proved that the earlier review was too permissive: slides 6 and 8 contained real semantic text/phone collisions even though canvas-overflow QA passed. The remediation therefore changes both the deck layout model and the reusable QA gate.
 
-## Review 01–15
+## Root causes
 
-01 — [hinweis] Cover: ursprünglicher vertikaler Overflow und defensive „nicht Mockup“-Copy wurden entfernt. Fix: Inhalt innerhalb Safe-Area, präzisere Premium-Formulierung und reales Brand-Logo.
+1. Major slide regions were positioned independently with inline absolute coordinates and no semantic collision contract.
+2. QA checked canvas overflow, phone ratio and footer safe area but not content↔visual overlap or presentation-distance readability.
+3. Too many slides used complete screens shrunk into small boxes instead of large relevant crops.
+4. Footer branding and bottom tags consumed too much attention and space.
+5. Runtime health evidence and product snapshot evidence were visually close enough to imply stronger deployment identity than was actually proven.
 
-02 — [kritisch] Überblick: die Formulierung „through-line Serviceversprechen“ war sprachlich fehlerhaft. Fix: saubere deutsche Aussage und klare Hierarchie der drei Oberflächen.
+## Required V2 acceptance by slide
 
-03 — [hinweis] Website: Browser-Frame, Crop und Text-/Bildgewicht sind im finalen Render ausgewogen; kein weiterer Fix erforderlich.
+01 — Cover: small consistent footer logo; evidence chips are secondary; no claim that snapshot SHA equals deployment SHA.
 
-04 — [hinweis] Website-Detail: Ausrichtung und Frame-Proportionen sind konsistent; kein weiterer Fix erforderlich.
+02 — Overview: three roles are readable without zooming; explanatory copy is at presentation size; no tiny three-column miniature wall.
 
-05 — [kritisch] Eigentümer-App: das zweite Smartphone ragte rechts aus dem 1280px-Canvas und kollidierte mit der unteren Safe-Area. Fix: Stage/Phone-Geometrie neu gesetzt, beide Geräte vollständig innerhalb des Canvas.
+03 — Website start: one large hero browser and clear supporting points.
 
-06 — [kritisch] Eigentümer-App: Phone endete ursprünglich ca. 40px unterhalb der Folie. Fix: Höhe/Position reduziert und Footer-Safe-Area eingehalten.
+04 — Website flow: two large curated crops with explicit Step 1/Step 2 narrative; no unreadable full-page thumbnails.
 
-07 — [hinweis] Eigentümer-App: Phone reichte bis an Folienkante/Footer. Fix: zusätzlicher unterer Sicherheitsabstand und konsistente Device-Höhe.
+05 — Owner request: one large phone plus three explanatory callouts; remove redundant overlapping phone.
 
-08 — [kritisch] Handwerker-Zugang: Phone endete ursprünglich ca. 20px außerhalb des Canvas. Fix: Device-Größe/Position korrigiert, Prüfstatus bleibt vollständig lesbar.
+06 — Owner house file: hard split between visual left and content right; zero phone/headline/body/bullet overlap.
 
-09 — [kritisch] Handwerker-Betrieb: ursprüngliche 270×380-Proportion war für ein Smartphone unplausibel und erzeugte unnötigen Crop. Fix: realistisches Device-Seitenverhältnis und ausgewogene Textspalte.
+07 — Tariffs: one large readable phone and one concise model explanation; no floating bottom badge over footer.
 
-10 — [kritisch] Handwerker-Profil: Device überschritt den Canvas geringfügig. Fix: Höhe/Position in Safe-Area gebracht; Profilansicht bleibt vollständig im Frame.
+08 — Partner access: hard split between text and phone; no overlay box over the phone/headline; replace internal phrase “läuft zuerst durch Prüfung” with clear external language.
 
-11 — [hinweis] Zusammenspiel: die Drei-Oberflächen-Erzählung ist im finalen Render klar und ausgewogen; kein weiterer Fix erforderlich.
+09 — Operations: one large representative work screen plus four readable functional callouts.
 
-12 — [kritisch] Live-Nachweis: „GitHub main ≡ OCI-Produktion“ war ohne Deployment-SHA-Beweis zu stark. Fix: Gleichheitsbehauptung entfernt; Health/DB werden nur als separat verifizierbare Laufzeitevidenz dargestellt. Produkt-Snapshot und Präsentations-HEAD sind ausdrücklich getrennt.
+10 — Profile: headline becomes “Das Profil macht Qualität sichtbar.”; one large screen; no tiny UI catalogue.
 
-13 — [kritisch] Anhang Website: „Website-Vollseiten“ war bei kuratierten/croppten Ansichten irreführend. Fix: „Website-Ansichten“ und klarere Erwartung an die Bilddarstellung.
+11 — Flow: three clear process cards with stronger arrows and readable supporting copy.
 
-14 — [kritisch] Anhang App: acht kleine Screens waren in Präsentationsgröße nicht sinnvoll lesbar. Fix: auf vier größere, kuratierte App-Ansichten reduziert.
+12 — Evidence: snapshot, live health, DB readiness and screenshot date are separated. Explicitly state that without a deployment SHA no Git↔production identity is claimed.
 
-15 — [hinweis] Abschluss: technische Wiederholung schwächte den Schluss. Fix: Abschlussbotschaft „Ein Zuhause. Ein Ansprechpartner.“ statt erneuter Commit-/Health-Wiederholung.
+13 — Website appendix: one dominant website view plus two readable supporting crops; no three full-page miniatures.
 
-## Top-5 deckübergreifend umgesetzt
+14 — App appendix: two representative large phones, one per role; no four-phone miniature catalogue.
 
-1. Device-Geometrie und Safe-Areas systematisch korrigiert; kein Phone darf Canvas oder Footer überlaufen.
-2. Screenshot-Dichte reduziert und Lesbarkeit priorisiert; Anhang zeigt kuratierte statt überfüllte Übersichten.
-3. Evidence-Semantik gehärtet: Produkt-Snapshot `3a8aa93054df7ec897c1dc3fec200ecf8526965a` ist historische Quellenreferenz, nicht automatisch der aktuelle Präsentations- oder Deployment-HEAD.
-4. Copy und Dramaturgie auf Premium-Präsentation ausgerichtet: weniger defensive Mockup-Sprache, klarerer Abschluss.
-5. Wiederverwendbare Qualitätssicherung zentralisiert in `wow-my-zsh/connectors/slides-generator` und `wow-my-zsh/shared/skills/presentation-quality`.
+15 — Close: product message only; no redundant technical evidence claims.
 
-## Was bereits gut funktioniert
+## Global V2 acceptance
 
-Brand-Palette, große Typografie, Device-Frames, reale Produktoberflächen, konsistenter Footer und die Story über Website → Eigentümer-App → Handwerker-App bilden eine klare visuelle Produktlogik. Die finalen Änderungen erhalten diese Stärken und entfernen vor allem Geometrie-, Lesbarkeits- und Evidence-Risiken.
+- No content↔visual semantic collisions.
+- No content/visual zone may enter the footer safe area.
+- Footer logo is small and consistent.
+- Presentation-facing text obeys the configured minimum font threshold.
+- Primary screenshots obey minimum rendered dimensions and remain meaningful at presentation scale.
+- Normal slides contain no more than three primary images.
+- Phone ratios remain realistic.
+- No absolute Mac/OCI asset path exists in deck source.
+- All 15 final PNGs are visually inspected individually.
+- PDF contains 15 pages; PPTX contains 15 slides; both come from accepted PNGs.
+- Connector smoke test proves a valid deck passes and a synthetic semantic collision/undersized-text deck fails.
 
-## Finale Evidence
+## Evidence semantics
 
-- HTML-QA: 15 Folien, 1280×720, zentrale Slides-Generator-Pipeline; PASS.
-- Produkt-Snapshot: `3a8aa93054df7ec897c1dc3fec200ecf8526965a`, als existierender Vorfahr des Produkt-HEAD validiert.
-- Render: 15 PNGs in `rendered/`, frisch aus `deck.html` erzeugt.
-- Pixel-Review: alle 15 final gerenderten PNGs einzeln geladen und geprüft; die bekannten T-0165-Befunde sind im finalen Source behoben.
-- PDF: `einfachhausen-premium.pdf`, 15 Seiten.
-- PPTX: `einfachhausen-premium.pptx`, 15 Slides.
-- Limitierung: `/api/health` kann Health/DB-Readiness belegen, aber ohne expliziten Deployment-SHA keine Identität zwischen Live-Deployment und Git-HEAD. Diese Identitätsbehauptung wird daher nicht verwendet.
+Product snapshot: `3a8aa93054df7ec897c1dc3fec200ecf8526965a`.
+
+Meaning: historical product/screenshot snapshot used to support what is shown. It is not automatically the presentation HEAD or production deployment SHA. Health `ok=true` and DB `ready` may be shown only as runtime health evidence. A deployment-SHA equality statement is intentionally omitted unless independently proven.
+
+## Completion evidence
+
+Fill this section only after execution:
+
+- strict HTML QA: PASS (15 slides, 1280×720; source snapshot ancestor verified)
+- connector positive smoke: PASS
+- connector negative collision/readability fixture: PASS (semantic collision + undersized text rejected)
+- render: PASS (15 PNGs at 1280×720)
+- individual slide review 01–15: PASS (100% visual inspection)
+- PDF page count: 15
+- PPTX slide count: 15
+- product branch/SHA: pending until commit
+- wow-my-zsh branch/SHA: pending until commit
+- remaining blocker: none
