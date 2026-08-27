@@ -1,0 +1,37 @@
+{
+  "expectedSlides": 15,
+  "width": 1280,
+  "height": 720,
+  "footerSafePx": 50,
+  "maxContentImages": 4,
+  "slideSelector": ".slide",
+  "phoneSelector": ".phone",
+  "footerSelector": ".foot",
+  "phoneRatio": {
+    "min": 1.7,
+    "max": 2.35
+  },
+  "sourceCommit": "3a8aa93054df7ec897c1dc3fec200ecf8526965a",
+  "bannedCopy": [
+    {
+      "text": "through-line",
+      "why": "unpräzise Mischsprache"
+    },
+    {
+      "text": "Nichts Mockup",
+      "why": "defensive statt premium Copy"
+    },
+    {
+      "text": "Produktion · nicht Mockup",
+      "why": "defensive statt premium Copy"
+    },
+    {
+      "text": "Website-Vollseiten",
+      "why": "irreführend bei gecroppten Ansichten"
+    },
+    {
+      "text": "App-Screens (vollständig)",
+      "why": "irreführend bei kuratierter Übersicht"
+    }
+  ]
+}

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --ink:#17221B; --deep:#0B3D2A; --deeper:#071B13; --brand:#0B6B43;
+    --mint:#DDEDE4; --bg:#F6F8F6; --gold:#F4D27A; --muted:#5C6A62;
+    --line:#E3E9E4;
+  }
+  body{font-family:-apple-system,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
+       color:var(--ink); -webkit-font-smoothing:antialiased}
+  .slide{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--bg)}
+  .slide.dark{background:linear-gradient(135deg,#0B3D2A 0%,#071B13 100%);color:#fff}
+
+  .kicker{font-size:14px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--brand)}
+  .dark .kicker{color:var(--gold)}
+  h1{font-size:92px;line-height:1.02;letter-spacing:-.03em;font-weight:800}
+  h2{font-size:50px;line-height:1.07;letter-spacing:-.025em;font-weight:750}
+  .sub{font-size:17px;line-height:1.55;color:var(--muted)}
+  .dark .sub{color:#C7D6CE}
+  .foot{position:absolute;left:80px;right:80px;bottom:32px;display:flex;justify-content:space-between;
+        align-items:center;font-size:12px;color:#8CA096;letter-spacing:.08em}
+  .wordmark{font-weight:800;letter-spacing:-.01em}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;
+        font-size:13px;font-weight:600;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:#E9F3EC}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+  .check{width:26px;height:26px;border-radius:8px;background:var(--brand);color:#fff;font-size:14px;
+         display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+
+  .browser{background:#fff;border-radius:18px;box-shadow:0 40px 80px -30px rgba(7,27,19,.35);
+           overflow:hidden;border:1px solid var(--line)}
+  .browser .bar{height:36px;display:flex;align-items:center;gap:6px;padding:0 14px;background:#F0F3F0;border-bottom:1px solid var(--line)}
+  .browser .bar i{width:10px;height:10px;border-radius:50%;background:#D4DCD5}
+  .browser .url{margin-left:10px;flex:0 0 auto;width:190px;height:20px;border-radius:6px;background:#fff;
+                border:1px solid var(--line);font-size:11px;color:#7B8980;display:flex;align-items:center;padding-left:10px}
+  .phone{background:#0C110E;border-radius:40px;padding:7px;box-shadow:0 50px 90px -30px rgba(7,27,19,.55);
+         position:relative}
+  .phone .screen{border-radius:34px;overflow:hidden;background:#fff;position:relative;height:100%}
+  .phone .screen img{width:100%;height:100%;object-fit:cover;display:block}
+  .phone .notch{position:absolute;top:15px;left:50%;transform:translateX(-50%);width:82px;height:19px;
+                background:#0C110E;border-radius:10px;z-index:5}
+  .badge{position:absolute;background:#fff;border-radius:14px;padding:13px 20px;
+         box-shadow:0 20px 40px -18px rgba(7,27,19,.28);font-size:14.5px;font-weight:700;color:var(--brand)}
+  .stage{position:absolute;right:0;top:0;width:600px;height:720px;
+         background:linear-gradient(160deg,var(--mint),#EDF5EF 70%)}
+  .stat{flex:1;border-top:3px solid var(--gold);padding-top:22px}
+  .stat .lbl{font-size:13px;letter-spacing:.18em;color:#8FA79A;text-transform:uppercase;margin-bottom:12px}
+  .stat .val{font-size:34px;font-weight:750;letter-spacing:-.01em}
+  .stat .dsc{font-size:15px;margin-top:8px;color:#C7D6CE;line-height:1.45}
+</style></head><body>
+
+<!-- 01 COVER -->
+<div class="slide dark">
+  <div style="position:absolute;left:80px;top:150px;width:620px">
+    <div class="kicker" style="margin-bottom:26px">Team-Präsentation · Live-Stand 26.08.2026</div>
+    <h1>Dein Zuhause.<br>Wir kümmern<br>uns<span style="color:var(--gold)">.</span></h1>
+    <p class="sub" style="margin-top:28px;max-width:500px;font-size:20px">
+      Eine Plattform. Drei Oberflächen. Vom ersten Klick bis zum erledigten Auftrag.
+    </p>
+    <div style="display:flex;gap:12px;margin-top:42px">
+      <span class="pill"><span class="dot"></span>Produkt-Snapshot 3a8aa93</span>
+      <span class="pill"><span class="dot"></span>Healthcheck ok</span>
+      <span class="pill"><span class="dot"></span>DB ready</span>
+    </div>
+  </div>
+  <div style="position:absolute;right:70px;top:112px;width:520px;height:566px">
+    <div class="browser" style="position:absolute;left:0;top:30px;width:430px;transform:rotate(-4deg)">
+      <div class="bar"><i></i><i></i><i></i><span class="url">einfachhausen.de</span></div>
+      <div style="height:250px;overflow:hidden;background:#fff">
+        <img src="../professional-assets/web_hero.png" style="width:100%;object-fit:cover;object-position:top">
+      </div>
+    </div>
+    <div class="phone" style="position:absolute;left:336px;top:188px;width:170px;height:342px;transform:rotate(7deg)">
+      <div class="notch"></div><div class="screen">
+        <img src="../professional-assets/owner_home_top_phone.png">
+      </div>
+    </div>
+    <div class="phone" style="position:absolute;left:184px;top:220px;width:178px;height:356px;transform:rotate(-3deg)">
+      <div class="notch"></div><div class="screen">
+        <img src="../professional-assets/pro_start_phone.png">
+      </div>
+    </div>
+  </div>
+  <div class="foot" style="color:#6E8578">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Produktionsstand · live verifiziert</span><span>01 / 15</span>
+  </div>
+</div>
+
+<!-- 02 ÜBERBLICK -->
+<div class="slide">
+  <div style="position:absolute;left:80px;top:84px;right:80px;display:flex;justify-content:space-between;align-items:flex-end">
+    <div>
+      <div class="kicker" style="margin-bottom:18px">Überblick</div>
+      <h2>Eine Plattform.<br>Drei Oberflächen<span style="color:var(--brand)">.</span></h2>
+    </div>
+    <p class="sub" style="max-width:360px;text-align:right;padding-bottom:6px">
+      Jede Oberfläche hat eine klare Aufgabe — zusammen bilden sie ein durchgängiges Serviceversprechen.
+    </p>
+  </div>
+
+  <div style="position:absolute;left:80px;right:80px;top:300px;display:flex;gap:28px">
+    <div style="flex:1.35">
+      <div class="browser">
+        <div class="bar"><i></i><i></i><i></i><span class="url">einfachhausen.de</span></div>
+        <div style="height:250px;overflow:hidden">
+          <img src="../professional-assets/web_hero.png" style="width:100%;object-fit:cover;object-position:top">
+        </div>
+      </div>
+      <div style="margin-top:20px"><b style="font-size:19px">1 · Website</b>
+        <div class="sub" style="font-size:15px;margin-top:5px">Vertrauen aufbauen. Besucher zu einer konkreten Anfrage führen.</div></div>
+    </div>
+    <div style="flex:1;background:#fff;border-radius:20px;border:1px solid var(--line);padding:22px;text-align:center">
+      <div class="phone lite" style="width:172px;height:300px;margin:0 auto">
+        <div class="notch" style="top:13px;width:70px;height:16px"></div>
+        <div class="screen"><img src="../professional-assets/owner_home_top_phone.png"></div>
+      </div>
+      <div style="text-align:left;margin-top:18px"><b style="font-size:19px">2 · Eigentümer-App</b>
+        <div class="sub" style="font-size:15px;margin-top:5px">Anliegen, Hausakte und Tarife — das Zuhause an einem Ort.</div></div>
+    </div>
+    <div style="flex:1;background:#fff;border-radius:20px;border:1px solid var(--line);padding:22px;text-align:center">
+      <div class="phone lite" style="width:172px;height:300px;margin:0 auto">
+        <div class="notch" style="top:13px;width:70px;height:16px"></div>
+        <div class="screen"><img src="../professional-assets/pro_start_phone.png"></div>
+      </div>
+      <div style="text-align:left;margin-top:18px"><b style="font-size:19px">3 · Handwerker-App</b>
+        <div class="sub" style="font-size:15px;margin-top:5px">Geprüfte Partner steuern Aufträge, Team und Profil.</div></div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Überblick</span><span>02 / 15</span>
+  </div>
+</div>
+
+<!-- 03 WEBSITE HERO -->
+<div class="slide">
+  <div style="position:absolute;left:80px;top:88px;width:420px">
+    <div class="kicker" style="margin-bottom:18px">Website</div>
+    <h2>Der erste Eindruck sitzt<span style="color:var(--brand)">.</span></h2>
+    <p class="sub" style="margin-top:24px">Claim, Leistungsversprechen und Wegweiser — oben auf der ersten Seite,
+       ohne Scrollen versteckt.</p>
+    <div style="margin-top:34px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;gap:13px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Klare Positionierung:</b> „Dein Zuhause. Wir kümmern uns."</div></div>
+      <div style="display:flex;gap:13px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Große Einstiegsflächen</b> für die drei häufigsten Servicefälle</div></div>
+      <div style="display:flex;gap:13px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Ruhige Bildsprache</b>, die Vertrauen vor Werbung setzt</div></div>
+    </div>
+  </div>
+  <div class="browser" style="position:absolute;left:560px;top:76px;width:640px">
+    <div class="bar"><i></i><i></i><i></i><span class="url">einfachhausen.de</span></div>
+    <div style="height:560px;overflow:hidden">
+      <img src="../professional-assets/web_hero.png" style="width:100%;object-fit:cover;object-position:top">
+    </div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Website · Hero</span><span>03 / 15</span>
+  </div>
+</div>
+
+<!-- 04 WEBSITE LEISTUNGEN+ABLUF -->
+<div class="slide">
+  <div style="position:absolute;left:80px;top:84px;right:80px">
+    <div class="kicker" style="margin-bottom:18px">Website</div>
+    <h2>Vom Angebot zum Ablauf<span style="color:var(--brand)">.</span></h2>
+  </div>
+  <div style="position:absolute;left:80px;right:80px;top:236px;display:flex;gap:28px">
+    <div style="flex:1">
+      <div class="browser">
+        <div class="bar"><i></i><i></i><i></i><span class="url">…/leistungen</span></div>
+        <div style="height:340px;overflow:hidden">
+          <img src="../professional-assets/web_services_cards.png" style="width:100%;object-fit:cover;object-position:top">
+        </div>
+      </div>
+      <div style="margin-top:16px;font-size:15px"><b style="color:var(--brand)">01 · Leistungen</b>
+        <span class="sub"> — drei Servicekarten statt einer Feature-Liste.</span></div>
+    </div>
+    <div style="flex:1">
+      <div class="browser">
+        <div class="bar"><i></i><i></i><i></i><span class="url">…/so-funktionierts</span></div>
+        <div style="height:340px;overflow:hidden">
+          <img src="../professional-assets/web_how_steps.png" style="width:100%;object-fit:cover;object-position:top">
+        </div>
+      </div>
+      <div style="margin-top:16px;font-size:15px"><b style="color:var(--brand)">02 · So funktioniert's</b>
+        <span class="sub"> — der sichere Weg vom Problem zur Lösung.</span></div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Website · Leistungen & Ablauf</span><span>04 / 15</span>
+  </div>
+</div>
+
+<!-- 05 EIGENTÜMER ANLIEGEN -->
+<div class="slide">
+  <div style="position:absolute;left:80px;top:96px;width:500px">
+    <div class="kicker" style="margin-bottom:18px">Eigentümer-App</div>
+    <h2>Anliegen erfassen, statt Formulare auszufüllen<span style="color:var(--brand)">.</span></h2>
+    <div style="margin-top:34px;display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;gap:14px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Foto, Sprache oder kurzer Text.</b>
+        <div class="sub" style="font-size:15px;margin-top:3px">Das Anliegen beginnt dort, wo der Alltag es liefert.</div></div></div>
+      <div style="display:flex;gap:14px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Der passende Hausmeister.</b>
+        <div class="sub" style="font-size:15px;margin-top:3px">Vorschlag nach Fähigkeit und Region.</div></div></div>
+      <div style="display:flex;gap:14px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Freigabe vor jedem Auftrag.</b>
+        <div class="sub" style="font-size:15px;margin-top:3px">Kostenkontrolle bleibt bei der Eigentümerin, beim Eigentümer.</div></div></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="phone" style="position:absolute;left:68px;top:108px;width:260px;height:532px">
+      <div class="notch"></div><div class="screen"><img src="../professional-assets/owner_hausmeister_phone.png"></div>
+    </div>
+    <div class="phone" style="position:absolute;left:318px;top:154px;width:230px;height:470px">
+      <div class="notch"></div><div class="screen"><img src="../05-eigentuemer-app-hausmeister.png"></div>
+    </div>
+    <div class="badge" style="left:56px;bottom:52px">Kein Auftrag ohne Freigabe ✓</div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Eigentümer-App · Anliegen</span><span>05 / 15</span>
+  </div>
+</div>
+
+<!-- 06 EIGENTÜMER HAUS -->
+<div class="slide">
+  <div class="stage" style="background:linear-gradient(200deg,var(--mint),#EDF5EF 70%)">
+    <div class="phone" style="position:absolute;left:142px;top:96px;width:266px;height:544px">
+      <div class="notch"></div><div class="screen"><img src="../professional-assets/owner_house_top_phone.png"></div>
+    </div>
+    <div class="badge" style="left:64px;bottom:64px">Mein Haus: alles an einem Ort</div>
+  </div>
+  <div style="position:absolute;left:660px;top:110px;width:540px">
+    <div class="kicker" style="margin-bottom:18px">Eigentümer-App</div>
+    <h2>Das Zuhause als digitales Objekt<span style="color:var(--brand)">.</span></h2>
+    <p class="sub" style="margin-top:24px">Die Hausakte bündelt Objekt, offene Anliegen und Historie —
+       nicht nur ein Ticket-System, sondern laufende Betreuung.</p>
+    <div style="margin-top:32px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;gap:13px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Hausakte:</b> Technik, Dokumente, Verlauf.</div></div>
+      <div style="display:flex;gap:13px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Nächste Schritte</b> sind immer sichtbar verlinkt.</div></div>
+      <div style="display:flex;gap:13px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Ansprechpartner</b> mit echtem Zuständigkeitssinn.</div></div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Eigentümer-App · Hausakte</span><span>06 / 15</span>
+  </div>
+</div>
+
+<!-- 07 EIGENTÜMER TARIFE -->
+<div class="slide">
+  <div style="position:absolute;left:80px;top:96px;width:520px">
+    <div class="kicker" style="margin-bottom:18px">Eigentümer-App</div>
+    <h2>Tarife machen das Modell greifbar<span style="color:var(--brand)">.</span></h2>
+    <p class="sub" style="margin-top:24px">Aus dem Einzelauftrag wird ein Betreuungsmodell mit klarem Umfang —
+       verständlich kalkulierbar für beide Seiten.</p>
+    <div style="margin-top:34px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 26px;
+                box-shadow:0 24px 48px -24px rgba(7,27,19,.2)">
+      <div style="font-size:13px;letter-spacing:.16em;color:var(--brand);text-transform:uppercase;font-weight:700;margin-bottom:10px">Warum das trägt</div>
+      <div style="font-size:16.5px;line-height:1.55">Laufende Betreuung verkauft sich nicht über Einzelpreise,
+      sondern über Verlässlichkeit — genau das bildet die Tariflogik ab.</div>
+    </div>
+  </div>
+  <div class="stage" style="background:linear-gradient(160deg,#EDF5EF,var(--mint))">
+    <div class="phone" style="position:absolute;left:142px;top:96px;width:266px;height:544px">
+      <div class="notch"></div><div class="screen"><img src="../professional-assets/owner_tariffs_top_phone.png"></div>
+    </div>
+    <div class="badge" style="left:72px;bottom:56px">Klarer Umfang, klare Kalkulation</div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Eigentümer-App · Tarife</span><span>07 / 15</span>
+  </div>
+</div>
+
+<!-- 08 HANDWERKER ZUGANG -->
+<div class="slide">
+  <div class="stage" style="background:linear-gradient(160deg,#E7F2EA,#F2F7F3)">
+    <div class="phone" style="position:absolute;left:142px;top:96px;width:266px;height:544px">
+      <div class="notch"></div><div class="screen"><img src="../professional-assets/pro_start_phone.png"></div>
+    </div>
+    <div class="badge" style="left:58px;bottom:58px;background:#FFF3CC;color:#7A5B05;border:1px solid #EAD9A0">
+      Live-Status: Unternehmensprüfung ausstehend</div>
+  </div>
+  <div style="position:absolute;left:660px;top:100px;width:540px">
+    <div class="kicker" style="margin-bottom:18px">Handwerker-App</div>
+    <h2>Kein Zugang ohne Prüfung<span style="color:var(--brand)">.</span></h2>
+    <p class="sub" style="margin-top:22px">Neue Partner sehen den Marktplatz erst nach erfolgreicher
+       Unternehmens- und Vertragsprüfung. Der Status auf diesem Screen ist echt — bewusst.</p>
+    <div style="margin-top:30px;background:#FFF8E2;border-radius:18px;padding:22px 26px;border:1px solid #F0E3BC">
+      <div style="font-size:13px;letter-spacing:.16em;color:#7A5B05;text-transform:uppercase;font-weight:700;margin-bottom:10px">Präsentationsformulierung</div>
+      <div style="font-family:Georgia,serif;font-size:18px;line-height:1.5;font-style:italic">
+        „Wir öffnen den Marktplatz nicht blind. Jeder regionale Partner läuft zuerst durch Prüfung, Vertrag und Profilqualität."</div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Handwerker-App · Zugang</span><span>08 / 15</span>
+  </div>
+</div>
+
+<!-- 09 HANDWERKER AUFTRÄGE+TEAM -->
+<div class="slide">
+  <div style="position:absolute;left:80px;top:84px;right:80px;display:flex;justify-content:space-between;align-items:flex-end">
+    <div>
+      <div class="kicker" style="margin-bottom:18px">Handwerker-App</div>
+      <h2>Die operative Oberfläche<span style="color:var(--brand)">.</span></h2>
+    </div>
+    <p class="sub" style="max-width:380px;text-align:right;padding-bottom:6px">Arbeitsmittel statt Benachrichtigungsliste:
+       Aufträge, Nachrichten, Team und Profil als vier Säulen.</p>
+  </div>
+  <div style="position:absolute;left:80px;right:80px;top:240px;display:flex;gap:32px;justify-content:center">
+    <div class="phone" style="width:205px;height:420px">
+      <div class="notch" style="top:14px;width:74px;height:17px"></div>
+      <div class="screen"><img src="../professional-assets/pro_jobs_phone.png" style="object-position:top"></div>
+    </div>
+    <div style="align-self:center;font-size:34px;color:var(--brand)">→</div>
+    <div class="phone" style="width:205px;height:420px">
+      <div class="notch" style="top:14px;width:74px;height:17px"></div>
+      <div class="screen"><img src="../professional-assets/pro_team_top_phone.png" style="object-position:top"></div>
+    </div>
+    <div style="flex:1;max-width:330px;align-self:center">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:12px"><div class="check">✓</div><div style="font-size:15.5px"><b>Aufträge</b> mit Status, Details und Historie</div></div>
+        <div style="display:flex;gap:12px"><div class="check">✓</div><div style="font-size:15.5px"><b>Team</b> zuweisen und Auslastung sehen</div></div>
+        <div style="display:flex;gap:12px"><div class="check">✓</div><div style="font-size:15.5px"><b>Nachrichten</b> direkt zum Auftrag kontextualisiert</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Handwerker-App · Betrieb</span><span>09 / 15</span>
+  </div>
+</div>
+
+<!-- 10 HANDWERKER PROFIL -->
+<div class="slide">
+  <div style="position:absolute;left:80px;top:96px;width:520px">
+    <div class="kicker" style="margin-bottom:18px">Handwerker-App</div>
+    <h2>Profil ist Qualitätsversprechen<span style="color:var(--brand)">.</span></h2>
+    <p class="sub" style="margin-top:22px">Was Kundinnen und Kunden sehen, bevor ein Partner einen Auftrag bekommt:
+       geprüfte Unternehmensdaten, Leistungen, Erreichbarkeit.</p>
+    <div style="margin-top:32px;display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;gap:13px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Unternehmensdaten</b> verifiziert gegen Registereinträge</div></div>
+      <div style="display:flex;gap:13px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Leistungsprofil</b> bestimmt automatische Zuordnung</div></div>
+      <div style="display:flex;gap:13px"><div class="check">✓</div><div style="font-size:16px;padding-top:2px"><b>Prüfstatus</b> transparent sichtbar — kein Stillstand im Verborgenen</div></div>
+    </div>
+  </div>
+  <div class="stage" style="background:linear-gradient(200deg,#E7F2EA,#F2F7F3)">
+    <div class="phone" style="position:absolute;left:142px;top:96px;width:266px;height:544px">
+      <div class="notch"></div><div class="screen"><img src="../professional-assets/pro_profile_top_phone.png"></div>
+    </div>
+    <div class="badge" style="left:66px;bottom:54px">Geprüft & sichtbar</div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Handwerker-App · Profil</span><span>10 / 15</span>
+  </div>
+</div>
+
+<!-- 11 ZUSAMMENSPIEL -->
+<div class="slide dark">
+  <div style="position:absolute;left:80px;top:88px">
+    <div class="kicker" style="margin-bottom:18px">Zusammenspiel</div>
+    <h2>Ein durchgängiger Weg<span style="color:var(--gold)">.</span></h2>
+  </div>
+  <div style="position:absolute;left:80px;right:80px;top:300px;display:flex;align-items:center;gap:0">
+    <div style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:28px">
+      <div style="font-size:13px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;font-weight:700">Schritt 1</div>
+      <div style="font-size:24px;font-weight:750;margin-top:10px">Website</div>
+      <div class="sub" style="font-size:15px;margin-top:10px">Vertrauen & konkrete Anfrage</div>
+    </div>
+    <div style="width:56px;text-align:center;font-size:30px;color:var(--gold)">→</div>
+    <div style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:28px">
+      <div style="font-size:13px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;font-weight:700">Schritt 2</div>
+      <div style="font-size:24px;font-weight:750;margin-top:10px">Eigentümer-App</div>
+      <div class="sub" style="font-size:15px;margin-top:10px">Anliegen erfassen & Freigabe erteilen</div>
+    </div>
+    <div style="width:56px;text-align:center;font-size:30px;color:var(--gold)">→</div>
+    <div style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:28px">
+      <div style="font-size:13px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;font-weight:700">Schritt 3</div>
+      <div style="font-size:24px;font-weight:750;margin-top:10px">Handwerker-App</div>
+      <div class="sub" style="font-size:15px;margin-top:10px">Geprüfter Partner führt aus</div>
+    </div>
+  </div>
+  <div style="position:absolute;left:80px;bottom:104px;right:80px;font-size:18px;color:#DCEFE5;text-align:center">
+    Jeder Übergang bleibt im selben System — dieselbe Sprache, dieselbe Qualität, ein Serviceversprechen.
+  </div>
+  <div class="foot" style="color:#6E8578">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Zusammenspiel</span><span>11 / 15</span>
+  </div>
+</div>
+
+<!-- 12 LIVE-NACHWEIS -->
+<div class="slide dark">
+  <div style="position:absolute;left:80px;top:96px">
+    <div class="kicker" style="margin-bottom:20px">Live-Nachweis</div>
+    <h2>Produktionsstand.<br>Live verifiziert<span style="color:var(--gold)">.</span></h2>
+  </div>
+  <div style="position:absolute;left:80px;right:80px;top:350px;display:flex;gap:24px">
+    <div class="stat"><div class="lbl">Produkt-Snapshot</div><div class="val">3a8aa93</div>
+      <div class="dsc">Snapshot der gezeigten Produktoberflächen</div></div>
+    <div class="stat"><div class="lbl">Healthcheck</div><div class="val">ok = true</div>
+      <div class="dsc">Öffentlicher Endpunkt, live geprüft</div></div>
+    <div class="stat"><div class="lbl">Datenbank</div><div class="val">ready</div>
+      <div class="dsc">Status am öffentlichen Health-Endpunkt</div></div>
+    <div class="stat" style="border-top-color:rgba(255,255,255,.25)"><div class="lbl">Capture</div><div class="val">26.08.2026</div>
+      <div class="dsc">Alle Screenshots von einfachhausen.de</div></div>
+  </div>
+  <div style="position:absolute;left:80px;bottom:106px;right:80px;background:rgba(255,255,255,.05);
+              border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:20px 26px;font-size:16px;color:#DCEFE5">
+    Die gezeigten Produktscreens wurden aus dem laufenden Produktivsystem aufgenommen —
+    inklusive des realen Prüfstatus neuer Handwerks-Partner.
+  </div>
+  <div class="foot" style="color:#6E8578">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Live-Stand · verifiziert</span><span>12 / 15</span>
+  </div>
+</div>
+
+<!-- 13 ANHANG A WEBSITE -->
+<div class="slide">
+  <div style="position:absolute;left:80px;top:60px;right:80px;display:flex;justify-content:space-between;align-items:baseline">
+    <div class="kicker">Anhang A · Website-Ansichten</div>
+    <div style="font-size:13px;color:#8CA096">Quelle: einfachhausen.de · Live-Capture 26.08.2026</div>
+  </div>
+  <div style="position:absolute;left:80px;right:80px;top:118px;bottom:70px;display:flex;gap:24px">
+    <div class="browser" style="flex:1"><div class="bar"><i></i><i></i><i></i><span class="url">01 · Startseite</span></div>
+      <div style="height:calc(100% - 36px);overflow:hidden"><img src="../01-website-startseite.png" style="width:100%"></div></div>
+    <div class="browser" style="flex:1"><div class="bar"><i></i><i></i><i></i><span class="url">02 · Leistungen</span></div>
+      <div style="height:calc(100% - 36px);overflow:hidden"><img src="../02-website-leistungen.png" style="width:100%"></div></div>
+    <div class="browser" style="flex:1"><div class="bar"><i></i><i></i><i></i><span class="url">03 · So funktioniert's</span></div>
+      <div style="height:calc(100% - 36px);overflow:hidden"><img src="../03-website-so-funktionierts.png" style="width:100%"></div></div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Anhang · Website</span><span>13 / 15</span>
+  </div>
+</div>
+
+<!-- 14 ANHANG B APPS -->
+<div class="slide">
+  <div style="position:absolute;left:80px;top:60px;right:80px;display:flex;justify-content:space-between;align-items:baseline">
+    <div class="kicker">Anhang B · Repräsentative App-Screens</div>
+    <div style="font-size:13px;color:#8CA096">Eigentümer- und Handwerker-App · kuratierte Auswahl</div>
+  </div>
+  <div style="position:absolute;left:80px;right:80px;top:116px;bottom:78px;display:flex;gap:22px">
+    <div style="flex:1;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;text-align:center">
+      <div class="phone" style="width:150px;height:308px;margin:0 auto"><div class="notch" style="top:12px;width:62px;height:14px"></div><div class="screen"><img src="../04-eigentuemer-app-start.png" style="object-position:top"></div></div>
+      <div class="kicker" style="font-size:10px;letter-spacing:.14em;margin-top:16px">Eigentümer</div><div style="font-size:19px;font-weight:750;margin-top:6px">Start</div><div class="sub" style="font-size:13px;margin-top:6px">Hausstatus & nächste Schritte</div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;text-align:center">
+      <div class="phone" style="width:150px;height:308px;margin:0 auto"><div class="notch" style="top:12px;width:62px;height:14px"></div><div class="screen"><img src="../05-eigentuemer-app-hausmeister.png" style="object-position:top"></div></div>
+      <div class="kicker" style="font-size:10px;letter-spacing:.14em;margin-top:16px">Eigentümer</div><div style="font-size:19px;font-weight:750;margin-top:6px">Hausmeister</div><div class="sub" style="font-size:13px;margin-top:6px">Text, Foto oder Sprache</div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;text-align:center">
+      <div class="phone" style="width:150px;height:308px;margin:0 auto"><div class="notch" style="top:12px;width:62px;height:14px"></div><div class="screen"><img src="../09-handwerker-app-auftraege.png" style="object-position:top"></div></div>
+      <div class="kicker" style="font-size:10px;letter-spacing:.14em;margin-top:16px">Handwerker</div><div style="font-size:19px;font-weight:750;margin-top:6px">Aufträge</div><div class="sub" style="font-size:13px;margin-top:6px">Status & operative Arbeit</div>
+    </div>
+    <div style="flex:1;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;text-align:center">
+      <div class="phone" style="width:150px;height:308px;margin:0 auto"><div class="notch" style="top:12px;width:62px;height:14px"></div><div class="screen"><img src="../11-handwerker-app-profil.png" style="object-position:top"></div></div>
+      <div class="kicker" style="font-size:10px;letter-spacing:.14em;margin-top:16px">Handwerker</div><div style="font-size:19px;font-weight:750;margin-top:6px">Profil</div><div class="sub" style="font-size:13px;margin-top:6px">Leistungen & Prüfstatus</div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span><span>Anhang · Apps</span><span>14 / 15</span>
+  </div>
+</div>
+
+<!-- 15 ABSCHLUSS -->
+<div class="slide dark">
+  <div style="position:absolute;left:0;right:0;top:200px;text-align:center">
+    <div class="kicker" style="margin-bottom:30px">Einfachhausen · Team-Review</div>
+    <h1 style="font-size:76px">Ein Zuhause.<br>Ein Ansprechpartner<span style="color:var(--gold)">.</span></h1>
+    <p class="sub" style="margin-top:30px;font-size:19px">Website, Eigentümer-App und Partnerbetrieb greifen als ein Service zusammen.</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:44px">
+      <span class="pill"><span class="dot"></span>Produktionsstand verifiziert</span>
+      <span class="pill"><span class="dot"></span>15 Folien · Team-ready</span>
+    </div>
+  </div>
+  <div class="foot" style="color:#6E8578;justify-content:center">
+    <span class="wordmark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" class="logo-icon"><path d="M21 55.5 60 22l39 33.5v43H74V72H46v26.5H21z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/></svg> einfachhausen.de</span>
+  </div>
+</div>
+
+</body></html>
