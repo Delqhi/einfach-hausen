@@ -24,23 +24,32 @@
     "test:notifications": "node scripts/t0104-notification-regression.mjs",
     "test:matching:t0107": "node scripts/t0107-matching-regression.mjs",
     "test:matching:benchmark": "node scripts/t0108-matching-benchmark.mjs",
-    "test:review": "node scripts/t0110-review-regression.mjs"
+    "test:review": "node scripts/t0110-review-regression.mjs",
+    "test:t0168-auth": "node scripts/t0168-dual-auth-regression.mjs",
+    "test:t0170-auth": "node scripts/t0170-auth-e2e.mjs"
   },
   "dependencies": {
+    "@capacitor/keyboard": "^8.0.5",
+    "@capacitor/status-bar": "^8.0.3",
+    "@supabase/ssr": "^0.12.5",
+    "@supabase/supabase-js": "^2.112.4",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^13.0.3",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.33.0",
     "next": "16.3.1",
+    "nodemailer": "^9.0.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "stripe": "^22.5.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
     "@tailwindcss/postcss": "^4",
     "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

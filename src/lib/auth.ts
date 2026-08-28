@@ -1,9 +1,17 @@
 import { randomBytes } from 'node:crypto';
 import { db } from './db';
+import { createServerClient } from '@supabase/ssr';
 
 export type CurrentUser = {
   id: number; email: string; role: 'homeowner' | 'provider'; first_name: string; last_name: string; phone: string | null;
 };
+
+export type AuthMode = 'supabase' | 'local';
+export function authMode(): AuthMode {
+  const mode = process.env.AUTH_MODE || 'supabase';
+  if (mode === 'local' && process.env.NODE_ENV === 'production') throw new Error('Local auth is disabled in production');
+  return mode === 'local' ? 'local' : 'supabase';
+}
 
 const DEV_COOKIE = 'mh_session';
 // __Host- requires Secure+Path=/+no Domain; valid only over HTTPS production.
@@ -30,7 +38,7 @@ function cookieOptions(expires: Date) {
 }
 
 // Lazily resolved so this module stays importable outside Next's request context.
-async function jar(): Promise<{ get(k: string): { value: string } | undefined; set(k: string, v: any, o?: any): void; delete(k: string): void }> {
+async function jar(): Promise<{ get(k: string): { value: string } | undefined; getAll?: () => Array<{ name: string; value: string }>; set(k: string, v: any, o?: any): void; delete(k: string): void }> {
   const { cookies } = await import('next/headers');
   return await cookies() as any;
 }
@@ -100,19 +108,42 @@ export async function destroySession() {
 }
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
+  if (authMode() === 'local') return getLocalUser();
   const store = await jar();
-  const name = cookieName();
-  const token = store.get(name)?.value;
-  if (!token) return null;
-  const row = db.prepare(`SELECT u.id,u.email,u.role,u.first_name,u.last_name,u.phone
-    FROM sessions s JOIN users u ON u.id=s.user_id
-    WHERE s.token=? AND s.expires_at > ?`).get(token, new Date().toISOString()) as CurrentUser | undefined;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
+  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('your-project.supabase.co')) return null;
+  const client = createServerClient(
+    supabaseUrl,
+    supabaseAnonKey,
+    { cookies: { getAll: () => store.getAll ? store.getAll() : [DEV_COOKIE, PROD_COOKIE].flatMap((name) => { const c = store.get(name); return c ? [{ name, value: c.value }] : []; }), setAll: (items) => { for (const item of items) { try { store.set(item.name, item.value, item.options); } catch {} } } } }
+  );
+  const { data: { user: identity }, error } = await client.auth.getUser();
+  if (error || !identity) return null;
+  // Roles are application authority, never mutable Supabase user_metadata.
+  // A verified subject must map to an existing server-controlled application row.
+  let row = db.prepare('SELECT id,email,role,first_name,last_name,phone FROM users WHERE auth_subject=?').get(identity.id) as CurrentUser | undefined;
+  // One-time, explicit migration bridge: email is only used to bind an existing
+  // application account to the verified Supabase subject. Future requests require auth_subject.
   if (!row) {
-    // Stale or rotated token: drop the row and clear the cookie.
-    db.prepare('DELETE FROM sessions WHERE token=?').run(token);
-    try { store.delete(name); } catch {}
-    return null;
+    // Email is a one-time migration key only. It must identify exactly one
+    // existing account; mismatched roles and collisions fail closed.
+    const matches = db.prepare('SELECT id,email,role,first_name,last_name,phone,auth_subject FROM users WHERE lower(email)=lower(?)').all(identity.email || '') as Array<CurrentUser & { auth_subject: string | null }>;
+    if (matches.length !== 1 || matches[0].auth_subject !== null) return null;
+    const candidate = matches[0];
+    const updated = db.prepare('UPDATE users SET auth_subject=? WHERE id=? AND auth_subject IS NULL').run(identity.id, candidate.id);
+    if (updated.changes !== 1) return null;
+    row = db.prepare('SELECT id,email,role,first_name,last_name,phone FROM users WHERE auth_subject=?').get(identity.id) as CurrentUser | undefined;
   }
+  if (!row) return null;
+  return row || null;
+}
+
+async function getLocalUser(): Promise<CurrentUser | null> {
+  const store = await jar(); const token = store.get(DEV_COOKIE)?.value;
+  if (!token) return null;
+  const row = db.prepare(`SELECT u.id,u.email,u.role,u.first_name,u.last_name,u.phone FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token=? AND s.expires_at > ?`).get(token, new Date().toISOString()) as CurrentUser | undefined;
+  if (!row) { db.prepare('DELETE FROM sessions WHERE token=?').run(token); try { store.delete(DEV_COOKIE); } catch {} return null; }
   return row;
 }
 

@@ -108,19 +108,66 @@ Die Plattformanwendung und das Akquise-/Outreach-Control-Plane sind bewusst getr
 
 Agents dürfen daraus **keine zwei konkurrierenden CRMs** machen. Repository-Ziele und aktuelle Fortsetzung stehen jeweils in `docs/NEXT_AGENT.md` und dem kanonischen `.sin-gpt-web`-Taskplan des Repos.
 
-## Pilot-Infrastruktur
+## Technische Vervollständigung v2 + Produktions-HA
 
-Für den Pilot wird vorhandene Infrastruktur wiederverwendet:
+Der kanonische Plan erweitert um **Supabase HA + Capacitor**. Roadmap ist **T-0100..T-0131 plus T-0166 Supabase Migration + T-0167 Capacitor Release** und erweitert die Architektur ohne das Produktmodell zu ändern. Technische Grenzen:
 
-- OCI VM als Runtime
-- Cloudflare Tunnel als öffentlicher TLS-Eingang
-- SQLite/WAL als transaktionale Single-Node-Datenbank
-- self-hosted Supabase für bestehende Plattformdienste/Backups
+- **Onboarding/account lifecycle:** homeowner and partner first-run journeys plus recovery/session revocation remain on the existing identity model.
+- **Notification pipeline:** business transactions emit a durable, versioned outbox event; dispatch/retry/channel adapters and user-visible inbox state consume that event idempotently.
+- **Matching quality:** the existing matcher gains privacy-safe decision traces, freshness/capacity rules and deterministic benchmark fixtures; monetization remains excluded from ranking quality.
+- **Trust/reviews:** reviews are derived only from verified completed service relationships, with moderation/audit and truthful low-sample aggregates.
+- **i18n/a11y/performance:** typed locale boundaries, WCAG-critical shared interaction rules and measurable CWV/server budgets become release gates rather than one-off audits.
+- **Security/observability:** adversarial regression, supply-chain gates, structured redacted correlation and SLO probes reuse the current OCI/Next.js stack.
+- **Feature flags/admin/privacy:** minimal server-authoritative flags, one restrained admin operations console, and authenticated export/request workflows avoid a second control plane.
+- **Release proof:** T-0129 production-style browser E2E and T-0130 deterministic visual regression converge into T-0131 final technical completion.
+
+External-authority reduziert auf **#16 STRATO-DNSSEC, #11 Rechtstexte, #14 SEPA/Stripe-live**. **#12 App Stores ist kein Blocker mehr** — Capacitor iOS/Android ist aktiver Produktionspfad (T-0167).
+
+## Authentifizierungsarchitektur — Deep-Research-Konvergenz T-0168
+
+Die Zielarchitektur für geschützte Owner-/Provider-Flächen ist serverautoritativ:
+
+- **Supabase ist die einzige Produktions-Identity-Authority.** Browser-Sessionzustand darf UI steuern, aber keine Produktionsberechtigung erteilen.
+- `currentUser()`, `requireUser()` und `requirePro()` müssen auf eine konsistente serverseitig verifizierte App-Identity konvergieren.
+- `mh_session`/SQLite-Auth ist nur als **expliziter Local-Dev-Fallback** zulässig. Es gibt keinen stillen Fallback von Supabase auf lokal.
+- Ein Local-Auth-Modus in Produktion muss **fail closed** enden.
+- `AuthContext` ist UI-State und darf weder gültige Server-Autorisierung überschreiben noch geschützten Zugriff gewähren.
+- Server Actions autorisieren vor jeder sensiblen Mutation erneut.
+- Die Zuordnung zwischen Supabase-Subject und bestehendem Application-User ist explizit zu modellieren; `supabase user.id == app users.id` darf nicht ungeprüft angenommen werden.
+
+```text
+Production
+  Supabase verified identity
+    -> AppIdentity
+    -> requireUser()/requirePro()
+    -> protected Server Components / Route Handlers / Server Actions
+
+Development
+  AUTH_BACKEND=supabase -> gleiche Semantik wie Produktion
+  AUTH_BACKEND=local    -> mh_session/SQLite nur wenn NODE_ENV != production
+
+Production + AUTH_BACKEND=local -> fail closed
+```
+
+Die vollständigen Forschungs-, Test- und visuellen Acceptance-Regeln stehen in [`T0168_DEEP_RESEARCH.md`](T0168_DEEP_RESEARCH.md).
+
+## Produktions-Infrastruktur — OCI + SIN Supabase OSS
+
+Zielproduktion ist **Multi-User auf OCI**. Hochverfügbarkeit wird nur dort als verifiziert bezeichnet, wo Redundanz, Backup/Restore und Failover tatsächlich nachgewiesen sind:
+
+- OCI-VM als Runtime hinter Cloudflare Tunnel
+- **SIN Supabase OSS auf OCI** als primäre Auth-/Datenplattform; Supabase Cloud ist nicht Teil der Zielarchitektur
+- **Postgres aus dem SIN-Supabase-Stack** als primäre transaktionale DB — Runtime-Konfiguration ausschließlich über geschützte OCI/SIN-Secrets
+- **Supabase Storage aus dem self-hosted Stack** als primärer Blob-Store für `private/` und `uploads/`
+- **SQLite + WAL via `better-sqlite3` nur expliziter Local-Dev-Fallback**, nicht Primary in Produktion; Local-Auth in Produktion fail-closed
+- **Capacitor 6** für iOS + Android native Auslieferung derselben Next.js App (`@capacitor/core`, `@capacitor/ios`, `@capacitor/android`)
 - Kestra für geplante Checks
 - OmniRoute für optionale Assistenzfunktionen
 - Stripe/Connect für Abos und Zahlungen
 
-Keine neue Infrastruktur wird eingeführt, wenn die vorhandene Lösung das Problem bereits zuverlässig löst.
+Der Code- und Agentenpfad ist nach dem Übergabe-Release **GitHub → OCI-VM**. Mac-M1 bleibt Source/Release/Recovery und ist nicht mehr der kanonische Worker-Host. Direkte Working-Tree-Kopien vom Mac nach OCI sind verboten.
+
+Migration von SQLite → SIN Supabase Postgres läuft als kontrollierter Cutover mit idempotenter Backfill-Verifikation (siehe `docs/OPERATIONS.md`). Begriffe wie **HA**, **PITR** oder **Failover** gelten erst nach frischem OCI-Evidence für die tatsächlich betriebene self-hosted Konfiguration.
 
 <!-- SIN-GPT-WEB-HANDOVER:BEGIN -->
 ## SIN GPT Web completion / handover sync
@@ -128,9 +175,9 @@ Keine neue Infrastruktur wird eingeführt, wenn die vorhandene Lösung das Probl
 - Last synchronized task: `T-0043`
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
 - Canonical repo goal: Einfach Hausen vollständig fertigstellen und vor allem App und Website auf Produktionsqualität verbessern
-- Resume rule: read/validate the canonical taskplan and continue its highest-priority eligible task; do not create a competing roadmap.
+- Resume rule: product-completion v2 is T-0100..T-0131; continue the highest-priority eligible canonical task (currently T-0100) and do not create a competing roadmap.
 - Taskplan sync: `pass`
-- Synchronized at: `2026-08-25T20:59:52+00:00`
+- Synchronized at: `2026-08-26T03:34:55+00:00`
 - Contract: `sin-gpt-web-completion-handover-v1`
 <!-- SIN-GPT-WEB-HANDOVER:END -->
 

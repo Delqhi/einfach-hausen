@@ -30,7 +30,7 @@ function execWithRetry<T>(fn: () => T, attempts = 10): T {
 }
 
 execWithRetry(() => db.exec(`
-CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,email TEXT NOT NULL UNIQUE COLLATE NOCASE,password_hash TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('homeowner','provider')),first_name TEXT NOT NULL,last_name TEXT NOT NULL,phone TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,email TEXT NOT NULL UNIQUE COLLATE NOCASE,password_hash TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('homeowner','provider')),first_name TEXT NOT NULL,last_name TEXT NOT NULL,phone TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,auth_subject TEXT UNIQUE);
 CREATE TABLE IF NOT EXISTS sessions (token TEXT PRIMARY KEY,user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,expires_at TEXT NOT NULL); CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
 CREATE TABLE IF NOT EXISTS homeowner_profiles (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,postcode TEXT NOT NULL DEFAULT '',address TEXT NOT NULL DEFAULT '');
 CREATE TABLE IF NOT EXISTS provider_profiles (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,business_name TEXT NOT NULL,trades TEXT NOT NULL DEFAULT '',postcode TEXT NOT NULL DEFAULT '',radius_km INTEGER NOT NULL DEFAULT 25,verified INTEGER NOT NULL DEFAULT 0,rating REAL NOT NULL DEFAULT 0,rating_count INTEGER NOT NULL DEFAULT 0,description TEXT NOT NULL DEFAULT '',stripe_account_id TEXT,stripe_onboarded INTEGER NOT NULL DEFAULT 0);
@@ -178,6 +178,8 @@ addColumnIfMissing('house_history_entries','job_id','job_id INTEGER REFERENCES j
 addColumnIfMissing('homeowner_contacts','property_id','property_id INTEGER REFERENCES properties(id)');
 addColumnIfMissing('provider_invites','property_id','property_id INTEGER REFERENCES properties(id)');
 addColumnIfMissing('house_transfers','property_id','property_id INTEGER REFERENCES properties(id)');
+addColumnIfMissing('users','auth_subject','auth_subject TEXT');
+execWithRetry(() => db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_auth_subject ON users(auth_subject) WHERE auth_subject IS NOT NULL'));
 addColumnIfMissing('sessions','issued_at','issued_at TEXT');
 addColumnIfMissing('admin_sessions','issued_at','issued_at TEXT');
 // First-run onboarding state for homeowners (EH T-0101). 'done' keeps every

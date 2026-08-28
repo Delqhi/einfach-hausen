@@ -15,16 +15,17 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - **One repository = one goal.** Every agent works toward the same canonical goal from `.sin-gpt-web/taskplan.sqlite3`: finish the complete Einfach Hausen platform to production quality, prove acceptance, then converge the repository. Do not create side-roadmaps, duplicate task lists, speculative redesign waves, or parallel infrastructure goals.
 - **Mandatory read order before work:** `docs/NEXT_AGENT.md` → `.sin-gpt-web/TASKPLAN.md` → the exact `sin-gpt-web-state show <TASK>` record → `docs/PRODUCT_VISION.md` and any task-specific docs. Historical reports are evidence, never the current roadmap.
 - **Always take the highest-priority eligible canonical task.** Do not work a completed/cancelled task again. Do not invent a new task when an existing canonical task covers the work.
-- The current endgame is sequential: **T-0042 Final Acceptance → T-0043 Final Convergence/Handover**. New implementation is allowed only if T-0042 produces a reproducible failed criterion and a canonical remediation task is created through `sin-gpt-web-state`.
+- **Current explicit operator roadmap (2026-08-28 OCI migration):** First complete the verified **Mac-M1 → GitHub → OCI-VM** handoff. After the GitHub release SHA is proven, **OCI-VM is the canonical execution host** for `einfach-hausen`; Mac-M1 is source/release/recovery only. Immediate critical chain: **T-0170 OCI SIN Supabase auth convergence → T-0169 Notion 1:1 visual acceptance → T-0171 final convergence**, then resume the highest-priority eligible product-completion task. **SIN Supabase OSS on OCI is the target production auth/data authority; Supabase Cloud is not part of the target architecture.** SQLite remains explicit local-development fallback only.
 - Before ending a wave, update canonical task evidence/state, render+validate the taskplan, and update `docs/NEXT_AGENT.md` only if the continuation point changed. Leave exactly one unambiguous next action for the next agent.
 - README, worker reports, GitHub issues, Notion and ad-hoc docs must not become competing engineering roadmaps. They may link to or summarize the canonical taskplan only.
 
 - `docs/PRODUCT_VISION.md` is the binding product definition. Preserve the core model: AI organizes, verified regional partners execute, and a concrete human contact takes over after booking.
+- `docs/PRODUCT_POSITIONING.md` is the binding strategic positioning layer. Product and UX choices must reinforce Einfach Hausen as the **personal house manager / operating system for the home**: reduce mental load, increase decision confidence, preserve house memory and value, and reduce fragmented tools/contacts. Do not foreground AI, lead-marketplace or generic portal positioning when a homeowner-facing benefit can express the same capability.
 - `DESIGN.md` is the binding visual/UX contract across the public website, homeowner app, and partner app. Read it before touching UI. During parallel surface-specific design waves, treat it and shared business logic as read-only and stay inside the task's allowed paths.
 - For architecture, dependency flow, blast-radius questions, and unfamiliar code paths, use Graphify first: `graphify query`, `graphify explain`, or `graphify path`. If the graph is absent or stale, run `npm run graph:update`.
 - Graphify output is generated local state under `graphify-out/` and is intentionally not committed. Git hooks installed by Graphify refresh the graph after commit/checkout.
 - Before shipping application changes run `npm run lint`, `npm run build`, and the relevant E2E flow (`npm run test:e2e` for end-to-end product changes).
-- Reuse the existing OCI stack (OmniRoute, Supabase, Kestra, Cloudflare) instead of introducing parallel infrastructure unless there is a demonstrated gap.
+- Reuse the existing OCI stack (OmniRoute, **SIN Supabase OSS**, Kestra, Cloudflare) instead of introducing parallel infrastructure unless there is a demonstrated gap. After the migration release, run repository, test, build, GitNexus and Prime-Agent/Luna work for this project on **OCI-VM**, not Mac-M1. GitHub is the only Mac→OCI code-transfer boundary; never copy a dirty Mac working tree directly to OCI.
 - **Production/domain continuation:** Before changing production infrastructure, DNS, Cloudflare, STRATO, Stripe or OCI routing, read `docs/PRODUCTION_HANDOVER.md` and `docs/OPERATIONS.md`. Treat handover status as a starting point only; verify live state before mutations.
 - Keep the customer and partner products radically simple. Do not add generic ERP-style roles, settings, dashboards, or configuration unless required by the product vision.
 
@@ -40,7 +41,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **einfach-hausen** (1910 symbols, 4420 relationships, 155 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **einfach-hausen** (23711 symbols, 52258 relationships, 300 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > Index stale? Run `node .gitnexus/run.cjs analyze` from the project root — it auto-selects an available runner. No `.gitnexus/run.cjs` yet? `npx gitnexus analyze` (npm 11 crash → `npm i -g gitnexus`; #1939).
 
@@ -85,12 +86,12 @@ This project is indexed by GitNexus as **einfach-hausen** (1910 symbols, 4420 re
 <!-- SIN-GPT-WEB-HANDOVER:BEGIN -->
 ## SIN GPT Web completion / handover sync
 
-- Last synchronized task: `T-0043`
+- Last synchronized task: `T-0167`
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
-- Canonical repo goal: Einfach Hausen vollständig fertigstellen und vor allem App und Website auf Produktionsqualität verbessern
-- Resume rule: read/validate the canonical taskplan and continue its highest-priority eligible task; do not create a competing roadmap.
+- Canonical repo goal: Einfach Hausen HA-Produktion — Supabase Postgres+Storage Primary, Capacitor iOS/Android, SQLite nur Fallback
+- Resume rule: product-completion HA is T-0100..T-0167; continue highest-priority eligible task, #12 App Stores kein Blocker
 - Taskplan sync: `pass`
-- Synchronized at: `2026-08-25T20:59:52+00:00`
+- Synchronized at: `2026-08-27T00:00:00+00:00`
 - Contract: `sin-gpt-web-completion-handover-v1`
 <!-- SIN-GPT-WEB-HANDOVER:END -->
 
@@ -317,3 +318,16 @@ updated: 2026-08-26T20:15:45+00:00
 actor: local-agent
 evidence-sha256: 8cc3663b0397c2fbcef390d333845930ad753ab448184830a67735e6b2b43ac0
 -->
+
+## T-0168 Auth- und Visual-Acceptance-Regel (2026-08-28)
+
+- **Produktions-Auth:** Supabase ist die serverseitige Identity Authority. Lokale SQLite-/`mh_session`-Auth ist nur als expliziter Local-Dev-Fallback zulässig und muss in Produktion fail-closed sein.
+- **Client-Grenze:** `AuthContext` ist UI-State, nicht Security Boundary. Geschützte Server Components, Route Handler und Server Actions autorisieren serverseitig.
+- **Identity Mapping:** Supabase-Subject und bestehende Application-User-ID dürfen nicht ungeprüft gleichgesetzt werden; Mapping muss explizit belegt sein.
+- **Visual Acceptance:** Finale T-0168-Abnahme benötigt frische 390×844 Reference/Actual/Overlay/Diff-Evidence und grüne Auth/Security/Visual/Build/GitNexus-Gates. Vollständiger Vertrag: `docs/T0168_DEEP_RESEARCH.md`.
+
+## Notion 1:1 Regel (2026-08-28) - lokal gespeichert
+
+- **Quelle:** https://app.notion.com/p/App-Design-3c8b784cdffc80a1a5d1ed2269dbdd0d - 12 Bilder lokal unter `public/notion/`.
+- **Regel:** Alles was nicht 100% 1:1 wie auf den Bildern aussieht, wird entfernt und neu gemacht. Keine 90% Lösungen. Pixelgenau: Farben, Radien, Shadows, Typo, Icons, Header, Tabbar.
+- **Design-Basis:** Notion Bilder > DESIGN.md > Implementation. DESIGN.md wird nach Notion kalibriert.

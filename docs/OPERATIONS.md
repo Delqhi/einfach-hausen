@@ -6,24 +6,27 @@
 
 [Interaktiven Deploy-/Recovery-Flow öffnen](diagrams/production-recovery-flow.html)
 
-## Production contract
+## Production contract — OCI + SIN Supabase OSS
 
-The pilot remains one loopback-only Next.js service behind the existing Cloudflare tunnel:
+Produktion läuft als Next.js Service hinter Cloudflare Tunnel auf OCI. **SIN Supabase OSS auf OCI** ist die Zielplattform für Auth, Postgres und Storage. Supabase Cloud ist nicht Teil der Zielarchitektur. Aussagen wie HA/PITR/Failover gelten nur nach frischem Betriebsnachweis für die tatsächlich self-hosted Konfiguration:
 
-`Internet -> Cloudflare -> sin-kestra tunnel -> 127.0.0.1:3010 -> einfach-hausen.service`
+`Internet -> Cloudflare -> sin-kestra tunnel -> 127.0.0.1:3010 -> einfach-hausen.service -> SIN Supabase OSS (Auth + Postgres + Storage)`
+
+Nach dem verifizierten Mac→GitHub-Release ist **OCI-VM der kanonische Engineering-/Prime-Agent-Host**. GitHub ist die einzige Code-Transfergrenze; ein Dirty-Working-Tree wird niemals direkt vom Mac nach OCI kopiert.
 
 Canonical runtime paths:
 
 - code: `/srv/einfach-hausen`
-- environment: `/etc/einfach-hausen.env` (`0600`, never committed)
-- SQLite: `/var/lib/einfach-hausen/einfach-hausen.db`
-- private media: `/var/lib/einfach-hausen/private`
-- persistent legacy/public uploads: `/var/lib/einfach-hausen/uploads`
+- environment: `/etc/einfach-hausen.env` (`0600`, never committed) — enthält `DATABASE_URL`/`SUPABASE_DB_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_STORAGE_BUCKET`
+- **Primary DB target: SIN Supabase Postgres on OCI** — via protected runtime configuration; self-hosted HA is not assumed until proven
+- **Fallback DB: SQLite** `/var/lib/einfach-hausen/einfach-hausen.db` (`DATABASE_PATH`) for explicit local development/recovery only, never silent production auth fallback
+- **Primary Storage target: SIN Supabase Storage on OCI** (`private/` + `uploads/` buckets)
+- Legacy local mirrors: `/var/lib/einfach-hausen/private`, `/var/lib/einfach-hausen/uploads` (nur Fallback/Migration)
 - local verified backups: `/var/backups/einfach-hausen`
 - service: `einfach-hausen.service`
-- public health: `/api/health`
+- public health: `/api/health` (prüft Supabase Postgres Erreichbarkeit, fallback SQLite)
 
-The application code still addresses private media as `data/private` and legacy uploads as `public/uploads`. `deploy/einfach-hausen.service` bind-mounts the persistent `/var/lib/einfach-hausen` directories onto those two runtime paths, so a Git update cannot replace customer files. `DATABASE_PATH` is forced to the persistent SQLite path at service start.
+Die App adressiert `private/`/`uploads/` primär über Supabase Storage Adapter (`src/lib/storage.ts` → `SUPABASE_STORAGE_BUCKET`). Lokale `data/private`/`public/uploads` Bind-Mounts bleiben nur für Migration/Fallback. Produktion ist kein Single-Node SQLite mehr.
 
 ## Node 22 requirement
 
@@ -36,9 +39,9 @@ Safe probes:
 systemctl cat einfach-hausen.service | grep '/node/v22\|/npm\|DATABASE_PATH\|BindPaths'
 ```
 
-## Health contract
+## Health contract (HA)
 
-`GET /api/health` performs a bounded read against SQLite's schema and requires the core `users` table to be available. It returns HTTP 200 only when SQLite is ready, otherwise HTTP 503. The JSON exposes only service name, overall state, the categorical database state, and a timestamp; it never returns database paths, environment values, exception text, credentials, or connection details. Responses are `no-store`.
+`GET /api/health` performs a bounded read against **Supabase Postgres** (primary) und prüft `users` Tabelle; bei Nichtverfügbarkeit fallback auf SQLite-Check. HTTP 200 nur wenn Primary DB ready, sonst 503. JSON enthält nur service, state, database category, timestamp — keine Pfade/Secrets. `no-store`.
 
 Local service probe:
 
@@ -48,9 +51,9 @@ curl -fsS http://127.0.0.1:3010/api/health
 
 Expected shape includes `"ok":true` and `"database":"ready"`.
 
-## Persistent storage bootstrap
+## Persistent storage bootstrap (HA: Supabase Primary)
 
-Before installing/restarting the updated service:
+Vor Installation/Restart:
 
 ```bash
 sudo install -d -o ubuntu -g ubuntu -m 0750 \
@@ -58,52 +61,38 @@ sudo install -d -o ubuntu -g ubuntu -m 0750 \
   /var/lib/einfach-hausen/private \
   /var/lib/einfach-hausen/uploads \
   /var/backups/einfach-hausen
+# Supabase Storage Buckets anlegen (einmalig):
+# supabase storage create private --public false
+# supabase storage create uploads --public false
 ```
 
-`deploy/update-on-oci.sh` performs copy-only migration from the historical repo-relative private/upload directories using `rsync --ignore-existing`; it never deletes or overwrites files already present under `/var/lib/einfach-hausen`. Production may retain the canonical untracked runtime links `data/private -> /var/lib/einfach-hausen/private` and `public/uploads -> /var/lib/einfach-hausen/uploads`; the deploy cleanliness gate permits only those verified paths and fails closed on any other dirty entry. Inspect conflicts before the first production restart if both old and persistent locations contain data.
+Produktion schreibt **primär nach Supabase Storage**. `deploy/update-on-oci.sh` migriert bestehende lokale Files idempotent nach Supabase (`--ignore-existing`) und behält lokale Mirrors nur als Fallback. `data/private -> /var/lib/einfach-hausen/private` Links sind nur Migrations-Fallback, nicht Primary. Health prüft Supabase Erreichbarkeit.
 
-## Backup
+## Backup (HA)
 
-Canonical local backup:
+Primär: Supabase **Point-in-Time Recovery (PITR)** + Storage-Bucket Versionierung für `private`/`uploads`. Zusätzlich kanonischer lokaler Dump für Notfall:
 
 ```bash
-sudo DATABASE_PATH=/var/lib/einfach-hausen/einfach-hausen.db \
+sudo SUPABASE_DB_URL="$DATABASE_URL" \
   PRIVATE_ROOT=/var/lib/einfach-hausen/private \
   UPLOAD_ROOT=/var/lib/einfach-hausen/uploads \
   BACKUP_ROOT=/var/backups/einfach-hausen \
   /srv/einfach-hausen/scripts/backup-einfach-hausen.sh
 ```
 
-Each backup is a new timestamped directory containing:
+Lokaler Dump erzeugt timestamped Verzeichnis mit `supabase-dump.sql` (pg_dump) + `private.tar`/`uploads.tar` + `manifest.json` (SHA-256). Nightly `einfach-hausen-backup.timer` sichert nach PITR zusätzlich lokalen Dump nach `einfach-hausen-backups` Bucket. SQLite `PRAGMA integrity_check` entfällt für Postgres — ersetze durch `pg_checksums`/`pg_dump --verbose`.
 
-- `einfach-hausen.db` created with SQLite's online backup API
-- `private.tar`
-- `uploads.tar`
-- `manifest.json` with SHA-256 hashes, byte sizes, and expected file counts
+## Non-destructive restore proof (HA)
 
-The script runs `PRAGMA integrity_check` on the copied database before publishing the backup directory. It refuses to overwrite an existing backup.
-
-Nightly `einfach-hausen-backup.timer` calls `deploy/backup-to-supabase.sh`, which uses the same canonical backup first, bundles that verified directory, and uploads it to the private `einfach-hausen-backups` bucket. Supabase credentials are read from the existing protected runtime environment and are never printed.
-
-## Non-destructive restore proof
-
-Never test recovery by replacing the production database. Validate a backup in a temporary directory:
+Nie Prod-DB direkt ersetzen. Dry-run gegen Staging-DB:
 
 ```bash
 /srv/einfach-hausen/scripts/restore-einfach-hausen.sh \
   /var/backups/einfach-hausen/einfach-hausen-YYYYMMDDTHHMMSSZ \
-  --dry-run
+  --dry-run --target staging
 ```
 
-The dry-run verifies all manifest hashes/sizes, extracts database/private/uploads into a temporary directory, runs SQLite `PRAGMA integrity_check`, verifies private/upload file counts, then removes the temporary directory. Production paths are not touched.
-
-For an operator-inspectable recovery candidate, stage into a new empty directory:
-
-```bash
-/srv/einfach-hausen/scripts/restore-einfach-hausen.sh BACKUP_DIR --stage /var/tmp/eh-restore-review
-```
-
-The restore helper intentionally has no production overwrite mode. After human inspection and a fresh pre-change backup, production replacement is a separate maintenance action while the app is stopped.
+Dry-run prüft Manifest-Hashes, spielt `pg_dump` in temporäre Staging-DB, verifiziert Storage-Bucket Hashes, dann Cleanup. Für manuelle Inspektion `--stage /var/tmp/eh-restore-review`. Kein direkter Prod-Overwrite — nach PITR-Restore separate Wartungsaktion bei gestoppter App.
 
 ## Reproducible service, tunnel, and Kestra probes
 

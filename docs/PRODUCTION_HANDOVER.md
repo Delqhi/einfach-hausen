@@ -1,6 +1,8 @@
 # Einfach Hausen — Production Handover and Continuation Runbook
 
-**Status snapshot:** 2026-08-25 production cutover remains verified for release `dcd53ca1f463e9d64ee3fc6838d1cdb3fb2bb557` under T-0041.
+**Status snapshot:** 2026-08-28 — **Execution migration to OCI-VM; SIN Supabase OSS on OCI is the target production auth/data authority.** The previous cutover `dcd53ca1f463e9d64ee3fc6838d1cdb3fb2bb557` remains the known production baseline. Self-hosted HA/PITR/failover must be re-proven on the actual OCI stack before being described as active.
+
+**Execution boundary:** complete the one-time verified Mac-M1 → GitHub handoff, then run `einfach-hausen` engineering and Prime Agent Luna on **OCI-VM**. GitHub is the only transfer boundary; do not copy a dirty Mac working tree directly to OCI. Supabase Cloud is not part of the target architecture.
 
 This document is the canonical **production operations** continuation point. Repository/agent continuation starts at [`NEXT_AGENT.md`](NEXT_AGENT.md). All agents share one engineering goal and one transactional taskplan; remaining release-wide work is strictly T-0042 Final Acceptance followed by T-0043 Final Convergence/Handover unless acceptance creates a canonical remediation task.
 
@@ -46,6 +48,15 @@ Do not overwrite or delete these paths during deployment.
 ## 2. Target architecture
 
 ```text
+GitHub verified release SHA
+  -> OCI-VM canonical engineering/runtime host
+      -> Next.js application
+      -> SIN Supabase OSS on OCI
+          -> Auth
+          -> Postgres
+          -> Storage
+          -> Pooler/Supavisor as deployed
+
 Internet
   -> Cloudflare zone: einfachhausen.de
       -> Cloudflare security/TLS
@@ -54,6 +65,8 @@ Internet
       -> systemd: einfach-hausen.service
       -> Next.js application
 ```
+
+Mac-M1 is source/release/recovery only after this handoff. OCI work starts from a Git commit, never from a copied Mac working tree.
 
 The app must remain loopback-only. Do **not** expose port `3010` directly to the Internet.
 
@@ -134,6 +147,19 @@ ADMIN_PASSWORD=<runtime secret>
 ```
 
 Secrets are canonical in SIN-Infisical where applicable and must never be copied into Git, screenshots, chat output, evidence files or documentation.
+
+## 6a. Produktions-Auth-Grenze — T-0168 Deep Research
+
+Für die nächste Produktionskonvergenz gilt zusätzlich:
+
+- Supabase ist die serverseitige Identity Authority für geschützte Owner-/Provider-Flächen.
+- `mh_session`/SQLite darf nur in einem expliziten Local-Dev-Modus verwendet werden; ein solcher Modus muss in Produktion fail-closed sein.
+- Es gibt keinen stillen Fallback von Supabase auf lokale Auth.
+- `AuthContext` ist keine Sicherheitsgrenze; geschützte Server Components, Route Handler und Server Actions autorisieren serverseitig.
+- Die Zuordnung von Supabase-Subject zu bestehender App-User-ID muss vor Migration oder Schemaänderung explizit nachgewiesen werden.
+- Finale T-0168-Acceptance benötigt frische authentifizierte Round-3-Evidence unter `.sin-gpt-web/evidence/T-0168/round3/` sowie grüne Security/Auth/Visual/TypeScript/Build/Diff/GitNexus-Gates.
+
+Vollständiger Entscheidungsstand: [`T0168_DEEP_RESEARCH.md`](T0168_DEEP_RESEARCH.md).
 
 ## 7. Stripe cutover
 
@@ -244,6 +270,12 @@ Release verification retained from the independent convergence gauntlet and refr
 - public canonical routes and `www` redirect passed; old fallback health remained HTTP 200
 - Stripe readiness/doctor passed for the canonical live webhook without issuing a real charge
 
+## 10a. Technical product-completion v2 + HA (2026-08-27)
+
+Baseline `dcd53ca1` bleibt Rollback-Punkt. Operator-Entscheidung 2026-08-27 hebt auf **HA-Produktion**: **T-0100..T-0131 + T-0166 Supabase HA-Migration + T-0167 Capacitor Release**. Jede Welle muss `T-0129/T-0130/T-0131` Gates passieren, dann **Zero-Downtime Supabase Cutover (T-0166)** und **Capacitor App Store Release (T-0167)**.
+
+Externe Blocker reduziert auf **#16 STRATO-DNSSEC, #11 Rechtstexte, #14 SEPA/Stripe-live** — **#12 App Stores kein Blocker mehr** (Capacitor ist aktiver Produktionspfad).
+
 ## 11. Repository hygiene and in-progress work
 
 After T-0041, tracked release work is committed. The Mac controller still has local generated coordination/cache directories (`.sin-gpt-teamwork/`, `scripts/__pycache__/`) to classify in final convergence. Production intentionally has only the two canonical untracked runtime symlinks described above. **Do not run `git reset --hard` or `git clean -fd` blindly.**
@@ -277,12 +309,12 @@ T-0041 production cutover is complete. Any optional DNSSEC enablement or fallbac
 <!-- SIN-GPT-WEB-HANDOVER:BEGIN -->
 ## SIN GPT Web completion / handover sync
 
-- Last synchronized task: `T-0043`
+- Last synchronized task: `T-0167`
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
-- Canonical repo goal: Einfach Hausen vollständig fertigstellen und vor allem App und Website auf Produktionsqualität verbessern
-- Resume rule: read/validate the canonical taskplan and continue its highest-priority eligible task; do not create a competing roadmap.
+- Canonical repo goal: Einfach Hausen HA-Produktion — Supabase Postgres+Storage Primary, Capacitor iOS/Android, SQLite nur Fallback
+- Resume rule: product-completion HA is T-0100..T-0167; continue highest-priority eligible task, #12 App Stores kein Blocker
 - Taskplan sync: `pass`
-- Synchronized at: `2026-08-25T20:59:52+00:00`
+- Synchronized at: `2026-08-27T00:00:00+00:00`
 - Contract: `sin-gpt-web-completion-handover-v1`
 <!-- SIN-GPT-WEB-HANDOVER:END -->
 

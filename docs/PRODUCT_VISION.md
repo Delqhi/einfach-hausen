@@ -1,5 +1,9 @@
 # Einfach Hausen — verbindliche Produktvision
 
+## Strategischer Produktkern
+
+Die verbindliche Positionierung und psychologische Differenzierung steht in [`PRODUCT_POSITIONING.md`](PRODUCT_POSITIONING.md). Kurzform: **Einfach Hausen ist der persönliche Hausmanager und die Betriebszentrale für das eigene Zuhause.** Das Produkt verkauft nicht primär KI oder Vermittlung, sondern mentale Entlastung, Entscheidungssicherheit, Kontinuität und Werterhalt. Jede neue Produktentscheidung muss mit diesem Kern vereinbar sein.
+
 ## Produktversprechen
 
 **Ein Ansprechpartner für alles rund ums Eigenheim.**
@@ -305,10 +309,12 @@ Zusätzlich können definierte Jahrespakete wie HausCare, GartenCare und Energie
 
 START, PRO und PREMIUM starten mit einer zweimonatigen kostenlosen Testphase. Der Partner-Tarif darf die fachliche Reihenfolge im Matching nicht kaufen.
 
-## Technische Zielarchitektur
+## Technische Zielarchitektur (Produktion HA)
 
-- mobile-first Kunden-Web-App / PWA
-- Partner-Web-App / PWA
+- mobile-first Kunden-Web-App (Next.js) + **Capacitor 6 native iOS/Android Apps** (gleiche Codebase, App Store + Play Store)
+- Partner-Web-App (Next.js) + Capacitor Hülle
+- PWA bleibt für Web/Offline-Hinweise, primäre mobile Auslieferung ist **Capacitor**
+- **Supabase Postgres (HA, Primary DB)** + **Supabase Storage (private/uploads für Fotos/Dokumente/Rechnungen)** — SQLite nur Local-Dev Fallback
 - WhatsApp Cloud API als zusätzlicher Kundeneingang
 - KI-Orchestrierung mit OpenAI-kompatiblem Gateway; deterministischer Fallback bleibt verfügbar
 - strukturierter Service-/Preis-Katalog
@@ -319,9 +325,9 @@ START, PRO und PREMIUM starten mit einer zweimonatigen kostenlosen Testphase. De
 - direkte Kunde↔Ansprechpartner-Kommunikation nach Buchung
 - Stripe Checkout für Kunden- und Partnerabos / Jahrespakete
 - Stripe Connect für zentrale Auftragszahlungen mit 0 % Plattformprovision
-- private Dokumentablage
+- private Dokumentablage via Supabase Storage
 - Admin-Konsole für Prüfung, Verträge, Qualität und Servicefälle
-- Benachrichtigungen und Auditierbarkeit
+- Benachrichtigungen und Auditierbarkeit (Push via Capacitor)
 
 ## Geschäftsstrategie
 

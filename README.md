@@ -6,7 +6,7 @@
 
 Einfach Hausen ist die zentrale Anlaufstelle für Eigenheimbesitzer. Der Kunde beschreibt ein Problem und entscheidet selbst: **nur einen konkreten menschlichen Ansprechpartner sprechen** oder **einen echten Auftrag organisieren lassen**. Kontakte, Hausdaten, Termine und Dokumente bleiben dauerhaft beim Haus. Die KI arbeitet im Hintergrund als Assistenz- und Organisationsschicht, ist aber nicht das eigentliche Kundenversprechen.
 
-Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md). Das langlebige Daten- und Berechtigungsmodell steht in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md). Die strategische Positionierung als **persönlicher Hausmanager / Betriebszentrale für das eigene Zuhause** steht in [`docs/PRODUCT_POSITIONING.md`](docs/PRODUCT_POSITIONING.md). Das langlebige Daten- und Berechtigungsmodell steht in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Agenten & kanonischer Arbeitsstand
 
@@ -21,16 +21,19 @@ Aktueller Endpfad: **T-0042 Final Acceptance → T-0043 Final Convergence/Handov
 [Interaktive Architektur öffnen](docs/diagrams/platform-architecture.html) · Detailansichten: [Eigentümer-Serviceflow](docs/diagrams/homeowner-service-flow.html), [Partner-/Auftrags-Lifecycle](docs/diagrams/partner-job-lifecycle.html), [Hausakte & Datenschutz](docs/diagrams/property-privacy-dataflow.html), [Zahlungen](docs/diagrams/payment-lifecycle.html), [CRM & Outreach](docs/diagrams/crm-outreach-flow.html), [Production & Recovery](docs/diagrams/production-recovery-flow.html).
 
 
-## Live Pilot
+## Live Produktion (HA)
 
 - App: `https://einfachhausen.de`
 - Runtime: OCI `sin-supabase`
-- Cloudflare: existing `sin-kestra` tunnel
+- Cloudflare: `sin-kestra` tunnel
 - Process supervisor: systemd (`einfach-hausen.service`)
-- Backups: existing self-hosted Supabase Storage
-- Scheduled health checks: existing Kestra
+- **Primäre DB: Supabase Postgres** (HA, managed, Replikation) — `DATABASE_URL` / `SUPABASE_DB_URL`
+- **Primärer Storage: Supabase Storage** für `private/` und `uploads/` (Fotos, Dokumente, Rechnungen, Haus-Historie) — `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` / `SUPABASE_STORAGE_BUCKET`
+- **Fallback/Local Dev: SQLite + WAL via `better-sqlite3`** (`DATABASE_PATH=./data/einfach-hausen.db`) nur für lokale Entwicklung und als Offline-Fallback, nicht mehr als Produktions-Primary
+- **Mobile HA: Capacitor 6** — Next.js App wird als native iOS/Android Hülle ausgeliefert (siehe `Mobile App / Capacitor`)
+- Scheduled health checks: Kestra
 
-The pilot deliberately keeps the working core small. SQLite remains the transactional app database on the single OCI host for now; Supabase and Kestra are reused for platform services instead of rebuilding storage and scheduling from scratch. See `docs/OPERATIONS.md`.
+Produktion läuft ab sofort als **echter Multi-User/HA-Betrieb**. Supabase Postgres ist die transaktionale Primär-DB, Supabase Storage der primäre Blob-Store. SQLite bleibt nur für `npm run dev` und als lokaler Fallback. Siehe `docs/OPERATIONS.md` und `docs/ARCHITECTURE.md`.
 
 ## Kernablauf
 
@@ -87,9 +90,14 @@ Die verbindliche UI-Richtung steht in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYST
 - WhatsApp Cloud API mit demselben Modell: KI zuerst, danach `ANSPRECHPARTNER` oder `AUFTRAG`
 - PWA-Manifest
 
-## Mobile App / PWA
+## Mobile App / Capacitor (iOS + Android) + PWA
 
-Die bestehende Next.js-Anwendung ist zugleich die mobile Pilot-App. Sie ist auf iPhone und Android als **Progressive Web App** installierbar und läuft im Standalone-Modus ohne Browser-Chrome.
+Die Next.js-Anwendung ist die **Produktions-App für Web + iOS + Android**. Auslieferung erfolgt als:
+
+- **Web:** Next.js direkt auf `https://einfachhausen.de` (PWA bleibt für Browser/Installierbarkeit)
+- **iOS / Android:** **Capacitor 6** native Hülle (`@capacitor/core`, `@capacitor/ios`, `@capacitor/android`) um dieselbe Next.js-Build — keine zweite Codebase, kein Flutter/React-Native Rewrite
+
+Enthalten (Web + nativ identisch):
 
 - `manifest.webmanifest` mit App-Icons und Shortcuts
 - Apple-Touch-Icon und `appleWebApp`-Metadaten
@@ -98,9 +106,8 @@ Die bestehende Next.js-Anwendung ist zugleich die mobile Pilot-App. Sie ist auf 
 - Safe-Area-Unterstützung für iPhone-Notch/Home-Indikator
 - mobile Bottom-Navigation: Home, Aufträge, Termine, Ansprechpartner, Mehr
 - 44px+-Touch-Ziele und 16px-Formfelder gegen iOS-Auto-Zoom
-- Installationshinweis direkt im Kunden- und Partnerprofil
-
-Für den Pilot ist das absichtlich einfacher als zwei separate native Codebasen. Falls später App-Store-Verteilung nötig wird, kann diese Web-App als dünne native Hülle veröffentlicht werden, ohne die Produktlogik zu duplizieren.
+- `capacitor.config.ts` mit AppId `de.einfachhausen.app`, native Push (`@capacitor/push-notifications`), Camera/Filesystem via Supabase Storage
+- App-Store Verteilung: App Store + Play Store sind **ab sofort aktiver Produktionspfad** (kein externer Blocker mehr), siehe `docs/ARCHITECTURE.md`
 
 ## Kunden-Tarife
 
@@ -200,15 +207,16 @@ AI_API_KEY=
 
 Ohne Gateway bleibt die Kernfunktion über einen deterministischen Parser funktionsfähig.
 
-## Stack
+## Stack (Produktion HA)
 
 - Next.js 16 / React 19 / TypeScript
-- SQLite + WAL via `better-sqlite3`
+- **Supabase Postgres ( Primary ) + Supabase Storage (private/uploads)** — `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`
+- **SQLite + WAL via `better-sqlite3` nur Fallback/Local Dev** (`DATABASE_PATH`)
+- **Capacitor 6** für iOS + Android (native Hülle um Next.js)
 - HttpOnly Sessions + bcrypt
 - Stripe / Stripe Connect
 - OpenAI-kompatibler KI-Gateway
 - serverseitige Actions
-- private Dokumentablage
 - PLZ-Geocoding + Distanzmatching
 - Playwright E2E
 
@@ -220,6 +228,10 @@ npm install
 npm run dev
 ```
 
+## Authentifizierung: Produktionsgrenze
+
+Die Zielarchitektur für die geschützten Owner-/Provider-Flächen ist **Supabase serverautoritativ**. Lokale SQLite-/`mh_session`-Authentifizierung ist ausschließlich als expliziter Development-Fallback zulässig und darf in Produktion nicht stillschweigend greifen. Details, Testmatrix und T-0168-Visual-Acceptance: [`docs/T0168_DEEP_RESEARCH.md`](docs/T0168_DEEP_RESEARCH.md).
+
 ## Qualitätschecks
 
 ```bash
@@ -230,17 +242,25 @@ E2E_ADMIN_PASSWORD='<lokales-testpasswort>' npm run test:e2e:architecture
 npm run test:crm
 ```
 
-## Produktion
+## Aktueller technischer Vervollständigungsplan
 
-Die erste produktive Installation läuft auf der OCI-VM `sin-supabase` hinter einem Cloudflare Tunnel. Der Dienst bindet nur auf Loopback; der öffentliche Zugriff erfolgt ausschließlich über Cloudflare TLS.
+Der kanonische `.sin-gpt-web/taskplan.sqlite3` enthält **Produktions-HA** inkl. **T-0100..T-0131 (32 Tasks)** + neue Migrations-Tasks **T-0166 Supabase Postgres+Storage Migration** + **T-0167 Capacitor iOS/Android Auslieferung**. Schwerpunkte sind Onboarding-E2E, Notification-Outbox/Delivery, Matching-Qualität, Reviews/Trust, i18n/A11y, Core Web Vitals, Security, Observability, Restore-Drills, Feature Flags, Admin-Minimalfläche, Datenschutz-Export, Browser-E2E, Visual Regression sowie **Supabase-Cutover und Capacitor Release**. Der README ist nur ein Wegweiser; Status, Akzeptanz und Abhängigkeiten bleiben ausschließlich im kanonischen Taskplan.
 
-- persistenter Datenpfad für SQLite und private Dateien
+Nächster kanonischer Task: **T-0100 — Homeowner onboarding: first-session to first useful outcome**. Externe Blocker reduziert auf **#16 STRATO-DNSSEC, #11 Rechtstexte, #14 SEPA/Stripe-Live** — **#12 App Stores ist kein Blocker mehr** (Capacitor-Produktionspfad aktiv).
+
+## Produktion (HA)
+
+Die Produktion läuft auf OCI `sin-supabase` hinter Cloudflare Tunnel (Loopback-only, TLS nur via Cloudflare).
+
+- **Supabase Postgres** als primärer DB-Cluster (HA) + **Supabase Storage** für private Dateien — Secrets in Infisical (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `SUPABASE_STORAGE_BUCKET`)
+- **Lokaler Fallback** SQLite `/var/lib/einfach-hausen/einfach-hausen.db` nur für Dev/Notfall, nicht mehr Primary
 - systemd-Dienst mit automatischem Restart
 - Cloudflare Tunnel
 - Admin-Passwort außerhalb von Git
 - KI-Gateway-Key außerhalb von Git
 - Stripe-/WhatsApp-Secrets außerhalb von Git
-- Stripe-Betrieb über den kanonischen `wow-my-zsh/shared/skills/sin-stripe`-Skill; Einfach-Hausen-Secrets bleiben in Infisical und werden nur in die private OCI-Runtime injiziert
+- Stripe-Betrieb über `wow-my-zsh/shared/skills/sin-stripe`; Secrets in Infisical, injiziert in OCI-Runtime
+- **Capacitor iOS/Android Builds** aus selbem Next.js Artefakt (`npx cap sync` + `npx cap open ios/android`)
 
 ## Repository
 
@@ -265,9 +285,9 @@ The local Graphify post-commit and post-checkout hooks keep `graphify-out/graph.
 - Last synchronized task: `T-0043`
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
 - Canonical repo goal: Einfach Hausen vollständig fertigstellen und vor allem App und Website auf Produktionsqualität verbessern
-- Resume rule: read/validate the canonical taskplan and continue its highest-priority eligible task; do not create a competing roadmap.
+- Resume rule: product-completion v2 is T-0100..T-0131; continue the highest-priority eligible canonical task (currently T-0100) and do not create a competing roadmap.
 - Taskplan sync: `pass`
-- Synchronized at: `2026-08-25T20:59:52+00:00`
+- Synchronized at: `2026-08-26T03:34:55+00:00`
 - Contract: `sin-gpt-web-completion-handover-v1`
 <!-- SIN-GPT-WEB-HANDOVER:END -->
 
