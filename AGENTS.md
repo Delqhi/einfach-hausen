@@ -331,3 +331,10 @@ evidence-sha256: 8cc3663b0397c2fbcef390d333845930ad753ab448184830a67735e6b2b43ac
 - **Quelle:** https://app.notion.com/p/App-Design-3c8b784cdffc80a1a5d1ed2269dbdd0d - 12 Bilder lokal unter `public/notion/`.
 - **Regel:** Alles was nicht 100% 1:1 wie auf den Bildern aussieht, wird entfernt und neu gemacht. Keine 90% Lösungen. Pixelgenau: Farben, Radien, Shadows, Typo, Icons, Header, Tabbar.
 - **Design-Basis:** Notion Bilder > DESIGN.md > Implementation. DESIGN.md wird nach Notion kalibriert.
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0004
+updated: 2026-08-29T05:56:51+00:00
+actor: local-agent
+evidence-sha256: 4aaa04f685e833bd81528668f15ce9ca3bd1e3e37227af5d8e2fb1df720a513a
+-->

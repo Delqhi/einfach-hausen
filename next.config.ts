@@ -5,6 +5,9 @@ const isDev = process.env.NODE_ENV === 'development';
 // Global CSP tuned to this app's integrations: no third-party browser scripts,
 // same-origin API/server actions/uploads, inline styles/scripts required by
 // Next.js without nonce-based dynamic rendering (see next/dist/docs CSP guide).
+// Supabase gateway origin for browser auth (see csp-defect evidence T-0169).
+const supabaseConnectOrigin = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '').replace(/\/$/, '');
+
 const cspDirectives = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
@@ -12,7 +15,11 @@ const cspDirectives = [
   "img-src 'self' data: blob:",
   "media-src 'self' blob:",
   "font-src 'self' data:",
-  "connect-src 'self'",
+  // The T-0170-verified production auth path signs in via the browser Supabase
+  // client (src/app/login/page.tsx). The gateway origin must be connectable,
+  // otherwise the /login form fails with "Failed to fetch" under this CSP
+  // (reproduced in T-0169, see .sin-gpt-web/evidence/T-0169/oci/csp-defect.txt).
+  `connect-src 'self'${supabaseConnectOrigin ? ` ${supabaseConnectOrigin}` : ''}`,
   "worker-src 'self'",
   "manifest-src 'self'",
   "object-src 'none'",
