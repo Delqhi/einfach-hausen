@@ -1,6 +1,15 @@
 # Einfach Hausen — Canonical Next-Agent Contract
 
-**Updated:** 2026-08-29 — **ABSCHLUSS: T-0170/T-0004/T-0169/T-0005/T-0171 DONE; main=bdebe9f; Production deployed + Smoke 17/17 PASS**
+**Updated:** 2026-08-30 — **Website-Wave DONE: `/` ist wieder die öffentliche Lead-Magnet-Homepage (main=1cedf03, gepusht). Höchster eligible Task bleibt T-0006 (e2e tech-persona seam).**
+
+## 0-b. Website-Wave 2026-08-30 (Commit 1cedf03, Operator-Direktiva)
+
+- Root cause gefixt: `/` zeigte die App-Welcome-Seite und der AuthContext-Guard leitete ALLE Marketing-/Legal-Seiten client-seitig auf `/login` → die öffentliche Website war faktisch tot. Neu: `/` = Lead-Magnet-Homepage (DESIGN.md §5.1), `/welcome` = App-Einstieg (mit Server-Redirect für Sessions), explizite PUBLIC_ROUTES/PUBLIC_PREFIXES in `src/components/AuthContext.tsx`.
+- Motion-Layer: `src/components/marketing/motion.tsx` (Reveal/Stagger/ScrollShadow, GSAP + @gsap/react, reduced-motion-safe, no-JS-sichtbar). FAQ/Chips/Hover/Scrolled-Header in marketing.module.css; Produktvorschau auf Mobile wieder aktiviert (`display:none` entfernt).
+- Lead-Funnel: Hero-Intake (Chips) → `/register?role=homeowner&request=…` → Register zeigt „Dein Anliegen" (verifiziert).
+- Verify-Evidenz: lint 0 errors, build 87/87, sin verify security 0, Route-Smoke 17/17=200, impeccable detect [], A11y-Report (Kontrast/Tab-Order/Skip/Reduced-Motion), Screenshots unter /tmp/eh-after (flüchtig; Neuzeuge via `node scripts/dev-shot.mjs "home=/"` + `SHOT_MOBILE=1`).
+- E2E: Step 0 (Website) grün modernisiert; verbleibender Fail `/pro/messages` tech-persona seam failed identisch auf pre-wave HEAD = dokumentierter T-0006-Scope, KEINE Regression.
+- Nächster einzelner Schritt: **T-0006** weiterführen (tech-persona `/pro/messages` seam), danach OCI-Deploy des Standes (GitHub = Transfer-Boundary; Deploy nur über OCI-Host gemäß Migrations-Contract).
 
 ## 0. Read this first
 
