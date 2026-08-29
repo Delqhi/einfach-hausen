@@ -43,15 +43,22 @@
 - Harness: `node scripts/t0169-visual-acceptance.mjs` (real Supabase login, throwaway DB,
   ephemeral identity) + `python3 scripts/t0169-visual-diff.py`.
 
-## 3. Taskplan state (2026-08-29, T-0171 running)
+## 3. Taskplan state (2026-08-29, T-0171 DONE & deployed; open: T-0006/T-0007)
 
 - DONE: T-0170 (Supabase auth 15/15), T-0004 (CSP login fix), T-0169 (visual evidence,
   12 original Notion references recovered), T-0005 (Owner screens converged 1:1 to the
   Notion originals: dashboard, drawer, welcome, role, register chrome; no logic changes).
 - DONE & DEPLOYED: T-0171 abgeschlossen; main=bdebe9f (GitHub-SHA-Gleichheit bewiesen); Production
   /srv/einfach-hausen @ bdebe9f, Service aktiv, /api/health ready, Smoke 17/17 PASS, Pre-Deploy-Backup erstellt.
-- OPEN: **T-0006 e2e modernization** (höchster eligible Task) — full-flow e2e auf die konvergierte UI
-  weiterführen (Tech-Persona-Login-Seam dokumentiert; alle übrigen Sektionen grün repariert).
+- OPEN: **T-0006 e2e modernization** — full-flow e2e auf die konvergierte UI weiterführen
+  (Tech-Persona-Login-Seam dokumentiert; alle übrigen Sektionen grün repariert); danach
+  **T-0007 Repository hygiene** (Legacy-Worktree/Branch-Inventar klassifizieren + bereinigen).
+- Workflow-Kontrakt für Übernahme/Abschluss: Skill **sin-handback** (~/.prime/agent/skills/sin-handback/SKILL.md,
+  global registriert in wow-my-zsh registry/skills.yaml) — Teil A Intake (SHAs/Taskplan/Transfer-Grenze
+  verifizieren, Safety-Push), Teil B Handback (Gates frisch, Docs↔Code, Handback-Dokument committen+pushen
+  BEVOR er als existierend gilt, Taskplan-Sync inkl. Handover-Marker, Main-ff-only + SHA-Beweis, Deploy/Smoke).
+  Verkettet mit sin-gpt-web-state (complete/render/validate), sin-never-end (False-Success-Schutz) und
+  sin-after-work (Caretaker-Verifikation).
 - Verified docs truth (2026-08-29): App DB = SQLite (`DATABASE_PATH`, better-sqlite3);
   `/api/health` checks SQLite; Supabase OSS = Auth authority only; no Storage adapter;
   HA/PITR/Capacitor (T-0166/T-0167) were planning-only and never executed.
