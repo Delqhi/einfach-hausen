@@ -86,12 +86,13 @@ This project is indexed by GitNexus as **einfach-hausen** (23711 symbols, 52258 
 <!-- SIN-GPT-WEB-HANDOVER:BEGIN -->
 ## SIN GPT Web completion / handover sync
 
-- Last synchronized task: `T-0167`
+- Last synchronized task: `T-0171`
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
 - Canonical repo goal: Einfach Hausen vollständig fertigstellen — Owner-App/Website auf Produktionsqualität konvergiert (Notion-Original-Referenzen), Auth via self-hosted SIN Supabase, App-Daten SQLite
 - Resume rule: read/validate the canonical taskplan (.sin-gpt-web/taskplan.sqlite3) and continue its highest-priority eligible task
+- State 2026-08-29: DONE T-0170/T-0004/T-0169/T-0005/T-0171 (main=2307493, production bdebe9f, Smoke 17/17); open: T-0006 e2e modernization
 - Taskplan sync: `pass`
-- Synchronized at: `2026-08-27T00:00:00+00:00`
+- Synchronized at: `2026-08-29T18:59:08+00:00`
 - Contract: `sin-gpt-web-completion-handover-v1`
 <!-- SIN-GPT-WEB-HANDOVER:END -->
 
