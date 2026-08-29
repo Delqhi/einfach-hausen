@@ -19,7 +19,7 @@ const AuthContext = createContext<Ctx>({
 const PUBLIC_ROUTES = ["/", "/welcome", "/role", "/login", "/register-owner", "/register-pro", "/check-email", "/datenschutz", "/impressum"];
 // Canonical app/pro pages resolve Supabase identity and application role on
 // the server. The browser guard must never replace that authority with metadata.
-const SERVER_AUTH_PREFIXES = ["/app", "/pro"];
+const SERVER_AUTH_PREFIXES = ["/app", "/pro", "/admin"];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);

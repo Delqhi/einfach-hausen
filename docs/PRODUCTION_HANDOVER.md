@@ -270,11 +270,9 @@ Release verification retained from the independent convergence gauntlet and refr
 - public canonical routes and `www` redirect passed; old fallback health remained HTTP 200
 - Stripe readiness/doctor passed for the canonical live webhook without issuing a real charge
 
-## 10a. Technical product-completion v2 + HA (2026-08-27)
+## 10a. Technical product-completion v2 + HA (2026-08-27) — historischer Planungsstand
 
-Baseline `dcd53ca1` bleibt Rollback-Punkt. Operator-Entscheidung 2026-08-27 hebt auf **HA-Produktion**: **T-0100..T-0131 + T-0166 Supabase HA-Migration + T-0167 Capacitor Release**. Jede Welle muss `T-0129/T-0130/T-0131` Gates passieren, dann **Zero-Downtime Supabase Cutover (T-0166)** und **Capacitor App Store Release (T-0167)**.
-
-Externe Blocker reduziert auf **#16 STRATO-DNSSEC, #11 Rechtstexte, #14 SEPA/Stripe-live** — **#12 App Stores kein Blocker mehr** (Capacitor ist aktiver Produktionspfad).
+Baseline `dcd53ca1` bleibt Rollback-Punkt. Die 2026-08-27 geplante **HA-Produktion** (T-0100..T-0131 + T-0166 Supabase HA-Migration + T-0167 Capacitor Release) wurde **nie ausgeführt**: Der laufende Production-Code (Stand 2026-08-29, oci/t0169) nutzt SQLite (`DATABASE_PATH`) als App-Datenbank, SIN Supabase OSS ausschließlich als Auth-Autorität, und es existiert kein Storage-Adapter. Verifizierter Runtime-/Deploy-Pfad: `deploy/update-on-oci.sh` (rsync persistenter Symlinks, Node 22, Build, Backup, systemd-Restart, Health-Check). Externe Blocker: siehe `docs/EXTERNAL-BLOCKERS.md`.
 
 ## 11. Repository hygiene and in-progress work
 
@@ -311,8 +309,8 @@ T-0041 production cutover is complete. Any optional DNSSEC enablement or fallbac
 
 - Last synchronized task: `T-0167`
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
-- Canonical repo goal: Einfach Hausen HA-Produktion — Supabase Postgres+Storage Primary, Capacitor iOS/Android, SQLite nur Fallback
-- Resume rule: product-completion HA is T-0100..T-0167; continue highest-priority eligible task, #12 App Stores kein Blocker
+- Canonical repo goal: Einfach Hausen vollständig fertigstellen — Owner-App/Website auf Produktionsqualität konvergiert (Notion-Original-Referenzen), Auth via self-hosted SIN Supabase, App-Daten SQLite
+- Resume rule: read/validate the canonical taskplan (.sin-gpt-web/taskplan.sqlite3) and continue its highest-priority eligible task
 - Taskplan sync: `pass`
 - Synchronized at: `2026-08-27T00:00:00+00:00`
 - Contract: `sin-gpt-web-completion-handover-v1`
@@ -547,4 +545,11 @@ task: T-0004
 updated: 2026-08-29T05:56:51+00:00
 actor: local-agent
 evidence-sha256: 4aaa04f685e833bd81528668f15ce9ca3bd1e3e37227af5d8e2fb1df720a513a
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0005
+updated: 2026-08-29T08:50:05+00:00
+actor: local-agent
+evidence-sha256: fa183425e21f31b54cdc90edc511fb1218cf517590a404b9fb51fd05e56fb6da
 -->

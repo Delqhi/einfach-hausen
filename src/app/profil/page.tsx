@@ -12,7 +12,7 @@ export default function ProfilPage() {
   const [name, setName] = useState("");
   const [tel, setTel] = useState("");
   const [saved, setSaved] = useState(false);
-  useEffect(() => { if (!user) return; setName((user as any).user_metadata?.full_name || ""); setTel((user as any).user_metadata?.telefon || ""); }, [user]);
+  useEffect(() => { if (!user) return; queueMicrotask(() => { setName((user as any).user_metadata?.full_name || ""); setTel((user as any).user_metadata?.telefon || ""); }); }, [user]);
   async function save() { await supabase.auth.updateUser({ data: { full_name: name, telefon: tel } as any }); setSaved(true); setTimeout(() => setSaved(false), 1500); }
   if (!user) return null;
   return (

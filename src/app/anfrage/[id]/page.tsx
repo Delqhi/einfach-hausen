@@ -16,7 +16,7 @@ export default function AnfrageDetailPage() {
   const [proMode, setProMode] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && sessionStorage.getItem("eh_role") === "pro") setProMode(true);
+    if (typeof window !== "undefined" && sessionStorage.getItem("eh_role") === "pro") queueMicrotask(() => setProMode(true));
     supabase.from("anfragen").select("*").eq("id", id as string).single().then(({ data }: any) => setAnfrage(data));
     supabase.from("angebote").select("*").eq("anfrage_id", id as string).then(({ data }: any) => setAngebote((data as any) ?? []));
   }, [id]);

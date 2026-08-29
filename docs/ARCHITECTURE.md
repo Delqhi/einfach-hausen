@@ -108,9 +108,9 @@ Die Plattformanwendung und das Akquise-/Outreach-Control-Plane sind bewusst getr
 
 Agents dürfen daraus **keine zwei konkurrierenden CRMs** machen. Repository-Ziele und aktuelle Fortsetzung stehen jeweils in `docs/NEXT_AGENT.md` und dem kanonischen `.sin-gpt-web`-Taskplan des Repos.
 
-## Technische Vervollständigung v2 + Produktions-HA
+## Technische Vervollständigung v2 (historischer Planungsstand)
 
-Der kanonische Plan erweitert um **Supabase HA + Capacitor**. Roadmap ist **T-0100..T-0131 plus T-0166 Supabase Migration + T-0167 Capacitor Release** und erweitert die Architektur ohne das Produktmodell zu ändern. Technische Grenzen:
+Hinweis (2026-08-29): Dieser Abschnitt beschreibt den historischen v2/HA-Planungsstand (T-0100..T-0131, T-0166 Supabase-Migration, T-0167 Capacitor). Die Migrations-/Release-Tasks wurden nie ausgeführt und sind nicht Teil des aktuellen Taskplans; maßgeblich ist die kanonische `.sin-gpt-web`-Datenbank. Technische Grenzen des damaligen Plans:
 
 - **Onboarding/account lifecycle:** homeowner and partner first-run journeys plus recovery/session revocation remain on the existing identity model.
 - **Notification pipeline:** business transactions emit a durable, versioned outbox event; dispatch/retry/channel adapters and user-visible inbox state consume that event idempotently.
@@ -121,7 +121,7 @@ Der kanonische Plan erweitert um **Supabase HA + Capacitor**. Roadmap ist **T-01
 - **Feature flags/admin/privacy:** minimal server-authoritative flags, one restrained admin operations console, and authenticated export/request workflows avoid a second control plane.
 - **Release proof:** T-0129 production-style browser E2E and T-0130 deterministic visual regression converge into T-0131 final technical completion.
 
-External-authority reduziert auf **#16 STRATO-DNSSEC, #11 Rechtstexte, #14 SEPA/Stripe-live**. **#12 App Stores ist kein Blocker mehr** — Capacitor iOS/Android ist aktiver Produktionspfad (T-0167).
+Externe Blocker: siehe `docs/EXTERNAL-BLOCKERS.md` (nur verifizierte Fakten).
 
 ## Authentifizierungsarchitektur — Deep-Research-Konvergenz T-0168
 
@@ -143,31 +143,30 @@ Production
     -> protected Server Components / Route Handlers / Server Actions
 
 Development
-  AUTH_BACKEND=supabase -> gleiche Semantik wie Produktion
-  AUTH_BACKEND=local    -> mh_session/SQLite nur wenn NODE_ENV != production
+  AUTH_MODE=supabase    -> gleiche Semantik wie Produktion (Supabase Session, serverseitig verifiziert)
+  AUTH_MODE=local       -> mh_session/SQLite nur wenn NODE_ENV != production
 
-Production + AUTH_BACKEND=local -> fail closed
+Production + AUTH_MODE=local -> fail closed
 ```
 
 Die vollständigen Forschungs-, Test- und visuellen Acceptance-Regeln stehen in [`T0168_DEEP_RESEARCH.md`](T0168_DEEP_RESEARCH.md).
 
 ## Produktions-Infrastruktur — OCI + SIN Supabase OSS
 
-Zielproduktion ist **Multi-User auf OCI**. Hochverfügbarkeit wird nur dort als verifiziert bezeichnet, wo Redundanz, Backup/Restore und Failover tatsächlich nachgewiesen sind:
+Zielproduktion ist **Multi-User auf OCI**. Hochverfügbarkeit wird nur dort als verifiziert bezeichnet, wo Redundanz, Backup/Restore und Failover tatsächlich nachgewiesen sind (aktuell: nicht nachgewiesen):
 
 - OCI-VM als Runtime hinter Cloudflare Tunnel
-- **SIN Supabase OSS auf OCI** als primäre Auth-/Datenplattform; Supabase Cloud ist nicht Teil der Zielarchitektur
-- **Postgres aus dem SIN-Supabase-Stack** als primäre transaktionale DB — Runtime-Konfiguration ausschließlich über geschützte OCI/SIN-Secrets
-- **Supabase Storage aus dem self-hosted Stack** als primärer Blob-Store für `private/` und `uploads/`
-- **SQLite + WAL via `better-sqlite3` nur expliziter Local-Dev-Fallback**, nicht Primary in Produktion; Local-Auth in Produktion fail-closed
-- **Capacitor 6** für iOS + Android native Auslieferung derselben Next.js App (`@capacitor/core`, `@capacitor/ios`, `@capacitor/android`)
+- **SIN Supabase OSS auf OCI** als Auth-Autorität (`AUTH_MODE=supabase`, serverseitige Session-Verifikation); Supabase Cloud ist nicht Teil der Zielarchitektur
+- **App-Datenbank: SQLite + WAL via `better-sqlite3`** (`DATABASE_PATH`) — verifizierter Laufzeitstand in Produktion; ein Postgres-/Storage-Adapter existiert im Code nicht (Stand 2026-08-29)
+- `private/`/`uploads/` als persistente lokale Verzeichnisse per Symlink
+- Local-Auth in Produktion fail-closed
 - Kestra für geplante Checks
 - OmniRoute für optionale Assistenzfunktionen
 - Stripe/Connect für Abos und Zahlungen
 
 Der Code- und Agentenpfad ist nach dem Übergabe-Release **GitHub → OCI-VM**. Mac-M1 bleibt Source/Release/Recovery und ist nicht mehr der kanonische Worker-Host. Direkte Working-Tree-Kopien vom Mac nach OCI sind verboten.
 
-Migration von SQLite → SIN Supabase Postgres läuft als kontrollierter Cutover mit idempotenter Backfill-Verifikation (siehe `docs/OPERATIONS.md`). Begriffe wie **HA**, **PITR** oder **Failover** gelten erst nach frischem OCI-Evidence für die tatsächlich betriebene self-hosted Konfiguration.
+Eine Migration SQLite → Supabase Postgres wurde geplant (T-0166), aber nie ausgeführt; der laufende Code kennt keinen Postgres-Adapter. Begriffe wie **HA**, **PITR** oder **Failover** gelten erst nach frischem OCI-Evidence für die tatsächlich betriebene Konfiguration.
 
 <!-- SIN-GPT-WEB-HANDOVER:BEGIN -->
 ## SIN GPT Web completion / handover sync
@@ -410,4 +409,11 @@ task: T-0004
 updated: 2026-08-29T05:56:51+00:00
 actor: local-agent
 evidence-sha256: 4aaa04f685e833bd81528668f15ce9ca3bd1e3e37227af5d8e2fb1df720a513a
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0005
+updated: 2026-08-29T08:50:05+00:00
+actor: local-agent
+evidence-sha256: fa183425e21f31b54cdc90edc511fb1218cf517590a404b9fb51fd05e56fb6da
 -->

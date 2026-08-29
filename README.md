@@ -27,13 +27,14 @@ Aktueller Endpfad: **T-0042 Final Acceptance → T-0043 Final Convergence/Handov
 - Runtime: OCI `sin-supabase`
 - Cloudflare: `sin-kestra` tunnel
 - Process supervisor: systemd (`einfach-hausen.service`)
-- **Primäre DB: Supabase Postgres** (HA, managed, Replikation) — `DATABASE_URL` / `SUPABASE_DB_URL`
+- **App-Datenbank: SQLite** (`better-sqlite3`, `DATABASE_PATH`) — bewährter Single-Node-Betrieb mit Backup-Pflicht
+- **Auth: SIN Supabase OSS (self-hosted, `https://supabase.delqhi.com`)** — serverseitig autoritative Identität (`auth_subject`); Supabase ist **nicht** die App-Datenbank
 - **Primärer Storage: Supabase Storage** für `private/` und `uploads/` (Fotos, Dokumente, Rechnungen, Haus-Historie) — `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` / `SUPABASE_STORAGE_BUCKET`
 - **Fallback/Local Dev: SQLite + WAL via `better-sqlite3`** (`DATABASE_PATH=./data/einfach-hausen.db`) nur für lokale Entwicklung und als Offline-Fallback, nicht mehr als Produktions-Primary
 - **Mobile HA: Capacitor 6** — Next.js App wird als native iOS/Android Hülle ausgeliefert (siehe `Mobile App / Capacitor`)
 - Scheduled health checks: Kestra
 
-Produktion läuft ab sofort als **echter Multi-User/HA-Betrieb**. Supabase Postgres ist die transaktionale Primär-DB, Supabase Storage der primäre Blob-Store. SQLite bleibt nur für `npm run dev` und als lokaler Fallback. Siehe `docs/OPERATIONS.md` und `docs/ARCHITECTURE.md`.
+Produktion ist ein **Multi-User-Betrieb** auf Single-Node-Basis: App-Daten in SQLite (persistenter Pfad + Backup), Auth gegen den self-hosted SIN-Supabase-Stack (Autorität serverseitig verifiziert). Ein Supabase-Storage-Adapter ist **nicht implementiert**; `private/`/`uploads/` laufen über persistente lokale Verzeichnisse. Historische HA-/Postgres-Migrationsplanung (T-0166) wurde nie ausgeführt und ist nicht Teil des aktuellen Taskplans. Siehe `docs/OPERATIONS.md` und `docs/ARCHITECTURE.md`.
 
 ## Kernablauf
 
@@ -210,7 +211,7 @@ Ohne Gateway bleibt die Kernfunktion über einen deterministischen Parser funkti
 ## Stack (Produktion HA)
 
 - Next.js 16 / React 19 / TypeScript
-- **Supabase Postgres ( Primary ) + Supabase Storage (private/uploads)** — `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`
+- **Supabase (Auth, self-hosted OSS)** — `AUTH_MODE=supabase`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`; App-Daten via `DATABASE_PATH` (SQLite)
 - **SQLite + WAL via `better-sqlite3` nur Fallback/Local Dev** (`DATABASE_PATH`)
 - **Capacitor 6** für iOS + Android (native Hülle um Next.js)
 - HttpOnly Sessions + bcrypt
@@ -244,9 +245,9 @@ npm run test:crm
 
 ## Aktueller technischer Vervollständigungsplan
 
-Der kanonische `.sin-gpt-web/taskplan.sqlite3` enthält **Produktions-HA** inkl. **T-0100..T-0131 (32 Tasks)** + neue Migrations-Tasks **T-0166 Supabase Postgres+Storage Migration** + **T-0167 Capacitor iOS/Android Auslieferung**. Schwerpunkte sind Onboarding-E2E, Notification-Outbox/Delivery, Matching-Qualität, Reviews/Trust, i18n/A11y, Core Web Vitals, Security, Observability, Restore-Drills, Feature Flags, Admin-Minimalfläche, Datenschutz-Export, Browser-E2E, Visual Regression sowie **Supabase-Cutover und Capacitor Release**. Der README ist nur ein Wegweiser; Status, Akzeptanz und Abhängigkeiten bleiben ausschließlich im kanonischen Taskplan.
+Der kanonische `.sin-gpt-web/taskplan.sqlite3` enthält die aktuelle OCI-Convergence-Kette (T-0170 Auth, T-0169/T-0005 Notion-Visual, T-0171 Final Convergence). Historische Roadmap-Prosa (T-0100..T-0131, T-0166/T-0167) beschreibt frühere Planungsstände, nie ausgeführte Migrations-Tasks sind aus dem Plan gefallen. Der README ist nur ein Wegweiser; Status, Akzeptanz und Abhängigkeiten bleiben ausschließlich im kanonischen Taskplan (`sin-gpt-web-state --repo . summary`).
 
-Nächster kanonischer Task: **T-0100 — Homeowner onboarding: first-session to first useful outcome**. Externe Blocker reduziert auf **#16 STRATO-DNSSEC, #11 Rechtstexte, #14 SEPA/Stripe-Live** — **#12 App Stores ist kein Blocker mehr** (Capacitor-Produktionspfad aktiv).
+Nächster kanonischer Task: siehe `sin-gpt-web-state --repo . next`. Externe Blocker: siehe `docs/EXTERNAL-BLOCKERS.md` (nur verifizierte Fakten).
 
 ## Produktion (HA)
 
@@ -285,7 +286,7 @@ The local Graphify post-commit and post-checkout hooks keep `graphify-out/graph.
 - Last synchronized task: `T-0043`
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
 - Canonical repo goal: Einfach Hausen vollständig fertigstellen und vor allem App und Website auf Produktionsqualität verbessern
-- Resume rule: product-completion v2 is T-0100..T-0131; continue the highest-priority eligible canonical task (currently T-0100) and do not create a competing roadmap.
+- Resume rule: read/validate the canonical taskplan and continue its highest-priority eligible task; do not create a competing roadmap.
 - Taskplan sync: `pass`
 - Synchronized at: `2026-08-26T03:34:55+00:00`
 - Contract: `sin-gpt-web-completion-handover-v1`
@@ -520,4 +521,11 @@ task: T-0004
 updated: 2026-08-29T05:56:51+00:00
 actor: local-agent
 evidence-sha256: 4aaa04f685e833bd81528668f15ce9ca3bd1e3e37227af5d8e2fb1df720a513a
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0005
+updated: 2026-08-29T08:50:05+00:00
+actor: local-agent
+evidence-sha256: fa183425e21f31b54cdc90edc511fb1218cf517590a404b9fb51fd05e56fb6da
 -->

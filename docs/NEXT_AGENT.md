@@ -1,6 +1,6 @@
 # Einfach Hausen — Canonical Next-Agent Contract
 
-**Updated:** 2026-08-29 — **OCI convergence wave (T-0170/T-0004/T-0169 → T-0171)**
+**Updated:** 2026-08-29 — **T-0171 Final OCI convergence (Taskplan: T-0170/T-0004/T-0169/T-0005 DONE)**
 
 ## 0. Read this first
 
@@ -43,21 +43,22 @@
 - Harness: `node scripts/t0169-visual-acceptance.mjs` (real Supabase login, throwaway DB,
   ephemeral identity) + `python3 scripts/t0169-visual-diff.py`.
 
-## 3. Taskplan state (2026-08-29)
+## 3. Taskplan state (2026-08-29, T-0171 running)
 
-- DONE: T-0170 (Supabase auth convergence, 15/15), T-0004 (CSP login fix, security 43/43).
-- COMPLETING: T-0169 (Notion visual convergence evidence on OCI; gates green; structural
-  deltas to the 2024 mockups documented, no design wave performed per handoff §30).
-- NEXT: **T-0171 Final OCI convergence and acceptance** — fresh gate battery (auth,
-  security, visual, tsc, lint, build, diff, GitNexus incl. `gitnexus analyze --index-only`),
-  full regression suite, docs↔code reconciliation (AUTH_BACKEND→AUTH_MODE remnants,
-  Postgres/Storage claims, roadmap prose, EXTERNAL-BLOCKERS.md), then main integration.
+- DONE: T-0170 (Supabase auth 15/15), T-0004 (CSP login fix), T-0169 (visual evidence,
+  12 original Notion references recovered), T-0005 (Owner screens converged 1:1 to the
+  Notion originals: dashboard, drawer, welcome, role, register chrome; no logic changes).
+- RUNNING: **T-0171 Final OCI convergence and acceptance** — docs↔code reconciliation
+  (SQLite-primary reality, AUTH_MODE, Storage absence, roadmap prose, EXTERNAL-BLOCKERS.md),
+  full regression battery, GitNexus re-index, then main integration + deploy.
+- Verified docs truth (2026-08-29): App DB = SQLite (`DATABASE_PATH`, better-sqlite3);
+  `/api/health` checks SQLite; Supabase OSS = Auth authority only; no Storage adapter;
+  HA/PITR/Capacitor (T-0166/T-0167) were planning-only and never executed.
 
 ## 4. Known pre-existing debt (documented, not introduced by T-0169)
 
-- `npm run lint`: 17 errors in legacy `presentation/*.js` + old src pages
-  (`anfrage/[id]`, `benachrichtigungen`, `ki-chat`, `profil`, `dashboard*`). T-0171 owns
-  the cleanup decision (src fixes allowed; presentation/ needs an explicit scope call).
+- `npm run lint`: legacy errors were fixed in T-0171 (src pages + stale presentation
+  deck-builder scripts removed via documented scope extension). Lint is green again.
 - Unrelated OCI worktrees (`/home/ubuntu/dev/einfach-hausen*`, `t0165-premium*`, `t0167`)
   are recovery/history — do not develop or clean them.
 
@@ -73,4 +74,11 @@ task: T-0169
 updated: 2026-08-29T06:11:34+00:00
 actor: local-agent
 evidence-sha256: 8a26c7d17a8ec5b52526fb9c2fb1f91e86ba8f1503952d8365e2d2aafe1a1f42
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0005
+updated: 2026-08-29T08:50:05+00:00
+actor: local-agent
+evidence-sha256: fa183425e21f31b54cdc90edc511fb1218cf517590a404b9fb51fd05e56fb6da
 -->

@@ -16,7 +16,7 @@ export default function KiChatPage() {
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
   useEffect(() => {
     const p = sp.get("prompt");
-    if (p) { setInput(""); setMsgs((m) => [...m, { role: "user", text: p }]); sendWith(p, msgs.concat({ role: "user", text: p })); }
+    if (p) queueMicrotask(() => { setInput(""); setMsgs((m) => [...m, { role: "user", text: p }]); sendWith(p, msgs.concat({ role: "user", text: p })); });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   async function sendWith(text: string, history: Msg[]) {

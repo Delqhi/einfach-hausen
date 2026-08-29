@@ -210,10 +210,9 @@ async function run() {
 
   log('[T-0169] menu states via real UI interaction');
   const menuSummary = page.locator('.mobile-menu summary');
+  await capture(page, 'menu-closed');
   await menuSummary.click();
   await page.waitForTimeout(300);
-  await capture(page, 'menu-closed');
-  // current shell has no accordion sub-levels; menu-open captures the same open panel state
   await capture(page, 'menu-open');
   await menuSummary.click();
   await page.waitForTimeout(200);
