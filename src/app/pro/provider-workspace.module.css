@@ -1,16 +1,16 @@
 .providerScope {
-  --provider-green-900: #123c2a;
-  --provider-green-700: #176b45;
-  --provider-green-600: #238454;
-  --provider-green-100: #eaf5ee;
-  --provider-green-50: #f4faf6;
-  --provider-canvas: #f7f8f7;
-  --provider-surface: #ffffff;
-  --provider-subtle: #f2f4f2;
-  --provider-text: #171a18;
-  --provider-muted: #66706a;
-  --provider-border: #e4e8e5;
-  --provider-border-strong: #d5dcd7;
+  --provider-green-900: var(--eh-green-900);
+  --provider-green-700: var(--eh-green-700);
+  --provider-green-600: var(--eh-green-600);
+  --provider-green-100: var(--eh-green-100);
+  --provider-green-50: var(--eh-green-50);
+  --provider-canvas: var(--eh-canvas);
+  --provider-surface: var(--eh-surface);
+  --provider-subtle: var(--eh-surface-subtle);
+  --provider-text: var(--eh-text);
+  --provider-muted: var(--eh-muted);
+  --provider-border: var(--eh-border);
+  --provider-border-strong: var(--eh-border-strong);
   min-height: 100vh;
   background: var(--provider-canvas);
 }
@@ -37,111 +37,112 @@
   transform: translateY(0);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme) {
+.providerScope :global(.app-shell-v3.provider-theme) {
   min-height: 100vh;
   padding: 0;
   background: var(--provider-canvas);
   color: var(--provider-text);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .workspace-shell) {
+.providerScope :global(.app-shell-v3.provider-theme .workspace-shell) {
   background: var(--provider-canvas);
   color: var(--provider-text);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .desktop-sidebar) {
+.providerScope :global(.app-shell-v3.provider-theme .desktop-sidebar) {
   background: rgba(255, 255, 255, 0.97);
   border-color: var(--provider-border);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-brand .brand[data-inverse='true']),
-.providerScope :global(.app-shell-v3.pro-theme .mobile-brand .brand[data-inverse='true']) {
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-brand .brand[data-inverse='true']),
+.providerScope :global(.app-shell-v3.provider-theme .mobile-brand .brand[data-inverse='true']) {
   color: var(--provider-green-900);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-brand .brand small),
-.providerScope :global(.app-shell-v3.pro-theme .mobile-brand .brand small) {
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-brand .brand small),
+.providerScope :global(.app-shell-v3.provider-theme .mobile-brand .brand small) {
   color: var(--provider-muted);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-nav a) {
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-nav a) {
   min-height: 44px;
   color: #66706a;
   font-size: 13px;
   font-weight: 600;
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-nav a:hover) {
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-nav a:hover) {
   background: var(--provider-subtle);
   color: var(--provider-text);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-nav a.active) {
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-nav a.active) {
   background: var(--provider-green-100);
   color: var(--provider-green-900);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-nav a.active .sidebar-icon) {
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-nav a.active .sidebar-icon) {
   color: var(--provider-green-700);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-footer) {
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-footer) {
   border-color: var(--provider-border);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-user),
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-help) {
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-user),
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-help) {
   color: var(--provider-muted);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .sidebar-user strong) {
+.providerScope :global(.app-shell-v3.provider-theme .sidebar-user strong) {
   color: var(--provider-text);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .user-avatar),
-.providerScope :global(.app-shell-v3.pro-theme .top-user-avatar) {
+.providerScope :global(.app-shell-v3.provider-theme .user-avatar),
+.providerScope :global(.app-shell-v3.provider-theme .top-user-avatar) {
   background: var(--provider-green-100);
   color: var(--provider-green-900);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .topbar-v3) {
+.providerScope :global(.app-shell-v3.provider-theme .topbar-v3) {
   background: rgba(255, 255, 255, 0.94);
   border-color: var(--provider-border);
   color: var(--provider-text);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .page-context small) {
+.providerScope :global(.app-shell-v3.provider-theme .page-context small) {
   color: var(--provider-muted);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .top-actions > a) {
+.providerScope :global(.app-shell-v3.provider-theme .top-actions > a) {
   width: 44px;
   height: 44px;
   color: #59635d;
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .top-actions > a:hover) {
+.providerScope :global(.app-shell-v3.provider-theme .top-actions > a:hover) {
   background: var(--provider-subtle);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
+.providerScope :global(.app-shell-v3.provider-theme .screen-v3) {
   width: min(100%, 1120px);
   max-width: 1120px;
   padding: 48px 48px 112px;
   color: var(--provider-text);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .bottom-nav) {
+.providerScope :global(.app-shell-v3.provider-theme .bottom-nav) {
   background: rgba(255, 255, 255, 0.98);
   border-color: var(--provider-border);
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .bottom-nav a) {
+.providerScope :global(.app-shell-v3.provider-theme .bottom-nav a) {
   min-height: 56px;
   color: #727b75;
+  font-size: 12px;
 }
 
-.providerScope :global(.app-shell-v3.pro-theme .bottom-nav a.active) {
+.providerScope :global(.app-shell-v3.provider-theme .bottom-nav a.active) {
   color: var(--provider-green-700);
 }
 
@@ -475,7 +476,7 @@
 .providerScope :global(.pro-request .request-main > span:not(.new)) {
   margin-top: 11px;
   color: var(--provider-muted);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -502,7 +503,7 @@
   background: var(--provider-green-100);
   color: var(--provider-green-700);
   padding: 4px 7px;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0;
 }
 
@@ -513,7 +514,7 @@
   background: var(--provider-green-100);
   color: var(--provider-green-700);
   padding: 6px 9px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .providerScope :global(.provider-next-action) {
@@ -563,7 +564,7 @@
   background: #eef1ef;
   color: #57615a;
   padding: 5px 8px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1;
   letter-spacing: 0.02em;
 }
@@ -737,9 +738,9 @@
 .providerScope :global(.team-add-form),
 .providerScope :global(.member-card),
 .providerScope :global(.broker-lead-status),
-.providerScope :global(.app-shell-v3.pro-theme .quote-form),
-.providerScope :global(.app-shell-v3.pro-theme .pro-form),
-.providerScope :global(.app-shell-v3.pro-theme .document-form) {
+.providerScope :global(.app-shell-v3.provider-theme .quote-form),
+.providerScope :global(.app-shell-v3.provider-theme .pro-form),
+.providerScope :global(.app-shell-v3.provider-theme .document-form) {
   border: 1px solid var(--provider-border);
   border-radius: 16px;
   background: var(--provider-surface);
@@ -776,12 +777,12 @@
 .providerScope :global(.pro-form select),
 .providerScope :global(.document-form input),
 .providerScope :global(.document-form select),
-.providerScope :global(.app-shell-v3.pro-theme .quote-form input),
-.providerScope :global(.app-shell-v3.pro-theme .quote-form textarea),
-.providerScope :global(.app-shell-v3.pro-theme .pro-form input),
-.providerScope :global(.app-shell-v3.pro-theme .pro-form textarea),
-.providerScope :global(.app-shell-v3.pro-theme .document-form input),
-.providerScope :global(.app-shell-v3.pro-theme .document-form select),
+.providerScope :global(.app-shell-v3.provider-theme .quote-form input),
+.providerScope :global(.app-shell-v3.provider-theme .quote-form textarea),
+.providerScope :global(.app-shell-v3.provider-theme .pro-form input),
+.providerScope :global(.app-shell-v3.provider-theme .pro-form textarea),
+.providerScope :global(.app-shell-v3.provider-theme .document-form input),
+.providerScope :global(.app-shell-v3.provider-theme .document-form select),
 .providerScope :global(.invoice-form input),
 .providerScope :global(.invoice-form textarea),
 .providerScope :global(.invoice-form select),
@@ -1028,14 +1029,14 @@
 
 .providerScope :global(.verification-card small) {
   color: var(--provider-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .providerScope :global(.contract-checks span) {
   border-color: var(--provider-border);
   background: var(--provider-subtle);
   color: var(--provider-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .providerScope :global(.contract-checks span.ok) {
@@ -1371,7 +1372,7 @@
   display: block;
   margin-bottom: 5px;
   color: var(--provider-green-700);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 750;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -1502,7 +1503,7 @@
 
 .providerScope :global(.provider-form-disclosure > summary small) {
   color: var(--provider-muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.4;
   font-weight: 500;
 }
@@ -1541,7 +1542,7 @@
 }
 
 @media (max-width: 900px) {
-  .providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
+  .providerScope :global(.app-shell-v3.provider-theme .screen-v3) {
     padding-inline: 28px;
   }
 
@@ -1589,12 +1590,12 @@
     grid-column: 2;
   }
 
-  .providerScope :global(.app-shell-v3.pro-theme .topbar-v3) {
+  .providerScope :global(.app-shell-v3.provider-theme .topbar-v3) {
     background: rgba(255, 255, 255, 0.98);
     border-bottom: 1px solid var(--provider-border);
   }
 
-  .providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
+  .providerScope :global(.app-shell-v3.provider-theme .screen-v3) {
     padding: 30px 18px calc(96px + env(safe-area-inset-bottom));
   }
 
@@ -1716,7 +1717,7 @@
 }
 
 @media (max-width: 420px) {
-  .providerScope :global(.app-shell-v3.pro-theme .screen-v3) {
+  .providerScope :global(.app-shell-v3.provider-theme .screen-v3) {
     padding-inline: 16px;
   }
 

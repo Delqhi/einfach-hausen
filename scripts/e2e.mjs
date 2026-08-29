@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import net from 'node:net';
-import os from 'node:os';
 import path from 'node:path';
 import { randomBytes } from 'node:crypto';
 import { spawn } from 'node:child_process';
@@ -8,8 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright-core';
 
 const repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const tempRoot=fs.mkdtempSync(path.join(os.tmpdir(),'einfach-hausen-full-e2e-'));
-const projectRoot=path.join(tempRoot,'project');
+const tempRoot=fs.mkdtempSync(path.join(path.dirname(repo),'.einfach-hausen-full-e2e-'));
+const projectRoot=repo;
 const databasePath=path.join(tempRoot,'app.sqlite3');
 const artifactsDir=path.join(repo,'artifacts','e2e');
 fs.mkdirSync(artifactsDir,{recursive:true});
@@ -30,19 +29,10 @@ function browserExecutable(){
   const candidates=[process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,process.env.CHROME_PATH,bundled,
     '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome','/Applications/Chromium.app/Contents/MacOS/Chromium',
     '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge','/opt/google/chrome/chrome','/usr/bin/google-chrome',
-    '/usr/bin/google-chrome-stable','/usr/bin/chromium','/usr/bin/chromium-browser','/snap/bin/chromium'].filter(Boolean);
+    '/usr/bin/google-chrome-stable','/snap/chromium/current/usr/lib/chromium-browser/chrome','/usr/bin/chromium','/usr/bin/chromium-browser','/snap/bin/chromium'].filter(Boolean);
   const found=candidates.find(candidate=>fs.existsSync(candidate));
   if(!found)throw new Error('No Chromium-family browser found; set PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH or CHROME_PATH');
   return found;
-}
-
-function createProjectCopy(){
-  fs.mkdirSync(projectRoot,{recursive:true});
-  for(const directory of ['src','public'])fs.cpSync(path.join(repo,directory),path.join(projectRoot,directory),{recursive:true});
-  for(const file of ['package.json','tsconfig.json','next.config.ts','postcss.config.mjs','next-env.d.ts']){
-    const source=path.join(repo,file);if(fs.existsSync(source))fs.copyFileSync(source,path.join(projectRoot,file));
-  }
-  fs.symlinkSync(path.join(repo,'node_modules'),path.join(projectRoot,'node_modules'),'dir');
 }
 
 async function freePort(){return await new Promise((resolve,reject)=>{const socket=net.createServer();socket.unref();socket.on('error',reject);socket.listen(0,'127.0.0.1',()=>{const address=socket.address();const port=typeof address==='object'&&address?address.port:0;socket.close(()=>resolve(port));});});}
@@ -50,6 +40,9 @@ async function runChild(argv,{cwd,env,timeoutMs=180000}={}){return await new Pro
 async function waitForServer(url,timeoutMs=90000){const started=Date.now();while(Date.now()-started<timeoutMs){if(server?.exitCode!==null&&server?.exitCode!==undefined)throw new Error(`Next server exited early (${server.exitCode})\n${serverLog.slice(-60).join('')}`);try{const response=await fetch(url,{redirect:'manual'});if(response.status<500)return;}catch{}await new Promise(resolve=>setTimeout(resolve,250));}throw new Error(`Next server did not become ready\n${serverLog.slice(-60).join('')}`);}
 async function waitText(page,text){try{await page.waitForFunction(value=>document.body.innerText.includes(value),text,{timeout:20000});}catch(error){const body=(await page.locator('body').innerText()).slice(-5000);throw new Error(`Expected text not found: ${text} | url=${page.url()} | body-tail=${body}`,{cause:error});}}
 async function assertNoOverflow(page,label){const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth);if(overflow)throw new Error(`${label} has horizontal overflow`);}
+async function assertPrimaryNavTargets(page,label){const sizes=await page.locator('.bottom-nav a:visible,.sidebar-nav a:visible').evaluateAll(nodes=>nodes.map(node=>{const box=node.getBoundingClientRect();const style=getComputedStyle(node);return {width:box.width,height:box.height,fontSize:parseFloat(style.fontSize)}}));if(!sizes.length)throw new Error(`${label} has no visible primary navigation`);for(const size of sizes){if(size.height<44)throw new Error(`${label} nav target below 44px: ${JSON.stringify(size)}`);if(size.fontSize<12)throw new Error(`${label} nav text below 12px: ${JSON.stringify(size)}`);}}
+async function assertProviderLightCanvas(page,label){const colors=await page.evaluate(()=>{const shell=document.querySelector('.app-shell-v3');const screen=document.querySelector('.screen-v3');return {className:shell?.className||'',shell:shell?getComputedStyle(shell).backgroundColor:'',screen:screen?getComputedStyle(screen).color:''};});if(!colors.className.includes('provider-theme')||colors.className.includes('pro-theme'))throw new Error(`${label} provider theme class drift: ${colors.className}`);if(/rgb\((?:0|1[0-9]|2[0-9]|3[0-9]),\s*(?:0|1[0-9]|2[0-9]|3[0-9]),\s*(?:0|1[0-9]|2[0-9]|3[0-9])\)/.test(colors.shell))throw new Error(`${label} provider shell is unexpectedly dark: ${colors.shell}`);}
+async function assertResponsiveMatrix(page,{role,label,routes}){for(const width of [320,375,390,768,1024,1440]){const height=width<=390?844:width<1024?900:1000;await page.setViewportSize({width,height});for(const route of routes){const response=await page.goto(base+route);await page.waitForLoadState('domcontentloaded');if(!response?.ok())throw new Error(`${label} ${route} ${width}px failed status=${response?.status()} url=${page.url()}`);const nav=page.locator('.bottom-nav a:visible,.sidebar-nav a:visible').first();try{await nav.waitFor({state:'visible',timeout:10000});}catch(error){const diag=await page.evaluate(()=>({url:location.href,title:document.title,body:document.body.innerText.slice(0,700),bottomNav:getComputedStyle(document.querySelector('.bottom-nav')||document.body).display,sidebar:getComputedStyle(document.querySelector('.desktop-sidebar')||document.body).display}));throw new Error(`${label} ${route} ${width}px navigation missing: ${JSON.stringify(diag)}`,{cause:error});}await assertNoOverflow(page,`${label} ${route} ${width}px`);await assertPrimaryNavTargets(page,`${label} ${route} ${width}px`);if(role==='provider')await assertProviderLightCanvas(page,`${label} ${route} ${width}px`);}}}
 const runtimeErrors=[];
 function trackPage(page,label){
   page.on('pageerror',error=>runtimeErrors.push(`${label}: pageerror: ${error.message}`));
@@ -75,7 +68,6 @@ async function clickAndWaitUrl(page,locator,matcher,timeout=30000){await Promise
 async function clickServerAction(page,locator,timeout=30000){await Promise.all([page.waitForResponse(response=>response.request().method()==='POST'&&Boolean(response.request().headers()['next-action']),{timeout}),locator.click()]);}
 async function sendHousemaster(page,text,matcher=null){const c=page.getByPlaceholder(/Beschreib kurz|Beantworte nur noch|Was soll draußen|Was ist kaputt|Was soll gereinigt|Wobei brauchst du/);await c.click();await c.pressSequentially(text,{delay:1});const button=page.locator('button.send-action:not([disabled])');if(matcher)await clickAndWaitUrl(page,button,matcher);else await clickServerAction(page,button);}
 
-createProjectCopy();
 const port=await freePort();
 const base=`http://127.0.0.1:${port}`;
 const nextBin=path.join(repo,'node_modules','next','dist','bin','next');
@@ -84,7 +76,7 @@ for(const key of Object.keys(sanitizedEnv)){
   if(/(?:STRIPE|WHATSAPP|META_|OPENAI|OPENROUTER|SILICONFLOW|OMNIROUTE|API_KEY|ACCESS_TOKEN|AUTH_TOKEN|WEBHOOK_SECRET)/i.test(key))delete sanitizedEnv[key];
 }
 const runtimeEnv={...sanitizedEnv,DATABASE_PATH:databasePath,ADMIN_PASSWORD:adminPassword,NEXT_PUBLIC_APP_URL:base,NODE_ENV:'production',SESSION_COOKIE_NAME:'e2e_mh_session'};
-await runChild([nextBin,'build','--webpack'],{cwd:projectRoot,env:runtimeEnv,timeoutMs:240000});
+await runChild([nextBin,'build'],{cwd:projectRoot,env:runtimeEnv,timeoutMs:240000});
 server=spawn(process.execPath,[nextBin,'start','-H','127.0.0.1','-p',String(port)],{cwd:projectRoot,env:runtimeEnv,stdio:['ignore','pipe','pipe']});
 for(const stream of [server.stdout,server.stderr])stream.on('data',chunk=>{serverLog.push(chunk.toString());if(serverLog.length>300)serverLog.shift();});
 await waitForServer(`${base}/`);
@@ -111,7 +103,9 @@ await publicCtx.close();
 
 const desktopCtx=await browser.newContext({viewport:{width:1320,height:900}}); const desktop=await desktopCtx.newPage(); trackPage(desktop,'public-desktop');
 for(const route of ['/','/leistungen','/preise','/so-funktionierts','/eigenheimbesitzer','/partner','/hausakte','/hilfe','/sicherheit','/kontakt','/impressum','/datenschutz','/agb']){const response=await desktop.goto(base+route);if(!response?.ok())throw new Error(`Public route failed: ${route} status=${response?.status()}`);await assertNoOverflow(desktop,`Desktop ${route}`);}
-await desktop.goto(base+'/'); await assertKeyboardFocus(desktop,'Desktop landing'); await desktopCtx.close();
+await desktop.goto(base+'/'); await assertKeyboardFocus(desktop,'Desktop landing');
+for(const width of [320,375,390,768,1024,1440]){await desktop.setViewportSize({width,height:width<=390?844:900});await desktop.goto(base+'/login');await desktop.getByLabel('E-Mail').waitFor({state:'visible'});await assertNoOverflow(desktop,`Login ${width}px`);const authMetrics=await desktop.evaluate(()=>{const input=document.querySelector('.auth-reference input[name="email"]');const button=document.querySelector('.auth-reference .btn.primary');return {inputFont:input?parseFloat(getComputedStyle(input).fontSize):0,inputHeight:input?.getBoundingClientRect().height||0,buttonHeight:button?.getBoundingClientRect().height||0,buttonBg:button?getComputedStyle(button).backgroundColor:''};});if(authMetrics.inputHeight<46||authMetrics.buttonHeight<46)throw new Error(`Login controls below minimum at ${width}px: ${JSON.stringify(authMetrics)}`);if(width<=720&&authMetrics.inputFont<16)throw new Error(`Login input below 16px on mobile at ${width}px`);if(!/rgb\(23,\s*107,\s*69\)/.test(authMetrics.buttonBg))throw new Error(`Login primary action is not canonical green at ${width}px: ${authMetrics.buttonBg}`);}
+await desktopCtx.close();
 
 // 1) Firma registrieren, prüfen und als Vertragspartner aktivieren.
 const managerCtx=await browser.newContext({viewport:{width:390,height:844}}); const manager=await managerCtx.newPage(); trackPage(manager,'provider-manager');
@@ -174,12 +168,15 @@ if(await owner.locator('.owner-onboarding-banner').count())throw new Error('Onbo
 await assertNoOverflow(owner,'Mobile customer app');
 await owner.locator('.bottom-nav a').first().waitFor(); const ownerNavCount=await owner.locator('.bottom-nav a').count(); if(ownerNavCount!==5)throw new Error(`Mobile homeowner navigation must expose five primary destinations, got ${ownerNavCount}`);
 await waitText(owner,'Dringender Notfall'); await waitText(owner,'Direkt einen Menschen fragen'); await owner.locator('.bottom-nav').getByText('Ansprechpartner',{exact:true}).waitFor();
+const moreTrigger=owner.locator('.bottom-nav a[href="/app/more"]');await moreTrigger.click();const moreDialog=owner.locator('#owner-more-menu');await moreDialog.waitFor({state:'visible'});if(await moreTrigger.getAttribute('aria-expanded')!=='true')throw new Error('Owner more trigger did not expose expanded state');await owner.keyboard.press('Escape');await moreDialog.waitFor({state:'hidden'});const focusHref=await owner.evaluate(()=>document.activeElement instanceof HTMLAnchorElement?document.activeElement.getAttribute('href'):'');if(focusHref!=='/app/more')throw new Error(`Owner menu focus was not restored, got ${focusHref}`);
+await assertResponsiveMatrix(owner,{role:'homeowner',label:'Owner responsive',routes:['/app','/app/jobs','/app/home','/app/messages']});await owner.setViewportSize({width:390,height:844});await owner.goto(base+'/app');
 await owner.goto(base+'/app/profile'); await waitText(owner,'Einfach Hausen aufs Handy'); await assertNoOverflow(owner,'Mobile customer profile');
 await owner.goto(base+'/app/hausmeister'); await assertNoOverflow(owner,'Mobile housemaster');
 await sendHousemaster(owner,'Meine Hecke ist zu hoch. Dienstag ab 14 Uhr hätte ich Zeit. Wen kann ich dazu fragen?',/answered=1/);
 await waitText(owner,'Wie soll es weitergehen?'); await waitText(owner,'Ansprechpartner finden'); await waitText(owner,'Auftrag organisieren');
 // Eine normale Hausfrage darf noch keine Partneranfrage erzeugen.
 await manager.goto(base+'/pro'); await waitText(manager,'Keine neue passende Anfrage');
+await assertResponsiveMatrix(manager,{role:'provider',label:'Provider responsive',routes:['/pro','/pro/team','/pro/profile']});await manager.setViewportSize({width:390,height:844});await manager.goto(base+'/pro');
 
 // 3a) Zuerst nur einen Menschen verbinden — ausdrücklich noch kein Auftrag.
 await clickAndWaitUrl(owner,owner.getByRole('button',{name:/Ansprechpartner finden/}),/\/app\/jobs\/\d+/); const contactJobId=Number(owner.url().split('/').pop()); if(!contactJobId)throw new Error('contact job missing');

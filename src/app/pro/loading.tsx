@@ -1,6 +1,6 @@
 export default function ProLoading() {
   return (
-    <main className="app-page app-shell-v3 pro-theme" aria-busy="true" aria-live="polite">
+    <main className="app-page app-shell-v3 provider-theme" aria-busy="true" aria-live="polite">
       <div className="workspace-shell">
         <div className="workspace-main">
           <section className="screen-v3 provider-loading">

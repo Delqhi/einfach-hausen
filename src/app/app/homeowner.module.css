@@ -1,17 +1,17 @@
 .ownerScope {
-  --owner-green-900: #123c2a;
-  --owner-green-700: #176b45;
-  --owner-green-600: #238454;
-  --owner-green-100: #eaf5ee;
-  --owner-green-50: #f4faf6;
-  --owner-bg: #f7f8f7;
-  --owner-surface: #ffffff;
-  --owner-surface-subtle: #f2f4f2;
-  --owner-text: #171a18;
-  --owner-muted: #66706a;
-  --owner-border: #e4e8e5;
-  --owner-border-strong: #d5dcd7;
-  --owner-focus: #176b45;
+  --owner-green-900: var(--eh-green-900);
+  --owner-green-700: var(--eh-green-700);
+  --owner-green-600: var(--eh-green-600);
+  --owner-green-100: var(--eh-green-100);
+  --owner-green-50: var(--eh-green-50);
+  --owner-bg: var(--eh-canvas);
+  --owner-surface: var(--eh-surface);
+  --owner-surface-subtle: var(--eh-surface-subtle);
+  --owner-text: var(--eh-text);
+  --owner-muted: var(--eh-muted);
+  --owner-border: var(--eh-border);
+  --owner-border-strong: var(--eh-border-strong);
+  --owner-focus: var(--eh-green-700);
   min-height: 100vh;
   background: var(--owner-bg);
   color: var(--owner-text);
@@ -98,7 +98,7 @@
 .ownerScope :global(.app-shell-v3 .page-context small) {
   margin-top: 3px;
   color: var(--owner-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .ownerScope :global(.app-shell-v3 .top-actions > a),
@@ -356,7 +356,7 @@
 .ownerScope :global(.owner-copilot-copy > span),
 .ownerScope :global(.owner-section-heading > div > span) {
   color: var(--owner-green-700);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 750;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -426,7 +426,7 @@
   gap: 16px;
   margin-top: 14px;
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ownerScope :global(.owner-copilot-meta > span),
@@ -530,7 +530,7 @@
 
 .ownerScope :global(.owner-next-copy small) {
   color: var(--owner-green-700);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -544,7 +544,7 @@
   margin-top: 3px;
   overflow: hidden;
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -600,7 +600,7 @@
 .ownerScope :global(.owner-house-link p) {
   margin: 4px 0 0;
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.45;
 }
 
@@ -854,7 +854,7 @@
 
 .ownerScope :global(.mobile-job-meta span),
 .ownerScope :global(.mobile-job-foot small) {
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .ownerScope :global(.mobile-job-foot) {
@@ -872,7 +872,7 @@
 
 .ownerScope :global(.status) {
   padding: 5px 8px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -978,7 +978,7 @@
 .ownerScope :global(.contact-row small),
 .ownerScope :global(.contact-row p) {
   color: var(--owner-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .ownerScope :global(.contact-row.selected) {
@@ -1081,7 +1081,7 @@
 
 .ownerScope :global(.house-cover-copy span) {
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: 12px;
   opacity: 1;
 }
 
@@ -1136,7 +1136,7 @@
 .ownerScope :global(.settings-list small),
 .ownerScope :global(.more-menu small) {
   color: var(--owner-muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.4;
 }
 
@@ -1176,7 +1176,7 @@
 }
 
 .ownerScope :global(.year-item small) {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .ownerScope :global(.asset-grid article),
@@ -1311,7 +1311,7 @@
 
 .ownerScope :global(.emergency-disclaimer) {
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.55;
 }
 
@@ -1492,7 +1492,7 @@
     min-height: 60px;
     padding: 6px 2px 3px;
     color: #707a73;
-    font-size: 9px;
+    font-size: 12px;
   }
 
   .ownerScope :global(.app-shell-v3 .bottom-nav a.active) {
