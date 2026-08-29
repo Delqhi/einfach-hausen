@@ -1,7 +1,34 @@
 # Einfach Hausen — Final Repository Handover
 
-**Date:** 2026-08-25
-**Canonical completion task:** T-0043 — Final convergence: repository hygiene, handover and release proof
+**Date:** 2026-08-29 (OCI Abschluss-Welle: T-0170 → T-0169 → T-0004 → T-0005 → T-0171)
+**Execution host:** OCI-VM (sinsupabase) · canonical worktree `/home/ubuntu/einfach-hausen-oci-handoff`
+**Taskplan:** `.sin-gpt-web/taskplan.sqlite3` — done: T-0170, T-0169, T-0004, T-0005, T-0171; open: T-0006 (e2e modernization)
+
+## FINAL RESULT: ACCEPT / CONVERGED / DEPLOYED
+
+| Item | State |
+|---|---|
+| GitHub main | `2ad165f0366b0db8cd651383f1e52b575972ad95` (fast-forward, SHA-Gleichheit LOCAL==REMOTE bewiesen) |
+| Branch history | oci/t0170 → oci/t0169 (+ T-0004 CSP-Fix, T-0005 1:1-Konvergenz) → oci/t0171, alle gepusht |
+| Production | /srv/einfach-hausen @ `2ad165f`, Service `einfach-hausen.service` active, Deploy via `deploy/update-on-oci.sh` |
+| Health | `{"ok":true,"database":"ready"}` auf 127.0.0.1:3010 (nicht öffentlich) |
+| Smoke | 17/17 Routes PASS @ https://einfachhausen.de |
+| Backup | `/var/backups/einfach-hausen/einfach-hausen-20260829T190352Z` (+ ältere) |
+| Auth | Supabase OSS self-hosted (`supabase.delqhi.com`) = Auth-Autorität; CSP connect-src enthält den Gateway-Origin (T-0004) |
+| App-Daten | SQLite (`DATABASE_PATH`, better-sqlite3) — KEIN Postgres/Storage-Adapter im Code (T-0166/T-0167 waren nie ausgeführte Planung) |
+| Visual | Owner-Screens 1:1 zu den 12 Original-Notion-Referenzen konvergiert (`public/notion/notion-originals/` + Evidence `T-0169/oci/round3/`); Historie: keine Referenz existent → Paritätsbasis |
+| Gates frisch | auth 15/15, t0168 PASS, security 43/43, tsc PASS, lint 0 errors, build PASS, diff-check PASS, 8 Logik-Regressionen PASS, e2e:architecture PASS |
+| Offen | T-0006: full-flow e2e modernisieren (Tech-Persona-Login-Naht; vor dieser Welle war der e2e komplett veraltet) |
+
+## Externe Blocker (nicht technisch)
+STRATO-DNSSEC (#16), Rechtstexte-Freigabe (#11), Stripe/SEPA-Live (#14) — Details `docs/EXTERNAL-BLOCKERS.md`.
+
+## Canonical next action
+`sin-gpt-web-state --repo . next` → T-0006. Keine konkurrierenden Roadmaps erfinden.
+
+---
+
+# Historisch: Abschluss T-0043 (2026-08-25)
 
 ## Verdict
 
