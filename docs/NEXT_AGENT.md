@@ -1,6 +1,6 @@
 # Einfach Hausen — Canonical Next-Agent Contract
 
-**Updated:** 2026-08-29 — **T-0171 Final OCI convergence (Taskplan: T-0170/T-0004/T-0169/T-0005 DONE)**
+**Updated:** 2026-08-29 — **ABSCHLUSS: T-0170/T-0004/T-0169/T-0005/T-0171 DONE; main=bdebe9f; Production deployed + Smoke 17/17 PASS**
 
 ## 0. Read this first
 
@@ -48,9 +48,10 @@
 - DONE: T-0170 (Supabase auth 15/15), T-0004 (CSP login fix), T-0169 (visual evidence,
   12 original Notion references recovered), T-0005 (Owner screens converged 1:1 to the
   Notion originals: dashboard, drawer, welcome, role, register chrome; no logic changes).
-- RUNNING: **T-0171 Final OCI convergence and acceptance** — docs↔code reconciliation
-  (SQLite-primary reality, AUTH_MODE, Storage absence, roadmap prose, EXTERNAL-BLOCKERS.md),
-  full regression battery, GitNexus re-index, then main integration + deploy.
+- DONE & DEPLOYED: T-0171 abgeschlossen; main=bdebe9f (GitHub-SHA-Gleichheit bewiesen); Production
+  /srv/einfach-hausen @ bdebe9f, Service aktiv, /api/health ready, Smoke 17/17 PASS, Pre-Deploy-Backup erstellt.
+- OPEN: **T-0006 e2e modernization** (höchster eligible Task) — full-flow e2e auf die konvergierte UI
+  weiterführen (Tech-Persona-Login-Seam dokumentiert; alle übrigen Sektionen grün repariert).
 - Verified docs truth (2026-08-29): App DB = SQLite (`DATABASE_PATH`, better-sqlite3);
   `/api/health` checks SQLite; Supabase OSS = Auth authority only; no Storage adapter;
   HA/PITR/Capacitor (T-0166/T-0167) were planning-only and never executed.
