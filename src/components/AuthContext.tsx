@@ -17,8 +17,8 @@ const AuthContext = createContext<Ctx>({
 });
 
 const PUBLIC_ROUTES = ["/", "/welcome", "/role", "/login", "/register-owner", "/register-pro", "/check-email", "/datenschutz", "/impressum"];
-// Canonical app/pro pages authenticate on the server with mh_session. The
-// Supabase client guard must not overwrite that authoritative session.
+// Canonical app/pro pages resolve Supabase identity and application role on
+// the server. The browser guard must never replace that authority with metadata.
 const SERVER_AUTH_PREFIXES = ["/app", "/pro"];
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -45,13 +45,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (usesServerAuth) return;
     if (!session && !isPublic) {
       router.replace("/login");
-    } else if (session && (pathname === "/login" || pathname === "/welcome" || pathname === "/role")) {
-      const role = (session as any).user.user_metadata?.role;
-      if ((session as any).user.user_metadata?.onboarding_done === false && role === "pro") {
-        router.replace("/onboarding/pro");
-      } else {
-        router.replace(role === "pro" ? "/dashboard-pro" : "/dashboard");
-      }
+    } else if (session && (pathname === "/welcome" || pathname === "/role")) {
+      // Enter through the canonical server-authorized owner route. A provider
+      // is redirected to /pro by requireUser using the application DB role.
+      router.replace("/app");
     }
   }, [session, loading, pathname, router]);
 

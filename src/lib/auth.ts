@@ -100,6 +100,30 @@ export async function createSession(userId: number) {
 
 export async function destroySession() {
   const store = await jar();
+  const mode = authMode();
+
+  if (mode === 'supabase') {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
+    if (supabaseUrl && supabaseAnonKey && !supabaseUrl.includes('your-project.supabase.co')) {
+      const client = createServerClient(
+        supabaseUrl,
+        supabaseAnonKey,
+        { cookies: { getAll: () => store.getAll ? store.getAll() : [], setAll: (items) => { for (const item of items) { try { store.set(item.name, item.value, item.options); } catch {} } } } }
+      );
+      const { error } = await client.auth.signOut();
+      if (error) throw error;
+    }
+
+    // Defense in depth: make the browser stop presenting any chunk of the
+    // Supabase SSR auth cookie even if its storage format changes or is chunked.
+    for (const cookie of store.getAll ? store.getAll() : []) {
+      if (cookie.name.startsWith('sb-') && cookie.name.includes('-auth-token')) {
+        try { store.delete(cookie.name); } catch {}
+      }
+    }
+  }
+
   const name = cookieName();
   const token = store.get(name)?.value;
   if (token) db.prepare('DELETE FROM sessions WHERE token=?').run(token);

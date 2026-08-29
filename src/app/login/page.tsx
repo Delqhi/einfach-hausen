@@ -15,12 +15,12 @@ export default function LoginPage() {
   async function login() {
     setErr("");
     setBusy(true);
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pw });
+    const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
     setBusy(false);
     if (error) { setErr(error.message === "Invalid login credentials" ? "E-Mail oder Passwort falsch." : error.message); return; }
-    const role = (data as any).user?.user_metadata?.role;
-    if (role === "pro" && (data as any).user?.user_metadata?.onboarding_done === false) router.replace("/onboarding/pro");
-    else router.replace(role === "pro" ? "/dashboard-pro" : "/dashboard");
+    // Never route from client-editable Supabase metadata. /app resolves the
+    // server-controlled application identity and redirects providers to /pro.
+    router.replace("/app");
   }
 
   return (

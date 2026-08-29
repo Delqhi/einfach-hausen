@@ -10,8 +10,9 @@ export default function WelcomePage() {
 
   useEffect(() => {
     if (!loading && session) {
-      const role = (session as any).user.user_metadata?.role;
-      router.replace(role === "pro" ? "/dashboard-pro" : "/dashboard");
+      // Canonical role resolution happens server-side from the application
+      // identity. Providers entering /app are redirected to /pro by requireUser.
+      router.replace("/app");
     }
   }, [session, loading, router]);
 
