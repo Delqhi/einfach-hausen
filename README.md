@@ -12,7 +12,7 @@ Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PROD
 
 Alle Agents arbeiten in diesem Repository **am selben Ziel**. Es gibt keinen zweiten Engineering-Taskplan in README, Issues oder Worker-Reports. Der verbindliche Einstieg ist [`docs/NEXT_AGENT.md`](docs/NEXT_AGENT.md); der transaktionale Taskstatus liegt in `.sin-gpt-web/taskplan.sqlite3` und wird nach `.sin-gpt-web/TASKPLAN.md` gerendert.
 
-Aktueller Endpfad: **T-0042 Final Acceptance → T-0043 Final Convergence/Handover**. Bereits erledigte oder abgelöste Wellen werden nicht erneut begonnen. Neue Implementierungsarbeit entsteht nur aus einem reproduzierbaren Acceptance-Fehler und wird als kanonischer Remediation-Task erfasst.
+Aktueller Endpfad: **T-0171 Final Convergence abgeschlossen (2026-08-29, deployed) → offen: T-0006 e2e Modernisierung**. Bereits erledigte oder abgelöste Wellen werden nicht erneut begonnen. Neue Implementierungsarbeit entsteht nur aus einem reproduzierbaren Acceptance-Fehler und wird als kanonischer Remediation-Task erfasst.
 
 ## Systemübersicht
 
@@ -283,12 +283,13 @@ The local Graphify post-commit and post-checkout hooks keep `graphify-out/graph.
 <!-- SIN-GPT-WEB-HANDOVER:BEGIN -->
 ## SIN GPT Web completion / handover sync
 
-- Last synchronized task: `T-0043`
+- Last synchronized task: `T-0171`
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3`
 - Canonical repo goal: Einfach Hausen vollständig fertigstellen und vor allem App und Website auf Produktionsqualität verbessern
 - Resume rule: read/validate the canonical taskplan and continue its highest-priority eligible task; do not create a competing roadmap.
+- State 2026-08-29: DONE T-0170/T-0004/T-0169/T-0005/T-0171 (main=2307493, production bdebe9f, Smoke 17/17); open: T-0006 e2e modernization
 - Taskplan sync: `pass`
-- Synchronized at: `2026-08-26T03:34:55+00:00`
+- Synchronized at: `2026-08-29T18:59:08+00:00`
 - Contract: `sin-gpt-web-completion-handover-v1`
 <!-- SIN-GPT-WEB-HANDOVER:END -->
 
