@@ -17,6 +17,12 @@ function emit(name: 'eh-install-ready' | 'eh-install-complete' | 'eh-service-wor
   window.dispatchEvent(new Event(name));
 }
 
+// Browser Push is explicitly unavailable (per T-0033 / issue-12 decision).
+// No subscription request is shown; the settings page explains why.
+function requestBrowserPushSubscription() {
+  throw new Error('Browser Push is unavailable — per issue-12 decision, PWA is the approved launch channel and push is disabled in settings.');
+}
+
 export function PwaRegister() {
   useEffect(() => {
     let cancelled = false;
@@ -33,6 +39,10 @@ export function PwaRegister() {
           // reports whether this browser is actually controlled by the worker.
         });
     }
+
+    // Deliberately do NOT request push permission — push is unavailable.
+    // If a future task requires native store distribution, a new canonical task
+    // through sin-gpt-web-state must create the proper infrastructure.
 
     const onInstallPrompt = (event: Event) => {
       event.preventDefault();

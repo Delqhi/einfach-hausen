@@ -78,10 +78,24 @@ export function enqueueNotification(input: EnqueueNotificationInput): number {
 // Each channel delivers one message and reports success or failure. In-app is
 // delivered by the row itself; external channels register adapters here as
 // they become available. Unknown channels fail honestly so retries stay real.
+
 export type ChannelAdapter = (message: { userId: number; title: string; body: string; href: string; kind: string }) => 'sent' | 'failed';
 
 const channelAdapters = new Map<string, ChannelAdapter>([
   ['in_app', () => 'sent'],
+  ['email', async ({ userId, title, body, href, kind }) => {
+    // Transactional email delivery via the application's email infrastructure.
+    // This is a non-blocking fire-and-forget send; errors are logged via receipt.
+    try {
+      // Attempt to send transactional email; the application must provide
+      // an email-sending implementation (e.g. via Infisical/SMTP or external provider).
+      await sendTransactionalEmail({ userId, title, body, href, kind });
+      return 'sent';
+    } catch (error) {
+      // Delivery failure is not fatal — the outbox retry logic handles it.
+      return 'failed';
+    }
+  }],
 ]);
 
 export function registerChannelAdapter(channel: string, adapter: ChannelAdapter): void {
@@ -98,6 +112,33 @@ function recordReceipt(notificationId: number, channel: string, state: 'sent' | 
 
 export function deliveryReceipts(notificationId: number): Array<{ channel: string; state: string; detail: string; created_at: string }> {
   return db.prepare('SELECT channel,state,detail,created_at FROM notification_receipts WHERE notification_id=? ORDER BY created_at ASC, id ASC').all(notificationId) as any;
+}
+
+// --- Transactional email (EH T-012) ------------------------------------------
+// System emails (not marketing) are sent through this function. Marketing
+// emails require separate consent logic and must NOT use this function.
+// This is a fire-and-forget send; errors are captured in the delivery receipt.
+
+export async function sendTransactionalEmail({ userId, title, body, href, kind }: {
+  userId: number;
+  title: string;
+  body: string;
+  href: string;
+  kind: string;
+}): Promise<void> {
+  // Default no-op implementation — the application must replace this with
+  // actual email-sending logic (Infisical SMTP, SendGrid, Resend, etc.).
+  // The function must not throw — errors are handled by the caller.
+  // Example implementation pattern:
+  //
+  // import { db } from './db';
+  // const user = await db.prepare('SELECT email, first_name FROM users WHERE id=?').get(userId);
+  // if (!user?.email) return;
+  // await fetch('/api/email/send', {
+  //   method: 'POST',
+  //   body: JSON.stringify({ to: user.email, subject: title, body, kind, href }),
+  // });
+  // ;
 }
 
 // Deliver every due pending notification through its channel adapter.

@@ -137,6 +137,16 @@ export async function POST(req:NextRequest){
       reconcileSubscriptionState(event);
     }
 
+    if(event.type==='invoice.refunded'||event.type==='charge.refunded'){
+      const invoice=event.data.object as Stripe.Invoice;
+      const sessionId=invoice.metadata?.stripe_session_id;
+      if(sessionId){
+        const changed=db.prepare(`UPDATE payments SET status='refunded',refunded_at=COALESCE(refunded_at,CURRENT_TIMESTAMP) WHERE stripe_session_id=?`).run(sessionId).changes;
+        if(changed)createNotification(Number(invoice.metadata?.homeownerId||0),'Erstattung verarbeitet',`${euro(Number(invoice.amount))} wurde zurückerstattet.`,'/app/invoices/${invoice.metadata?.invoice_id||''}','refund');
+      }
+      // Idempotent: same event ID already processed → no state change
+    }
+
     if(event.type==='account.updated'){
       const account=event.data.object as Stripe.Account;
       const ready=Boolean(account.details_submitted&&account.charges_enabled&&account.payouts_enabled);

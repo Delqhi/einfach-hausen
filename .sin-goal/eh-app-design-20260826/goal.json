@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "goal_id": "eh-app-design-20260826",
+  "status": "active",
+  "repository_root": "/home/ubuntu/dev/einfach-hausen",
+  "user_outcome": "Große Design-Erneuerung für Eigentümer- und Handwerker-App gemäß Notion-Entwürfen; Design-System anpassen, implementieren, auf main mergen, deployen und live testen.",
+  "definition_of_done": [],
+  "functional_requirements": [],
+  "non_functional_requirements": [],
+  "quality_thresholds": {},
+  "explicit_non_goals": [],
+  "inferred_required_work": [],
+  "constraints": [],
+  "hard_external_blockers": [],
+  "completion_gates": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7",
+    "G8",
+    "G9",
+    "G10"
+  ],
+  "created_at": "2026-08-26T14:42:41.949038+00:00",
+  "updated_at": "2026-08-26T14:42:41.949038+00:00"
+}

@@ -73,3 +73,10 @@ export function markPaymentFailed(sessionId:string){
   return db.prepare(`UPDATE payments SET status='failed'
     WHERE stripe_session_id=? AND status='pending'`).run(sessionId).changes;
 }
+
+export function markPaymentRefunded(sessionId:string){
+  if(!validSessionId(sessionId))return null;
+  const changed=db.prepare(`UPDATE payments SET status='refunded',refunded_at=COALESCE(refunded_at,CURRENT_TIMESTAMP)
+    WHERE stripe_session_id=? AND status IN ('pending','paid','failed')`).run(sessionId).changes;
+  return {changed,sessionId};
+}
