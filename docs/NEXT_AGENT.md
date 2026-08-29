@@ -1,6 +1,6 @@
 # Einfach Hausen — Canonical Next-Agent Contract
 
-**Updated:** 2026-08-29 — **ABSCHLUSS: T-0170/T-0004/T-0169/T-0005/T-0171 DONE; main=bdebe9f; Production deployed + Smoke 17/17 PASS**
+**Updated:** 2026-08-29 — **T-0170/T-0004/T-0169/T-0005/T-0171 DONE (deployed); T-0007 repo hygiene DONE; main=ebc0454 (= origin/main, /srv @ ebc0454); open: T-0006 only**
 
 ## 0. Read this first
 
@@ -51,8 +51,12 @@
 - DONE & DEPLOYED: T-0171 abgeschlossen; main=bdebe9f (GitHub-SHA-Gleichheit bewiesen); Production
   /srv/einfach-hausen @ bdebe9f, Service aktiv, /api/health ready, Smoke 17/17 PASS, Pre-Deploy-Backup erstellt.
 - OPEN: **T-0006 e2e modernization** — full-flow e2e auf die konvergierte UI weiterführen
-  (Tech-Persona-Login-Seam dokumentiert; alle übrigen Sektionen grün repariert); danach
-  **T-0007 Repository hygiene** (Legacy-Worktree/Branch-Inventar klassifizieren + bereinigen).
+  (Tech-Persona-Login-Seam dokumentiert; alle übrigen Sektionen grün repariert). T-0006 is the
+  only remaining open task.
+- DONE: **T-0007 Repository hygiene** (2026-08-29) — legacy worktree/branch inventory verified
+  and classified; WIP preserved via pushed `archive/*` tags; merged remote branches deleted;
+  `t0165-premium` worktree removed; taskplan DBs checkpointed. Full report:
+  `.sin-gpt-web/reports/T-0007.md`.
 - Workflow-Kontrakt für Übernahme/Abschluss: Skill **sin-handback** (~/.prime/agent/skills/sin-handback/SKILL.md,
   global registriert in wow-my-zsh registry/skills.yaml) — Teil A Intake (SHAs/Taskplan/Transfer-Grenze
   verifizieren, Safety-Push), Teil B Handback (Gates frisch, Docs↔Code, Handback-Dokument committen+pushen
@@ -67,8 +71,14 @@
 
 - `npm run lint`: legacy errors were fixed in T-0171 (src pages + stale presentation
   deck-builder scripts removed via documented scope extension). Lint is green again.
-- Unrelated OCI worktrees (`/home/ubuntu/dev/einfach-hausen*`, `t0165-premium*`, `t0167`)
-  are recovery/history — do not develop or clean them.
+- Legacy OCI worktrees after T-0007 (2026-08-29): `t0165-premium` REMOVED; `t0165-premium-v3`,
+  `t0167` and `/home/ubuntu/einfach-hausen` were already removed earlier the same day (WIP on
+  pushed `archive/*` branches). Remaining: `/home/ubuntu/dev/einfach-hausen` (legacy repo anchor,
+  `main` @ d83abf4 = ancestor of origin/main; historical taskplan DB checkpointed in
+  `.sin-gpt-web/archive/`) and `/home/ubuntu/dev/einfach-hausen-crm` (separate CRM repo; unique
+  audiences WIP archived as branch `archive/oci-local-state-20260829` @ 65845ee + tag
+  `archive/crm-oci-local-wip`; worktree intentionally left dirty for the next CRM agent).
+  Do not develop in either. All archival pointers: `.sin-gpt-web/reports/T-0007.md`.
 
 ## 5. Hard rules (unchanged)
 
