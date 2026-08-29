@@ -1,0 +1,5 @@
+Captured: 2026-08-26T01:27:27.769Z
+Base: https://einfachhausen.de
+Git main: 3a8aa93054df7ec897c1dc3fec200ecf8526965a
+Health: verified before capture
+Surfaces: website, homeowner app, provider app

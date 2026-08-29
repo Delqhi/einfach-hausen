@@ -56,6 +56,15 @@ next-env.d.ts
 /.sin-gpt-web/
 /.sin-after-work/
 /.issue9-logo.png
+
+# linked worktrees are local execution state, never repository content
+/.worktrees/
+
+# presentation build/runtime dependencies and local benchmark state
+/presentation/node_modules/
+/presentation/bakeoff/presenton/app_data/
+/presentation/_benchmark/tools/
+/presentation/bakeoff/pptx-gen/repo/
 /src/app/pro/.t0018-final-start.log
 # local generated agent/code-intelligence state + Python bytecode
 /.gitnexus/
