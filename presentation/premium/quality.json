@@ -28,45 +28,15 @@
   },
   "sourceCommit": "3a8aa93054df7ec897c1dc3fec200ecf8526965a",
   "bannedCopy": [
-    {
-      "text": "through-line",
-      "why": "unpräzise Mischsprache"
-    },
-    {
-      "text": "Nichts Mockup",
-      "why": "defensive statt premium Copy"
-    },
-    {
-      "text": "Produktion · nicht Mockup",
-      "why": "defensive statt premium Copy"
-    },
-    {
-      "text": "Website-Vollseiten",
-      "why": "irreführend bei gecroppten Ansichten"
-    },
-    {
-      "text": "App-Screens (vollständig)",
-      "why": "irreführend bei kuratierter Übersicht"
-    },
-    {
-      "text": "Profil ist Qualitätsversprechen",
-      "why": "sprachlich unvollständig"
-    },
-    {
-      "text": "läuft zuerst durch Prüfung",
-      "why": "sperrige interne Prozesssprache"
-    },
-    {
-      "text": "GitHub main ≡ OCI-Produktion",
-      "why": "Deployment-SHA nicht belegt"
-    },
-    {
-      "text": "Produktionsstand · live verifiziert",
-      "why": "zu starke Deployment-Identitätsaussage"
-    },
-    {
-      "text": "Produktionsstand verifiziert",
-      "why": "zu starke Deployment-Identitätsaussage"
-    }
+    {"text": "through-line", "why": "unpräzise Mischsprache"},
+    {"text": "Nichts Mockup", "why": "defensive statt premium Copy"},
+    {"text": "Produktion · nicht Mockup", "why": "defensive statt premium Copy"},
+    {"text": "Website-Vollseiten", "why": "irreführend bei gecroppten Ansichten"},
+    {"text": "App-Screens (vollständig)", "why": "irreführend bei kuratierter Übersicht"},
+    {"text": "Profil ist Qualitätsversprechen", "why": "sprachlich unvollständig"},
+    {"text": "läuft zuerst durch Prüfung", "why": "sperrige interne Prozesssprache"},
+    {"text": "GitHub main ≡ OCI-Produktion", "why": "Deployment-SHA nicht belegt"},
+    {"text": "Produktionsstand · live verifiziert", "why": "zu starke Deployment-Identitätsaussage"},
+    {"text": "Produktionsstand verifiziert", "why": "zu starke Deployment-Identitätsaussage"}
   ]
 }

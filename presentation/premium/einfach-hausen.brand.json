@@ -1,0 +1,53 @@
+{
+  "brand": {
+    "colors": {
+      "primary": "#176B45",
+      "deep": "#123C2A",
+      "mint": "#EAF5EE",
+      "accent": "#F4D27A",
+      "text": "#171A18",
+      "muted": "#66706A",
+      "surface": "#FFFFFF",
+      "line": "#E4E8E5",
+      "success": "#238454",
+      "warning": "#9B6A00",
+      "danger": "#B42318"
+    },
+    "logo": {
+      "src": "../../public/brand/einfachhausen-mark.svg",
+      "alt": "einfachhausen – Dein Zuhause. Wir kümmern uns.",
+      "variant": "auto",
+      "variants": { "light": "", "dark": "" },
+      "scale": 1,
+      "position": "left",
+      "opacity": 1,
+      "maxHeight": 36,
+      "footerHeight": 34,
+      "heroHeight": 78,
+      "footerMaxWidth": 180,
+      "heroMaxWidth": 360,
+      "darkTreatment": "surface",
+      "safeAreaPx": 8
+    }
+  },
+  "canvas": { "width": 1280, "height": 720, "background": "#F7F8F7" },
+  "device": {
+    "phone": {
+      "frameWidth": 3,
+      "frameColor": "#101612",
+      "radius": 34,
+      "screenInset": 3,
+      "notchWidth": 60,
+      "notchHeight": 14,
+      "notchRadius": 10,
+      "shadow": "0 22px 48px -28px rgba(18,60,42,.42)",
+      "maxWidth": 270,
+      "background": "#101612"
+    }
+  },
+  "footer": { "enabled": true, "variant": "brand", "showLogo": true, "showDomain": false, "showContext": true, "showPageNumber": true, "align": "spread", "opacity": 0.76, "divider": false },
+  "rhythm": { "defaultTheme": "light", "allowDark": true, "darkMaxStreak": 1, "maxBullets": 5, "maxChips": 5 },
+  "motion": { "enabled": false, "durationMs": 180, "easing": "ease-out", "respectReducedMotion": true },
+  "accessibility": { "lang": "de", "minNormalContrast": 4.5, "minLargeContrast": 3, "requireAltText": true },
+  "qa": { "minBodyFontPx": 16, "minSupportingFontPx": 12, "maxPrimaryImages": 3, "minPrimaryImageWidthPx": 260, "minPrimaryImageHeightPx": 200, "collisionTolerancePx": 2, "maxPhoneFramePx": 4, "requireLogoAlt": true, "requireSemanticZones": true }
+}
