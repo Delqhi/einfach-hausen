@@ -17,6 +17,10 @@ git rev-list --left-right --count main...origin/main
 
 Do not create a new roadmap or reopen completed/cancelled waves without a fresh reproducible defect. Product truth remains `docs/PRODUCT_VISION.md`; final acceptance is `docs/FINAL_ACCEPTANCE.md`; final repository/recovery handover is `docs/FINAL_HANDOVER.md`.
 
+### T-0165 presentation continuation
+
+The visual presentation chain is **Notion App Design → `DESIGN.md` → `docs/PRESENTATION_BRAND.md` → `presentation/premium/brand.config.json` → `presentation/premium/deck.html`**. Notion is visual evidence, not an automatic product specification. Any future app-design change must be checked against the presentation brand contract and deck before export.
+
 ## 2. Accepted product state
 
 T-0042 concluded **ACCEPT** with GitHub issues #1-#6 at **6/6 PASS**, all major binding PRODUCT_VISION capabilities accepted, and zero unresolved Critical/Major technical findings.

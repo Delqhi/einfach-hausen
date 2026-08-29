@@ -6,6 +6,10 @@ Diese Datei beschreibt die langlebigen Produktbeziehungen hinter der bewusst ein
 
 Komplexität gehört in die Technik, nicht in die Benutzeroberfläche. Ein Eigentümer soll immer in Alltagssprache starten können: **Was möchtest du erledigen?** Ein professioneller Anbieter hat **ein Konto** und erweitert darin seine Tätigkeiten und Leistungen.
 
+### Visuelle / Präsentations-Source-of-Truth
+
+Für T-0165 gilt die Kette **Notion App Design → `DESIGN.md` → `docs/PRESENTATION_BRAND.md` → `presentation/premium/brand.config.json` → `presentation/premium/deck.html`**. Notion ist visuelle Evidence, nicht automatisch fachliche Produktspezifikation. Änderungen am App-Design müssen daher auch gegen Presentation Brand und Präsentation geprüft werden; Owner und Pro bleiben auf derselben hellen visuellen Foundation.
+
 ## Kernmodell
 
 ![Plattformarchitektur](diagrams/platform-architecture.svg)

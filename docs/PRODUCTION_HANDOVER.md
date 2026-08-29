@@ -4,6 +4,10 @@
 
 This document is the canonical **production operations** continuation point. Repository/agent continuation starts at [`NEXT_AGENT.md`](NEXT_AGENT.md). All agents share one engineering goal and one transactional taskplan; remaining release-wide work is strictly T-0042 Final Acceptance followed by T-0043 Final Convergence/Handover unless acceptance creates a canonical remediation task.
 
+### T-0165 visual/presentation contract
+
+Presentation work follows **Notion App Design → `DESIGN.md` → `docs/PRESENTATION_BRAND.md` → `presentation/premium/brand.config.json` → `presentation/premium/deck.html`**. Notion is a visual reference, not automatic product truth. The presentation uses the repository's real logo asset unchanged, keeps Owner and Pro on the same light visual foundation, uses a 3px phone frame (5px maximum), and treats dark slides as targeted accents. Any future app-design change must be checked through this chain before a new deck export.
+
 ## 0. Latest continuation checkpoint — 2026-08-25
 
 **Canonical next-agent entry:** [`NEXT_AGENT.md`](NEXT_AGENT.md).

@@ -1,0 +1,36 @@
+{
+  "brand": {
+    "colors": {
+      "primary": "#176B45",
+      "secondary": "#123C2A",
+      "canvas": "#F7F8F7",
+      "surface": "#FFFFFF",
+      "surfaceMuted": "#F2F4F2",
+      "text": "#171A18",
+      "muted": "#66706A",
+      "border": "#E4E8E5",
+      "accent": "#238454"
+    },
+    "logo": {
+      "src": "assets/branding/einfachhausen-mark.svg",
+      "source": "../../public/brand/einfachhausen-mark.svg",
+      "variant": "original",
+      "heroHeight": 60,
+      "footerHeight": 26,
+      "maxWidth": 188,
+      "safeArea": 8,
+      "darkMode": "surface"
+    }
+  },
+  "devices": {
+    "phone": {
+      "framePx": 3
+    }
+  },
+  "rhythm": {
+    "darkSlides": [1, 11, 15]
+  },
+  "qa": {
+    "maxPhoneFramePx": 5
+  }
+}
