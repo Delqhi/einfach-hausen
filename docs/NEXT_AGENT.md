@@ -67,3 +67,10 @@ No `git reset --hard`/`clean`/force-push; no direct Mac→OCI file copies for so
 (GitHub is the transfer boundary); no production DB/user mutations for tests; never print
 `/etc/einfach-hausen.env`, service keys or user secrets; no invented 1:1 visual claims;
 no DONE without fresh evidence.
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0169
+updated: 2026-08-29T06:11:34+00:00
+actor: local-agent
+evidence-sha256: 8a26c7d17a8ec5b52526fb9c2fb1f91e86ba8f1503952d8365e2d2aafe1a1f42
+-->

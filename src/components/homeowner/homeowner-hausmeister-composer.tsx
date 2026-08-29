@@ -102,7 +102,7 @@ export function HomeownerHausmeisterComposer({
       <div className="agent-actions">
         <label className="icon-action" htmlFor={fileId} title="Foto, Video oder Sprachnachricht hinzufügen">
           <Camera size={19} aria-hidden="true" />
-          <span>Medien</span>
+          <span>Foto</span>
           <input
             id={fileId}
             name="photo"
@@ -119,7 +119,7 @@ export function HomeownerHausmeisterComposer({
           aria-label={listening ? 'Spracheingabe beenden' : speechSupported ? 'Spracheingabe starten' : 'Spracheingabe nicht verfügbar; Alternativen anzeigen'}
         >
           {listening ? <Square size={18} aria-hidden="true" /> : <Mic size={19} aria-hidden="true" />}
-          <span>{listening ? 'Stop' : speechSupported ? 'Sprechen' : 'Nur Text'}</span>
+          <span>{listening ? 'Stopp' : speechSupported ? 'Sprache' : 'Nur Text'}</span>
         </button>
         <button className="send-action" type="submit" disabled={offline || text.trim().length < 4}>
           <Send size={18} aria-hidden="true" />

@@ -313,7 +313,7 @@ await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Weiter'}),/\/app\/on
 await waitText(buyer,'Wie dürfen wir dich erreichen?');
 await buyer.getByRole('button',{name:'Überspringen'}).click();
 await Promise.all([buyer.waitForURL('**/app?onboarding=done'),buyer.waitForLoadState('load')]);
-await waitText(buyer,'Was ist bei deinem Haus gerade wichtig?');
+await waitText(buyer,'Frag einfachhausen');
 if(await buyer.locator('.owner-onboarding-banner').count())throw new Error('Onboarding banner still shown after completion');
 await buyer.reload(); if(await buyer.locator('.owner-onboarding-banner').count())throw new Error('Onboarding state did not persist after reload');
 // 12) Hausakte kann kontrolliert übergeben werden, private Vorgänge bleiben beim bisherigen Eigentümer.

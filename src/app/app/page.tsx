@@ -1,108 +1,86 @@
 import Link from 'next/link';
-import { AlertTriangle, ArrowRight, CalendarDays, CheckCircle2, House, MessageCircle, ShieldCheck, Wrench } from 'lucide-react';
-import { AppShell } from '@/components/shell';
 import { HomeownerHausmeisterComposer } from '@/components/homeowner/homeowner-hausmeister-composer';
+import { AppShell } from '@/components/shell';
+import { ArrowRightThin, BookThinIcon, CalendarCheckThinIcon, ChatRoundIcon, NotfallSirenIcon, PersonSmallIcon, RobotIcon } from '@/components/icons';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { dateLabel } from '@/lib/format';
 
 export default async function Dashboard() {
   const user = await requireUser('homeowner');
   const profile = db.prepare('SELECT address,postcode,onboarding_step FROM homeowner_profiles WHERE user_id=?').get(user.id) as any;
   const onboardingPending = profile?.onboarding_step && profile.onboarding_step !== 'done';
-  const nextAppointment = db.prepare(`SELECT a.*,j.title,p.business_name FROM appointments a JOIN jobs j ON j.id=a.job_id JOIN provider_profiles p ON p.user_id=a.provider_id WHERE a.homeowner_id=? AND a.status='confirmed' AND datetime(a.start_at)>=datetime('now') ORDER BY a.start_at LIMIT 1`).get(user.id) as any;
-  const openOffer = db.prepare(`SELECT id,title FROM jobs WHERE homeowner_id=? AND request_kind='service' AND status='quoted' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as any;
-  const activeJob = db.prepare(`SELECT id,title,status FROM jobs WHERE homeowner_id=? AND request_kind='service' AND status IN ('accepted','in_progress') ORDER BY updated_at DESC LIMIT 1`).get(user.id) as any;
-  const dueTask = db.prepare(`SELECT id,title,due_date FROM maintenance_tasks WHERE homeowner_id=? AND status='open' AND due_date<=date('now','+45 day') ORDER BY due_date LIMIT 1`).get(user.id) as any;
-  const hasNextThings = Boolean(openOffer || nextAppointment || dueTask || activeJob);
+  const activeJobs = (db.prepare(`SELECT COUNT(*) c FROM jobs WHERE homeowner_id=? AND status NOT IN ('completed','cancelled')`).get(user.id) as {c:number}).c;
+  const savedContacts = (db.prepare('SELECT COUNT(*) c FROM homeowner_contacts WHERE homeowner_id=?').get(user.id) as {c:number}).c;
 
   return (
     <AppShell role="homeowner" active="/app" title="Mein Zuhause" subtitle="Dein Haus-Copilot">
-      <div className="owner-dashboard">
-        <header className="owner-dashboard-intro">
-          <span className="soft-kicker">Mein Zuhause</span>
-          <h1>Hallo, {user.first_name}.</h1>
-          <p><House aria-hidden="true" /> {profile?.address || profile?.postcode || 'Hausprofil noch nicht vollständig'}</p>
-        </header>
-
+      <div className="own-dash ehn-dash">
         {onboardingPending && (
-          <section className="owner-onboarding-banner" aria-label="Einrichtung unvollständig">
+          <section className="owner-onboarding-banner ehn-onboard-banner" aria-label="Einrichtung unvollständig">
             <p>Du hast die Ersteinrichtung noch nicht abgeschlossen.</p>
             <a href="/app/onboarding">Jetzt weiter einrichten</a>
           </section>
         )}
 
-        <section className="owner-copilot" aria-labelledby="owner-copilot-title">
-          <div className="owner-copilot-copy">
-            <span>Hausmeister</span>
-            <h2 id="owner-copilot-title">Was ist bei deinem Haus gerade wichtig?</h2>
-            <p>Schreib, sprich oder zeig per Foto, was los ist. Wir klären zuerst dein Anliegen. Einen Ansprechpartner oder Auftrag startest du nur, wenn du das ausdrücklich auswählst.</p>
-          </div>
-          <div id="dashboard-composer" className="owner-dashboard-composer">
-            <HomeownerHausmeisterComposer />
-          </div>
-          <div className="owner-copilot-meta">
-            <span><ShieldCheck aria-hidden="true" /> Kein Auftrag ohne deine Freigabe</span>
-            <div>
-              <Link href="/app/consultation"><MessageCircle aria-hidden="true" /> Direkt einen Menschen fragen</Link>
-              <Link href="/app/emergency"><AlertTriangle aria-hidden="true" /> Dringender Notfall</Link>
+        <section className="qa-row" aria-label="Schnellaktionen">
+          <a className="qa-card" href="#dashboard-composer">
+            <div className="qa-icon qa-dark"><ChatRoundIcon variant="dark" /></div>
+            <strong>Auftrag</strong>
+            <span>Handwerker beauftragen und Angebote erhalten.</span>
+            <div className="qa-arrow"><ArrowRightThin /></div>
+          </a>
+          <Link className="qa-card" href="/app/consultation">
+            <div className="qa-icon"><ChatRoundIcon variant="light" /></div>
+            <strong>Beratung</strong>
+            <span>Fachliche Hilfe und Empfehlungen.</span>
+            <div className="qa-arrow"><ArrowRightThin /></div>
+          </Link>
+          <Link className="qa-card qa-alert" href="/app/emergency">
+            <div className="qa-icon"><NotfallSirenIcon /></div>
+            <strong>Notfall</strong>
+            <span>Schnelle Hilfe in dringenden Fällen.</span>
+            <div className="qa-arrow"><ArrowRightThin /></div>
+          </Link>
+        </section>
+
+        <section className="ki-card" aria-labelledby="owner-copilot-title">
+          <div className="ki-head">
+            <div className="ki-robot"><RobotIcon /></div>
+            <div className="ki-title-row">
+              <h2 id="owner-copilot-title">Frag einfachhausen</h2>
+              <span className="ki-badge">KI</span>
             </div>
+            <Link className="ki-more" href="/app/hausmeister" aria-label="Hausmeister-Assistent öffnen"><ArrowRightThin /></Link>
+          </div>
+          <p className="ki-text">Schilder uns dein Problem. Wir bringen dich mit dem richtigen Ansprechpartner in Kontakt oder willst du direkt Angebote vergleichen?</p>
+          <div id="dashboard-composer" className="ki-input-row ehn-composer">
+            <HomeownerHausmeisterComposer starterHint="Was ist los bei dir?" />
           </div>
         </section>
 
-        <section className="owner-next-section" aria-labelledby="owner-next-title">
-          <div className="owner-section-heading">
-            <div>
-              <span>Als Nächstes</span>
-              <h2 id="owner-next-title">Nur das, was jetzt zählt.</h2>
-            </div>
-            <Link href="/app/jobs">Alle Vorgänge</Link>
-          </div>
-
-          {hasNextThings ? (
-            <div className="owner-next-list">
-              {openOffer && (
-                <Link href={`/app/jobs/${openOffer.id}`} className="owner-next-row">
-                  <span className="owner-next-icon"><ShieldCheck aria-hidden="true" /></span>
-                  <span className="owner-next-copy"><small>Entscheidung offen</small><strong>{openOffer.title}</strong><span>Angebote vergleichen und bewusst auswählen.</span></span>
-                  <ArrowRight aria-hidden="true" />
-                </Link>
-              )}
-              {nextAppointment && (
-                <Link href={`/app/jobs/${nextAppointment.job_id}`} className="owner-next-row">
-                  <span className="owner-next-icon"><CalendarDays aria-hidden="true" /></span>
-                  <span className="owner-next-copy"><small>Nächster Termin · {dateLabel(nextAppointment.start_at)}</small><strong>{nextAppointment.title}</strong><span>{nextAppointment.business_name}</span></span>
-                  <ArrowRight aria-hidden="true" />
-                </Link>
-              )}
-              {dueTask && (
-                <Link href="/app/year" className="owner-next-row">
-                  <span className="owner-next-icon"><Wrench aria-hidden="true" /></span>
-                  <span className="owner-next-copy"><small>Wartung · {dateLabel(dueTask.due_date)}</small><strong>{dueTask.title}</strong><span>In deinem Hausjahresplan prüfen.</span></span>
-                  <ArrowRight aria-hidden="true" />
-                </Link>
-              )}
-              {activeJob && (
-                <Link href={`/app/jobs/${activeJob.id}`} className="owner-next-row">
-                  <span className="owner-next-icon"><Wrench aria-hidden="true" /></span>
-                  <span className="owner-next-copy"><small>{activeJob.status === 'in_progress' ? 'In Arbeit' : 'Gebucht'}</small><strong>{activeJob.title}</strong><span>Status, Termin und Ansprechpartner ansehen.</span></span>
-                  <ArrowRight aria-hidden="true" />
-                </Link>
-              )}
-            </div>
-          ) : (
-            <div className="owner-calm-state" role="status">
-              <CheckCircle2 aria-hidden="true" />
-              <div><strong>Gerade ist nichts dringend.</strong><p>Wenn etwas auftaucht, beschreib es oben einfach in deinen eigenen Worten.</p></div>
-            </div>
-          )}
-        </section>
-
-        <div className="owner-house-link">
-          <House aria-hidden="true" />
-          <div><strong>Deine Hausakte</strong><p>Technik, Wartungen, Dokumente, Historie und Ansprechpartner bleiben dauerhaft beim Haus.</p></div>
-          <Link href="/app/home">Mein Haus öffnen <ArrowRight aria-hidden="true" /></Link>
+        <h3 className="own-section-title">Mein Zuhause im Überblick</h3>
+        <div className="overview-grid">
+          <Link className="ov-card" href="/app/jobs">
+            <div className="ov-icon"><CalendarCheckThinIcon /></div>
+            <div className="ov-text"><strong>Aktuelle Aufträge</strong><span>{activeJobs} aktiv</span></div>
+            <ArrowRightThin />
+          </Link>
+          <Link className="ov-card" href="/app/partners">
+            <div className="ov-icon"><PersonSmallIcon /></div>
+            <div className="ov-text"><strong>Ansprechpartner</strong><span>{savedContacts} gespeichert</span></div>
+            <ArrowRightThin />
+          </Link>
         </div>
+        <Link className="ov-card ov-wide" href="/app/home/history">
+          <div className="ov-icon ov-icon-lg"><BookThinIcon /></div>
+          <div className="ov-text"><strong>Haus-Historie ansehen</strong><span>Alle Ereignisse, Maßnahmen und Dokumente rund um dein Zuhause.</span></div>
+          <ArrowRightThin />
+        </Link>
+
+        <Link className="fab-plus" href="/app/hausmeister" aria-label="Neue Anfrage starten">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" /></svg>
+        </Link>
+        <div className="home-indicator" aria-hidden="true" />
       </div>
     </AppShell>
   );

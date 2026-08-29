@@ -2,8 +2,19 @@ import Link from 'next/link';
 import { Bell, HelpCircle, Menu } from 'lucide-react';
 import { Logo } from './logo';
 import { BottomNav, isNavActive, ownerNav, providerNav } from './bottom-nav';
+import { OwnerMobileMenu } from './owner-menu';
+import { BellRoundedIcon } from './icons';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
+
+function CenterLogo({ href }: { href: string }) {
+  return (
+    <Link className="ehn-center-logo" href={href} aria-label="einfachhausen – Startseite">
+      <svg className="ehn-center-logo-house" width="86" height="58" viewBox="0 0 120 88" fill="none" aria-hidden="true"><path d="M38 34 L74 12 L96 26 V82 H52" stroke="#00565b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      <span className="ehn-center-logo-text"><span className="own-logo-line1">einfach</span><span className="own-logo-line2">hausen</span></span>
+    </Link>
+  );
+}
 
 export async function AppShell({ role, active, children, title, subtitle }: { role:'homeowner'|'provider'; active:string; children:React.ReactNode; title?:string; subtitle?:string }) {
   const pro = role === 'provider';
@@ -13,7 +24,16 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
   const profileHref=pro?'/pro/profile':'/app/profile';
   const initials=user?`${user.first_name?.[0]||''}${user.last_name?.[0]||''}`.toUpperCase():'EH';
 
-  return <main className={pro?'app-page app-shell-v3 pro-theme':'app-page app-shell-v3'}>
+  const mobileMenu = pro ? (
+    <details className="mobile-menu">
+      <summary aria-label="Hauptmenü öffnen"><Menu size={20}/><span>Menü</span></summary>
+      <nav className="mobile-menu-panel" aria-label="Hauptnavigation">{items.map(([href,Icon,label])=><Link key={href} href={href} className={isNavActive(active,href)?'active':''}><Icon size={18}/><span>{label}</span></Link>)}</nav>
+    </details>
+  ) : (
+    <OwnerMobileMenu active={active} />
+  );
+
+  return <main className={pro?'app-page app-shell-v3 pro-theme':'app-page app-shell-v3 ehn-owner'}>
     <div className="workspace-shell">
       <aside className="desktop-sidebar">
         <details className="app-menu">
@@ -30,16 +50,20 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
       </aside>
 
       <div className="workspace-main">
-        <header className="topbar-v3">
+        <header className={pro?'topbar-v3':'topbar-v3 ehn-owner-top'}>
+          {mobileMenu}
           <div className="mobile-brand"><Logo inverse={pro}/></div>
-          <details className="mobile-menu">
-            <summary aria-label="Hauptmenü öffnen"><Menu size={20}/><span>Menü</span></summary>
-            <nav className="mobile-menu-panel" aria-label="Hauptnavigation">{items.map(([href,Icon,label])=><Link key={href} href={href} className={isNavActive(active,href)?'active':''}><Icon size={18}/><span>{label}</span></Link>)}</nav>
-          </details>
+          {!pro&&<CenterLogo href="/app"/>}
           <div className="page-context"><strong>{title || (pro?'Partnerbereich':'Einfach Hausen')}</strong><small>{subtitle || (pro?'Aufträge organisieren':'Alles rund um dein Zuhause')}</small></div>
-          <div className="top-actions"><Link className="notification-link" href="/notifications" aria-label={unread?`${unread} ungelesene Benachrichtigungen`:'Benachrichtigungen'}><Bell size={18}/>{unread>0&&<span>{unread>99?'99+':unread}</span>}</Link><Link href={profileHref} className="top-user-avatar" aria-label="Profil">{initials}</Link></div>
+          <div className="top-actions">
+            <Link className="notification-link" href="/notifications" aria-label={unread?`${unread} ungelesene Benachrichtigungen`:'Benachrichtigungen'}>
+              {pro?<Bell size={18}/>:<BellRoundedIcon/>}
+              {unread>0&&(pro?<span>{unread>99?'99+':unread}</span>:<span className="ehn-bell-dot" aria-hidden="true"/>)}
+            </Link>
+            <Link href={profileHref} className="top-user-avatar" aria-label="Profil">{initials}</Link>
+          </div>
         </header>
-        <section className="screen-v3">{children}</section>
+        <section className={`screen-v3${!pro && active === "/app" ? " ehn-dash-screen" : ""}`}>{children}</section>
       </div>
       <BottomNav role={role} active={active}/>
     </div>

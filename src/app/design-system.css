@@ -416,3 +416,425 @@ button,a,input,textarea,select{touch-action:manipulation}
 .auth-card>small a{color:var(--eh-accent);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .auth-card .alert{border-radius:12px;line-height:1.45}
 @media(max-width:520px){.auth-page{align-items:start;padding:calc(24px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom))}.auth-card{border-radius:20px;padding:24px 20px;box-shadow:0 12px 36px rgba(18,60,42,.07)}}
+
+/* =========================================================================
+   T-0005 · Notion-1:1 owner convergence (dashboard, drawer, welcome, role,
+   register). Reference: public/notion/notion-originals (390px first).
+   Palette measured from the originals:
+   cream #fbf9f7 · drawer #f5f3f1 · ink #16333d · teal #066a6f (actions)
+   deep teal #02545a (FAB/send/crown) · mint surface #e8f0ec · mint icon #eaf4ee
+   ========================================================================= */
+:root{
+  --ehn-cream:#fbf9f7;
+  --ehn-cream-2:#f5f3f1;
+  --ehn-ink:#16333d;
+  --ehn-teal:#066a6f;
+  --ehn-teal-deep:#02545a;
+  --ehn-mint:#e8f0ec;
+  --ehn-mint-soft:#eaf4ee;
+  --ehn-muted:#5b6d73;
+}
+
+/* ---------- owner app shell (mobile-first) ---------- */
+.app-shell-v3.ehn-owner{background:var(--ehn-cream);min-height:100dvh}
+.ehn-owner .side-menu{background:var(--ehn-cream-2)}
+.ehn-owner .ehn-center-logo{display:none}
+.app-shell-v3.ehn-owner .top-user-avatar{background:#e9e2d2;color:var(--ehn-ink);font-weight:800;font-size:13px}
+
+@media(max-width:920px){
+  .app-shell-v3.ehn-owner{background:var(--ehn-cream)}
+  .app-shell-v3.ehn-owner .mobile-brand{display:none}
+  .app-shell-v3.ehn-owner .topbar-v3{background:var(--ehn-cream);border-bottom:0;backdrop-filter:none;height:64px;padding:8px 12px 4px;position:relative;justify-content:space-between;gap:8px}
+  .app-shell-v3.ehn-owner .ehn-center-logo{display:flex;position:absolute;left:50%;top:6px;transform:translateX(-50%);align-items:center;gap:2px;text-decoration:none}
+  .app-shell-v3.ehn-owner .bottom-nav{display:none}
+  .app-shell-v3.ehn-owner .screen-v3{padding:6px 14px 110px;max-width:none}
+  .app-shell-v3.ehn-owner .screen-v3.ehn-dash-screen{padding:0 0 132px}
+  .ehn-center-logo-text{display:flex;flex-direction:column;line-height:.95}
+  .ehn-center-logo .own-logo-line1{font-size:17px;font-weight:800;color:var(--ehn-ink);letter-spacing:-.4px}
+  .ehn-center-logo .own-logo-line2{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:16px;color:#00565b;margin-left:14px}
+  .app-shell-v3 .ehn-owner-top .top-actions{gap:8px;order:4}
+  .app-shell-v3 .ehn-owner-top .notification-link{position:relative;width:42px;height:42px;border-radius:15px;background:#fffdfa;box-shadow:0 2px 8px rgba(22,51,61,.07);display:grid;place-items:center;color:var(--ehn-ink)}
+  .app-shell-v3 .ehn-owner-top .notification-link:hover{background:#fffdfa}
+  .app-shell-v3 .ehn-owner-top .notification-link .ehn-bell-dot{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:#2e9e63}
+  .app-shell-v3 .ehn-owner-top .top-user-avatar{width:38px;height:38px}
+}
+
+/* ---------- burger + drawer (Menuepunkte_01 / menuepunkte_offen) ---------- */
+.ehn-menu{display:none}
+@media(max-width:920px){
+  .app-shell-v3.ehn-owner .ehn-menu{display:block;order:0;position:static}
+  .app-shell-v3 .ehn-menu summary{list-style:none;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;color:var(--ehn-ink);cursor:pointer;padding:0;background:transparent;position:relative;z-index:70}
+  .ehn-menu[open] summary svg{opacity:0}
+  .ehn-menu summary::-webkit-details-marker{display:none}
+  .ehn-menu summary span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .ehn-drawer{transform:none;width:min(88%,360px);background:var(--ehn-cream-2);border-radius:0 26px 26px 0;box-shadow:16px 0 50px rgba(22,51,61,.12);padding:26px 20px 18px;z-index:60}
+}
+.ehn-acc{display:flex;flex-direction:column;gap:2px;margin-top:22px}
+.ehn-acc-sec>summary{list-style:none;cursor:pointer}
+.ehn-acc-sec>summary::-webkit-details-marker{display:none}
+.ehn-acc-chevron{display:grid;place-items:center;width:28px;height:28px}
+.ehn-acc-chevron svg{transition:transform .18s ease;transform:rotate(90deg)}
+.ehn-acc-sec.ehn-acc-open .ehn-acc-head .ehn-acc-chevron svg{transform:rotate(-90deg)}
+.ehn-acc-head{padding:12px 2px}
+.ehn-acc-body{display:flex;flex-direction:column;padding:2px 0 12px 8px}
+.ehn-acc-row{margin:0;padding:0;border:0}
+.ehn-acc-link{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;padding:8px 6px;font-family:inherit;font-size:14.5px;font-weight:600;color:#33484f;text-align:left;cursor:pointer;border-radius:10px}
+.ehn-acc-link:hover{background:rgba(22,51,61,.045)}
+.ehn-acc-link.ehn-acc-active{color:var(--ehn-teal);font-weight:800}
+.ehn-acc-ico{display:grid;place-items:center;width:20px;flex:0 0 20px;color:#33484f}
+.ehn-acc-ico svg{display:block}
+
+/* ---------- owner dashboard (Homesceen_EH_02) ---------- */
+.ehn-dash{padding-bottom:8px}
+.ehn-onboard-banner{margin:10px 16px 0;background:var(--ehn-mint);border:0;border-radius:16px;padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.ehn-onboard-banner p{margin:0;font-size:13px;font-weight:600;color:var(--ehn-ink)}
+.ehn-onboard-banner a{color:var(--ehn-teal);font-weight:800;font-size:13px}
+.qa-card,.ov-card,.ki-card,.fab-plus{color:inherit}
+.fab-plus{background:var(--ehn-teal-deep);border:5px solid var(--ehn-cream)}
+.ki-send,.ehn-composer .send-action{background:var(--ehn-teal-deep)}
+.app-shell-v3 .screen-v3 .qa-card{text-decoration:none}
+.app-shell-v3 .screen-v3 .ov-card{text-decoration:none}
+
+/* composer inside the KI card: white pill input + round send + Foto/Sprache chips */
+.ehn-composer{margin-top:14px}
+.ehn-owner .ehn-composer .agent-composer{position:relative;display:block;background:transparent;border:0;padding:0;margin:0;box-shadow:none}
+.ehn-owner .ehn-composer .agent-composer textarea{width:100%;height:54px;min-height:54px;border:0;border-radius:30px;background:#fffdfa;box-shadow:0 5px 18px rgba(22,51,61,.05);padding:17px 64px 0 22px;font-size:15px;line-height:1.3;color:var(--ehn-ink);resize:none;margin:0}
+.ehn-owner .ehn-composer .agent-composer textarea:focus{outline:none;box-shadow:0 5px 18px rgba(22,51,61,.05),0 0 0 2px rgba(2,84,90,.25)}
+.ehn-owner .ehn-composer .agent-composer .agent-actions{display:flex;align-items:center;gap:10px;margin-top:12px}
+.ehn-owner .ehn-composer .agent-composer .icon-action{display:inline-flex;align-items:center;gap:8px;background:#fffdfa;border:0;border-radius:24px;padding:11px 18px;font-size:13.5px;font-weight:600;color:var(--ehn-ink);cursor:pointer;box-shadow:0 2px 8px rgba(22,51,61,.05)}
+.ehn-owner .ehn-composer .agent-composer .icon-action input{position:absolute;width:1px;height:1px;opacity:0}
+.ehn-owner .ehn-composer .agent-composer .icon-action.recording{box-shadow:0 0 0 2px rgba(201,32,32,.35)}
+.ehn-owner .ehn-composer .agent-composer .send-action{position:absolute;top:3px;right:5px;width:48px;height:48px;border-radius:50%;border:0;background:var(--ehn-teal-deep);color:#fff;display:grid;place-items:center;cursor:pointer}
+.ehn-owner .ehn-composer .agent-composer .send-action:disabled{opacity:.55;cursor:default}
+.ehn-owner .ehn-composer .agent-composer .send-action span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ehn-owner .ehn-composer .agent-composer .owner-composer-status{margin:8px 4px 0;font-size:11.5px;color:var(--ehn-muted)}
+.ki-more{display:grid;place-items:center;width:34px;height:34px;border-radius:50%}
+
+/* ---------- welcome (LogIn_oder_Neu) ---------- */
+.wl-page{min-height:100dvh;background:var(--ehn-cream);display:flex;flex-direction:column;align-items:center;padding:26px 20px 30px;text-align:center}
+.wl-logo{display:flex;flex-direction:column;align-items:center;gap:0}
+.wl-logo-text{display:flex;flex-direction:column;line-height:.9;margin-top:-4px}
+.wl-logo-text .wl-1{font-size:31px;font-weight:800;letter-spacing:-.6px;color:var(--ehn-ink)}
+.wl-logo-text .wl-2{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:29px;color:#00565b;margin-left:26px}
+.wl-tagline{font-size:13.5px;color:var(--ehn-ink);margin:6px 0 0;font-weight:600}
+.wl-tagline span{color:#0f6a66;font-weight:700}
+.wl-title{font-size:25px;font-weight:800;color:var(--ehn-ink);margin:26px 0 0;letter-spacing:-.3px}
+.wl-sub{font-size:14.5px;line-height:1.5;color:#3f545c;margin:10px 0 0;max-width:330px}
+.wl-hero{width:calc(100% + 40px);max-width:none;margin:14px -20px 0;display:block}
+.wl-cards{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.wl-card{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid rgba(22,51,61,.04);border-radius:20px;padding:18px 16px;text-align:left;box-shadow:0 6px 18px rgba(22,51,61,.05)}
+.wl-card-mint{background:#f1f5f2;border-color:transparent}
+.wl-card-icon{width:54px;height:54px;border-radius:50%;background:#dce8e0;display:grid;place-items:center;flex:0 0 54px}
+.wl-card-text{flex:1;display:flex;flex-direction:column;gap:3px}
+.wl-card-text strong{font-size:16.5px;font-weight:800;color:var(--ehn-ink)}
+.wl-card-text span{font-size:13px;color:var(--ehn-muted);line-height:1.4}
+.wl-card-arrow{display:grid;place-items:center}
+.wl-benefits{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+.wl-benefit{display:flex;flex-direction:column;align-items:center;gap:4px}
+.wl-benefit svg{margin-bottom:2px}
+.wl-benefit strong{font-size:11.5px;font-weight:800;color:var(--ehn-ink)}
+.wl-benefit span{font-size:10.5px;color:var(--ehn-muted);line-height:1.35;max-width:104px}
+.wl-support{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f1f5f2;border-radius:20px;padding:16px 18px;margin-top:24px;text-align:left}
+.wl-support-icon{width:44px;height:44px;border-radius:50%;background:#dce8e0;display:grid;place-items:center}
+
+/* ---------- role (first_action) ---------- */
+.role2-page{min-height:100dvh;background:var(--ehn-cream);display:flex;flex-direction:column;padding:26px 18px 30px;align-items:center}
+.role2-logo{display:flex;align-items:center;gap:4px}
+.role2-logo-word{display:flex;align-items:baseline;line-height:1}
+.role2-logo-green{font-size:24px;font-weight:800;letter-spacing:-.5px;color:#00565b}
+.role2-logo-ink{font-size:24px;font-weight:800;letter-spacing:-.5px;color:var(--ehn-ink)}
+.role2-title{font-size:31px;font-weight:800;color:#0e2f43;text-align:center;line-height:1.12;letter-spacing:-.5px;margin:26px 0 0}
+.role2-sub{font-size:14.5px;line-height:1.5;color:#3f545c;text-align:center;margin:12px 0 0}
+.role2-owner-card{position:relative;width:100%;background:#fff;border-radius:24px;margin-top:22px;overflow:hidden;box-shadow:0 10px 30px rgba(22,51,61,.07);display:flex;flex-direction:column}
+.role2-owner-photo{position:absolute;top:0;right:0;bottom:38%;width:56%;pointer-events:none}
+.role2-owner-photo img{width:100%;height:100%;object-fit:cover;object-position:center}
+.role2-owner-copy{position:relative;z-index:1;padding:24px 20px 18px;max-width:62%}
+.role2-owner-copy h2{font-size:26px;line-height:1.1;font-weight:800;color:#0b5c62;letter-spacing:-.4px;margin:0}
+.role2-owner-copy h2::after{content:"";display:block;width:26px;height:3px;border-radius:2px;background:#0b5c62;margin-top:10px;opacity:.55}
+.role2-owner-copy p{font-size:13px;line-height:1.5;color:#3f545c;margin:12px 0 0}
+.role2-owner-cta{display:inline-flex;align-items:center;gap:9px;margin-top:16px;background:var(--ehn-teal);color:#fff;border:0;border-radius:999px;padding:12px 18px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 8px 20px rgba(6,106,111,.28)}
+.role2-owner-cta:active{transform:scale(.98)}
+.role2-owner-cta-house{display:grid;place-items:center}
+.role2-owner-cta-arrow{margin-left:2px}
+.role2-owner-benefits{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 12px 18px;border-top:1px solid #eef2f0}
+.role2-benefit{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.role2-benefit strong{font-size:10px;font-weight:800;color:var(--ehn-ink);line-height:1.25}
+.role2-benefit span{font-size:8.5px;color:var(--ehn-muted);line-height:1.3}
+.role2-pro-row{width:100%;display:flex;align-items:center;gap:14px;background:#f1f5f2;border:0;border-radius:20px;padding:18px 16px;margin-top:16px;text-align:left;cursor:pointer;font-family:inherit}
+.role2-pro-icon{width:52px;height:52px;border-radius:50%;background:#dce8e0;display:grid;place-items:center;flex:0 0 52px}
+.role2-pro-arrow{display:grid;place-items:center}
+.role2-trust{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;margin-top:22px}
+.role2-trust-icon{width:42px;height:42px;border-radius:50%;background:#dce8e0;display:grid;place-items:center;flex:0 0 42px}
+
+/* ---------- register (eigentumer.login) ---------- */
+.ehn-reg-page{min-height:100dvh;background:var(--ehn-cream);display:flex;flex-direction:column;align-items:center;padding:24px 16px 30px}
+.ehn-reg-head{position:relative;width:100%;display:flex;flex-direction:column;align-items:center}
+.ehn-reg-back{position:absolute;left:2px;top:12px;display:grid;place-items:center;width:40px;height:40px;border-radius:14px;background:#fff;box-shadow:0 2px 8px rgba(22,51,61,.07)}
+.ehn-reg-hero{width:100%;max-width:430px;margin-top:18px}
+.ehn-reg-hero h1{font-size:30px;font-weight:800;color:var(--ehn-ink);line-height:1.12;letter-spacing:-.5px;margin:0}
+.ehn-reg-hero p{margin:12px 0 0;font-size:14px;line-height:1.55;color:#3f545c}
+.ehn-reg-page .green{color:#0b5c62;font-weight:800}
+.ehn-reg-form-section{width:100%;max-width:430px;margin-top:26px}
+.ehn-reg-form-section h2{text-align:center;font-size:20px;font-weight:800;color:var(--ehn-ink)}
+.ehn-reg-form{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.ehn-two{gap:10px}
+.ehn-field{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e3ece8;border-radius:14px;padding:14px 16px}
+.ehn-field input{border:0;outline:0;flex:1;font-size:14.5px;background:transparent;color:var(--ehn-ink);min-width:0;padding:0}
+.ehn-field input:focus{box-shadow:none}
+.ehn-field textarea{border:0;outline:0;flex:1;font-size:14px;background:transparent;color:var(--ehn-ink);min-width:0;resize:vertical;padding:0}
+.ehn-field-area{align-items:flex-start}
+.ehn-field-area svg{margin-top:2px}
+.ehn-field-hint{font-size:11px;color:var(--ehn-muted);white-space:nowrap}
+.ehn-field-file input[type="file"]{font-size:12px}
+.ehn-file-label{font-size:14px;font-weight:600;color:var(--ehn-ink);white-space:nowrap}
+.ehn-reg-form .btn.primary{background:var(--ehn-teal);border-radius:14px;min-height:54px;font-size:15.5px;font-weight:800;margin-top:6px}
+.ehn-reg-form .btn.primary:hover{background:#05575c}
+.ehn-reg-form .alert.error{background:#fdeeee;color:#8f1f1f;border-radius:12px;border:0;font-size:13px}
+.ehn-reg-page .auth-footer{font-size:14px}
+.sr-only-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* =========================================================================
+   T-0005 calibration pass 2 — order-proof overrides + reference geometry
+   (reference-measured @390: margins 20px, card gaps 8px, KI input h44,
+   overview cards h~85, drawer icon tiles ~46px)
+   ========================================================================= */
+
+/* ---------- register fields: row layout must win over global label rule ---------- */
+.ehn-field{flex-direction:row}
+
+/* ---------- order-proof owner shell overrides (homeowner.module.css loads last) ---------- */
+@media(max-width:920px){
+  main.app-page.ehn-owner header.topbar-v3{
+    height:62px;padding:8px 12px 4px;position:relative;justify-content:space-between;gap:8px;
+    background:var(--ehn-cream);border-bottom:0;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  }
+  main.app-page.ehn-owner .screen-v3.ehn-dash-screen{padding:0 0 128px!important;width:100%;max-width:none}
+  main.app-page.ehn-owner .bottom-nav{display:none!important}
+}
+main.app-page.ehn-owner{--owner-bg:var(--ehn-cream)}
+.app-shell-v3.ehn-owner .workspace-shell{background:var(--ehn-cream)}
+
+/* ---------- centered header logo (house right, wordmark overlapping) ---------- */
+@media(max-width:920px){
+  main.app-page.ehn-owner .ehn-center-logo{
+    display:block;position:absolute;left:50%;top:5px;transform:translateX(-50%);
+    width:152px;height:54px;
+  }
+  .ehn-center-logo-house{position:absolute;right:2px;top:0}
+  .ehn-center-logo-text{position:absolute;left:2px;bottom:1px;display:flex;flex-direction:column;line-height:1}
+  .ehn-center-logo .own-logo-line1{font-size:20px;font-weight:800;color:var(--ehn-ink);letter-spacing:-.4px;line-height:1}
+  .ehn-center-logo .own-logo-line2{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:19px;color:#00565b;margin-left:24px;line-height:1;margin-top:1px}
+}
+
+/* ---------- dashboard geometry (Homesceen_EH_02 @390) ---------- */
+@media(max-width:920px){
+  .qa-row{padding:12px 20px 0;gap:8px}
+  .qa-card{min-height:138px;padding:12px 8px 9px;border-radius:16px;gap:4px}
+  .qa-icon{width:42px;height:42px}
+  .qa-icon.qa-dark{background:var(--ehn-ink)}
+  .qa-card strong{font-size:14.5px}
+  .qa-card span{font-size:11px;line-height:1.32}
+  .qa-arrow{margin-top:auto}
+  .qa-arrow svg{width:13px;height:13px}
+  .ki-card{margin:10px 20px 0;padding:14px 12px 12px;border-radius:22px}
+  .ki-robot svg{width:48px;height:48px}
+  .ki-title-row h2{font-size:18px;white-space:nowrap}
+  .ki-badge{font-size:10px;padding:2px 7px;border-radius:6px}
+  .ki-text{margin:6px 0 0 62px;font-size:12px;line-height:1.42}
+  .ki-more{width:30px;height:30px}
+  .ki-more svg{width:14px;height:14px}
+  .ehn-composer{margin-top:10px}
+  .ehn-owner .ehn-composer .agent-composer textarea{height:46px;min-height:46px;border-radius:26px;padding:13px 54px 0 18px;font-size:13px}
+  .ehn-owner .ehn-composer .agent-composer .send-action{width:40px;height:40px;top:3px;right:3px}
+  .ehn-owner .ehn-composer .agent-composer .send-action svg{width:15px;height:15px}
+  .ehn-owner .ehn-composer .agent-composer .agent-actions{gap:8px;margin-top:8px}
+  .ehn-owner .ehn-composer .agent-composer .icon-action{padding:8px 13px;font-size:11.5px;gap:6px}
+  .ehn-owner .ehn-composer .agent-composer .icon-action svg{width:14px;height:14px}
+  .own-section-title{padding:18px 20px 0;font-size:17px}
+  .overview-grid{padding:10px 20px 0;gap:8px}
+  .ov-card{padding:12px 10px;gap:8px;border-radius:16px}
+  .ov-icon{width:46px;height:46px;flex-basis:46px}
+  .ov-icon svg{width:24px;height:24px}
+  .ov-icon-lg{width:54px;height:54px;flex-basis:54px}
+  .ov-text strong{font-size:13.5px}
+  .ov-text span{font-size:11px;margin-top:2px}
+  .ov-wide{width:calc(100% - 40px);margin:10px 20px 0;padding:14px 10px}
+  .ov-card svg:last-child{width:13px;height:13px;flex:0 0 13px}
+  .fab-plus{width:58px;height:58px;bottom:20px;border:5px solid var(--ehn-cream)}
+  .fab-plus svg{width:26px;height:26px}
+  .ehn-onboard-banner{margin:8px 20px 0}
+}
+
+/* ---------- drawer sizing (Menuepunkte @390) ---------- */
+@media(max-width:920px){
+  .ehn-drawer{padding:20px 18px 16px}
+  .ehn-drawer .sm-logo{width:128px;height:64px}
+  .ehn-drawer .sm-logo svg{width:66px;height:48px}
+  .ehn-drawer .sm-close{width:42px;height:42px;border-radius:12px}
+  .ehn-acc{margin-top:14px;gap:0}
+  .ehn-acc-head{padding:10px 2px;gap:14px}
+  .ehn-drawer .sm-icon{width:46px;height:46px;border-radius:14px}
+  .ehn-drawer .sm-label{font-size:16px;letter-spacing:-.2px}
+  .ehn-acc-body{padding:0 0 10px 6px}
+  .ehn-acc-link{padding:7px 6px;font-size:13px;gap:10px}
+  .ehn-drawer .sm-divider{margin:14px 0}
+  .ehn-drawer .sm-pro-card{padding:14px;border-radius:16px;gap:12px}
+  .ehn-drawer .sm-pro-icon{width:46px;height:46px}
+  .ehn-drawer .sm-pro-text strong{font-size:14px}
+  .ehn-drawer .sm-pro-text span{font-size:11.5px}
+  .ehn-drawer .sm-logout{padding:14px;font-size:15px;border-radius:12px;border-width:1.5px;margin-top:14px}
+  .ehn-drawer .sm-footer{font-size:11px;padding-top:16px}
+}
+
+/* ---------- welcome compression (fit 844 like LogIn_oder_Neu) ---------- */
+.wl-page{padding:22px 20px 24px}
+.wl-logo-text{line-height:1;margin-top:0;gap:1px}
+.wl-title{margin-top:18px;font-size:24px}
+.wl-sub{margin-top:8px;font-size:13.5px}
+.wl-hero{margin-top:10px}
+.wl-cards{gap:12px;margin-top:14px}
+.wl-card{padding:14px;border-radius:18px}
+.wl-card-icon{width:50px;height:50px;flex-basis:50px}
+.wl-card-text strong{font-size:15.5px}
+.wl-card-text span{font-size:12px}
+.wl-benefits{margin-top:16px;gap:8px}
+.wl-support{margin-top:16px;padding:13px 16px;border-radius:18px}
+
+/* ---------- role compression + owner card overlap fix ---------- */
+.role2-page{padding:22px 18px 24px}
+.role2-title{margin-top:18px;font-size:29px}
+.role2-sub{margin-top:10px;font-size:13.5px}
+.role2-owner-card{margin-top:16px;border-radius:22px}
+.role2-owner-photo{width:47%;bottom:34%}
+.role2-owner-copy{max-width:55%;padding:20px 4px 14px 18px}
+.role2-owner-copy h2{font-size:23px}
+.role2-owner-copy p{font-size:12px;margin-top:10px}
+.role2-owner-cta{margin-top:12px;padding:10px 14px;font-size:12.5px;gap:7px;white-space:nowrap}
+.role2-owner-benefits{padding:12px 10px 14px;gap:6px}
+.role2-pro-row{margin-top:12px;padding:15px 14px}
+.role2-pro-icon{width:48px;height:48px;flex-basis:48px}
+.role2-trust{margin-top:14px}
+
+/* =========================================================================
+   T-0005 calibration pass 3 — drawer full-bleed, header height 96,
+   chip labels, overview overflow, logo stacking fixes
+   ========================================================================= */
+
+/* ---------- KI chips keep their labels (module hides spans at <=420px) ---------- */
+main.app-page.ehn-owner .ehn-composer .agent-composer .icon-action span{display:inline}
+
+/* ---------- overview cards must not overflow the 2-col row ---------- */
+.ehn-owner .ov-card{min-width:0}
+.ehn-owner .ov-text{min-width:0}
+.ehn-owner .ov-text strong{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:920px){
+  .ehn-owner .ov-text strong{font-size:12.5px}
+}
+
+/* ---------- taller reference-style header (96px, items top-aligned) ---------- */
+@media(max-width:920px){
+  main.app-page.ehn-owner header.topbar-v3{height:96px;padding:12px 12px 0;align-items:flex-start}
+  main.app-page.ehn-owner .ehn-menu summary{margin-top:8px}
+  main.app-page.ehn-owner .ehn-owner-top .top-actions{margin-top:4px}
+  main.app-page.ehn-owner .ehn-center-logo{top:2px;width:172px;height:88px}
+  .ehn-center-logo-house{right:2px;top:0;width:118px;height:80px}
+  .ehn-center-logo-text{left:4px;bottom:4px}
+  .ehn-center-logo .own-logo-line1{font-size:26px}
+  .ehn-center-logo .own-logo-line2{font-size:24px;margin-left:34px;margin-top:2px}
+  main.app-page.ehn-owner .screen-v3.ehn-dash-screen{padding:0 0 128px}
+  main.app-page.ehn-owner .workspace-main{padding-top:max(44px, env(safe-area-inset-top));background:var(--ehn-cream)}
+  .qa-row{padding-top:14px}
+}
+
+/* ---------- drawer: full-bleed panel + wordmark stacking fix ---------- */
+@media(max-width:920px){
+  .ehn-drawer{width:100%;max-width:none;border-radius:0;box-shadow:none}
+  .ehn-drawer .own-logo-text{bottom:6px}
+  .ehn-drawer .own-logo-line1{font-size:22px;line-height:1.05;letter-spacing:-.4px}
+  .ehn-drawer .own-logo-line2{font-size:21px;line-height:1.05;margin-left:26px;margin-top:1px}
+  .ehn-drawer .sm-icon{width:48px;height:48px}
+  .ehn-drawer .sm-label{font-size:17px}
+  .ehn-acc-head{padding:11px 2px;gap:14px}
+  .ehn-acc-link{font-size:13px;padding:6px}
+}
+
+/* =========================================================================
+   T-0005 calibration pass 4 — overview fit, text metrics per reference
+   ========================================================================= */
+@media(max-width:920px){
+  .qa-card span{font-size:10px;line-height:1.25}
+  .ki-text{font-size:10.5px;line-height:1.4;margin-left:78px;margin-top:4px}
+  .ki-robot svg{width:40px;height:40px}
+  .overview-grid{padding:10px 20px 0;gap:8px}
+  .ehn-owner .ov-card{padding:10px 8px;gap:6px}
+  .ehn-owner .ov-icon{width:38px;height:38px;flex-basis:38px}
+  .ehn-owner .ov-icon svg{width:20px;height:20px}
+  .ehn-owner .ov-icon-lg{width:48px;height:48px;flex-basis:48px}
+  .ehn-owner .ov-text strong{font-size:11px}
+  .ehn-owner .ov-text span{font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ehn-owner .ov-card > svg:last-child{width:12px;height:12px;flex-basis:12px}
+  .own-section-title{font-size:16.5px;padding-top:16px}
+}
+
+/* =========================================================================
+   T-0005 calibration pass 5 — welcome + role rhythm per reference rows
+   ========================================================================= */
+.wl-page{padding:44px 20px 28px}
+.wl-title{margin-top:38px}
+.wl-sub{margin-top:10px}
+.wl-hero{margin-top:14px}
+.wl-cards{margin-top:18px}
+.wl-card{padding:15px 16px;border-radius:20px}
+.wl-card-icon{width:50px;height:50px;flex-basis:50px}
+.wl-benefits{margin-top:22px}
+.wl-support{margin-top:22px;padding:15px 18px}
+
+.role2-page{padding:40px 18px 24px}
+.role2-title{margin-top:40px;font-size:30px}
+.role2-sub{margin-top:16px;font-size:14px}
+.role2-owner-card{margin-top:28px}
+.role2-owner-photo{width:45%;bottom:32%}
+.role2-owner-copy{max-width:52%;padding:22px 2px 14px 20px}
+.role2-pro-row{margin-top:26px}
+.role2-trust{margin-top:38px}
+
+/* =========================================================================
+   T-0005 calibration pass 6 — welcome typography, role card height
+   ========================================================================= */
+.wl-title{font-size:22.5px;margin-top:40px}
+.wl-sub{font-size:13px;max-width:320px}
+.wl-logo-text .wl-2{margin-top:2px}
+.role2-owner-copy{padding-top:30px}
+.role2-owner-cta{margin-top:18px}
+.role2-owner-benefits{padding:16px 10px 20px}
+.role2-owner-photo{bottom:30%}
+
+/* =========================================================================
+   T-0005 calibration pass 7 — welcome/role row alignment (measured)
+   ========================================================================= */
+.wl-title{margin-top:48px;font-size:22.5px}
+.wl-sub{margin-top:18px;font-size:13px}
+.wl-hero{margin-top:21px}
+.wl-cards{margin-top:18px}
+.wl-card{padding:18px 16px}
+.wl-benefits{margin-top:20px}
+.wl-support{margin-top:23px}
+
+.role2-page{display:flex}
+.role2-title{margin-top:52px;font-size:28px}
+.role2-sub{margin-top:18px;font-size:13.5px}
+.role2-owner-card{margin-top:12px}
+.role2-owner-copy{padding-top:22px}
+.role2-owner-cta{margin-top:14px}
+.role2-owner-benefits{padding:12px 10px 16px}
+.role2-pro-row{margin-top:22px}
+.role2-trust{margin-top:auto;padding-bottom:10px}
+
+/* =========================================================================
+   T-0005 calibration pass 8 — final polish
+   ========================================================================= */
+.wl-title{font-size:21px}
+.role2-owner-photo{bottom:37%}
+.role2-owner-cta-house{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center;flex:0 0 26px}
+.role2-owner-cta-house svg{width:15px;height:15px}

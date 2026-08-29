@@ -251,13 +251,13 @@ async function run() {
 
   // A verified email that points at an already-bound account must never steal the mapping.
   response = await req(prodServer.base, '/app', ownerCookie);
-  denial = await deniedTo(response, '/login', /Was ist bei deinem Haus gerade wichtig|Deine Hausakte|Hallo,/);
+  denial = await deniedTo(response, '/login', /Frag einfachhausen|Mein Zuhause im Überblick|Deine Hausakte|Hallo,/);
   check('14 email/pre-bound collision cannot bind wrong app identity', denial.ok, denial.detail);
   check('14 collision leaves existing auth_subject unchanged', db.prepare('SELECT auth_subject FROM users WHERE id=?').get(ownerId).auth_subject === '00000000-0000-4000-8000-000000000170');
   db.prepare('UPDATE users SET auth_subject=NULL WHERE id=?').run(ownerId);
 
   response = await req(prodServer.base, '/app', ownerCookie);
-  let allowed = await allowedWithContent(response, /Was ist bei deinem Haus gerade wichtig|Deine Hausakte|Hallo,/);
+  let allowed = await allowedWithContent(response, /Frag einfachhausen|Mein Zuhause im Überblick|Deine Hausakte|Hallo,/);
   check('3 real Supabase homeowner -> /app allowed', allowed.ok, allowed.detail);
   check('15 first verified request binds auth_subject', db.prepare('SELECT auth_subject FROM users WHERE id=?').get(ownerId).auth_subject === ownerIdentity.id);
 
@@ -271,7 +271,7 @@ async function run() {
   const ownerOriginalEmail = ownerIdentity.email;
   db.prepare('UPDATE users SET email=? WHERE id=?').run(`mapped-${randomUUID()}@example.invalid`, ownerId);
   response = await req(prodServer.base, '/app', ownerCookie);
-  allowed = await allowedWithContent(response, /Was ist bei deinem Haus gerade wichtig|Deine Hausakte|Hallo,/);
+  allowed = await allowedWithContent(response, /Frag einfachhausen|Mein Zuhause im Überblick|Deine Hausakte|Hallo,/);
   check('15 mapped auth_subject remains authoritative on follow-up', allowed.ok, allowed.detail);
   db.prepare('UPDATE users SET email=? WHERE id=?').run(ownerOriginalEmail, ownerId);
 
@@ -281,12 +281,12 @@ async function run() {
   check('4 real Supabase provider -> /pro allowed', allowed.ok, allowed.detail);
   check('15 provider auth_subject bound stably', db.prepare('SELECT auth_subject FROM users WHERE id=?').get(providerId).auth_subject === providerIdentity.id);
   response = await req(prodServer.base, '/app', providerCookie);
-  denial = await deniedTo(response, '/pro', /Was ist bei deinem Haus gerade wichtig|Deine Hausakte|Hallo,/);
+  denial = await deniedTo(response, '/pro', /Frag einfachhausen|Mein Zuhause im Überblick|Deine Hausakte|Hallo,/);
   check('6 provider -> /app forbidden', denial.ok, denial.detail);
   check('13 provider user_metadata.role manipulation gives no homeowner privilege', denial.ok, denial.detail);
 
   response = await req(prodServer.base, '/app', tamperedCookieHeader(ownerIdentity.cookies));
-  denial = await deniedTo(response, '/login', /Was ist bei deinem Haus gerade wichtig|Deine Hausakte|Hallo,/);
+  denial = await deniedTo(response, '/login', /Frag einfachhausen|Mein Zuhause im Überblick|Deine Hausakte|Hallo,/);
   check('7 invalid Supabase session denied', denial.ok, denial.detail);
 
   const localToken = randomBytes(32).toString('hex');
@@ -344,7 +344,7 @@ async function run() {
   // Production local auth must fail closed even if both a real Supabase cookie and a local session cookie are presented.
   prodLocalServer = await startNext('production', { AUTH_MODE: 'local' });
   response = await req(prodLocalServer.base, '/app', `${ownerCookie}; mh_session=${localToken}`);
-  const localProdFailure = await failsClosed(response, /Was ist bei deinem Haus gerade wichtig|Deine Hausakte|Hallo,/);
+  const localProdFailure = await failsClosed(response, /Frag einfachhausen|Mein Zuhause im Überblick|Deine Hausakte|Hallo,/);
   check('10 production + local auth fails closed', localProdFailure.ok, localProdFailure.detail);
   await stopNext(prodLocalServer);
   prodLocalServer = undefined;
