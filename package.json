@@ -31,11 +31,13 @@
   "dependencies": {
     "@capacitor/keyboard": "^8.0.5",
     "@capacitor/status-bar": "^8.0.3",
+    "@gsap/react": "^2.1.2",
     "@supabase/ssr": "^0.12.5",
     "@supabase/supabase-js": "^2.112.4",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^13.0.3",
     "date-fns": "^4.4.0",
+    "gsap": "^3.15.0",
     "lucide-react": "^1.33.0",
     "next": "16.3.1",
     "nodemailer": "^9.0.6",

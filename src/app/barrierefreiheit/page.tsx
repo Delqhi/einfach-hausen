@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Keyboard, MousePointer2, ScanText } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { FeatureGrid, LegalNotice, PageHero, Section } from '@/components/marketing/ui';
+import { CtaBand, FeatureGrid, LegalNotice, PageHero, Section } from '@/components/marketing/ui';
 
 export const metadata: Metadata = { title: 'Barrierefreiheit', description: 'Zugänglichkeitsprinzipien der Einfach-Hausen-Oberflächen.' };
 export default function Page(){return <MarketingShell>
@@ -12,4 +12,5 @@ export default function Page(){return <MarketingShell>
   <Section eyebrow="Status" title="Formale Prüfung bleibt ein eigener Launch-Schritt." tone="soft">
     <LegalNotice title="Keine ungeprüfte Konformitätsbehauptung"><p>Vor einer formalen Erklärung zur Barrierefreiheit sind die produktiven Oberflächen, Inhalte und Interaktionen mit geeigneten Prüfverfahren zu bewerten. Diese Seite beschreibt deshalb nur die verbindlichen Design- und Entwicklungsziele.</p></LegalNotice>
   </Section>
+  <CtaBand title="Einfach anfangen – mit einem Produkt, das dich nicht überfordert." text="Hauskonto kostenlos anlegen und in Ruhe ausprobieren. Rückfragen beantwortet die Hilfe." />
 </MarketingShell>}

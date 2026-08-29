@@ -251,15 +251,14 @@
   .legalGrid dd { margin-bottom:14px; }
 }
 @media (max-width: 540px) {
-  .headerActions .primaryButton { display:none; }
   .headerInner { grid-template-columns:1fr auto; }
+  .headerActions { display:none; }
   .site :global(.brand-copy small) { display:none; }
   .hero { background:linear-gradient(180deg,#fff 0%,#f7f8f7 88%); }
   .hero h1, .pageHero h1 { font-size:42px; }
   .intake { box-shadow:none; }
   .intakeRow { flex-direction:column; }
   .productPreview { box-shadow:none; border-radius:18px; }
-  .previewBody { display:none; }
   .previewHead { min-height:64px; }
   .previewFoot { min-height:52px; }
   .intake button { width:100%; }
@@ -282,4 +281,41 @@
   .primaryButton, .secondaryButton, .skipLink { transition:none; }
   .primaryButton:hover { transform:none; }
   .publicStateMark:after { animation:none; }
+}
+
+/* --- Motion & interaction state layer (motion-system wave) --- */
+
+/* Header scroll state: solid surface once the page is scrolled > 8px (set via data-scrolled from motion.tsx). */
+.header { transition: background-color .16s ease, border-color .16s ease, box-shadow .16s ease; }
+.header[data-scrolled='true'] { background: var(--eh-surface); border-bottom-color: var(--eh-border-strong); box-shadow: 0 10px 30px -18px rgba(18,60,42,.22); }
+
+/* Sticky correctness: overflow-x:hidden turns .site into a scroll container, which silently
+   breaks position:sticky of the header. overflow-x:clip clips identically without creating a
+   scroll container (browsers without clip support keep the hidden fallback above). */
+.site { overflow-x: clip; }
+
+/* FAQ accordion: calm, border-based, >= 48px hit areas, chevron rotation.
+   Two supported markups: details.faq standalone and .faq as wrapper with inner details. */
+.faqList { max-width: 860px; display: flex; flex-direction: column; gap: 10px; }
+details.faq, .faq details { border: 1px solid var(--eh-border); border-radius: 16px; background: var(--eh-surface); padding: 0 20px; transition: border-color .16s ease; }
+details.faq[open], .faq details[open] { border-color: var(--eh-border-strong); }
+.faq summary, .faqSummary { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 14px; cursor: pointer; font-weight: 720; list-style: none; }
+.faq summary::-webkit-details-marker, .faqSummary::-webkit-details-marker { display: none; }
+.faqSummary svg { flex: 0 0 auto; color: var(--eh-text-secondary); transition: transform .16s ease; }
+details[open] .faqSummary svg { transform: rotate(180deg); }
+.faqBody { padding: 0 0 20px; }
+.faqBody p { margin: 0; color: var(--eh-text-secondary); font-size: 14px; line-height: 1.65; }
+
+/* Hero example-concern chips. */
+.chipRow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chip { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; padding: 0 14px; border: 1px solid var(--eh-border-strong); border-radius: 999px; background: var(--eh-surface); color: #3f4943; font-size: 13px; font-weight: 650; cursor: pointer; transition: background-color .16s ease, border-color .16s ease; }
+.chip:hover { background: var(--eh-green-50); border-color: #b9d8c4; }
+
+/* Service item hover: subtle lift + green border accent as inset ring (no layout shift inside the 1px-gap grid). */
+.serviceItem { box-shadow: inset 0 0 0 1px rgba(185,216,196,0); transition: transform .16s ease, box-shadow .16s ease; }
+.serviceItem:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px #b9d8c4; }
+
+@media (prefers-reduced-motion: reduce) {
+  .header, .serviceItem, .faqSummary svg, details.faq, .faq details, .chip { transition: none; }
+  .serviceItem:hover { transform: none; }
 }

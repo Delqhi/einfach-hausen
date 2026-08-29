@@ -1,5 +1,6 @@
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { Logo } from '@/components/logo';
+import { ScrollShadow } from './motion';
 import styles from './marketing.module.css';
 
 const primary = [
@@ -63,6 +64,7 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
   return (
     <div className={styles.site}>
       <a className={styles.skipLink} href="#main-content">Zum Inhalt springen</a>
+      <ScrollShadow>
       <header className={styles.header}>
         <div className={styles.headerInner}>
           {/* Native navigation is intentional here to keep the public marketing shell hydration-free. */}
@@ -89,6 +91,7 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
           </details>
         </div>
       </header>
+      </ScrollShadow>
       <main id="main-content">{children}</main>
       <footer className={styles.footer}>
         <div className={styles.footerInner}>

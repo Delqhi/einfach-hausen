@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { BadgeCheck, Eye, FileCheck2, LockKeyhole, ShieldCheck, UserCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { FeatureGrid, InfoPanel, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { CtaBand, FeatureGrid, InfoPanel, LinkButton, PageHero, Section } from '@/components/marketing/ui';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = {
@@ -65,6 +65,8 @@ export default function Page() {
           <LinkButton href="/impressum" secondary>Impressum</LinkButton>
         </div>
       </Section>
+
+      <CtaBand title="Kontrolle behalten – von der ersten Frage bis zum erledigten Auftrag." text="Starte kostenlos und entscheide bei jedem Schritt selbst, was mit deinen Daten und deinem Haus passiert." />
     </MarketingShell>
   );
 }

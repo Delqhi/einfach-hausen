@@ -1,8 +1,11 @@
+import { MarketingShell } from '@/components/marketing/site-shell';
+
 export const metadata = { title: "Impressum – einfachhausen" };
 
 export default function ImpressumPage() {
   return (
-    <div className="page" style={{ padding: 24, paddingTop: 60, maxWidth: 720, margin: "0 auto" }}>
+    <MarketingShell>
+    <div style={{ padding: "24px 20px 80px", maxWidth: 760, margin: "0 auto" }}>
       <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 16 }}>Impressum</h1>
       <div style={{ fontSize: 14.5, lineHeight: 1.7, color: "#33484f" }}>
         <p><strong>Anbieterkennzeichnung nach §5 TMG</strong></p>
@@ -14,5 +17,6 @@ export default function ImpressumPage() {
         <p style={{ marginTop: 24, color: "#9aa9ad" }}>Stand: {new Date().toLocaleDateString("de-DE")}</p>
       </div>
     </div>
+    </MarketingShell>
   );
 }

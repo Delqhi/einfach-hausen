@@ -118,19 +118,29 @@ try {
 // 0) Öffentliche Website ist mobile-first, nutzenorientiert und als PWA installierbar.
 const publicCtx=await newE2EContext({viewport:{width:390,height:844}}); const publicPage=await publicCtx.newPage(); trackPage(publicPage,'public-mobile');
 await publicPage.goto(base+'/');
-await publicPage.getByRole('heading',{name:/Willkommen bei einfachhausen/i}).waitFor();
-await waitText(publicPage,'Dein Zuhause. Alles geregelt.'); await waitText(publicPage,'Sicher & vertraulich'); await waitText(publicPage,'Regional verbunden'); await waitText(publicPage,'Einfach & praktisch'); await waitText(publicPage,'Hilfe benötigt?');
-if(!(await publicPage.getByRole('link',{name:'Log in'}).count()))throw new Error('Landing login card missing');
-if(!(await publicPage.getByRole('link',{name:'Neues Konto'}).count()))throw new Error('Landing new-account card missing');
+// Canonical root is the public lead-magnet homepage (DESIGN.md §5.1), not the app welcome screen.
+await publicPage.getByRole('heading',{name:/Du hast ein Haus/i}).waitFor();
+await waitText(publicPage,'Wir kümmern uns um den Rest.');
+await waitText(publicPage,'Was steht bei deinem Haus an?');
+await waitText(publicPage,'Hauskonto kostenlos'); await waitText(publicPage,'kein Auftrag ohne deine Entscheidung');
+if(!(await publicPage.locator('form[action="/register"] input[name="request"]').count()))throw new Error('Landing intake composer missing');
 if(/KI-Hausmeister/i.test(await publicPage.locator('body').innerText()))throw new Error('Landing page still foregrounds AI instead of customer benefit');
 await assertNoOverflow(publicPage,'Mobile landing');
+// Primary navigation must lead to real, indexable platform pages.
+for(const route of ['/so-funktionierts','/eigenheimbesitzer','/leistungen','/hausakte','/partner','/preise','/ueber-uns','/hilfe','/kontakt','/sicherheit']){const r=await publicPage.request.get(base+route);if(!r.ok())throw new Error(`Marketing route ${route} failed`);}
+// App entry stays canonical at /welcome: login/account cards and role selection for app users.
+await publicPage.goto(base+'/welcome');
+await publicPage.getByRole('heading',{name:/Willkommen bei einfachhausen/i}).waitFor();
+await waitText(publicPage,'Dein Zuhause. Alles geregelt.');
+if(!(await publicPage.getByRole('link',{name:'Log in'}).count()))throw new Error('Welcome login card missing');
+if(!(await publicPage.getByRole('link',{name:'Neues Konto'}).count()))throw new Error('Welcome new-account card missing');
 // Intake entry moved into the product: /kontakt serves 'Anliegen starten' -> /register?role=homeowner.
 const kontaktResponse=await publicPage.request.get(base+'/kontakt'); if(!kontaktResponse.ok())throw new Error('Kontakt route failed');
 const kontaktHtml=await kontaktResponse.text();
 if(!kontaktHtml.includes('Anliegen starten')||!kontaktHtml.includes('/register?role=homeowner'))throw new Error('Kontakt intake entry missing');
-// Real logged-out new-owner entry: landing card -> role selection.
-await publicPage.goto(base+'/');
-await clickAndWaitUrl(publicPage,publicPage.locator('a[href="/role"]'),/\/role/);
+// Real logged-out new-owner entry: welcome card -> role selection.
+await publicPage.goto(base+'/welcome');
+await clickAndWaitUrl(publicPage,publicPage.locator('a[href="/role"]').first(),/\/role/);
 await waitText(publicPage,'dass du da bist!'); await waitText(publicPage,'Als Eigentümer starten'); await waitText(publicPage,'Ich bin Dienstleister');
 // Owner registration (server action flow) stays the canonical owner onboarding entry.
 await publicPage.goto(base+'/register?role=homeowner');

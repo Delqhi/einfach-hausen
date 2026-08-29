@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Building2, CircleAlert, HelpCircle, LogIn, MessageCircle, ShieldCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { FeatureGrid, InfoPanel, LegalNotice, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { CtaBand, FeatureGrid, InfoPanel, LegalNotice, LinkButton, PageHero, Section } from '@/components/marketing/ui';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = {
@@ -69,6 +69,8 @@ export default function Page() {
           { icon: <ShieldCheck size={20} />, title: 'Dringende Hausprobleme', text: 'Für dringende, aber nicht lebensbedrohliche Hausprobleme kann der Notfallbereich im angemeldeten Eigentümerkonto genutzt werden.' },
         ]} />
       </Section>
+
+      <CtaBand title="Beschreib einfach, was bei deinem Haus ansteht." text="Dein Hauskonto ist kostenlos – und ein Anliegen löst niemals automatisch einen Auftrag aus." />
     </MarketingShell>
   );
 }

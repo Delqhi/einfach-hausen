@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { Reveal } from './motion';
 import styles from './marketing.module.css';
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -8,12 +9,12 @@ export function Eyebrow({ children }: { children: React.ReactNode }) {
 export function PageHero({ eyebrow, title, text, actions }: { eyebrow: string; title: string; text: string; actions?: React.ReactNode }) {
   return (
     <section className={styles.pageHero}>
-      <div className={styles.narrow}>
+      <Reveal className={styles.narrow}>
         <Eyebrow>{eyebrow}</Eyebrow>
         <h1>{title}</h1>
         <p>{text}</p>
         {actions && <div className={styles.heroActions}>{actions}</div>}
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -22,11 +23,11 @@ export function Section({ eyebrow, title, text, children, tone = 'plain' }: { ey
   return (
     <section className={`${styles.section} ${styles[`tone_${tone}`]}`}>
       <div className={styles.sectionInner}>
-        {(eyebrow || title || text) && <div className={styles.sectionHead}>
+        {(eyebrow || title || text) && <Reveal className={styles.sectionHead}>
           {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
           {title && <h2>{title}</h2>}
           {text && <p>{text}</p>}
-        </div>}
+        </Reveal>}
         {children}
       </div>
     </section>
@@ -54,7 +55,7 @@ export function InfoPanel({ children, label }: { children: React.ReactNode; labe
 }
 
 export function CtaBand({ title, text, href = '/register?role=homeowner', label = 'Kostenlos starten' }: { title: string; text: string; href?: string; label?: string }) {
-  return <section className={styles.ctaBand}><div><h2>{title}</h2><p>{text}</p></div><LinkButton href={href}>{label}</LinkButton></section>;
+  return <Reveal><section className={styles.ctaBand}><div><h2>{title}</h2><p>{text}</p></div><LinkButton href={href}>{label}</LinkButton></section></Reveal>;
 }
 
 export function LegalNotice({ title, children }: { title: string; children: React.ReactNode }) {
