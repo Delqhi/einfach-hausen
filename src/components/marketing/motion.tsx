@@ -138,3 +138,111 @@ export function HeaderState() {
 
   return <span ref={ref} aria-hidden="true" style={{ display: 'none' }} />;
 }
+
+/**
+ * Scroll-scrubbed draw-in line. The element itself is the line (position and
+ * size come from CSS); its scale is driven 0 -> 1 by scroll progress of the
+ * enclosing section (parent element). transform-only, scrub -> ease:none,
+ * reduced-motion renders the final state immediately.
+ */
+export function ScrubLine({ axis = 'y', className }: { axis?: 'x' | 'y'; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useGSAP(() => {
+    const el = ref.current;
+    const trigger = el?.parentElement;
+    if (!el || !trigger) return;
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const prop = axis === 'x' ? 'scaleX' : 'scaleY';
+      gsap.fromTo(el, { [prop]: 0 }, {
+        [prop]: 1,
+        ease: 'none',
+        scrollTrigger: { trigger, start: 'top 72%', end: 'bottom 55%', scrub: true },
+      });
+    });
+    mm.add('(prefers-reduced-motion: reduce)', () => {
+      gsap.set(el, { scaleX: 1, scaleY: 1 });
+    });
+
+    return () => mm.revert();
+  }, { dependencies: [axis] });
+
+  return <span ref={ref} className={className} aria-hidden="true" />;
+}
+
+/**
+ * Toggles `activeClassName` on the wrapped element while it is in the reading
+ * zone (used for step activation states). Class-only, no animation here.
+ */
+export function Activate({ children, className, activeClassName = 'isActive', start = 'top 72%' }: {
+  children: React.ReactNode;
+  className?: string;
+  activeClassName?: string;
+  start?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const el = ref.current;
+    if (!el) return;
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const st = ScrollTrigger.create({
+        trigger: el,
+        start,
+        end: 'bottom top',
+        toggleClass: { targets: el, className: activeClassName },
+      });
+      return () => st.kill();
+    });
+    mm.add('(prefers-reduced-motion: reduce)', () => {
+      el.classList.add(activeClassName);
+    });
+
+    return () => mm.revert();
+  }, { dependencies: [activeClassName, start] });
+
+  return <div ref={ref} className={className}>{children}</div>;
+}
+
+/**
+ * Draws an SVG path (stroke) once it enters the viewport. The path element
+ * must carry its full length via CSS (stroke-dasharray/dashoffset start are
+ * set here from getTotalLength). Reduced-motion: final state immediately.
+ */
+export function DrawPath({ children, className, delay = 0 }: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useGSAP(() => {
+    const root = ref.current;
+    const path = root?.querySelector('path');
+    if (!path) return;
+    const length = path.getTotalLength();
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+      gsap.to(path, {
+        strokeDashoffset: 0,
+        duration: 1.1,
+        delay,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: root, start: 'top 92%', once: true },
+      });
+    });
+    mm.add('(prefers-reduced-motion: reduce)', () => {
+      gsap.set(path, { strokeDasharray: 'none', strokeDashoffset: 0 });
+    });
+
+    return () => mm.revert();
+  }, { dependencies: [delay] });
+
+  return <span ref={ref} className={className} aria-hidden="true">{children}</span>;
+}

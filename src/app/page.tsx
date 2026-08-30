@@ -1,21 +1,28 @@
 import { redirect } from 'next/navigation';
-import { BadgeCheck, ChevronDown, FileText, Hammer, HeartHandshake, Home, Landmark, Leaf, MessageCircle, Paintbrush, Plug, Search, ShieldCheck, Sparkles, ThermometerSun, Trees, UserRound, Wrench } from 'lucide-react';
+import { ArrowRight, BadgeCheck, CalendarCheck2, ChevronDown, FileText, Hammer, HeartHandshake, Home, Landmark, Leaf, MessageCircle, Paintbrush, Plug, Search, ShieldCheck, Sparkles, ThermometerSun, Trees, UserRound, Wrench } from 'lucide-react';
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Section, Split, InfoPanel, BulletList, CtaBand } from '@/components/marketing/ui';
-import { Reveal, Stagger } from '@/components/marketing/motion';
+import { Reveal, Stagger, ScrubLine, Activate, DrawPath } from '@/components/marketing/motion';
 import { IntakeForm } from '@/components/home/intake-form';
 import styles from '@/components/marketing/marketing.module.css';
 
 const services = [
-  { icon:<Wrench size={21}/>, title:'Reparatur & Montage', text:'Kleine und größere Arbeiten am Haus' },
-  { icon:<Plug size={21}/>, title:'Elektro & Energie', text:'Elektro, Wallbox, PV und Smart Home' },
-  { icon:<ThermometerSun size={21}/>, title:'Heizung & Sanitär', text:'Wärme, Wasser, Klima und Wartung' },
-  { icon:<Landmark size={21}/>, title:'Dach & Gebäudehülle', text:'Dach, Fenster, Türen und Fassade' },
-  { icon:<Paintbrush size={21}/>, title:'Ausbau & Renovierung', text:'Maler, Boden, Schreiner und Sanierung' },
-  { icon:<Trees size={21}/>, title:'Garten & Außenbereich', text:'Pflege, Baumarbeiten und Pflaster' },
-  { icon:<Leaf size={21}/>, title:'Pflege & Reinigung', text:'Reinigung, Dachrinne und Winterdienst' },
-  { icon:<Hammer size={21}/>, title:'Weitere Hausdienste', text:'Umzug, Entrümpelung und Spezialfälle' },
+  { icon:<Wrench size={20}/>, title:'Reparatur & Montage', text:'Kleine und größere Arbeiten am Haus' },
+  { icon:<Plug size={20}/>, title:'Elektro & Energie', text:'Elektro, Wallbox, PV und Smart Home' },
+  { icon:<ThermometerSun size={20}/>, title:'Heizung & Sanitär', text:'Wärme, Wasser, Klima und Wartung' },
+  { icon:<Landmark size={20}/>, title:'Dach & Gebäudehülle', text:'Dach, Fenster, Türen und Fassade' },
+  { icon:<Paintbrush size={20}/>, title:'Ausbau & Renovierung', text:'Maler, Boden, Schreiner und Sanierung' },
+  { icon:<Trees size={20}/>, title:'Garten & Außenbereich', text:'Pflege, Baumarbeiten und Pflaster' },
+  { icon:<Leaf size={20}/>, title:'Pflege & Reinigung', text:'Reinigung, Dachrinne und Winterdienst' },
+  { icon:<Hammer size={20}/>, title:'Weitere Hausdienste', text:'Umzug, Entrümpelung und Spezialfälle' },
+] as const;
+
+const steps = [
+  ['01','Beschreiben','Schreib, sprich oder zeig per Foto, was ansteht.'],
+  ['02','Einordnen','Das Anliegen wird verständlich strukturiert und der nächste sinnvolle Schritt vorbereitet.'],
+  ['03','Entscheiden','Du wählst bewusst: Frage klären, Ansprechpartner finden oder Auftrag organisieren.'],
+  ['04','Behalten','Kontakte, Dokumente, Termine und erledigte Arbeiten landen in deiner Hausakte.'],
 ] as const;
 
 const faqs = [
@@ -35,8 +42,8 @@ export default async function HomePage() {
     <section className={styles.hero}>
       <div className={styles.heroInner}>
         <Stagger className={styles.heroCopy} gap={0.12}>
-          <span className={styles.eyebrow}><Home size={15} aria-hidden="true"/> Dein persönlicher Hausmanager</span>
-          <h1>Du hast ein Haus. <span>Wir kümmern uns um den Rest.</span></h1>
+          <span className={styles.eyebrow}><span className={styles.eyebrowDot} aria-hidden="true"/> Für Eigenheimbesitzer</span>
+          <h1>Du hast ein Haus. <span className={styles.heroAccent}>Wir kümmern uns <span className={styles.underlineSlot}>um den Rest.<DrawPath className={styles.heroUnderlineWrap}><svg viewBox="0 0 320 14" preserveAspectRatio="none" className={styles.heroUnderline} aria-hidden="true"><path d="M4 10 C 80 3, 240 3, 316 8" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/></svg></DrawPath></span></span></h1>
           <p className={styles.heroLead}>Weniger kümmern, mehr zuhause sein: Einfach Hausen bündelt alles rund ums Eigenheim. Beschreibe, was ansteht – wir helfen beim Einordnen, verbinden dich mit passenden Menschen und organisieren Aufträge, wenn du sie wirklich vergibst.</p>
           <IntakeForm />
           <div className={styles.heroLinks}><span>Mehr erfahren:</span><a href="/so-funktionierts">So funktioniert&apos;s</a><a href="/leistungen">Leistungen ansehen</a><a href="/preise">Preise</a></div>
@@ -53,6 +60,8 @@ export default async function HomePage() {
               </div>
             </div>
             <div className={styles.previewFoot}>Du entscheidest. Nichts wird automatisch beauftragt.</div>
+            <div className={`${styles.floatCard} ${styles.floatCardA}`}><CalendarCheck2 size={19} aria-hidden="true"/><span><strong>Termin bestätigt</strong><small>Dachrinne reinigen · Di 9:00</small></span></div>
+            <div className={`${styles.floatCard} ${styles.floatCardB}`}><FileText size={19} aria-hidden="true"/><span><strong>Rechnung abgelegt</strong><small>Hausakte · Energie</small></span></div>
           </div>
         </Reveal>
       </div>
@@ -66,12 +75,21 @@ export default async function HomePage() {
     </div></div>
 
     <Section eyebrow="Leistungen" title="Vom kleinen Defekt bis zur langfristigen Hauspflege." text="Du musst nicht zuerst wissen, welches Gewerk zuständig ist. Starte mit deinem Anliegen – die fachliche Einordnung kommt danach." tone="soft">
-      <div className={styles.serviceGrid}>{services.map((item)=><a className={styles.serviceItem} href="/leistungen" key={item.title}><span>{item.icon}</span><div><strong>{item.title}</strong><span>{item.text}</span></div></a>)}</div>
+      <div className={styles.serviceGrid}>{services.map((item)=><a className={styles.serviceItem} href="/leistungen" key={item.title}><span className={styles.serviceIcon}>{item.icon}</span><span className={styles.serviceText}><strong>{item.title}</strong><span>{item.text}</span></span><span className={styles.serviceArrow}><ArrowRight size={16} aria-hidden="true"/></span></a>)}</div>
     </Section>
 
     <Section eyebrow="So funktioniert's" title="Weniger suchen. Weniger hinterherlaufen. Mehr Überblick." text="Einfach Hausen bündelt die Organisation, ohne dir die Entscheidung abzunehmen.">
-      <div className={styles.processList}>
-        {[['01','Beschreiben','Schreib, sprich oder zeig per Foto, was ansteht.'],['02','Einordnen','Das Anliegen wird verständlich strukturiert und der nächste sinnvolle Schritt vorbereitet.'],['03','Entscheiden','Du wählst bewusst: Frage klären, Ansprechpartner finden oder Auftrag organisieren.'],['04','Behalten','Kontakte, Dokumente, Termine und erledigte Arbeiten landen in deiner Hausakte.']].map(([n,t,x])=><article className={styles.processStep} key={n}><b>{n}</b><h3>{t}</h3><p>{x}</p></article>)}
+      <div className={styles.processWrap}>
+        <ScrubLine axis="x" className={styles.processLine} />
+        <div className={styles.processList}>
+          {steps.map(([n,t,x])=>(
+            <Activate className={styles.processStep} key={n}>
+              <b>{n}</b>
+              <h3>{t}</h3>
+              <p>{x}</p>
+            </Activate>
+          ))}
+        </div>
       </div>
     </Section>
 
@@ -79,6 +97,7 @@ export default async function HomePage() {
       <Split>
         <InfoPanel label="Digitale Hausakte"><h3>Alles, was später wieder wichtig wird.</h3><BulletList items={['Arbeiten und Sanierungen dokumentieren','Rechnungen, Belege und Garantien wiederfinden','Technik und Anlagen am Haus erfassen','Persönliche Ansprechpartner nach Bereichen behalten','Hausbezogene Historie bei Eigentümerwechsel kontrolliert weitergeben']} /></InfoPanel>
         <div className={styles.previewCard}><div className={styles.previewCardHead}><strong>Mein Haus · Beispielansicht</strong><span>geordnet</span></div><div className={styles.timeline}>
+          <ScrubLine axis="y" className={styles.timelineScrub} />
           <div className={styles.timelineRow}><time>2026</time><span className={styles.timelineDot}/><div className={styles.timelineContent}><strong>Gartenpflege</strong><small>Ansprechpartner und Rechnung abgelegt</small></div></div>
           <div className={styles.timelineRow}><time>2025</time><span className={styles.timelineDot}/><div className={styles.timelineContent}><strong>Dacharbeiten</strong><small>Dokumentation und Garantiehinweis gespeichert</small></div></div>
           <div className={styles.timelineRow}><time>2024</time><span className={styles.timelineDot}/><div className={styles.timelineContent}><strong>Heizung</strong><small>Anlage erfasst · Wartung planbar</small></div></div>
@@ -96,7 +115,10 @@ export default async function HomePage() {
     </Section>
 
     <Section eyebrow="Preise" title="Kostenlos anfangen. Mehr Service nur, wenn du ihn brauchst." text="Das Kunden-Hauskonto startet bei 0 €. Für Partner gibt es ein kostenloses Modell und planbare Monatstarife." tone="soft">
-      <Split><InfoPanel label="Eigenheimbesitzer"><h3>FREE · 0 € / Monat</h3><p>Hausmeisterservice, Aufträge, Angebotsvergleich, Vermittlung und digitale Hausakte bilden den kostenlosen Einstieg.</p></InfoPanel><InfoPanel label="Partner"><h3>0 % Provision pro Auftrag</h3><p>FREE startet bei 0 €. Bezahlte Partner-Tarife beginnen laut Produktmodell bei 29 € / Monat.</p></InfoPanel></Split>
+      <Split>
+        <InfoPanel label="Eigenheimbesitzer"><div className={styles.priceFigure}><strong>0 €</strong><small>/ Monat</small></div><h3>FREE</h3><p>Hausmeisterservice, Aufträge, Angebotsvergleich, Vermittlung und digitale Hausakte bilden den kostenlosen Einstieg.</p></InfoPanel>
+        <InfoPanel label="Partner"><div className={styles.priceFigure}><strong>0 %</strong><small>Provision</small></div><h3>Planbare Tarife</h3><p>FREE startet bei 0 €. Bezahlte Partner-Tarife beginnen laut Produktmodell bei 29 € / Monat.</p></InfoPanel>
+      </Split>
     </Section>
 
     <Section eyebrow="Häufige Fragen" title="Klare Antworten, bevor du startest." text="Die wichtigsten Fragen zum Ablauf, zu Kosten, Partnern und Daten – ohne Kleingedrucktes." tone="plain">
