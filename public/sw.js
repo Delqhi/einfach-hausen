@@ -1,4 +1,4 @@
-const CACHE = 'einfach-hausen-public-shell-v3';
+const CACHE = 'einfach-hausen-public-shell-v4';
 const PUBLIC_SHELL = [
   '/icons/apple-touch-icon.png',
   '/icons/icon-192.png',
@@ -13,10 +13,10 @@ function offlineResponse() {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#176B45">
+  <meta name="theme-color" content="#105258">
   <title>Einfach Hausen – offline</title>
   <style>
-    *{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#F7F8F7;color:#171A18;display:grid;min-height:100vh;place-items:center;padding:24px}.box{width:min(100%,480px);background:#fff;border:1px solid #E4E8E5;border-radius:20px;padding:28px}h1{font-size:32px;line-height:1.08;letter-spacing:-.035em;margin:0 0 14px}p{line-height:1.6;color:#66706A;margin:0 0 20px}button{min-height:46px;border:0;border-radius:12px;padding:0 18px;background:#176B45;color:white;font:inherit;font-weight:700;cursor:pointer}button:focus-visible{outline:3px solid #9bd2b3;outline-offset:3px}
+    *{box-sizing:border-box}body{font-family:var(--font-marketing),-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;background:#F4F7F7;color:#1C2129;display:grid;min-height:100vh;place-items:center;padding:24px}.box{width:min(100%,480px);background:#fff;border:1px solid #E2E8E8;border-radius:20px;padding:28px}h1{font-size:32px;line-height:1.08;letter-spacing:-.035em;margin:0 0 14px}p{line-height:1.6;color:#57686B;margin:0 0 20px}button{min-height:46px;border:0;border-radius:12px;padding:0 18px;background:#105258;color:white;font:inherit;font-weight:700;cursor:pointer}button:focus-visible{outline:3px solid #9fcfd2;outline-offset:3px}
   </style>
 </head>
 <body>

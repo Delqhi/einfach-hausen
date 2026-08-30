@@ -13,14 +13,14 @@ Die gewünschte visuelle Richtung verbindet:
 - die Ruhe, Klarheit und typografische Präzision moderner OpenAI-/ChatGPT-Weboberflächen,
 - die saubere Komponentenlogik und hochwertige Produktästhetik sehr guter v0-Interfaces,
 - die Vertrauens- und Marktplatzwirkung großer Serviceplattformen wie MyHammer,
-- eine eigenständige Einfach-Hausen-Marke mit Grün als zentralem Vertrauens- und Aktionssignal.
+- eine eigenständige Einfach-Hausen-Marke mit Petrol-Teal aus dem Logo als zentralem Vertrauens- und Aktionssignal.
 
 **Nicht kopieren:** keine 1:1-Übernahme von OpenAI-, v0- oder MyHammer-Branding, Layouts, Icons oder Texten. Referenz sind Qualitätsniveau, Klarheit, Hierarchie und Produktreife.
 
 ## 2. Kernprinzipien
 
 1. **Hell und ruhig.** Weiß, warmes Off-White und sehr helle neutrale Flächen dominieren. Kein dunkles Partner-Dashboard.
-2. **Grün als Marke, nicht als Tapete.** Grün markiert Hauptaktionen, aktive Zustände, Vertrauen und Erfolg; große Flächen bleiben überwiegend neutral.
+2. **Teal als Marke, nicht als Tapete.** Das Logo-Petrol (#105258) markiert Hauptaktionen, aktive Zustände, Vertrauen und Erfolg; große Flächen bleiben überwiegend neutral.
 3. **Eine starke Aktion pro Kontext.** Keine fünf gleich wichtigen Buttons nebeneinander.
 4. **Weniger Karten.** Flächen, Listen, Tabellen und klare Abschnitte statt SaaS-Kachelwüste.
 5. **Große Plattform, nicht Demo.** Navigation, Footer, Unterseiten, Trust, Support, Rechtliches und klare Produktbereiche müssen vollständig wirken.
@@ -30,23 +30,37 @@ Die gewünschte visuelle Richtung verbindet:
 9. **Barrierefreiheit sichtbar mitdenken.** Fokus, Kontrast, Labels, Statusmeldungen, Tastatur, 44px+ Touch-Ziele, reduced motion.
 10. **Keine erfundenen Vertrauenssignale.** Keine Fake-Bewertungen, Kundenzahlen, Garantien oder Marktführer-Claims ohne belegbare Daten.
 
-## 3. Design Tokens
+## 3. Brand & Design Tokens
 
-### Farben
+### Logo (LOGO_03, verbindlich seit 2026-08-30)
 
-- `--eh-green-900: #123C2A` — sehr dunkles Markengrün für Text/Logo-Akzent
-- `--eh-green-700: #176B45` — primäres Aktionsgrün
-- `--eh-green-600: #238454` — Hover/aktive Akzente
-- `--eh-green-100: #EAF5EE` — dezente grüne Fläche
-- `--eh-green-50: #F4FAF6` — sehr helle Vertrauensfläche
-- `--eh-bg: #F7F8F7` — App-/Website-Canvas
+- Quelle: `.orca/drops/LOGO_03.png` — Hausmarke (Petrol-Teal Outline) + zweifarbiges Wortbild: „einfach" in Charcoal, „hausen" in Teal-Skript.
+- Öffentliche Website, Header: Hausmarke + typografischer Wordmark (Marke links, „einfach" Charcoal / „hausen" Teal). Footer: vollständige Logo-Komposition. Favicon/App-Icons: zugeschnittene Hausmarke.
+- Asset-Quellen: `public/brand/logo-full.png` (Volllogo), `public/brand/logo-mark.png` + statische Imports in `src/components/marketing/assets/` (content-gehashte URLs; keine public-URLs für Logo-Images, sonst stale Optimizer-Cache).
+
+### Farben (aus dem Logo kalibriert)
+
+- `--eh-green-900: #0A3539` — sehr dunkles Marken-Petrol für dunkle Flächen/CTA-Gradient
+- `--eh-green-700: #105258` — primäre Aktion (Teal aus der Hausmarke; 8.9:1 auf Weiß)
+- `--eh-green-600: #147078` — Hover/aktive Akzente
+- `--eh-green-100: #DCEBEC` — dezente Teal-Fläche
+- `--eh-green-50: #EDF5F5` — sehr helle Vertrauensfläche
+- `--eh-bg: #F4F7F7` — Website-Canvas
 - `--eh-surface: #FFFFFF`
-- `--eh-surface-subtle: #F2F4F2`
-- `--eh-text: #171A18`
-- `--eh-text-secondary: #66706A`
-- `--eh-border: #E4E8E5`
-- `--eh-border-strong: #D5DCD7`
+- `--eh-surface-subtle: #F2F5F5`
+- `--eh-text: #1C2129` — Charcoal aus dem Wortbild
+- `--eh-text-secondary: #57686B`
+- `--eh-border: #E2E8E8`
+- `--eh-border-strong: #CFDAD9`
 - Fehler/Warnung/Info nur semantisch und zurückhaltend.
+
+### Typografie
+
+- Inter Variable, self-hosted (`src/fonts/InterVariable.woff2`), Display 700, UI 550–650, Body 400; globales Tracking −0.011em, Display −0.03em bis −0.035em.
+
+### App-Delta (bekannt, bewusst offen)
+
+Die Eigentümer-App ist pixelgenau auf die Notion-Referenzen kalibriert (aktuell `#14735c`-Grün, `src/app/globals.css` v2-Block) und wurde so abgenommen. Eine Konvergenz der App-Oberflächen auf die Logo-Teal-Palette ist ein eigener Wave mit erneuter Visual-Acceptance — wird hier nicht stillschweigend umgefärbt.
 
 ### Typografie
 

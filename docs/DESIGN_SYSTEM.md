@@ -38,6 +38,8 @@ Hausservice, Kontakte, Jahr, Pakete und Partnerprofile sind kontextuelle Unterse
 
 ## Farben
 
+> **Brand-Delta (2026-08-30):** Die Markenidentität ist mit dem neuen Logo auf Petrol-Teal `#105258` kalibriert (siehe `DESIGN.md` §3). Diese Datei dokumentiert die abgenommene App-Referenz (`#14735c`-Familie); die Konvergenz der App-Oberflächen auf die Logo-Palette ist ein eigener Wave mit erneuter Visual-Acceptance.
+
 - Dunkelgrün: `#075531`
 - Primärgrün: `#0A6A3C`
 - Helles Grün/Mint: `#EEF6ED`

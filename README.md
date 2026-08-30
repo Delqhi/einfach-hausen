@@ -1,5 +1,7 @@
 # Einfach Hausen
 
+<p align="left"><img src="public/brand/logo-full.png" alt="einfachhausen Logo" width="220" /></p>
+
 > **Ein Ansprechpartner für alles rund ums Eigenheim.**
 >
 > **Du sagst, was dein Haus braucht. Wir kümmern uns um den Rest.**
