@@ -1,0 +1,14 @@
+import { chromium } from 'playwright-core';
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+const page = await ctx.newPage();
+await page.goto('http://localhost:3110/', { waitUntil: 'networkidle' });
+const dark = page.locator('section').filter({ hasText: 'Gute Kundenbeziehungen' }).first();
+await dark.scrollIntoViewIfNeeded();
+await page.waitForTimeout(900);
+const db = dark.locator('a[class*="primaryButton"]').first();
+const dbb = await db.boundingBox();
+const bg = await db.evaluate(el => getComputedStyle(el).backgroundColor + ' | ' + getComputedStyle(el).color);
+console.log('dark primary button:', bg);
+await page.screenshot({ path: '/tmp/eh-v8/dark.png', clip: { x: dbb.x-60, y: dbb.y-24, width: 560, height: 80 } });
+await browser.close();

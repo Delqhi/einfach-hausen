@@ -639,3 +639,44 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 }
 
 .heroMockStage { display: block; position: relative; }
+
+/* ============ v8: interaction & section polish ============ */
+
+/* Smooth anchors (motion-safe) */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Composer comes alive on focus */
+.intake { transition: border-color .2s ease, box-shadow .2s ease; }
+.intake:focus-within { border-color: rgba(16,82,88,.45);
+  box-shadow: 0 28px 70px -30px rgba(10,53,57,.32), 0 0 0 4px rgba(16,82,88,.10); }
+.intake button svg, .primaryButton svg { transition: translate .16s ease; }
+.intake button:hover svg, .primaryButton:hover svg { translate: 3px 0; }
+
+/* Ghost caret: the cycling example feels typed */
+.intakeGhost::after { content: ''; display: inline-block; width: 2px; height: 1.05em;
+  background: var(--eh-green-700); margin-left: 3px; vertical-align: text-bottom;
+  animation: eh-caret 1.1s steps(2, start) infinite; }
+@keyframes eh-caret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+/* Secondary buttons: quiet fill on hover */
+.secondaryButton { transition: background-color .16s ease, border-color .16s ease; }
+.secondaryButton:hover { background: var(--eh-green-50); border-color: rgba(16,82,88,.35); }
+
+/* Dark sections: buttons must carry their own contrast */
+.tone_dark .primaryButton { background: #fff; color: var(--eh-green-900); border-color: #fff; box-shadow: 0 14px 30px -14px rgba(0,0,0,.45); }
+.tone_dark .primaryButton:hover { background: #ecf5f2; }
+.tone_dark .secondaryButton { background: transparent; color: #fff; border-color: rgba(255,255,255,.45); }
+.tone_dark .secondaryButton:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.75); }
+
+/* Active nav state (aria-current set by ScrollShadow) */
+.desktopNav a[aria-current="page"] { background: var(--eh-green-50); color: var(--eh-green-700); }
+
+/* Trust bar: slightly more presence */
+.trustItem svg { width: 44px; height: 44px; padding: 11px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .intake button svg, .primaryButton svg { transition: none; }
+  .intake button:hover svg, .primaryButton:hover svg { translate: 0 0; }
+  .intakeGhost::after { animation: none; }
+}

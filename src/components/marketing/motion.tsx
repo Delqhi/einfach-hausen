@@ -12,6 +12,7 @@
  */
 
 import { useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -94,6 +95,7 @@ export function Stagger({ children, className, gap = 0.08, y = 24 }: {
  */
 export function ScrollShadow({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   useGSAP(() => {
     const root = ref.current;
@@ -110,6 +112,19 @@ export function ScrollShadow({ children }: { children: React.ReactNode }) {
 
     return () => window.removeEventListener('scroll', update);
   }, { scope: ref });
+
+  // Mark the current page in the desktop nav (aria-current drives the style).
+  useGSAP(() => {
+    const root = ref.current;
+    const links = root?.querySelectorAll<HTMLAnchorElement>('header nav a');
+    if (!links) return;
+    links.forEach((link) => {
+      const href = link.getAttribute('href') || '';
+      const active = href === pathname || (href !== '/' && pathname.startsWith(`${href}/`));
+      if (active) link.setAttribute('aria-current', 'page');
+      else link.removeAttribute('aria-current');
+    });
+  }, { dependencies: [pathname] });
 
   return <div ref={ref} style={{ display: 'contents' }}>{children}</div>;
 }

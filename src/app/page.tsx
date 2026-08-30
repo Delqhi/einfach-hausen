@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { ArrowRight, BadgeCheck, CalendarCheck2, ChevronDown, FileText, Hammer, HeartHandshake, Home, Landmark, Leaf, MessageCircle, Paintbrush, Plug, Search, ShieldCheck, Sparkles, ThermometerSun, Trees, UserRound, Wrench } from 'lucide-react';
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { Section, Split, InfoPanel, BulletList, CtaBand } from '@/components/marketing/ui';
+import { Section, Split, InfoPanel, BulletList, CtaBand, LinkButton } from '@/components/marketing/ui';
 import Link from 'next/link';
 import { Reveal, Stagger, ScrubLine, Activate, DrawPath } from '@/components/marketing/motion';
 import { IntakeForm } from '@/components/home/intake-form';
@@ -82,6 +82,7 @@ export default async function HomePage() {
 
     <Section eyebrow="Leistungen" title="Vom kleinen Defekt bis zur langfristigen Hauspflege." text="Du musst nicht zuerst wissen, welches Gewerk zuständig ist. Starte mit deinem Anliegen – die fachliche Einordnung kommt danach." tone="soft">
       <div className={styles.serviceGrid}>{services.map((item)=><a className={styles.serviceItem} href="/leistungen" key={item.title}><span className={styles.serviceIcon}>{item.icon}</span><span className={styles.serviceText}><strong>{item.title}</strong><span>{item.text}</span></span><span className={styles.serviceArrow}><ArrowRight size={16} aria-hidden="true"/></span></a>)}</div>
+      <a className={styles.textLink} href="/leistungen">Alle Leistungsbereiche im Detail <ArrowRight size={15} aria-hidden="true"/></a>
     </Section>
 
     <Section eyebrow="So funktioniert's" title="Weniger suchen. Weniger hinterherlaufen. Mehr Überblick." text="Einfach Hausen bündelt die Organisation, ohne dir die Entscheidung abzunehmen.">
@@ -97,6 +98,7 @@ export default async function HomePage() {
           ))}
         </div>
       </div>
+      <a className={styles.textLink} href="/so-funktionierts">Den ganzen Ablauf ansehen <ArrowRight size={15} aria-hidden="true"/></a>
     </Section>
 
     <Section eyebrow="Mein Haus" title="Die Hausakte wird mit jedem erledigten Thema wertvoller." text="Nicht nur der nächste Auftrag zählt. Technik, Historie, Dokumente, Wartungen und Ansprechpartner wachsen zu einem dauerhaften Gedächtnis deiner Immobilie." tone="green">
@@ -122,8 +124,8 @@ export default async function HomePage() {
 
     <Section eyebrow="Preise" title="Kostenlos anfangen. Mehr Service nur, wenn du ihn brauchst." text="Das Kunden-Hauskonto startet bei 0 €. Für Partner gibt es ein kostenloses Modell und planbare Monatstarife." tone="soft">
       <Split>
-        <InfoPanel label="Eigenheimbesitzer"><div className={styles.priceFigure}><strong>0 €</strong><small>/ Monat</small></div><h3>FREE</h3><p>Hausmeisterservice, Aufträge, Angebotsvergleich, Vermittlung und digitale Hausakte bilden den kostenlosen Einstieg.</p></InfoPanel>
-        <InfoPanel label="Partner"><div className={styles.priceFigure}><strong>0 %</strong><small>Provision</small></div><h3>Planbare Tarife</h3><p>FREE startet bei 0 €. Bezahlte Partner-Tarife beginnen laut Produktmodell bei 29 € / Monat.</p></InfoPanel>
+        <InfoPanel label="Eigenheimbesitzer"><div className={styles.priceFigure}><strong>0 €</strong><small>/ Monat</small></div><h3>FREE</h3><p>Hausmeisterservice, Aufträge, Angebotsvergleich, Vermittlung und digitale Hausakte bilden den kostenlosen Einstieg.</p><div className={styles.heroActions}><LinkButton href="/register?role=homeowner">Kostenlos starten</LinkButton><LinkButton href="/preise" secondary>Tarife vergleichen</LinkButton></div></InfoPanel>
+        <InfoPanel label="Partner"><div className={styles.priceFigure}><strong>0 %</strong><small>Provision</small></div><h3>Planbare Tarife</h3><p>FREE startet bei 0 €. Bezahlte Partner-Tarife beginnen laut Produktmodell bei 29 € / Monat.</p><div className={styles.heroActions}><LinkButton href="/register?role=provider">Als Partner starten</LinkButton><LinkButton href="/preise" secondary>Partnertarife</LinkButton></div></InfoPanel>
       </Split>
     </Section>
 
