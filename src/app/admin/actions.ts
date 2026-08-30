@@ -117,7 +117,7 @@ export async function adminUpdatePartnerContractLifecycleAction(providerId: numb
       `provider:${providerId}`,
       `verification=${provider.verification_status || 'missing'};profile_verified=${provider.verified ? 1 : 0};insurance=${insuranceVerified};qualification=${qualificationVerified};contract=${contractVerified};quality=${qualityStandardVerified}`,
     );
-    redirect(`/admin?partner=${providerId}&error=${encodeURIComponent('Aktivierung blockiert: Unternehmensprüfung und alle vier Vertrags-/Qualitätschecks müssen bestätigt sein.')}`);
+    redirect(`/admin?partner=${providerId}&error=${encodeURIComponent('Aktivierung blockiert: Unternehmenspr%C3%BCfung und alle vier Vertrags-/Qualit%C3%A4tschecks m%C3%BCssen best%C3%A4tigt sein.')}`);
   }
 
   let closedDispatches = 0;
