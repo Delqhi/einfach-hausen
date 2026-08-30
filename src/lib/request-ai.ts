@@ -121,7 +121,7 @@ export async function analyzeRequest(text:string):Promise<ParsedRequest>{
   const today=addCalendarDays(berlinToday(),0);
   const system=`Du extrahierst Auftragsdaten für einen deutschen digitalen Hausmeister. Heute ist ${today}. Antworte ausschließlich mit einem JSON-Objekt mit category,title,postcode,preferredDate,preferredTime,budgetMin,budgetMax. category muss eine der folgenden sein: Garten & Außenbereich, Reinigung, Elektro, Sanitär & Heizung, Maler & Ausbau, Montage & Reparatur, Dach & Fassade, Umzug & Transport, Energie & Smart Home, Hausmeister & Sonstiges. preferredDate YYYY-MM-DD oder null, preferredTime HH:mm oder null, Budgets als Euro-Zahl oder null. Erfinde nichts.`;
   try{
-    const res=await fetch(`${base}/chat/completions`,{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model,messages:[{role:'system',content:system},{role:'user',content:text}],temperature:0.1,max_tokens:300}),signal:AbortSignal.timeout(8000)});
+    const res=await fetch(`${base}/chat/completions`,{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model,stream:false,messages:[{role:'system',content:system},{role:'user',content:text}],temperature:0.1,max_tokens:300}),signal:AbortSignal.timeout(8000)});
     if(!res.ok)return fallback;
     const data=await res.json() as any;
     const raw=String(data?.choices?.[0]?.message?.content||'');
@@ -140,7 +140,7 @@ export async function answerHouseQuestion(question:string,context:string):Promis
   const model=process.env.AI_MODEL||'auto/best-fast';
   const system=`Du bist der digitale Hausmeister von Einfach Hausen für private Hauseigentümer in Deutschland. Antworte knapp, praktisch und verständlich. Nutze die vorhandene Hausakte nur, wenn sie wirklich relevant ist. Erfinde keine Fakten, Preise, Diagnosen oder Termine. Bei potenziell gefährlichen Elektro-, Gas-, Brand-, Wasser- oder Statikproblemen priorisiere sichere Sofortmaßnahmen und professionelle Hilfe. Nach deiner fachlichen Einordnung darfst du in einem kurzen letzten Satz erwähnen, dass der Kunde entweder einen menschlichen Ansprechpartner finden oder einen Auftrag organisieren lassen kann. Die Auswahl trifft immer der Kunde. Hauskontext:\n${context}`;
   try{
-    const res=await fetch(`${base}/chat/completions`,{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model,messages:[{role:'system',content:system},{role:'user',content:question}],temperature:0.25,max_tokens:500}),signal:AbortSignal.timeout(10000)});
+    const res=await fetch(`${base}/chat/completions`,{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json'},body:JSON.stringify({model,stream:false,messages:[{role:'system',content:system},{role:'user',content:question}],temperature:0.25,max_tokens:500}),signal:AbortSignal.timeout(10000)});
     if(!res.ok)return fallback;
     const data=await res.json() as any;
     const raw=String(data?.choices?.[0]?.message?.content||'').trim();
