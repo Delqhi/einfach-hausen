@@ -1,7 +1,20 @@
 import { ArrowRight, Menu, X } from 'lucide-react';
+import localFont from 'next/font/local';
 import { Logo } from '@/components/logo';
 import { ScrollShadow } from './motion';
 import styles from './marketing.module.css';
+
+// Self-hosted Inter Variable: the public website shares the crisp, neutral
+// grotesque look of the app surfaces (DESIGN.md: "System-/Inter-nahe Sans").
+// Scoped to the marketing shell so the accepted app screens stay untouched.
+const interVariable = localFont({
+  src: '../../fonts/InterVariable.woff2',
+  weight: '100 900',
+  style: 'normal',
+  display: 'swap',
+  variable: '--font-marketing',
+  fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+});
 
 const primary = [
   ["So funktioniert's", '/so-funktionierts'],
@@ -62,7 +75,7 @@ const footerGroups = [
 
 export function MarketingShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className={styles.site}>
+    <div className={`${styles.site} ${interVariable.variable}`}>
       <a className={styles.skipLink} href="#main-content">Zum Inhalt springen</a>
       <ScrollShadow>
       <header className={styles.header}>

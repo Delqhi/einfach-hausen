@@ -470,3 +470,53 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 .tone_dark .sectionHead h2 { color: #fff; }
 .processWrap .processStep b { width: 44px; height: 44px; font-size: 13px; }
 .processWrap .processLine { top: 21px; }
+
+/* ============ v4: app-calibrated palette + typographic discipline ============ */
+/* Operator directive: the public site must feel like the Notion-calibrated app
+   surfaces (#14735c / mint / crisp Inter), not like the legacy bottle-green
+   tokens. Scoped entirely to the marketing shell. */
+.site {
+  --eh-green-900: #114a3b;
+  --eh-green-700: #14735c;
+  --eh-green-600: #1b8569;
+  --eh-green-100: #e1efe8;
+  --eh-green-50: #f0f7f3;
+  --eh-bg: #f5f8f7;
+  --eh-text: #16333d;
+  --eh-text-secondary: #5f7170;
+  --eh-border: #e3eae6;
+  --eh-border-strong: #d2ddd7;
+  font-family: var(--font-marketing), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: -.011em;
+  font-optical-sizing: auto;
+}
+
+/* Weight discipline: one display weight (700), quiet UI weights. */
+.hero h1 { font-weight: 700; letter-spacing: -.035em; line-height: 1.02; font-size: clamp(44px, 5.8vw, 80px); }
+.sectionHead h2, .ctaBand h2 { font-weight: 700; letter-spacing: -.03em; }
+.pageHero h1 { font-weight: 700; letter-spacing: -.03em; }
+.desktopNav a, .loginLink { font-weight: 550; }
+.primaryButton, .secondaryButton { font-weight: 620; }
+.intake button { font-weight: 620; }
+.intake .chip, .chip { font-weight: 570; }
+.previewHead strong, .previewCardHead strong { font-weight: 650; }
+.heroLead { font-size: 19px; }
+
+/* Calmer effects: fewer, softer, fresher hues. */
+.hero { background:
+  radial-gradient(1000px 480px at 92% -12%, rgba(225,239,232,.85), transparent 60%),
+  linear-gradient(180deg, #ffffff 0%, var(--eh-bg) 100%); }
+.hero::before { background-image: radial-gradient(rgba(22,51,61,.038) 1px, transparent 1.3px); }
+.heroUnderline { opacity: .9; }
+.productPreview { border-radius: 24px; box-shadow: 0 30px 70px -34px rgba(15,74,59,.25), 0 8px 24px -14px rgba(15,74,59,.10); }
+.floatCard { box-shadow: 0 18px 44px -18px rgba(15,74,59,.25); }
+.intake { box-shadow: 0 24px 60px -30px rgba(15,74,59,.22), 0 2px 10px -6px rgba(15,74,59,.06); }
+.infoPanel { border-radius: 22px; box-shadow: 0 18px 50px -38px rgba(15,74,59,.25); }
+.primaryButton { background: var(--eh-green-700); box-shadow: 0 10px 22px -12px rgba(20,115,92,.45); }
+.primaryButton:hover { background: var(--eh-green-600); }
+.ctaBand { background: linear-gradient(135deg, #17835f 0%, #114a3b 82%); box-shadow: 0 32px 80px -36px rgba(15,74,59,.45); }
+.tone_dark { background: var(--eh-green-900); }
+.tone_dark .featureGrid { background: #205647; border-color: #205647; }
+.tone_dark .feature { background: #17503f; }
+.tone_dark .featureIcon { background: #1f5749; color: #a9d3c1; }
+.tone_green { background: var(--eh-green-50); border-top-color: #dcebe3; border-bottom-color: #dcebe3; }
