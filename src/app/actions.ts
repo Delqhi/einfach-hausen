@@ -105,7 +105,7 @@ export async function registerAction(fd: FormData) {
     emergencyMode: text(fd,'emergencyMode'), emergencyStart: text(fd,'emergencyStart') || '18:00', emergencyEnd: text(fd,'emergencyEnd') || '22:00',
     emergencyMarkup: int(fd,'emergencyMarkup') ?? 0, openingHours: text(fd,'openingHours'), bookableHours: text(fd,'bookableHours'),
   });
-  if (!parsed.success) { recordRateLimitFailure('register', ip); logSecurityEvent('security_validation_reject', 'register', `fields=${parsed.error.issues.length}`); redirect('/register?error=Bitte%20alle%20Pflichtfelder%20ausfüllen'); }
+  if (!parsed.success) { recordRateLimitFailure('register', ip); logSecurityEvent('security_validation_reject', 'register', `fields=${parsed.error.issues.length}`); redirect('/register?error=Bitte%20alle%20Pflichtfelder%20ausf%C3%BCllen'); }
   const { role, email, password, firstName: first, lastName: last } = parsed.data;
   if (db.prepare('SELECT id FROM users WHERE email=?').get(email)) { recordRateLimitFailure('register', ip); logSecurityEvent('security_validation_reject', 'register', 'duplicate_email'); redirect('/login?error=Konto%20existiert%20bereits'); }
   const d = parsed.data;
@@ -348,9 +348,9 @@ export async function submitQuoteAction(jobId:number, fd:FormData){
   const parsed=quoteSchema.safeParse({ amount: text(fd,'amount'), availableAt: text(fd,'availableAt'), message: text(fd,'message') });
   if(!parsed.success){ logSecurityEvent('security_validation_reject','quote',`fields=${parsed.error.issues.length}`); return; }
   const { amount, availableAt, message } = parsed.data;
-  const ctx=getProviderContext(user.id); if(!ctx?.active||!ctx.canManageJobs) redirect(`/pro/jobs/${jobId}?error=Du%20darfst%20für%20diesen%20Betrieb%20keine%20neuen%20Aufträge%20verwalten`);
+  const ctx=getProviderContext(user.id); if(!ctx?.active||!ctx.canManageJobs) redirect(`/pro/jobs/${jobId}?error=Du%20darfst%20f%C3%BCr%20diesen%20Betrieb%20keine%20neuen%20Auftr%C3%A4ge%20verwalten`);
   const profile=db.prepare(`SELECT p.verified,c.status contract_status FROM provider_profiles p LEFT JOIN partner_contracts c ON c.provider_id=p.user_id WHERE p.user_id=?`).get(ctx.providerId) as {verified:number,contract_status:string|null}|undefined;
-  if(!profile?.verified || profile.contract_status!=='active') redirect(`/pro/jobs/${jobId}?error=Dein%20Betrieb%20muss%20geprüft%20und%20vertraglich%20freigeschaltet%20sein`);
+  if(!profile?.verified || profile.contract_status!=='active') redirect(`/pro/jobs/${jobId}?error=Dein%20Betrieb%20muss%20gepr%C3%BCft%20und%20vertraglich%20freigeschaltet%20sein`);
   const dispatch=db.prepare(`SELECT id FROM job_dispatches WHERE job_id=? AND provider_id=? AND status IN ('sent','viewed','quoted')`).get(jobId,ctx.providerId) as {id:number}|undefined;
   if(!dispatch) return;
   db.prepare(`INSERT INTO quotes(job_id,provider_id,amount,available_at,message,submitted_by_user_id) VALUES(?,?,?,?,?,?)
@@ -456,7 +456,7 @@ export async function createCheckoutAction(jobId:number){
   if(!q || q.homeowner_id!==user.id) return;
   if(!process.env.STRIPE_SECRET_KEY) redirect(`/app/jobs/${jobId}?error=Stripe%20ist%20noch%20nicht%20konfiguriert`);
   if(!q.verified) redirect(`/app/jobs/${jobId}?error=Der%20Partner%20ist%20nicht%20mehr%20verifiziert`);
-  if(!q.stripe_account_id || !q.stripe_onboarded) redirect(`/app/jobs/${jobId}?error=Der%20Dienstleister%20hat%20seine%20Auszahlung%20noch%20nicht%20vollständig%20eingerichtet`);
+  if(!q.stripe_account_id || !q.stripe_onboarded) redirect(`/app/jobs/${jobId}?error=Der%20Dienstleister%20hat%20seine%20Auszahlung%20noch%20nicht%20vollst%C3%A4ndig%20eingerichtet`);
   const stripe=new Stripe(process.env.STRIPE_SECRET_KEY!); const origin=process.env.NEXT_PUBLIC_APP_URL||'http://localhost:3000';
   const session=await stripe.checkout.sessions.create({ mode:'payment', customer_email:user.email, line_items:[{price_data:{currency:process.env.STRIPE_CURRENCY||'eur',product_data:{name:q.title},unit_amount:q.amount},quantity:1}],payment_intent_data:{transfer_data:{destination:q.stripe_account_id},metadata:{jobId:String(jobId),homeownerId:String(user.id),providerId:String(q.provider_id),platformCommissionBps:'0'}},success_url:`${origin}/api/payments/success?session_id={CHECKOUT_SESSION_ID}`,cancel_url:`${origin}/app/jobs/${jobId}?payment=cancelled`,metadata:{jobId:String(jobId),homeownerId:String(user.id),providerId:String(q.provider_id),platformCommissionBps:'0'}});
   db.prepare('INSERT INTO payments(job_id,homeowner_id,provider_id,amount,currency,status,stripe_session_id) VALUES(?,?,?,?,?,?,?)').run(jobId,user.id,q.provider_id,q.amount,process.env.STRIPE_CURRENCY||'eur','pending',session.id);
@@ -467,8 +467,8 @@ export async function createInvoiceAction(jobId:number,fd:FormData){
   const user=await requireUser('provider'); const ctx=canAccessProviderJob(user.id,jobId); if(!ctx)return;
   const row=db.prepare(`SELECT j.id,j.homeowner_id,j.title,j.status,q.amount,q.provider_id,p.business_name,p.street_address,p.tax_id,p.vat_id,pu.email provider_email,pu.phone provider_phone,hu.first_name homeowner_first,hu.last_name homeowner_last,h.address homeowner_address,h.postcode homeowner_postcode FROM jobs j JOIN quotes q ON q.id=j.accepted_quote_id JOIN provider_profiles p ON p.user_id=q.provider_id JOIN users pu ON pu.id=p.user_id JOIN users hu ON hu.id=j.homeowner_id JOIN homeowner_profiles h ON h.user_id=j.homeowner_id WHERE j.id=? AND q.provider_id=? AND j.request_kind='service' AND j.status IN ('accepted','in_progress','completed')`).get(jobId,ctx.providerId) as any;
   if(!row)return;
-  if(!row.street_address)redirect(`/pro/jobs/${jobId}?error=Bitte%20hinterlege%20zuerst%20die%20vollständige%20Firmenanschrift%20im%20Partnerprofil`);
-  if(!row.tax_id&&!row.vat_id)redirect(`/pro/jobs/${jobId}?error=Bitte%20hinterlege%20für%20Rechnungen%20Steuernummer%20oder%20USt-IdNr.%20im%20Partnerprofil`);
+  if(!row.street_address)redirect(`/pro/jobs/${jobId}?error=Bitte%20hinterlege%20zuerst%20die%20vollst%C3%A4ndige%20Firmenanschrift%20im%20Partnerprofil`);
+  if(!row.tax_id&&!row.vat_id)redirect(`/pro/jobs/${jobId}?error=Bitte%20hinterlege%20f%C3%BCr%20Rechnungen%20Steuernummer%20oder%20USt-IdNr.%20im%20Partnerprofil`);
   const collect=(name:string)=>fd.getAll(name).map(String);
   const num=(name:string,i:number)=>(collect(name)[i]??'').trim().replace(',','.');
   // Optional trailing form rows stay droppable; only genuinely filled lines are validated.
@@ -515,8 +515,8 @@ export async function createInvoiceCheckoutAction(invoiceId:number){
   const user=await requireUser('homeowner');
   const invoice=db.prepare(`SELECT i.*,p.stripe_account_id,p.stripe_onboarded,p.verified FROM invoices i JOIN provider_profiles p ON p.user_id=i.provider_id WHERE i.id=? AND i.homeowner_id=?`).get(invoiceId,user.id) as any;
   if(!invoice||invoice.status!=='sent')return;
-  if(!process.env.STRIPE_SECRET_KEY)redirect(`/app/invoices/${invoiceId}?error=Onlinezahlung%20ist%20gerade%20nicht%20verfügbar`);
-  if(!invoice.verified||!invoice.stripe_account_id||!invoice.stripe_onboarded)redirect(`/app/invoices/${invoiceId}?error=Der%20Dienstleister%20hat%20die%20Onlinezahlung%20noch%20nicht%20vollständig%20eingerichtet`);
+  if(!process.env.STRIPE_SECRET_KEY)redirect(`/app/invoices/${invoiceId}?error=Onlinezahlung%20ist%20gerade%20nicht%20verf%C3%BCgbar`);
+  if(!invoice.verified||!invoice.stripe_account_id||!invoice.stripe_onboarded)redirect(`/app/invoices/${invoiceId}?error=Der%20Dienstleister%20hat%20die%20Onlinezahlung%20noch%20nicht%20vollst%C3%A4ndig%20eingerichtet`);
   const existing=db.prepare(`SELECT stripe_session_id FROM payments WHERE invoice_id=? AND status='pending' ORDER BY id DESC LIMIT 1`).get(invoiceId) as {stripe_session_id:string}|undefined;
   const stripe=new Stripe(process.env.STRIPE_SECRET_KEY!); const origin=process.env.NEXT_PUBLIC_APP_URL||'http://localhost:3000';
   if(existing?.stripe_session_id){try{const previous=await stripe.checkout.sessions.retrieve(existing.stripe_session_id);if(previous.url)redirect(previous.url);}catch{}}
@@ -624,7 +624,7 @@ export async function createHouseTransferAction(fd:FormData){
 
 export async function acceptHouseTransferAction(token:string){
   const user=await requireUser('homeowner'); const transfer=db.prepare(`SELECT * FROM house_transfers WHERE token=? AND status='active'`).get(token) as any; if(!transfer)return;
-  if(String(transfer.target_email).toLowerCase()!==user.email.toLowerCase())redirect(`/transfer/${token}?error=Diese%20Hausakte%20wurde%20für%20eine%20andere%20E-Mail-Adresse%20freigegeben`);
+  if(String(transfer.target_email).toLowerCase()!==user.email.toLowerCase())redirect(`/transfer/${token}?error=Diese%20Hausakte%20wurde%20f%C3%BCr%20eine%20andere%20E-Mail-Adresse%20freigegeben`);
   const propertyId=Number(transfer.property_id); if(!propertyId||!propertyOwnedBy(transfer.homeowner_id,propertyId))return;
   const property=db.prepare(`SELECT * FROM properties WHERE id=?`).get(propertyId) as any; if(!property)return;
   const tx=db.transaction(()=>{
@@ -856,7 +856,7 @@ export async function adminUpdatePartnerContractAction(providerId:number,fd:Form
 export async function addProviderMemberAction(fd:FormData){
   const user=await requireUser('provider'); const ctx=getProviderContext(user.id); if(!ctx?.canManageJobs)redirect('/pro/team?error=Keine%20Berechtigung');
   const parsed=providerMemberSchema.safeParse({email:text(fd,'email'),password:String(fd.get('password') ?? '').trim(),firstName:text(fd,'firstName'),lastName:text(fd,'lastName'),jobTitle:text(fd,'jobTitle'),phone:text(fd,'phone')});
-  if(!parsed.success){ logSecurityEvent('security_validation_reject','member_add',`fields=${parsed.error.issues.length}`); redirect('/pro/team?error=Bitte%20alle%20Pflichtfelder%20ausfüllen'); }
+  if(!parsed.success){ logSecurityEvent('security_validation_reject','member_add',`fields=${parsed.error.issues.length}`); redirect('/pro/team?error=Bitte%20alle%20Pflichtfelder%20ausf%C3%BCllen'); }
   const { email, password, firstName: first, lastName: last, jobTitle, phone } = parsed.data;
   if(db.prepare('SELECT id FROM users WHERE email=?').get(email))redirect('/pro/team?error=E-Mail%20ist%20bereits%20registriert');
   const hash=await bcrypt.hash(password,12);
@@ -875,7 +875,7 @@ export async function updateProviderMemberAction(memberUserId:number,fd:FormData
   const member=db.prepare('SELECT * FROM provider_members WHERE provider_id=? AND user_id=?').get(ctx.providerId,memberUserId) as any; if(!member)return;
   let nextManage=fd.get('canManageJobs')?1:0; let nextActive=fd.get('active')?1:0;
   if(memberUserId===ctx.providerId){nextManage=1;nextActive=1;}
-  if(member.active&&member.can_manage_jobs&&(!nextManage||!nextActive)){const managers=(db.prepare('SELECT COUNT(*) c FROM provider_members WHERE provider_id=? AND active=1 AND can_manage_jobs=1').get(ctx.providerId) as {c:number}).c;if(managers<=1)redirect('/pro/team?error=Mindestens%20eine%20Person%20muss%20Aufträge%20verwalten');}
+  if(member.active&&member.can_manage_jobs&&(!nextManage||!nextActive)){const managers=(db.prepare('SELECT COUNT(*) c FROM provider_members WHERE provider_id=? AND active=1 AND can_manage_jobs=1').get(ctx.providerId) as {c:number}).c;if(managers<=1)redirect('/pro/team?error=Mindestens%20eine%20Person%20muss%20Auftr%C3%A4ge%20verwalten');}
   db.prepare('UPDATE provider_members SET job_title=?,can_manage_jobs=?,active=? WHERE provider_id=? AND user_id=?').run(text(fd,'jobTitle'),nextManage,nextActive,ctx.providerId,memberUserId);
   revalidatePath('/pro/team'); revalidatePath('/pro');
 }
@@ -924,7 +924,7 @@ export async function sendSavedContactMessageAction(contactUserId:number,homeown
 }
 
 export async function startPartnerPlanCheckoutAction(planSlug:string){
-  const user=await requireUser('provider'); const ctx=getProviderContext(user.id); if(!ctx?.isOwner)redirect('/pro/plans?error=Nur%20der%20Firmeninhaber%20kann%20den%20Tarif%20ändern');
+  const user=await requireUser('provider'); const ctx=getProviderContext(user.id); if(!ctx?.isOwner)redirect('/pro/plans?error=Nur%20der%20Firmeninhaber%20kann%20den%20Tarif%20%C3%A4ndern');
   const plan=db.prepare('SELECT * FROM partner_plans WHERE slug=? AND active=1').get(planSlug) as any; if(!plan)return;
   if(plan.monthly_amount===0){const current=db.prepare('SELECT stripe_subscription_id FROM partner_subscriptions WHERE provider_id=?').get(ctx.providerId) as {stripe_subscription_id:string|null}|undefined;if(current?.stripe_subscription_id&&process.env.STRIPE_SECRET_KEY){const stripe=new Stripe(process.env.STRIPE_SECRET_KEY);try{await stripe.subscriptions.cancel(current.stripe_subscription_id);}catch{}}db.prepare(`INSERT INTO partner_subscriptions(provider_id,plan_slug,status,updated_at) VALUES(?,?,'active',CURRENT_TIMESTAMP) ON CONFLICT(provider_id) DO UPDATE SET plan_slug=excluded.plan_slug,status='active',stripe_subscription_id=NULL,current_period_end=NULL,trial_end=NULL,updated_at=CURRENT_TIMESTAMP`).run(ctx.providerId,plan.slug);revalidatePath('/pro/plans');redirect('/pro/plans?checkout=success');}
   if(!process.env.STRIPE_SECRET_KEY)redirect('/pro/plans?error=Stripe%20ist%20noch%20nicht%20konfiguriert');

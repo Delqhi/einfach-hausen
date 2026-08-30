@@ -522,8 +522,7 @@ html, body {
 .bubble.user { background: var(--green); color: #fff; border-bottom-right-radius: 6px; align-self: flex-end; }
 .ki-composer { padding: 10px 18px 16px; background: #fff; border-top: 1px solid #eef2f0; }
 
-/* ============================================================
-   einfachhausen – Design-System FINAL 100% (Bonus-Paket)
+/* =====================================================   einfachhausen – Design-System FINAL 100% (Bonus-Paket)
    Ueberschreibt vorherige Variablen mit finalen Werten
    ============================================================ */
 :root { --bg:#faf6ef; --ink:#16333d; --green:#14735c; --green-soft:#eaf4ee; --muted:#5b6d73; --card:#ffffff; --line:#e6eeeb; --danger:#d0452e; --radius:18px; }
@@ -654,8 +653,7 @@ p { font-size:14.5px; line-height:1.5; color:var(--muted); }
 .page { max-width:430px; margin:0 auto; display:flex; flex-direction:column; }
 .center-page { max-width:430px; margin:0 auto; }
 
-/* ============================================================
-   T-0168 — Notion App-Design fidelity layer
+/* =====================================================   T-0168 — Notion App-Design fidelity layer
    Verbindliche visuelle Tokens aus der App-Design-Referenz.
    ============================================================ */
 :root {
@@ -761,3 +759,7 @@ html,body { background:#faf6ef; color:#16333d; }
 .nf-primary { background:#105258; color:#fff; box-shadow:0 14px 30px -14px rgba(10,53,57,.55); }
 .nf-ghost { background:#fff; color:#1c2129; border:1px solid #cfdad9; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
+/* Global interactions moved out of marketing.module.css (CSS-module purity, T-0006) */
+::selection { background: var(--eh-green-100); }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

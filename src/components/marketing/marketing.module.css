@@ -323,8 +323,6 @@ details[open] .faqSummary svg { transform: rotate(180deg); }
 
 /* ============ Master redesign layer v3 (sin-frontend-design wave) ============ */
 
-::selection { background: var(--eh-green-100); }
-
 /* --- Editorial type scale + rhythm --- */
 .section { padding: 112px 0; }
 .sectionHead h2 { font-size: clamp(34px, 4.2vw, 54px); letter-spacing: -.045em; line-height: 1.04; font-weight: 800; }
@@ -646,8 +644,8 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 /* ============ v8: interaction & section polish ============ */
 
 /* Smooth anchors (motion-safe) */
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* reduced-motion smooth-scroll override lives in globals.css (CSS-module purity) */
 
 /* Composer comes alive on focus */
 .intake { transition: border-color .2s ease, box-shadow .2s ease; }

@@ -157,30 +157,56 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   const store = await jar();
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
-  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('your-project.supabase.co')) return null;
+  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('your-project.supabase.co')) {
+    console.error('[auth-debug] getCurrentUser null: supabase env missing at runtime');
+    return null;
+  }
   const client = createServerClient(
     supabaseUrl,
     supabaseAnonKey,
     { cookies: { getAll: () => store.getAll ? store.getAll() : [DEV_COOKIE, PROD_COOKIE].flatMap((name) => { const c = store.get(name); return c ? [{ name, value: c.value }] : []; }), setAll: (items) => { for (const item of items) { try { store.set(item.name, item.value, item.options); } catch {} } } } }
   );
-  const { data: { user: identity }, error } = await client.auth.getUser();
-  if (error || !identity) return null;
+  // The gateway (Kong/tunnel path) intermittently answers 502/503 under burst
+  // load. A single transient rejection must never log a user out, so transient
+  // failures are retried; hard auth failures stay fail-closed immediately.
+  let identity: any = null;
+  let lastError: { message?: string; status?: number } | null = null;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const { data, error } = await client.auth.getUser();
+    if (!error && data.user) { identity = data.user; break; }
+    lastError = error as any;
+    const status = (error as any)?.status;
+    const transient = !status || status === 408 || status === 429 || status >= 500 || /fetch failed|bad gateway|gateway time-?out|network/i.test(String(error?.message ?? ''));
+    if (!transient) break;
+    await new Promise((resolve) => setTimeout(resolve, 250 * 2 ** attempt));
+  }
+  if (!identity) {
+    // Quantify WHY an authenticated request was rejected (missing cookie vs
+    // gateway error) without logging any token material.
+    const cookieNames = store.getAll ? store.getAll().map((c) => c.name) : [];
+    console.error('[auth-debug] getCurrentUser rejected:', lastError?.message ?? 'no identity', '| cookies:', JSON.stringify(cookieNames));
+    return null;
+  }
   // Roles are application authority, never mutable Supabase user_metadata.
   // A verified subject must map to an existing server-controlled application row.
   let row = db.prepare('SELECT id,email,role,first_name,last_name,phone FROM users WHERE auth_subject=?').get(identity.id) as CurrentUser | undefined;
+  if (!row) console.error('[auth-debug] no app row for subject:', identity.id, '| email-match fallback next');
   // One-time, explicit migration bridge: email is only used to bind an existing
   // application account to the verified Supabase subject. Future requests require auth_subject.
   if (!row) {
     // Email is a one-time migration key only. It must identify exactly one
     // existing account; mismatched roles and collisions fail closed.
     const matches = db.prepare('SELECT id,email,role,first_name,last_name,phone,auth_subject FROM users WHERE lower(email)=lower(?)').all(identity.email || '') as Array<CurrentUser & { auth_subject: string | null }>;
-    if (matches.length !== 1 || matches[0].auth_subject !== null) return null;
+    if (matches.length !== 1 || matches[0].auth_subject !== null) {
+      console.error('[auth-debug] email-match bind rejected:', JSON.stringify({ matches: matches.length, existing_subject: matches[0]?.auth_subject ?? null }));
+      return null;
+    }
     const candidate = matches[0];
     const updated = db.prepare('UPDATE users SET auth_subject=? WHERE id=? AND auth_subject IS NULL').run(identity.id, candidate.id);
     if (updated.changes !== 1) return null;
     row = db.prepare('SELECT id,email,role,first_name,last_name,phone FROM users WHERE auth_subject=?').get(identity.id) as CurrentUser | undefined;
   }
-  if (!row) return null;
+  if (!row) { console.error('[auth-debug] getCurrentUser null: no app row after bind attempt for', identity.email); return null; }
   return row || null;
 }
 
