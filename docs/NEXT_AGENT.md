@@ -23,6 +23,10 @@
 - Production Node on OCI: use `/home/ubuntu/.local/bin` +
   `/home/ubuntu/.local/opt/node-v22.22.1-linux-arm64/bin` (never system node v20).
 
+### T-0165 presentation continuation
+
+The visual presentation chain is **Notion App Design → `DESIGN.md` → `docs/PRESENTATION_BRAND.md` → `presentation/premium/brand.config.json` → `presentation/premium/deck.html`**. Notion is visual evidence, not an automatic product specification. Any future app-design change must be checked against the presentation brand contract and deck before export.
+
 ## 1. Verified architecture facts (2026-08-29, T-0169/T-0004)
 
 - Auth: `AUTH_MODE=supabase` (production) / `local` (dev only; production local auth fails closed).
