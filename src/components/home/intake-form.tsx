@@ -50,6 +50,10 @@ export function IntakeForm() {
     >
       <input type="hidden" name="role" value="homeowner" />
       <label htmlFor="request">Was steht bei deinem Haus an?</label>
+      <div className={styles.intakeHead}>
+        <span className={styles.intakeLabel}>Dein Anliegen</span>
+        <span className={styles.intakeBadge}>kostenlos &amp; unverbindlich</span>
+      </div>
       <div className={styles.intakeRow}>
         <div className={styles.intakeField}>
           <input

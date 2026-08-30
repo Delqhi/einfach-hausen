@@ -45,7 +45,7 @@ export default async function HomePage() {
         <Stagger className={styles.heroCopy} gap={0.12}>
           <span className={styles.eyebrow}><span className={styles.eyebrowDot} aria-hidden="true"/> Für Eigenheimbesitzer</span>
           <h1>Du hast ein Haus. <span className={styles.heroAccent}>Wir kümmern uns <span className={styles.underlineSlot}>um den Rest.<DrawPath className={styles.heroUnderlineWrap}><svg viewBox="0 0 320 14" preserveAspectRatio="none" className={styles.heroUnderline} aria-hidden="true"><path d="M4 10 C 80 3, 240 3, 316 8" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/></svg></DrawPath></span></span></h1>
-          <p className={styles.heroLead}>Weniger kümmern, mehr zuhause sein: Einfach Hausen bündelt alles rund ums Eigenheim. Beschreibe, was ansteht – wir helfen beim Einordnen, verbinden dich mit passenden Menschen und organisieren Aufträge, wenn du sie wirklich vergibst.</p>
+          <p className={styles.heroLead}>Weniger kümmern, mehr zuhause sein: <strong>Einfach Hausen bündelt alles rund ums Eigenheim.</strong> Beschreibe, was ansteht – wir helfen beim Einordnen, verbinden dich mit passenden Menschen und organisieren Aufträge, wenn du sie wirklich vergibst.</p>
           <IntakeForm />
           <div className={styles.heroLinks}><span>Mehr erfahren:</span><a href="/so-funktionierts">So funktioniert&apos;s</a><a href="/leistungen">Leistungen ansehen</a><a href="/preise">Preise</a></div>
         </Stagger>
