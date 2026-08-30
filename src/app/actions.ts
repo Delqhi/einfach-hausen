@@ -8,7 +8,7 @@ import Stripe from 'stripe';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
-import { createSession, destroySession, requireUser } from '@/lib/auth';
+import { createSession, destroySession, requireUser, supabaseAdmin, establishSupabaseSession } from '@/lib/auth';
 import { adminPasswordMatches, createAdminSession, destroyAdminSession, requireAdmin } from '@/lib/admin-auth';
 import { createNotification } from '@/lib/notifications';
 import { geocodePostcode } from '@/lib/geocode';
@@ -111,9 +111,30 @@ export async function registerAction(fd: FormData) {
   const d = parsed.data;
   const emergencyDays=fd.getAll('emergencyDay').map(String).filter(v=>/^[0-6]$/.test(v)).join(',')||'1,2,3,4,5';
   const logoFile=fd.get('logo'); const logoPath=role==='provider'&&logoFile instanceof File&&logoFile.size?await savePublicImageUpload(logoFile):null;
+  // Identity authority first (fail-closed): the Supabase identity is created
+  // before any application state exists. The app row binds to the verified
+  // subject explicitly (T-0168 identity-mapping rule); bcrypt material stays
+  // only so the local-dev auth fallback can share the same accounts.
+  const admin = supabaseAdmin();
+  if (!admin) {
+    logSecurityEvent('security_validation_reject', 'register', 'supabase_admin_unavailable');
+    redirect('/register?error=Registrierung%20aktuell%20nicht%20verf%C3%BCgbar');
+  }
+  const created = await admin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { role }, // informational only; never authorizes
+  });
+  if (created.error || !created.data?.user) {
+    const reason = created.error?.message ?? 'unknown';
+    logSecurityEvent('auth_register_fail', email, `supabase_create=${reason.slice(0, 120)}`);
+    redirect('/register?error=Registrierung%20fehlgeschlagen.%20Existiert%20die%20E-Mail%20bereits%3F');
+  }
+  const authSubject = created.data.user.id as string;
   const hash = await bcrypt.hash(password, 12);
   const tx = db.transaction(() => {
-    const r = db.prepare('INSERT INTO users(email,password_hash,role,first_name,last_name,phone) VALUES(?,?,?,?,?,?)').run(email,hash,role,first,last,d.phone||null);
+    const r = db.prepare('INSERT INTO users(email,password_hash,role,first_name,last_name,phone,auth_subject) VALUES(?,?,?,?,?,?,?)').run(email,hash,role,first,last,d.phone||null,authSubject);
     const id = Number(r.lastInsertRowid);
     if (role==='homeowner') db.prepare('INSERT INTO homeowner_profiles(user_id,postcode,address,onboarding_step) VALUES(?,?,?,\'profile\')').run(id,d.postcode,d.address);
     else {
@@ -148,7 +169,16 @@ export async function registerAction(fd: FormData) {
     const bounded=intakeDescriptionSchema.safeParse({description:initialRequest});
     if(bounded.success){await answerHausmeisterQuestion(id,bounded.data.description,'app');}
   }
-  await createSession(id); redirect(role==='provider'?'/pro':initialRequest?'/app/hausmeister?answered=1':'/app/onboarding');
+  await createSession(id);
+  // Establish the Supabase SSR session server-side so the middleware gate and
+  // getCurrentUser() resolve immediately; otherwise the freshly registered
+  // user would bounce to /login despite valid credentials.
+  const supabaseSession = await establishSupabaseSession(email, password);
+  if (!supabaseSession) {
+    logSecurityEvent('auth_register', email, 'supabase_session_establishment_failed');
+    redirect('/login?notice=Konto%20erstellt.%20Bitte%20einmalig%20anmelden.');
+  }
+  redirect(role==='provider'?'/pro':initialRequest?'/app/hausmeister?answered=1':'/app/onboarding');
 }
 
 export async function loginAction(fd: FormData) {

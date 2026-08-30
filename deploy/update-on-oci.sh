@@ -81,6 +81,19 @@ fi
 
 git fetch origin main
 git merge --ff-only origin/main
+
+# NEXT_PUBLIC_* values are inlined at build time. The runtime env file is
+# root-only (0600), so the build sources the dedicated ubuntu-readable file
+# instead; without it the client bundle and CSP lose the Supabase gateway
+# origin and production login breaks (T-0200 root cause).
+BUILD_ENV_FILE="${BUILD_ENV_FILE:-/etc/einfach-hausen-build.env}"
+if [[ -r "$BUILD_ENV_FILE" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$BUILD_ENV_FILE"
+  set +a
+fi
+
 "$NPM_BIN" ci
 BUILD_DATABASE_PATH="${BUILD_DATABASE_PATH:-/tmp/einfach-hausen-build-$$.db}"
 DATABASE_PATH="$BUILD_DATABASE_PATH" "$NPM_BIN" run build

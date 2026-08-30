@@ -14,6 +14,7 @@ function clean(value: string): string {
 
 export type SecurityEventKind =
   | 'auth_register'
+  | 'auth_register_fail'
   | 'auth_login_ok'
   | 'auth_login_fail'
   | 'admin_login_ok'

@@ -1,6 +1,27 @@
 import { randomBytes } from 'node:crypto';
 import { db } from './db';
+import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
+
+// Resolved once per call: the Supabase gateway is the production identity
+// authority. Anonymous URL/key are public-by-design and safe to expose to the
+// browser bundle; the service-role key never leaves the server.
+export function supabaseConfig() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '';
+  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
+  const configured = Boolean(url && anon) && !url.includes('your-project.supabase.co');
+  return { url, anon, configured };
+}
+
+// Server-side admin client for identity lifecycle operations (registration
+// binding, account deletion). Returns null when unconfigured so callers fail
+// closed instead of silently bypassing the identity authority.
+export function supabaseAdmin() {
+  const { url, configured } = supabaseConfig();
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+  if (!configured || !serviceKey) return null;
+  return createClient(url, serviceKey, { auth: { autoRefreshToken: false, persistSession: false } });
+}
 
 export type CurrentUser = {
   id: number; email: string; role: 'homeowner' | 'provider'; first_name: string; last_name: string; phone: string | null;
@@ -176,4 +197,22 @@ export async function requireUser(role?: CurrentUser['role']) {
   if (!user) await navigateTo('/login');
   if (role && user!.role !== role) await navigateTo(user!.role === 'provider' ? '/pro' : '/app');
   return user!;
+}
+
+// Establish a real Supabase SSR session for a user who just registered via the
+// server action. The browser never sees the credentials; the server signs in
+// with the freshly created identity and persists the sb-* cookies so the
+// middleware gate and getCurrentUser() accept the request immediately.
+export async function establishSupabaseSession(email: string, password: string): Promise<boolean> {
+  const { url, anon, configured } = supabaseConfig();
+  if (!configured) return false;
+  const store = await jar();
+  const client = createServerClient(url, anon, {
+    cookies: {
+      getAll: () => (store.getAll ? store.getAll() : []),
+      setAll: (items) => { for (const item of items) { try { store.set(item.name, item.value, item.options); } catch {} } },
+    },
+  });
+  const { error } = await client.auth.signInWithPassword({ email, password });
+  return !error;
 }
