@@ -11,6 +11,16 @@
 - E2E: Step 0 (Website) grün modernisiert; verbleibender Fail `/pro/messages` tech-persona seam failed identisch auf pre-wave HEAD = dokumentierter T-0006-Scope, KEINE Regression.
 - OCI-Deploy ERFOLGT (2026-08-30, 4x): `/srv/einfach-hausen` @ **f6dac99** (Brand-Wave: LOGO_03 als Header-Lockup/Footer/Favicon-Set, Website-Palette auf Logo-Teal #105258 + Charcoal #1C2129 kalibriert; vorher 841891b Inter-Variable-Identity-Wave; davor 7d81872 Master-Design-Wave (Master-Design-Wave: editorialer Hero mit DrawPath-Underline, Ghost-Composer, Floating-Proof-Cards, Scrub-Line-Prozess/Timeline, Gradient-CTA; Motion-Primitives ScrubLine/Activate/DrawPath) via `deploy/update-on-oci.sh`, Production-Smoke 17/17 PASS @ https://einfachhausen.de, Live-HTML enthält alle Design-Marker. Nächster einzelner Schritt: **T-0006** weiterführen (tech-persona `/pro/messages` seam).
 
+## 0-c. Backend-Hardening-Welle 2026-08-30 (T-0200..T-0205, alle DONE, main=1ac7e90 deployed)
+
+- T-0200 Auth-Kette produktiv: Deploy sourced `/etc/einfach-hausen-build.env` (NEXT_PUBLIC_*) vor dem Build; Runtime-Env um AUTH_MODE/SUPABASE_URL/ANON/SERVICE_ROLE erweitert; registerAction erzeugt die Supabase-Identity zuerst (fail-closed) und bindet users.auth_subject + serverseitige SSR-Session; CSP connect-src enthaelt die Gateway-Origin (live). Beweis: scripts/t0200-register-e2e.mjs 9/9 (Register->Bind->Login->Legacy-Email-Match-Bind), t0170 15/15.
+- T-0201 E-Mail + Dispatcher: SMTP via Resend (verify + Send-Proof live), MAIL_FROM, E-Mail-Channel-Adapter im Outbox, systemd-Timer einfach-hausen-dispatch (5 min), GoTrue-SMTP konfiguriert, Fake-Domain entfernt. t0104 24/24.
+- T-0202 KI-Chat: /api/ki authentifiziert (401 unauth), ki_chat Rate-Limit (30/15min), OmniRoute mit stream:false (repariert auch den Silent-Fallback in request-ai). t0202 3/3 mit echter Gateway-Antwort.
+- T-0203 GDPR: /api/konto-loeschen ersetzt den 410-Legacy-Endpunkt (Session-Identity autorisiert; Anonymisierung, Retention fuer Rechnungen/Zahlungen, File-Unlink, Supabase-Identity-Delete), /api/account/export + UI unter /app/settings. t0203 14/14.
+- T-0204 Ops: /api/health gated auth_authority/smtp/storage (keine Pfade/Secrets); Restore-Drill dry-run+staged bewiesen (docs/evidence/T-0204-restore-drill-20260830.md); toter Cron entfernt; Offsite-Ziel als externer Blocker.
+- T-0205 Hygiene: 10 verwaiste Client-only-Routen entfernt (dashboard, dashboard-pro, profil, historie, auftraege, notfall, chat, meine-angebote, einstellungen, benachrichtigungen + SideMenu/ActionSheet); Redirects auf /pro, /app, /app/jobs umgebogen; E2E-DB-Isolation bleibt offen fuer T-0006.
+- Bekannte Restpunkte: Production-DB enthaelt 6 historische E2E-Test-User (Aug 21-26), bewusst nicht mutiert. E-Mail-Empfangs-Nachweis in einem echten Postfach + Offsite-Backup-Ziel stehen in docs/EXTERNAL-BLOCKERS.md.
+
 ## 0. Read this first
 
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3` in the **canonical OCI worktree**
