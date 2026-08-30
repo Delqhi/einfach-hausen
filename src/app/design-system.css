@@ -469,10 +469,11 @@ button,a,input,textarea,select{touch-action:manipulation}
   .app-shell-v3 .mobile-brand .brand-copy{gap:0}
   .app-shell-v3 .mobile-brand .brand-copy strong{font-size:14px}
   .app-shell-v3 .mobile-brand .brand-copy small{display:none}
-  .app-shell-v3 .ehn-center-logo{top:2px;gap:0;height:56px;overflow:visible}
-  .app-shell-v3 .ehn-center-logo .ehn-center-logo-house{width:56px;height:38px}
-  .app-shell-v3 .ehn-center-logo .own-logo-line1{font-size:14px}
-  .app-shell-v3 .ehn-center-logo .own-logo-line2{font-size:13px;margin-left:10px}
+  .app-shell-v3 .ehn-center-logo{top:2px;flex-direction:column;align-items:center;gap:0;height:60px;overflow:visible}
+  .app-shell-v3 .ehn-center-logo .ehn-center-logo-house{width:34px;height:22px}
+  .app-shell-v3 .ehn-center-logo .ehn-center-logo-text{margin-top:-4px}
+  .app-shell-v3 .ehn-center-logo .own-logo-line1{font-size:14px;line-height:1}
+  .app-shell-v3 .ehn-center-logo .own-logo-line2{font-size:12px;line-height:1;margin-left:8px;margin-top:1px}
 }
 .ehn-menu{display:none}
 @media(max-width:920px){
