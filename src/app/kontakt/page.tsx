@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Building2, CircleAlert, HelpCircle, LogIn, MessageCircle, ShieldCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, FeatureGrid, InfoPanel, LegalNotice, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { HeroContact } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export default function Page() {
         eyebrow="Kontakt"
         title="Der richtige Kontaktweg hängt von deinem Anliegen ab."
         text="Hausanliegen, bestehende Vorgänge und Partnerfragen bleiben dort, wo ihr Kontext bereits vorhanden ist. Öffentliche Betreiber- und Rechtskontaktdaten werden erst nach dokumentierter Freigabe veröffentlicht."
+        aside={<HeroContact />}
       />
 
       <Section eyebrow="Eigentümer" title="Hausanliegen direkt im passenden Kontext starten.">

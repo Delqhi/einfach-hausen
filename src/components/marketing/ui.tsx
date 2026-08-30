@@ -1,20 +1,23 @@
 import { ArrowRight } from 'lucide-react';
-import { Reveal } from './motion';
+import { Reveal, Stagger } from './motion';
 import styles from './marketing.module.css';
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return <span className={styles.eyebrow}>{children}</span>;
 }
 
-export function PageHero({ eyebrow, title, text, actions }: { eyebrow: string; title: string; text: string; actions?: React.ReactNode }) {
+export function PageHero({ eyebrow, title, text, actions, aside }: { eyebrow: string; title: string; text: string; actions?: React.ReactNode; aside?: React.ReactNode }) {
   return (
     <section className={styles.pageHero}>
-      <Reveal className={styles.narrow}>
-        <Eyebrow>{eyebrow}</Eyebrow>
-        <h1>{title}</h1>
-        <p>{text}</p>
-        {actions && <div className={styles.heroActions}>{actions}</div>}
-      </Reveal>
+      <div className={aside ? styles.pageHeroGrid : `${styles.pageHeroGrid} ${styles.pageHeroGridSingle}`}>
+        <Stagger className={styles.pageHeroCopy} gap={0.1}>
+          <span className={styles.eyebrow}><span className={styles.eyebrowDot} aria-hidden="true"/> {eyebrow}</span>
+          <h1>{title}</h1>
+          <p>{text}</p>
+          {actions && <div className={styles.heroActions}>{actions}</div>}
+        </Stagger>
+        {aside && <Reveal delay={0.22} y={30} className={styles.pageHeroAside}>{aside}</Reveal>}
+      </div>
     </section>
   );
 }

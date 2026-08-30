@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { BadgeCheck, Eye, FileCheck2, LockKeyhole, ShieldCheck, UserCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, FeatureGrid, InfoPanel, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { HeroShield } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = {
@@ -16,6 +17,8 @@ export default function Page() {
         eyebrow="Sicherheit"
         title="Kontrollierte Zugriffe statt Vertrauensversprechen ohne Beleg."
         text="Einfach Hausen trennt private Daten, bewusste Freigaben und technische Sicherheitsgrenzen. Diese Seite beschreibt überprüfbare Produktprinzipien und vorhandene Schutzmechanismen – keine externe Zertifizierung, kein Audit-Siegel und keine Garantie."
+        aside={<HeroShield />}
+        actions={<><LinkButton href="/register?role=homeowner">Kostenlos starten</LinkButton><LinkButton href="/datenschutz" secondary>Datenschutz</LinkButton></>}
       />
 
       <Section eyebrow="Entscheidungshoheit" title="Kein Auftrag und keine Freigabe im Hintergrund.">

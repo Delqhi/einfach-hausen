@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, PageHero, Section } from '@/components/marketing/ui';
+import { CtaBand, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { HeroHelp } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = { title: 'Hilfe & FAQ', description: 'Antworten zu Anliegen, Ansprechpartnern, Aufträgen, Hausakte, Preisen und Partnern.' };
@@ -15,7 +16,7 @@ const faq=[
  ['Sind alle Leistungen überall verfügbar?','Nein. Verfügbarkeit hängt vom regional aktiven, passenden Partnernetzwerk und der jeweiligen Kapazität ab.'],
 ] as const;
 export default function Page(){return <MarketingShell>
-  <PageHero eyebrow="Hilfe & FAQ" title="Klare Antworten, bevor du etwas beauftragst." text="Hier findest du die wichtigsten Grundlagen zum Ablauf, zur Hausakte und zum Partnernetzwerk." />
+  <PageHero eyebrow="Hilfe & FAQ" title="Klare Antworten, bevor du etwas beauftragst." text="Hier findest du die wichtigsten Grundlagen zum Ablauf, zur Hausakte und zum Partnernetzwerk." aside={<HeroHelp />} actions={<LinkButton href="/kontakt" secondary>Kontakt aufnehmen</LinkButton>} />
   <Section eyebrow="Häufige Fragen" title="Was du über Einfach Hausen wissen solltest.">
     <div className={styles.faq}>{faq.map(([q,a])=><details key={q}><summary>{q}</summary><p>{a}</p></details>)}</div>
   </Section>

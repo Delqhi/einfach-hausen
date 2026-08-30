@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { FileText, Home, MessageCircle, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { BulletList, CtaBand, FeatureGrid, InfoPanel, PageHero, Section, Split } from '@/components/marketing/ui';
+import { BulletList, CtaBand, FeatureGrid, InfoPanel, LinkButton, PageHero, Section, Split } from '@/components/marketing/ui';
+import { HeroChoices } from '@/components/marketing/hero-visuals';
 
 export const metadata: Metadata = { title: 'Für Eigenheimbesitzer', description: 'Eine zentrale Anlaufstelle für Fragen, Aufträge, Ansprechpartner und Hauswissen.' };
 export default function Page(){return <MarketingShell>
-  <PageHero eyebrow="Für Eigenheimbesitzer" title="Dein Haus hat viele Themen. Du brauchst trotzdem nur eine Eingangstür." text="Von der ersten Frage bis zur Rechnung: Einfach Hausen hält den Vorgang verständlich zusammen und bewahrt das Wissen danach in deiner Hausakte." />
+  <PageHero eyebrow="Für Eigenheimbesitzer" title="Dein Haus hat viele Themen. Du brauchst trotzdem nur eine Eingangstür." text="Von der ersten Frage bis zur Rechnung: Einfach Hausen hält den Vorgang verständlich zusammen und bewahrt das Wissen danach in deiner Hausakte." aside={<HeroChoices />} actions={<LinkButton href="/register?role=homeowner">Kostenlos starten</LinkButton>} />
   <Section eyebrow="Der Nutzen" title="Weniger Organisationsarbeit rund ums Eigenheim." text="Du musst nicht jedes Mal recherchieren, neu erklären und Informationen zusammensuchen.">
     <FeatureGrid items={[{icon:<MessageCircle size={20}/>,title:'Normal beschreiben',text:'Du musst weder Gewerk noch Fachbegriff kennen. Beschreibe einfach, was du siehst oder brauchst.'},{icon:<UserRound size={20}/>,title:'Menschen behalten',text:'Ein verbundener Ansprechpartner bleibt beim Haus gespeichert und kann später wieder direkt angesprochen werden.'},{icon:<FileText size={20}/>,title:'Hauswissen sichern',text:'Historie, Anlagen, Dokumente, Termine und Wartungshinweise wachsen an einem Ort zusammen.'}]}/>
   </Section>

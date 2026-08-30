@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { BulletList, CtaBand, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { HeroPlans } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = { title: 'Preise', description: 'Kunden- und Partnerpreise von Einfach Hausen transparent im Überblick.' };
@@ -16,7 +17,7 @@ const partner=[
  {name:'PREMIUM',price:'199 €',text:'Höchster definierter Partner-Monatstarif.'},
 ] as const;
 export default function Page(){return <MarketingShell>
-  <PageHero eyebrow="Preise" title="Transparent für Eigentümer und Betriebe." text="Kunden starten kostenlos. Partner arbeiten ohne Auftragsprovision. Bezahlte Funktionen und Tarife sind klar getrennt." />
+  <PageHero eyebrow="Preise" title="Transparent für Eigentümer und Betriebe." text="Kunden starten kostenlos. Partner arbeiten ohne Auftragsprovision. Bezahlte Funktionen und Tarife sind klar getrennt." aside={<HeroPlans />} actions={<LinkButton href="/register?role=homeowner">Kostenlos starten</LinkButton>} />
   <Section eyebrow="Eigenheimbesitzer" title="Vom kostenlosen Hauskonto bis zur persönlichen Betreuung." text="Alle Beträge pro Monat. Optionale Jahrespakete können zusätzlich angeboten werden, sind hier aber nicht bepreist, solange kein verifizierter Preis vorliegt.">
     <div className={styles.priceGrid}>{customer.map((p,i)=><article className={`${styles.priceCard} ${i===1?styles.priceCardFeatured:''}`} key={p.name}><h3>{p.name}</h3><div className={styles.price}>{p.price}<small>/ Monat</small></div><p>{p.text}</p><BulletList items={p.items}/><LinkButton href="/register?role=homeowner" secondary={i!==0}>{i===0?'Kostenlos starten':`${p.name} ansehen`}</LinkButton></article>)}</div>
     <p className={styles.note}>Ein Haus-Anliegen wird nicht automatisch zum Auftrag. Beratung, Ansprechpartner und organisierte Beauftragung bleiben getrennte Entscheidungen.</p>

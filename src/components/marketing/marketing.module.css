@@ -562,3 +562,54 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 .logoWord { font-size: 19px; font-weight: 700; letter-spacing: -.035em; line-height: 1; white-space: nowrap; }
 .logoWord b { color: var(--eh-text); font-weight: 700; }
 .logoWord span { color: var(--eh-green-700); font-weight: 700; }
+
+/* ============ v6: subpage hero system ============ */
+.pageHero { position: relative; overflow: hidden; padding: 104px 0 76px;
+  background:
+    radial-gradient(900px 420px at 92% -12%, rgba(220,235,236,.85), transparent 58%),
+    radial-gradient(700px 380px at -6% 115%, rgba(220,235,236,.55), transparent 55%),
+    linear-gradient(180deg, #ffffff 0%, var(--eh-bg) 100%); }
+.pageHero::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(28,33,41,.035) 1px, transparent 1.3px);
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.55), transparent 70%);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.55), transparent 70%); }
+.pageHeroGrid { position: relative; width: min(1200px, calc(100% - 40px)); margin: 0 auto;
+  display: grid; grid-template-columns: minmax(0,1.08fr) minmax(340px,.92fr); gap: 64px; align-items: center; }
+.pageHeroGridSingle { grid-template-columns: 1fr; max-width: 840px; }
+.pageHeroCopy { max-width: 640px; }
+.pageHeroCopy h1 { font-size: clamp(40px, 5vw, 64px); letter-spacing: -.035em; line-height: 1.03; font-weight: 700; margin: 14px 0 0; text-wrap: balance; }
+.pageHeroCopy p { margin: 18px 0 0; font-size: 18px; line-height: 1.65; color: var(--eh-text-secondary); }
+.pageHeroAside { position: relative; min-width: 0; }
+
+/* mock helpers (hero-visuals) */
+.heroServiceGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.heroServiceChip { min-height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--eh-border); border-radius: 10px; background: #fff; font-size: 12.5px; font-weight: 600; color: #3f4943; }
+.heroMockNote { margin: 12px 0 0; font-size: 12px; color: var(--eh-text-secondary); }
+.heroStatRow { display: flex; align-items: baseline; gap: 10px; margin: 2px 0 14px; }
+.heroStatRow strong { font-size: 44px; font-weight: 700; letter-spacing: -.04em; color: var(--eh-green-700); line-height: 1; }
+.heroStatRow span { color: var(--eh-text-secondary); font-size: 13px; line-height: 1.4; }
+.heroFactRow { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #3f4943; line-height: 1.5; margin-top: 10px; }
+.heroFactRow svg { color: var(--eh-green-700); flex: 0 0 auto; margin-top: 2px; }
+.heroPlanGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
+.heroPlan { border: 1px solid var(--eh-border); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 3px; background: #fff; }
+.heroPlan small { font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; color: var(--eh-text-secondary); }
+.heroPlan strong { font-size: 30px; font-weight: 700; letter-spacing: -.03em; color: var(--eh-text); line-height: 1.05; }
+.heroPlan span { font-size: 12px; color: var(--eh-text-secondary); }
+.heroPlanFeatured { border-color: rgba(16,82,88,.35); box-shadow: 0 0 0 2px rgba(16,82,88,.08) inset; }
+.heroPlanFeatured strong { color: var(--eh-green-700); }
+.heroContactRow { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; padding: 10px 0; border-bottom: 1px solid #eef2f2; }
+.heroContactRow:last-child { border-bottom: 0; }
+.heroContactRow strong { display: block; font-size: 13px; }
+.heroContactRow small { display: block; margin-top: 2px; color: var(--eh-text-secondary); font-size: 11.5px; }
+
+@media (max-width: 980px) {
+  .pageHeroGrid { grid-template-columns: 1fr; gap: 44px; }
+  .pageHeroAside { max-width: 520px; }
+  .pageHero { padding: 80px 0 64px; }
+}
+@media (max-width: 540px) {
+  .pageHero { padding: 64px 0 56px; }
+  .pageHeroGrid { width: calc(100% - 32px); gap: 36px; }
+  .pageHeroCopy h1 { font-size: 38px; }
+}

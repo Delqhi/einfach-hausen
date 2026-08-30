@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import { MessageCircle, ShieldCheck, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, FeatureGrid, PageHero, Section } from '@/components/marketing/ui';
+import { CtaBand, FeatureGrid, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { HeroChoices } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = { title: "So funktioniert's", description: 'So wird aus einem Anliegen ein klarer nächster Schritt – ohne automatische Beauftragung.' };
 
 export default function Page(){return <MarketingShell>
-  <PageHero eyebrow="So funktioniert's" title="Du beschreibst das Problem. Du entscheidest den nächsten Schritt." text="Einfach Hausen beginnt nicht mit einer Kategorienwand. Du sagst in normalen Worten, was an deinem Haus los ist – und entscheidest erst nach der Einordnung, was daraus werden soll." />
+  <PageHero eyebrow="So funktioniert's" title="Du beschreibst das Problem. Du entscheidest den nächsten Schritt." text="Einfach Hausen beginnt nicht mit einer Kategorienwand. Du sagst in normalen Worten, was an deinem Haus los ist – und entscheidest erst nach der Einordnung, was daraus werden soll." aside={<HeroChoices />} actions={<><LinkButton href="/register?role=homeowner">Anliegen starten</LinkButton><LinkButton href="/leistungen" secondary>Leistungen ansehen</LinkButton></>} />
   <Section eyebrow="Der Ablauf" title="Vier Schritte, die sich wie einer anfühlen." text="Die Organisation im Hintergrund darf komplex sein. Für dich bleibt der Weg klar.">
     <div className={styles.processList}>{[
       ['01','Anliegen beschreiben','Text, Foto oder Sprache: Du startest so, wie du das Problem selbst erklären würdest.'],
