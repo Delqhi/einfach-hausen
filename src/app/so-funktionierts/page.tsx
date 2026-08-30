@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { MessageCircle, ShieldCheck, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, FeatureGrid, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { CtaBand, FeatureGrid, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
 import { HeroChoices } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
@@ -17,7 +17,8 @@ export default function Page(){return <MarketingShell>
       ['04','Alles zusammenhalten','Bei einem Auftrag werden passende Partner, Angebote, Termine, Dokumente und der konkrete Ansprechpartner gebündelt.'],
     ].map(([n,t,x])=><article className={styles.processStep} key={n}><b>{n}</b><h3>{t}</h3><p>{x}</p></article>)}</div>
   </Section>
-  <Section eyebrow="Drei Wege" title="Eine Frage ist noch kein Auftrag." text="Das Produkt trennt Beratung, persönlichen Kontakt und Beauftragung bewusst voneinander." tone="soft">
+  <Statement kicker="Das Prinzip" tone="soft">Eine Frage ist noch kein Auftrag.</Statement>
+  <Section eyebrow="Drei Wege" title="Drei bewusste Wege statt einer Formularstrecke." text="Beratung, persönlicher Kontakt und Beauftragung sind getrennte Entscheidungen – du gehst jeden Weg nur, wenn du es willst." tone="soft">
     <FeatureGrid items={[
       {icon:<MessageCircle size={20}/>,title:'Frage klären',text:'Zuerst verstehen, was wahrscheinlich sinnvoll ist. Dabei entsteht noch kein Auftrag.'},
       {icon:<UserRound size={20}/>,title:'Ansprechpartner finden',text:'Ein passender geprüfter Partner kann als konkreter Mensch für Fragen verbunden werden – auch ohne Buchungszwang.'},

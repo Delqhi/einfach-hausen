@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Building2, CircleAlert, HelpCircle, LogIn, MessageCircle, ShieldCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { Statement } from '@/components/marketing/ui';
 import { CtaBand, FeatureGrid, InfoPanel, LegalNotice, LinkButton, PageHero, Section } from '@/components/marketing/ui';
 import { HeroContact } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
@@ -44,6 +45,7 @@ export default function Page() {
         </div>
       </Section>
 
+      <Statement kicker="Unser Grundsatz" tone="green">Kein Anliegen verliert seinen Kontext. Kein Kontakt läuft ins Leere.</Statement>
       <Section eyebrow="Datenschutz & Sicherheit" title="Sensible Anliegen brauchen einen verifizierten Betreiberkontakt.">
         <InfoPanel label="Noch kein erfundener Rechtskontakt">
           <p>

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Bug, Droplets, Hammer, Home, Leaf, Paintbrush, Plug, Shield, Snowflake, Sparkles, ThermometerSun, Trees } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
 import { HeroServices } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
@@ -25,6 +25,7 @@ export default function Page(){return <MarketingShell>
   <Section eyebrow="Leistungsbereiche" title="Breit genug für den Alltag eines Eigenheims." text="Die Plattform ist auf unterschiedliche Haus- und Grundstücksthemen ausgelegt. Nicht jede Leistung ist in jeder Region jederzeit verfügbar.">
     <div className={styles.serviceGrid}>{groups.map(x=><div className={styles.serviceItem} key={x.title}><span>{x.icon}</span><div><strong>{x.title}</strong><span>{x.text}</span></div></div>)}</div>
   </Section>
+  <Statement kicker="So startest du" tone="green">Erst das Anliegen. Dann die Lösung.</Statement>
   <Section eyebrow="So startest du" title="Nicht durchklicken. Beschreiben." text="Einfach Hausen soll zuerst verstehen, was tatsächlich ansteht, und erst danach die passenden nächsten Schritte zeigen." tone="soft">
     <div className={styles.processList}>{[['01','Anliegen schildern','Ein Satz genügt zum Start. Fotos oder weitere Angaben kommen nur hinzu, wenn sie helfen.'],['02','Details klären','Nötige Informationen werden schrittweise ergänzt statt in einem langen Formular abgefragt.'],['03','Weg wählen','Beratung, persönlicher Ansprechpartner oder organisierter Auftrag bleiben getrennte Entscheidungen.'],['04','Regional vermitteln','Bei einem Auftrag werden passende aktive Vertragspartner aus dem verfügbaren Netzwerk berücksichtigt.']].map(([n,t,x])=><article className={styles.processStep} key={n}><b>{n}</b><h3>{t}</h3><p>{x}</p></article>)}</div>
   </Section>

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
 import { HeroHelp } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
@@ -17,8 +17,14 @@ const faq=[
 ] as const;
 export default function Page(){return <MarketingShell>
   <PageHero eyebrow="Hilfe & FAQ" title="Klare Antworten, bevor du etwas beauftragst." text="Hier findest du die wichtigsten Grundlagen zum Ablauf, zur Hausakte und zum Partnernetzwerk." aside={<HeroHelp />} actions={<LinkButton href="/kontakt" secondary>Kontakt aufnehmen</LinkButton>} />
+  <Statement kicker="Unser Anspruch" tone="soft">Verständlich bleiben – bei jeder Frage, in jedem Schritt.</Statement>
   <Section eyebrow="Häufige Fragen" title="Was du über Einfach Hausen wissen solltest.">
-    <div className={styles.faq}>{faq.map(([q,a])=><details key={q}><summary>{q}</summary><p>{a}</p></details>)}</div>
+    <div className={`${styles.faqList} ${styles.faqTwoCol}`}>{faq.map(([q,a])=>(
+      <details className={styles.faq} key={q}>
+        <summary className={styles.faqSummary}><span>{q}</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div className={styles.faqBody}><p>{a}</p></div>
+      </details>
+    ))}</div>
   </Section>
   <CtaBand title="Deine konkrete Frage ist ein guter Startpunkt." text="Lege kostenlos ein Hauskonto an und beschreibe dein Anliegen in normalen Worten." />
 </MarketingShell>}

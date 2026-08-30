@@ -38,7 +38,36 @@ export function Section({ eyebrow, title, text, children, tone = 'plain' }: { ey
 }
 
 export function FeatureGrid({ items }: { items: ReadonlyArray<{ icon: React.ReactNode; title: string; text: string }> }) {
-  return <div className={styles.featureGrid}>{items.map((item) => <article className={styles.feature} key={item.title}><div className={styles.featureIcon}>{item.icon}</div><h3>{item.title}</h3><p>{item.text}</p></article>)}</div>;
+  return <div className={styles.featureGrid} data-count={items.length}>{items.map((item) => <article className={styles.feature} key={item.title}><div className={styles.featureIcon}>{item.icon}</div><h3>{item.title}</h3><p>{item.text}</p></article>)}</div>;
+}
+
+export function Statement({ kicker, tone = 'plain', children }: { kicker: string; tone?: 'plain' | 'soft' | 'green' | 'dark'; children: React.ReactNode }) {
+  return (
+    <section className={`${styles.section} ${styles.statement} ${styles[`tone_${tone}`]}`}>
+      <div className={styles.statementInner}>
+        <Reveal><span className={styles.eyebrow}>{kicker}</span></Reveal>
+        <Reveal delay={0.08}><p className={styles.statementText}>{children}</p></Reveal>
+      </div>
+    </section>
+  );
+}
+
+export function Numbered({ items, tone = 'plain' }: { items: ReadonlyArray<{ title: string; text: string }>; tone?: 'plain' | 'soft' | 'green' | 'dark' }) {
+  return (
+    <div className={`${styles.numberedList} ${tone !== 'plain' ? styles[`tone_${tone}`] : ''}`}>
+      {items.map((item, index) => (
+        <Reveal key={item.title} delay={index * 0.05}>
+          <div className={styles.numberedRow}>
+            <span className={styles.numberedNum}>{String(index + 1).padStart(2, '0')}</span>
+            <div className={styles.numberedBody}>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </div>
+          </div>
+        </Reveal>
+      ))}
+    </div>
+  );
 }
 
 export function Split({ children }: { children: React.ReactNode }) {

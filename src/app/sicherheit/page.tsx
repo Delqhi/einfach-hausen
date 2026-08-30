@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { BadgeCheck, Eye, FileCheck2, LockKeyhole, ShieldCheck, UserCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { Statement } from '@/components/marketing/ui';
 import { CtaBand, FeatureGrid, InfoPanel, LinkButton, PageHero, Section } from '@/components/marketing/ui';
 import { HeroShield } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
@@ -21,6 +22,7 @@ export default function Page() {
         actions={<><LinkButton href="/register?role=homeowner">Kostenlos starten</LinkButton><LinkButton href="/datenschutz" secondary>Datenschutz</LinkButton></>}
       />
 
+      <Statement kicker="Unser Prinzip" tone="green">Nichts passiert mit deinem Haus oder deinen Daten ohne deine Entscheidung.</Statement>
       <Section eyebrow="Entscheidungshoheit" title="Kein Auftrag und keine Freigabe im Hintergrund.">
         <FeatureGrid items={[
           { icon: <UserCheck size={20} />, title: 'Keine automatische Beauftragung', text: 'Eine Frage oder reine Kontaktanfrage wird nicht stillschweigend zu einem kostenpflichtigen Auftrag.' },

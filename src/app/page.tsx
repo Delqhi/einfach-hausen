@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { ArrowRight, BadgeCheck, CalendarCheck2, ChevronDown, CircleCheck, FileText, Hammer, HeartHandshake, Home, Landmark, Leaf, MessageCircle, Paintbrush, Plug, Search, ShieldCheck, Sparkles, ThermometerSun, Trees, UserRound, Wrench } from 'lucide-react';
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { Section, Split, InfoPanel, BulletList, CtaBand, LinkButton } from '@/components/marketing/ui';
+import { Section, Split, InfoPanel, BulletList, CtaBand, LinkButton, Statement } from '@/components/marketing/ui';
 import Link from 'next/link';
 import { Reveal, Stagger, ScrubLine, Activate, DrawPath, SplitLines } from '@/components/marketing/motion';
 import { IntakeForm } from '@/components/home/intake-form';
@@ -150,6 +150,7 @@ export default async function HomePage() {
       <a className={styles.textLink} href="/hilfe">Alle Fragen und Hilfe ansehen</a>
     </Section>
 
+    <Statement kicker="Einfach Hausen" tone="green">Dein Haus vergisst nichts. Wir auch nicht.</Statement>
     <CtaBand title="Beim nächsten Thema nicht wieder von vorne anfangen." text="Lege dein Hauskonto kostenlos an und beschreibe einfach, was bei deinem Eigenheim ansteht." />
   </MarketingShell>;
 }
