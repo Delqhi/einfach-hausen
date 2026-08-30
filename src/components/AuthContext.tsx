@@ -16,17 +16,15 @@ const AuthContext = createContext<Ctx>({
   user: null, session: null, loading: true, signOut: async () => {},
 });
 
-// Public surfaces: app entry points plus the complete public platform website
-// (DESIGN.md §5.1 — every primary navigation item must be reachable without a
-// session). Authorization authority stays on the server; this list only decides
-// whether the browser may bounce an anonymous visitor to /login.
-const PUBLIC_ROUTES = new Set([
-  "/", "/welcome", "/role", "/login", "/register-owner", "/register-pro", "/check-email",
-  "/so-funktionierts", "/eigenheimbesitzer", "/leistungen", "/hausakte", "/partner",
-  "/preise", "/ueber-uns", "/hilfe", "/kontakt", "/sicherheit",
-  "/impressum", "/datenschutz", "/agb", "/barrierefreiheit",
-]);
-const PUBLIC_PREFIXES = ["/register", "/onboarding", "/partner-invite"];
+// The browser guard is convenience-only: server components and actions remain
+// the authorization authority. It therefore protects ONLY the known private
+// app surfaces (client-side UX bounce to /login) and never touches unknown
+// routes (404s must render, not redirect) or public marketing pages.
+const PRIVATE_PREFIXES = [
+  "/auftraege", "/meine-angebote", "/mein-haus", "/historie", "/ki-chat",
+  "/profil", "/einstellungen", "/benachrichtigungen", "/notifications",
+  "/notfall", "/ansprechpartner", "/dashboard", "/anfragen-pro",
+];
 // Canonical app/pro pages resolve Supabase identity and application role on
 // the server. The browser guard must never replace that authority with metadata.
 const SERVER_AUTH_PREFIXES = ["/app", "/pro", "/admin"];
@@ -50,10 +48,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (loading) return;
-    const isPublic = PUBLIC_ROUTES.has(pathname) || PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix));
     const usesServerAuth = SERVER_AUTH_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
     if (usesServerAuth) return;
-    if (!session && !isPublic) {
+    const isPrivate = PRIVATE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+    if (!session && isPrivate) {
       router.replace("/login");
     } else if (session && (pathname === "/welcome" || pathname === "/role")) {
       // Enter through the canonical server-authorized owner route. A provider
