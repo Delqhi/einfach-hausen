@@ -1,7 +1,7 @@
 import { ArrowRight, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import localFont from 'next/font/local';
-import { ScrollShadow } from './motion';
+import { ScrollShadow, SmoothScroll } from './motion';
 import styles from './marketing.module.css';
 // Static imports: content-hashed URLs, immune to optimizer cache staleness.
 import logoMark from './assets/logo-mark.png';
@@ -79,6 +79,7 @@ const footerGroups = [
 export function MarketingShell({ children }: { children: React.ReactNode }) {
   return (
     <div className={`${styles.site} ${interVariable.variable}`}>
+      <SmoothScroll />
       <a className={styles.skipLink} href="#main-content">Zum Inhalt springen</a>
       <ScrollShadow>
       <header className={styles.header}>

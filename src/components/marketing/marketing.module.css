@@ -492,7 +492,7 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 }
 
 /* Weight discipline: one display weight (700), quiet UI weights. */
-.hero h1 { font-weight: 700; letter-spacing: -.035em; line-height: 1.02; font-size: clamp(44px, 5.8vw, 80px); }
+.hero h1, .heroH1 { font-weight: 700; letter-spacing: -.035em; line-height: 1.02; font-size: clamp(44px, 5.8vw, 80px); margin: 0; }
 .sectionHead h2, .ctaBand h2 { font-weight: 700; letter-spacing: -.03em; }
 .pageHero h1 { font-weight: 700; letter-spacing: -.03em; }
 .desktopNav a, .loginLink { font-weight: 550; }

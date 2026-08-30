@@ -13,11 +13,13 @@
 
 import { useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
 import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
 const REVEAL_DURATION = 0.7;
 const EASE = 'power3.out';
@@ -265,4 +267,69 @@ export function DrawPath({ children, className, delay = 0 }: {
   }, { dependencies: [delay] });
 
   return <span ref={ref} className={className} aria-hidden="true">{children}</span>;
+}
+
+/**
+ * Inertial smooth scrolling for the marketing site (Lenis), driven by the
+ * GSAP ticker so ScrollTrigger and Lenis share one clock (official recipe).
+ * Respects prefers-reduced-motion: with reduce, native scrolling stays.
+ */
+export function SmoothScroll() {
+  useGSAP(() => {
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const lenis = new Lenis({ lerp: 0.11, wheelMultiplier: 1, autoRaf: false });
+      lenis.on('scroll', ScrollTrigger.update);
+      const tick = (time: number) => lenis.raf(time * 1000);
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
+      return () => {
+        gsap.ticker.remove(tick);
+        lenis.destroy();
+      };
+    });
+    return () => mm.revert();
+  });
+  return null;
+}
+
+/**
+ * Premium line reveal: splits the heading into lines (Intl.Segmenter-based,
+ * umlaut-safe) and lets each line rise in after fonts are ready. Without JS
+ * or with reduced motion the plain heading stays fully visible.
+ */
+export function SplitLines({ children, className, delay = 0 }: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLHeadingElement>(null);
+
+  useGSAP(() => {
+    const el = ref.current;
+    if (!el) return;
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      let split: SplitText | undefined;
+      let killed = false;
+      document.fonts.ready.then(() => {
+        if (killed) return;
+        split = SplitText.create(el, { type: 'lines' });
+        gsap.from(split.lines, {
+          yPercent: 130,
+          autoAlpha: 0,
+          duration: 0.9,
+          ease: 'power4.out',
+          stagger: 0.1,
+          delay,
+        });
+      });
+      return () => { killed = true; split?.revert(); };
+    });
+
+    return () => mm.revert();
+  }, { dependencies: [delay] });
+
+  return <h1 ref={ref} className={className}>{children}</h1>;
 }

@@ -4,7 +4,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Section, Split, InfoPanel, BulletList, CtaBand, LinkButton } from '@/components/marketing/ui';
 import Link from 'next/link';
-import { Reveal, Stagger, ScrubLine, Activate, DrawPath } from '@/components/marketing/motion';
+import { Reveal, Stagger, ScrubLine, Activate, DrawPath, SplitLines } from '@/components/marketing/motion';
 import { IntakeForm } from '@/components/home/intake-form';
 import styles from '@/components/marketing/marketing.module.css';
 
@@ -48,7 +48,7 @@ export default async function HomePage() {
             <span className={styles.heroBadge}><Home size={15} aria-hidden="true"/> Digitale Hausakte</span>
             <span className={styles.heroBadge}><UserRound size={15} aria-hidden="true"/> Persönlicher Ansprechpartner</span>
           </span>
-          <h1>Du hast ein Haus. <span className={styles.heroAccent}>Wir kümmern uns <span className={styles.underlineSlot}>um den Rest.<DrawPath className={styles.heroUnderlineWrap}><svg viewBox="0 0 320 14" preserveAspectRatio="none" className={styles.heroUnderline} aria-hidden="true"><path d="M4 10 C 80 3, 240 3, 316 8" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/></svg></DrawPath></span></span></h1>
+          <SplitLines className={styles.heroH1}>Du hast ein Haus. <span className={styles.heroAccent}>Wir kümmern uns <span className={styles.underlineSlot}>um den Rest.<DrawPath className={styles.heroUnderlineWrap}><svg viewBox="0 0 320 14" preserveAspectRatio="none" className={styles.heroUnderline} aria-hidden="true"><path d="M4 10 C 80 3, 240 3, 316 8" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/></svg></DrawPath></span></span></SplitLines>
           <p className={styles.heroLead}>Weniger kümmern, mehr zuhause sein: <strong>Einfach Hausen bündelt alles rund ums Eigenheim.</strong> Beschreibe, was ansteht – wir helfen beim Einordnen, verbinden dich mit passenden Menschen und organisieren Aufträge, wenn du sie wirklich vergibst.</p>
           <IntakeForm />
           <Link href="/hausakte" className={styles.heroAkteStrip} aria-label="So sieht deine digitale Hausakte aus – zur Hausakte-Seite">
