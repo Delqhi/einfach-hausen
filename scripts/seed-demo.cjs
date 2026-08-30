@@ -1,0 +1,13 @@
+const Database = require('better-sqlite3');
+const db = new Database('data/einfach-hausen.db');
+const now = new Date().toISOString();
+const pid = Number(db.prepare('INSERT INTO properties(address,postcode) VALUES(?,?)').run('Torstraße 1','10115').lastInsertRowid);
+db.prepare('INSERT INTO property_ownerships(property_id,homeowner_id,active) VALUES(?,?,1)').run(pid,20);
+const j = db.prepare('INSERT INTO jobs(homeowner_id,category,title,description,status,request_kind,postcode,property_id,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)').run(20,'Sanitär','Heizung macht Geräusche','Die Heizung im Wohnzimmer macht seit Tagen komische Geräusche.','accepted','service','10115',pid,now,now);
+const jobId = j.lastInsertRowid;
+db.prepare('INSERT INTO quotes(job_id,provider_id,amount,available_at,message,submitted_by_user_id) VALUES(?,?,?,?,?,21)').run(jobId, 21, 45000, '2026-09-02', 'Ich schaue mir die Heizung an und tausche das Ventil.');
+const qid = db.prepare('SELECT id FROM quotes WHERE job_id=?').get(jobId).id;
+db.prepare('UPDATE jobs SET accepted_quote_id=? WHERE id=?').run(qid, jobId);
+db.prepare('INSERT INTO job_dispatches(job_id,provider_id,status) VALUES(?,?,?)').run(jobId,21,'accepted');
+db.prepare('INSERT INTO job_assignments(job_id,provider_id,contact_user_id,assigned_by_user_id) VALUES(?,?,21,21)').run(jobId,21);
+console.log('property', pid, 'job', jobId);

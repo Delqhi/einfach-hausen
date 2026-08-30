@@ -1,0 +1,10 @@
+import { chromium } from 'playwright-core';
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await ctx.addCookies([{ name: 'mh_session', value: '663ef280760ff84757bfa0585f047af0da43fa5275867cfd1f9193a943db40f4', domain: 'localhost', path: '/' }]);
+const page = await ctx.newPage();
+page.on('console', m => { const t = m.text(); if (t.includes('auth') || t.includes('null')) console.log('CONSOLE:', t.slice(0,120)); });
+await page.goto('http://localhost:3110/app', { waitUntil: 'networkidle' });
+await page.waitForTimeout(1500);
+console.log('final:', page.url());
+await browser.close();
