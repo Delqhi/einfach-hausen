@@ -102,15 +102,20 @@ export function ScrollShadow({ children }: { children: React.ReactNode }) {
     const header = root?.querySelector('header');
     if (!header) return;
 
+    let ticking = false;
     const update = () => {
       if (window.scrollY > 8) header.setAttribute('data-scrolled', 'true');
       else header.removeAttribute('data-scrolled');
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      header.style.setProperty('--scroll-progress', max > 0 ? String(Math.min(1, window.scrollY / max)) : '0');
+      ticking = false;
     };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
 
-    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
     update();
 
-    return () => window.removeEventListener('scroll', update);
+    return () => window.removeEventListener('scroll', onScroll);
   }, { scope: ref });
 
   // Mark the current page in the desktop nav (aria-current drives the style).

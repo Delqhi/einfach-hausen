@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { ArrowRight, BadgeCheck, CalendarCheck2, ChevronDown, FileText, Hammer, HeartHandshake, Home, Landmark, Leaf, MessageCircle, Paintbrush, Plug, Search, ShieldCheck, Sparkles, ThermometerSun, Trees, UserRound, Wrench } from 'lucide-react';
+import { ArrowRight, BadgeCheck, CalendarCheck2, ChevronDown, CircleCheck, FileText, Hammer, HeartHandshake, Home, Landmark, Leaf, MessageCircle, Paintbrush, Plug, Search, ShieldCheck, Sparkles, ThermometerSun, Trees, UserRound, Wrench } from 'lucide-react';
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Section, Split, InfoPanel, BulletList, CtaBand, LinkButton } from '@/components/marketing/ui';
@@ -43,10 +43,19 @@ export default async function HomePage() {
     <section className={styles.hero}>
       <div className={styles.heroInner}>
         <Stagger className={styles.heroCopy} gap={0.12}>
-          <span className={styles.eyebrow}><span className={styles.eyebrowDot} aria-hidden="true"/> Für Eigenheimbesitzer</span>
+          <span className={styles.heroBadgeRow}>
+            <span className={styles.heroBadge}><CircleCheck size={15} aria-hidden="true"/> Geprüfte Partner</span>
+            <span className={styles.heroBadge}><Home size={15} aria-hidden="true"/> Digitale Hausakte</span>
+            <span className={styles.heroBadge}><UserRound size={15} aria-hidden="true"/> Persönlicher Ansprechpartner</span>
+          </span>
           <h1>Du hast ein Haus. <span className={styles.heroAccent}>Wir kümmern uns <span className={styles.underlineSlot}>um den Rest.<DrawPath className={styles.heroUnderlineWrap}><svg viewBox="0 0 320 14" preserveAspectRatio="none" className={styles.heroUnderline} aria-hidden="true"><path d="M4 10 C 80 3, 240 3, 316 8" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/></svg></DrawPath></span></span></h1>
           <p className={styles.heroLead}>Weniger kümmern, mehr zuhause sein: <strong>Einfach Hausen bündelt alles rund ums Eigenheim.</strong> Beschreibe, was ansteht – wir helfen beim Einordnen, verbinden dich mit passenden Menschen und organisieren Aufträge, wenn du sie wirklich vergibst.</p>
           <IntakeForm />
+          <Link href="/hausakte" className={styles.heroAkteStrip} aria-label="So sieht deine digitale Hausakte aus – zur Hausakte-Seite">
+            <span className={styles.heroAkteIcon}><Home size={19} aria-hidden="true"/></span>
+            <span className={styles.heroAkteCopy}><strong>So sieht deine Hausakte aus.</strong><small>Technik, Dokumente und Ansprechpartner – geordnet an einem Ort.</small></span>
+            <ArrowRight size={17} className={styles.heroAkteArrow} aria-hidden="true"/>
+          </Link>
           <div className={styles.heroLinks}><span>Mehr erfahren:</span><a href="/so-funktionierts">So funktioniert&apos;s</a><a href="/leistungen">Leistungen ansehen</a><a href="/preise">Preise</a></div>
         </Stagger>
         <Reveal delay={0.25} y={34} className={styles.productPreviewWrap}>

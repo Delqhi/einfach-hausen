@@ -713,3 +713,67 @@ html { scroll-behavior: smooth; }
   .intakeHead { padding: 2px 4px 10px; }
   .intakeMeta span { padding: 6px 10px 6px 8px; font-size: 11.5px; }
 }
+
+/* ============ v10: premium depth pass ============ */
+
+/* Hero badge row above H1 */
+.heroBadgeRow { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
+.heroBadge { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px 8px 10px;
+  background: rgba(255,255,255,.85); border: 1px solid var(--eh-border-strong); border-radius: 999px;
+  font-size: 12.5px; font-weight: 640; color: var(--eh-text); letter-spacing: -.005em;
+  box-shadow: 0 8px 20px -14px rgba(10,53,57,.35);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.heroBadge svg { color: var(--eh-green-700); }
+
+/* Mini Hausakte strip under the composer */
+.heroAkteStrip { margin-top: 14px; display: flex; align-items: center; gap: 14px;
+  background: var(--eh-surface); border: 1px solid var(--eh-border); border-radius: 18px;
+  padding: 13px 16px; text-decoration: none; color: inherit;
+  box-shadow: 0 14px 36px -24px rgba(10,53,57,.3);
+  transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
+.heroAkteStrip:hover { border-color: rgba(16,82,88,.4); transform: translateY(-2px);
+  box-shadow: 0 20px 44px -24px rgba(10,53,57,.38); }
+.heroAkteIcon { flex: 0 0 auto; width: 42px; height: 42px; display: grid; place-items: center;
+  border-radius: 13px; background: var(--eh-green-50); color: var(--eh-green-700); }
+.heroAkteCopy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.heroAkteCopy strong { font-size: 14px; letter-spacing: -.01em; }
+.heroAkteCopy small { color: var(--eh-text-secondary); font-size: 12.5px; line-height: 1.45; }
+.heroAkteArrow { flex: 0 0 auto; color: var(--eh-green-700); transition: translate .18s ease; }
+.heroAkteStrip:hover .heroAkteArrow { translate: 4px 0; }
+
+/* CTA band facts */
+.ctaFacts { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 18px; position: relative; }
+.ctaFacts span { display: inline-flex; align-items: center; gap: 7px; color: #c9decf; font-size: 13px; font-weight: 550; }
+.ctaFacts svg { color: #7fc9a8; }
+
+/* Scroll progress bar in the header */
+.header::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: linear-gradient(90deg, var(--eh-green-700), #17808a);
+  transform-origin: left center; transform: scaleX(var(--scroll-progress, 0)); }
+
+/* Dark section: glow + stronger icons */
+.tone_dark { background:
+  radial-gradient(760px 380px at 88% -12%, rgba(255,255,255,.07), transparent 62%),
+  var(--eh-green-900); }
+.tone_dark .featureIcon { width: 46px; height: 46px; }
+
+/* Process numerals: outlined -> filled on activation */
+.processWrap .processStep b { background: var(--eh-surface); border: 1.5px solid var(--eh-border-strong); color: var(--eh-text-secondary); }
+.processStep.isActive b { border-color: var(--eh-green-700); }
+
+/* Glass highlight on mock cards */
+.productPreview { position: relative; }
+.productPreview::before { content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; z-index: 1;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.9), transparent); }
+
+/* Button press states */
+.primaryButton:active, .secondaryButton:active, .intake button:active { transform: translateY(0) scale(.985); }
+
+/* Trust bar hover */
+.trustItem { transition: background-color .16s ease; }
+.trustItem:hover { background: #fafcfb; }
+
+@media (prefers-reduced-motion: reduce) {
+  .heroAkteStrip, .heroAkteArrow, .trustItem { transition: none; }
+  .heroAkteStrip:hover { transform: none; }
+}

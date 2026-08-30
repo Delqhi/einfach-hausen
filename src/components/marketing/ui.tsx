@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CircleCheck } from 'lucide-react';
 import { Reveal, Stagger } from './motion';
 import styles from './marketing.module.css';
 
@@ -58,7 +58,7 @@ export function InfoPanel({ children, label }: { children: React.ReactNode; labe
 }
 
 export function CtaBand({ title, text, href = '/register?role=homeowner', label = 'Kostenlos starten' }: { title: string; text: string; href?: string; label?: string }) {
-  return <Reveal><section className={styles.ctaBand}><div><h2>{title}</h2><p>{text}</p></div><LinkButton href={href}>{label}</LinkButton></section></Reveal>;
+  return <Reveal><section className={styles.ctaBand}><div><h2>{title}</h2><p>{text}</p><div className={styles.ctaFacts}><span><CircleCheck size={14} aria-hidden="true"/> Kostenlos starten</span><span><CircleCheck size={14} aria-hidden="true"/> Kein Auftrag ohne deine Entscheidung</span><span><CircleCheck size={14} aria-hidden="true"/> 0 % Provision für Partner</span></div></div><LinkButton href={href}>{label}</LinkButton></section></Reveal>;
 }
 
 export function LegalNotice({ title, children }: { title: string; children: React.ReactNode }) {
