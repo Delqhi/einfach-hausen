@@ -1,7 +1,7 @@
 import { db } from '../db';
 import { logSecurityEvent } from './audit';
 
-export type RateLimitKind = 'login' | 'register' | 'admin_login' | 'admin_mutation' | 'ki_chat';
+export type RateLimitKind = 'login' | 'register' | 'admin_login' | 'admin_mutation' | 'ki_chat' | 'account_mutation';
 
 type Policy = { maxAttempts: number; windowMs: number; blockMs: number };
 
@@ -14,6 +14,8 @@ const POLICIES: Record<RateLimitKind, Policy> = {
   admin_mutation: { maxAttempts: 120, windowMs: 15 * 60_000, blockMs: 30 * 60_000 },
   // Per-user AI assistant budget: bounded cost exposure for the LLM proxy.
   ki_chat: { maxAttempts: 30, windowMs: 15 * 60_000, blockMs: 10 * 60_000 },
+  // Destructive self-service account operations (export/delete).
+  account_mutation: { maxAttempts: 5, windowMs: 60 * 60_000, blockMs: 60 * 60_000 },
 };
 
 // Bounded retention keeps unique-identifier floods from growing auth_rate_limits forever.

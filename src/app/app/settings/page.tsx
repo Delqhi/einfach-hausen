@@ -4,6 +4,7 @@ import { AppShell } from '@/components/shell';
 import { InstallAppCard } from '@/components/install-app-card';
 import { requireUser } from '@/lib/auth';
 import { PwaSettingsStatus } from './pwa-settings-status';
+import { AccountActions } from './account-actions';
 import styles from './settings.module.css';
 
 export default async function AppSettingsPage() {
@@ -56,6 +57,14 @@ export default async function AppSettingsPage() {
           </span>
           <input type="checkbox" disabled aria-label="Checklisten-Erinnerungen per Push noch nicht verfügbar" />
         </div>
+      </section>
+
+      <section className={styles.section} aria-labelledby="account-heading">
+        <div className={styles.sectionHeading}>
+          <ShieldCheck aria-hidden="true" />
+          <div><h2 id="account-heading">Konto & Daten</h2><p>Datenexport und Konto-Löschung nach DSGVO.</p></div>
+        </div>
+        <AccountActions />
       </section>
     </AppShell>
   );

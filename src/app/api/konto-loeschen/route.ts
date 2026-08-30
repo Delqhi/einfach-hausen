@@ -1,16 +1,25 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { getCurrentUser } from "@/lib/auth";
+import { checkRateLimit, consumeRateLimitAttempt } from "@/lib/security/rate-limit";
+import { deleteAccountData } from "@/lib/account-deletion";
 
+// Self-service account deletion (EH T-0203). The session's verified identity
+// is the only authorization input; any body payload (e.g. a legacy userId) is
+// deliberately ignored so one account can never delete another.
 export async function POST(req: Request) {
-  const { userId } = await req.json();
-  const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
-  const { data } = await admin.auth.admin.getUserById(userId);
-  const user: any = (data as any)?.user;
-  // Never derive authorization or data ownership from mutable user_metadata.
-  // This legacy endpoint is intentionally fail-closed until it is migrated to
-  // the server-controlled application identity model.
-  return NextResponse.json({ error: "legacy endpoint disabled" }, { status: 410 });
-  await admin.from("messages").delete().eq("sender_id", userId);
-  await admin.auth.admin.deleteUser(userId);
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+
+  const key = `u:${user.id}`;
+  if (!checkRateLimit("account_mutation", key).allowed) {
+    return NextResponse.json({ error: "Zu viele Versuche. Bitte später erneut." }, { status: 429 });
+  }
+  consumeRateLimitAttempt("account_mutation", key);
+
+  try {
+    await deleteAccountData(user.id);
+  } catch (error) {
+    return NextResponse.json({ error: "Löschen fehlgeschlagen. Bitte Support kontaktieren." }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }
