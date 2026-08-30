@@ -1,8 +1,11 @@
 import { ArrowRight, Menu, X } from 'lucide-react';
+import Image from 'next/image';
 import localFont from 'next/font/local';
-import { Logo } from '@/components/logo';
 import { ScrollShadow } from './motion';
 import styles from './marketing.module.css';
+// Static imports: content-hashed URLs, immune to optimizer cache staleness.
+import logoMark from './assets/logo-mark.png';
+import logoFull from './assets/logo-full.png';
 
 // Self-hosted Inter Variable: the public website shares the crisp, neutral
 // grotesque look of the app surfaces (DESIGN.md: "System-/Inter-nahe Sans").
@@ -83,7 +86,8 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
           {/* Native navigation is intentional here to keep the public marketing shell hydration-free. */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a className={styles.logoLink} href="/" aria-label="einfachhausen Startseite">
-            <Logo />
+            <Image src={logoMark} alt="" width={36} height={27} priority className={styles.logoImg} />
+            <span className={styles.logoWord}><b>einfach</b><span>hausen</span></span>
           </a>
           <nav className={styles.desktopNav} aria-label="Hauptnavigation">
             {primary.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
@@ -110,7 +114,7 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
         <div className={styles.footerInner}>
           <div className={styles.footerBrand}>
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/" aria-label="einfachhausen Startseite"><Logo /></a>
+            <a href="/" aria-label="einfachhausen Startseite"><Image src={logoFull} alt="einfachhausen" width={158} height={110} className={styles.logoImg} /></a>
             <p>Eine Anlaufstelle für alles rund ums Eigenheim: Anliegen einordnen, passende Menschen finden, Aufträge organisieren und Hauswissen behalten.</p>
             <span>© 2026 Einfach Hausen</span>
           </div>

@@ -520,3 +520,45 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 .tone_dark .feature { background: #17503f; }
 .tone_dark .featureIcon { background: #1f5749; color: #a9d3c1; }
 .tone_green { background: var(--eh-green-50); border-top-color: #dcebe3; border-bottom-color: #dcebe3; }
+
+/* ============ v5: logo-calibrated identity (LOGO_03) ============ */
+/* Brand colors extracted from .orca/drops/LOGO_03.png:
+   petrol teal #105258 (house mark + "hausen"), charcoal #1C2129 ("einfach").
+   Contrast: teal/white 8.86:1, charcoal/white 16.2:1. */
+.site {
+  --eh-green-900: #0a3539;
+  --eh-green-700: #105258;
+  --eh-green-600: #147078;
+  --eh-green-100: #dcebec;
+  --eh-green-50: #edf5f5;
+  --eh-bg: #f4f7f7;
+  --eh-text: #1c2129;
+  --eh-text-secondary: #57686b;
+  --eh-border: #e2e8e8;
+  --eh-border-strong: #cfdad9;
+}
+
+/* Logo image in header/footer */
+.logoImg { display: block; height: auto; }
+.logoLink { min-width: 0; }
+
+/* Recolor hardcoded accents from the previous green family to logo teal */
+.primaryButton { box-shadow: 0 10px 22px -12px rgba(16,82,88,.5); }
+.ctaBand { background: linear-gradient(135deg, #117a80 0%, #0a3539 85%); box-shadow: 0 32px 80px -36px rgba(10,53,57,.45); }
+.tone_dark .featureGrid { background: #174b50; border-color: #174b50; }
+.tone_dark .feature { background: #113f45; }
+.tone_dark .featureIcon { background: #144b51; color: #9fcfd2; }
+.processLine { background: linear-gradient(90deg, #105258, #8fc0c4); }
+.timelineScrub { background: linear-gradient(180deg, #105258, #a5cccc); }
+.intake { box-shadow: 0 24px 60px -30px rgba(10,53,57,.24), 0 2px 10px -6px rgba(10,53,57,.06); }
+.productPreview { box-shadow: 0 30px 70px -34px rgba(10,53,57,.24), 0 8px 24px -14px rgba(10,53,57,.10); }
+.infoPanel { box-shadow: 0 18px 50px -38px rgba(10,53,57,.25); }
+.hero { background:
+  radial-gradient(1000px 480px at 92% -12%, rgba(220,235,236,.9), transparent 60%),
+  linear-gradient(180deg, #ffffff 0%, var(--eh-bg) 100%); }
+
+/* --- v5b: logo lockup (mark + typographic wordmark) --- */
+.logoLink { display: inline-flex; align-items: center; gap: 10px; }
+.logoWord { font-size: 19px; font-weight: 700; letter-spacing: -.035em; line-height: 1; white-space: nowrap; }
+.logoWord b { color: var(--eh-text); font-weight: 700; }
+.logoWord span { color: var(--eh-green-700); font-weight: 700; }
