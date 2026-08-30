@@ -15,6 +15,14 @@ der technische Abschluss weder erfinden noch erledigen kann:
 3. **Zahlungen live schalten (SEPA/Stripe)** — geerbt (#14). Stripe-Integration
    ist im Code vorhanden (Webhook/Connect-Routen), der scharfe Live-Betrieb mit
    echten Lastschriften ist eine externe Geschäftsfreigabe.
+4. **Offsite-Backup-Ziel (T-0204)** — die verifizierte Nächtlich-Sicherung liegt
+   same-host im Supabase-Bucket. Eine Zweitkopie außerhalb der VM (z. B. OCI
+   Object Storage) braucht eine Tenancy-Entscheidung/Credentials des
+   Betreibers; OCI-CLI ist installiert, aber unkonfiguriert.
+5. **E-Mail-Postfach-Nachweis (T-0201)** — SMTP-Versand ist live verifiziert
+   (Handshake + selbst adressierter Sende-Nachweis via Resend). Der Empfang in
+   einem echten Postfach (z. B. Antwort-Handling) benötigt ein betreibereitens
+   gepflegtes Postfach und ist deshalb nicht agentenseitig beweisbar.
 
 Nicht-Blocker, aber grenzwertig erwähnt: App-Store-Auslieferung (Capacitor) ist
 Teil historischer Planung (T-0167, nie ausgeführt) und nicht Teil des aktuellen

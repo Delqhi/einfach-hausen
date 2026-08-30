@@ -35,7 +35,7 @@ export default function OnboardingProSchrittPage() {
     setBusy(true);
     await saveMeta({ leistungen: sel, plz_liste: plz ? [plz] : [], umkreis_km: umkreis, onboarding_done: true });
     setBusy(false);
-    router.replace("/dashboard-pro");
+    router.replace("/pro");
   }
 
   const heads: Record<string, { h: string; p: string }> = {

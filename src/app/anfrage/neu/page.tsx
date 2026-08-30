@@ -26,7 +26,7 @@ export default function NeueAnfragePage() {
     const { data } = await supabase.auth.getUser();
     await supabase.from("anfragen").insert({ user_id: (data as any).user?.id, kategorie: cat, unterkategorie: sub, titel, beschreibung, fotos, plz, ort, wunschtermin: termin || null, budget: budget || null, dringend, status: "offen" } as any);
     setSent(true);
-    setTimeout(() => router.replace("/auftraege"), 1400);
+    setTimeout(() => router.replace("/app/jobs"), 1400);
   }
   if (sent) {
     return (

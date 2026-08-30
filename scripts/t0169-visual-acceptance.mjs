@@ -14,6 +14,8 @@ import { chromium } from 'playwright-core';
 // throwaway SQLite app DB, deterministic seeded data, no production data.
 
 const root = process.cwd();
+// Health storage check requires the uploads dir; production bootstraps it via deploy/update-on-oci.sh.
+try { fs.mkdirSync(path.join(root, 'public', 'uploads'), { recursive: true }); } catch {}
 const nextBin = path.join(root, 'node_modules/next/dist/bin/next');
 const evidenceDir = path.join(root, '.sin-gpt-web/evidence/T-0169/oci');
 const round3Dir = path.join(evidenceDir, 'round3');

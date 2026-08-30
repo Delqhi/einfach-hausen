@@ -13,6 +13,8 @@ import Database from 'better-sqlite3';
 // identity. No production mutations.
 
 const root = process.cwd();
+// Health storage check requires the uploads dir; production bootstraps it via deploy/update-on-oci.sh.
+fs.mkdirSync(path.join(root, 'public', 'uploads'), { recursive: true });
 const results = [];
 let server;
 

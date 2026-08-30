@@ -12,6 +12,8 @@ import { createClient } from '@supabase/supabase-js';
 // Supabase identity; no production mutations.
 
 const root = process.cwd();
+// Health storage check requires the uploads dir; production bootstraps it via deploy/update-on-oci.sh.
+fs.mkdirSync(path.join(root, 'public', 'uploads'), { recursive: true });
 const nextBin = path.join(root, 'node_modules/next/dist/bin/next');
 if (!fs.existsSync(path.join(root, '.next/BUILD_ID'))) { console.error('Run npm run build first.'); process.exit(1); }
 const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'eh-t0202-'));

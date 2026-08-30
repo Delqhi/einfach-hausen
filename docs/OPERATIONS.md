@@ -78,6 +78,14 @@ sudo SUPABASE_DB_URL="$DATABASE_URL" \
 
 Backup-Pfad: `/var/backups/einfach-hausen` (+ `scripts/backup-einfach-hausen.sh`). Die SQLite-Datenbank wird vor jedem Deploy online gesichert; `private.tar`/`uploads.tar` sichern Medien. Restore-Proof erfolgt gegen eine Kopie, nie gegen die Produktions-DB.
 
+Nightly-Sicherung: `einfach-hausen-backup.timer` (03:25 UTC) bündelt SQLite+private+uploads und lädt das Bundle in den Supabase-Bucket `einfach-hausen-backups` (`deploy/backup-to-supabase.sh`). Zweitkopie außerhalb der VM: siehe `docs/EXTERNAL-BLOCKERS.md`.
+
+Restore-Drill (verifiziert 2026-08-30): `scripts/restore-einfach-hausen.sh BACKUP_DIR --dry-run` prüft Checksummen, SQLite-`integrity_check` und Archive; `--stage DIR` extrahiert ohne Produktionskontakt. Beweis inkl. RPO/RTO: `docs/evidence/T-0204-restore-drill-20260830.md`.
+
+Notification-Dispatcher: `einfach-hausen-dispatch.timer` (alle 5 Min) liefert fällige Outbox-Einträge über die Channel-Adapter (in_app, E-Mail via SMTP/Resend) mit Retry/Dead-Letter (`scripts/dispatch-notifications.mjs`).
+
+Environment-Dateien (T-0200/T-0201): `/etc/einfach-hausen.env` enthält zusätzlich `AUTH_MODE`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SMTP_*`, `MAIL_FROM`. Build-Zeit-Variablen (`NEXT_PUBLIC_*`) liegen in `/etc/einfach-hausen-build.env` (ubuntu-lesbar) und werden von `deploy/update-on-oci.sh` vor `npm run build` gesourcet - ohne sie verliert der Client-Bundle die Supabase-Gateway-Origin und die CSP bricht den Login.
+
 ## Non-destructive restore proof (HA)
 
 Nie Prod-DB direkt ersetzen. Dry-run gegen Staging-DB:

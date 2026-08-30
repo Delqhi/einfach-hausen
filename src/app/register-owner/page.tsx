@@ -50,7 +50,7 @@ export default function RegisterOwnerPage() {
       setError(err.message === "User already registered" ? "Ein Konto mit dieser E-Mail existiert bereits." : "Registrierung fehlgeschlagen. Bitte versuche es erneut.");
       return;
     }
-    if (data.session) router.replace("/dashboard");
+    if (data.session) router.replace("/app");
     else router.replace("/check-email");
   }
 

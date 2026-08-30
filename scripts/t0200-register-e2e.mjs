@@ -12,6 +12,8 @@ import { chromium } from 'playwright-core';
 // throwaway application database and ephemeral Supabase identities.
 
 const root = process.cwd();
+// Health storage check requires the uploads dir; production bootstraps it via deploy/update-on-oci.sh.
+fs.mkdirSync(path.join(root, 'public', 'uploads'), { recursive: true });
 const nextBin = path.join(root, 'node_modules/next/dist/bin/next');
 if (!fs.existsSync(path.join(root, '.next/BUILD_ID'))) {
   console.error('No production build found. Run `npm run build` first (with the Supabase build env).');

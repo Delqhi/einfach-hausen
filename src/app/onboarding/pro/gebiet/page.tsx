@@ -17,7 +17,7 @@ export default function GebietPage() {
   async function finish() {
     await supabase.auth.updateUser({ data: { area_mode: mode, area_center: plzZentrum, area_radius_km: mode === "radius" ? radius : null, area_plz: mode === "plz" ? plzListe : null, onboarding_complete: true } as any });
     setDone(true);
-    setTimeout(() => router.replace("/dashboard-pro"), 1200);
+    setTimeout(() => router.replace("/pro"), 1200);
   }
 
   if (done) {
