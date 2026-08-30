@@ -9,7 +9,7 @@
 - Lead-Funnel: Hero-Intake (Chips) → `/register?role=homeowner&request=…` → Register zeigt „Dein Anliegen" (verifiziert).
 - Verify-Evidenz: lint 0 errors, build 87/87, sin verify security 0, Route-Smoke 17/17=200, impeccable detect [], A11y-Report (Kontrast/Tab-Order/Skip/Reduced-Motion), Screenshots unter /tmp/eh-after (flüchtig; Neuzeuge via `node scripts/dev-shot.mjs "home=/"` + `SHOT_MOBILE=1`).
 - E2E: Step 0 (Website) grün modernisiert; verbleibender Fail `/pro/messages` tech-persona seam failed identisch auf pre-wave HEAD = dokumentierter T-0006-Scope, KEINE Regression.
-- OCI-Deploy ERFOLGT (2026-08-30): `/srv/einfach-hausen` @ 5d35f1e via `deploy/update-on-oci.sh` (Pre-Deploy-Backup, Node 22, Health ok), Production-Smoke 17/17 PASS @ https://einfachhausen.de, Live-Homepage zeigt Lead-Magnet-Content. Nächster einzelner Schritt: **T-0006** weiterführen (tech-persona `/pro/messages` seam).
+- OCI-Deploy ERFOLGT (2026-08-30, 2x): `/srv/einfach-hausen` @ **7d81872** (Master-Design-Wave: editorialer Hero mit DrawPath-Underline, Ghost-Composer, Floating-Proof-Cards, Scrub-Line-Prozess/Timeline, Gradient-CTA; Motion-Primitives ScrubLine/Activate/DrawPath) via `deploy/update-on-oci.sh`, Production-Smoke 17/17 PASS @ https://einfachhausen.de, Live-HTML enthält alle Design-Marker. Nächster einzelner Schritt: **T-0006** weiterführen (tech-persona `/pro/messages` seam).
 
 ## 0. Read this first
 
