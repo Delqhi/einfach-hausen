@@ -763,3 +763,31 @@ html,body { background:#faf6ef; color:#16333d; }
 ::selection { background: var(--eh-green-100); }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* ============================================================
+   Funnel-Retheme (2026-08-30): Register/Role auf Website-Brand
+   Scope: nur die öffentlichen Funnel-Seiten (ehn-reg-page/role2-page),
+   NICHT die abgenommenen App-Screens.
+   ============================================================ */
+.ehn-reg-page, .role2-page {
+  background:
+    radial-gradient(800px 400px at 80% -10%, #dcebec, transparent 60%),
+    #f4f7f7;
+  font-family: var(--font-marketing), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.ehn-reg-page h1, .ehn-reg-page h2, .role2-page h1, .role2-page h2 {
+  font-weight: 700; letter-spacing: -.03em;
+}
+.ehn-reg-page .ehn-reg-submit, .ehn-reg-page .btn-primary, .role2-page .btn-primary {
+  background: #105258; font-weight: 680; letter-spacing: -.01em;
+}
+.ehn-reg-page .ehn-reg-submit:hover, .ehn-reg-page .btn-primary:hover, .role2-page .btn-primary:hover {
+  background: #147078;
+}
+.ehn-reg-page .if-wrap input, .role2-page .if-wrap input {
+  border-color: #d7dfdc;
+}
+.ehn-reg-page .if-wrap input:focus, .role2-page .if-wrap input:focus {
+  border-color: #105258; box-shadow: 0 0 0 4px rgba(16,82,88,.10);
+}
+.oreg-logo svg path, .oreg-logo svg { stroke: #105258; }

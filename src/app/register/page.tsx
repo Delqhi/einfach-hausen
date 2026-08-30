@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { PwField } from '@/components/pw-field';
+import logoMark from '@/components/marketing/assets/logo-mark.png';
 import {
   BuildingIcon,
   ClipboardSmallIcon,
@@ -42,7 +44,7 @@ export default async function Register({searchParams}:{searchParams:Promise<Reco
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="#16333d" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </Link>}
       <div className="oreg-logo">
-        <svg width="40" height="36" viewBox="0 0 72 64" fill="none" aria-hidden="true"><path d="M8 30 L36 8 L64 30 M14 26 V58 H30 M58 58 V26 M30 58 V44 a6 6 0 0112 0 V58" stroke="#00565b" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        <Image src={logoMark} alt="" width={40} height={30} priority style={{ height: 'auto' }} />
         <div className="role2-logo-word"><span className="role2-logo-green">einfach</span><span className="role2-logo-ink">hausen</span></div>
       </div>
       <p className="oreg-tagline">Dein Zuhause. <span className="green">Alles geregelt.</span></p>
