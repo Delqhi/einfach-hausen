@@ -3,6 +3,7 @@ import { ArrowRight, BadgeCheck, CalendarCheck2, ChevronDown, FileText, Hammer, 
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Section, Split, InfoPanel, BulletList, CtaBand } from '@/components/marketing/ui';
+import Link from 'next/link';
 import { Reveal, Stagger, ScrubLine, Activate, DrawPath } from '@/components/marketing/motion';
 import { IntakeForm } from '@/components/home/intake-form';
 import styles from '@/components/marketing/marketing.module.css';
@@ -49,7 +50,9 @@ export default async function HomePage() {
           <div className={styles.heroLinks}><span>Mehr erfahren:</span><a href="/so-funktionierts">So funktioniert&apos;s</a><a href="/leistungen">Leistungen ansehen</a><a href="/preise">Preise</a></div>
         </Stagger>
         <Reveal delay={0.25} y={34} className={styles.productPreviewWrap}>
-          <div className={styles.productPreview} aria-label="Produktvorschau Hausmeisterservice">
+          <Link href="/register?role=homeowner" className={styles.heroMockLink} aria-label="Produktvorschau: kostenloses Hauskonto erstellen">
+            <span className={styles.heroMockStage}>
+            <div className={styles.productPreview} aria-label="Produktvorschau Hausmeisterservice">
             <div className={styles.previewHead}><div className={styles.previewMark}><Home size={19} aria-hidden="true"/></div><div><small>Hausmeisterservice</small><strong>Was brauchst du gerade?</strong></div><span className={styles.livePill}>bereit</span></div>
             <div className={styles.previewBody}>
               <div className={styles.userBubble}>Meine Heizung macht seit gestern komische Geräusche. Muss da jemand kommen?</div>
@@ -62,7 +65,10 @@ export default async function HomePage() {
             <div className={styles.previewFoot}>Du entscheidest. Nichts wird automatisch beauftragt.</div>
             <div className={`${styles.floatCard} ${styles.floatCardA}`}><CalendarCheck2 size={19} aria-hidden="true"/><span><strong>Termin bestätigt</strong><small>Dachrinne reinigen · Di 9:00</small></span></div>
             <div className={`${styles.floatCard} ${styles.floatCardB}`}><FileText size={19} aria-hidden="true"/><span><strong>Rechnung abgelegt</strong><small>Hausakte · Energie</small></span></div>
-          </div>
+            </div>
+            <span className={styles.heroMockHint}>App öffnen <ArrowRight size={14} aria-hidden="true"/></span>
+            </span>
+          </Link>
         </Reveal>
       </div>
     </section>
