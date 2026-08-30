@@ -38,3 +38,17 @@ build+lint+qa-extreme+desktop/mobile-Shots+a11y → Deploy → Live-Smoke.
 ## Definition of Done (gesamt)
 - qa-extreme PASS (lokal + live), lint 0e, build grün, a11y-Report grün,
   Deploy + Production-Smoke 17/17, Live-Marker je Hebel geprüft.
+
+## ABSCHLUSS (2026-08-30): Alle Hebel H1-H6 umgesetzt + verified
+- Produktion @ 96c9566, alle Gates grün:
+  - Design-Audit live: 0 critical / 0 high / 0 medium (11 Seiten)
+  - QA-Extreme live: PASS (320/390/1920px, 200% Zoom, Extrem-Strings)
+  - impeccable detect: 0 Befunde
+  - lint 0 errors, Build 80/80
+  - Auth-Regressionen: T-0168 PASS, T-0170 15/15 (OCI, gegen Deploy)
+  - Production-Smoke 17/17
+- Motion-Stack 2026: Lenis + SplitText (GSAP 3.15 Premium-Plugins, gratis)
+- Brand: LOGO_03 (Petrol #105258) durchgängig — Header, Footer, Favicons,
+  Funnel, Auth, Offline-Shell, Manifest
+- Dokumentiertes App-Delta: Eigentümer-App bleibt Notion-kalibriert
+  (#14735c) bis zur Konvergenz-Wave (eigene Acceptance nötig)
