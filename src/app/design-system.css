@@ -460,6 +460,20 @@ button,a,input,textarea,select{touch-action:manipulation}
 }
 
 /* ---------- burger + drawer (Menuepunkte_01 / menuepunkte_offen) ---------- */
+/* T-0206 W1: the topbar brand lockups overflowed their 64px bar at 390px
+   (house SVG at natural size + wrapped wordmark). Keep them compact and
+   single-line like the Notion topbar reference. */
+@media(max-width:920px){
+  .app-shell-v3 .mobile-brand .brand{flex-wrap:nowrap}
+  .app-shell-v3 .mobile-brand .brand-house{width:28px;height:28px;flex:0 0 28px}
+  .app-shell-v3 .mobile-brand .brand-copy{gap:0}
+  .app-shell-v3 .mobile-brand .brand-copy strong{font-size:14px}
+  .app-shell-v3 .mobile-brand .brand-copy small{display:none}
+  .app-shell-v3 .ehn-center-logo{top:2px;gap:0;height:56px;overflow:visible}
+  .app-shell-v3 .ehn-center-logo .ehn-center-logo-house{width:56px;height:38px}
+  .app-shell-v3 .ehn-center-logo .own-logo-line1{font-size:14px}
+  .app-shell-v3 .ehn-center-logo .own-logo-line2{font-size:13px;margin-left:10px}
+}
 .ehn-menu{display:none}
 @media(max-width:920px){
   .app-shell-v3.ehn-owner .ehn-menu{display:block;order:0;position:static}
