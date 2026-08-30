@@ -1,14 +1,18 @@
-# Premium-Deck einfachhausen.de (handgebaut)
+# Premium-Deck einfachhausen.de
 
-Quelle: `deck.html` (15 Folien à 1280×720, reines CSS, Brand-Palette siehe :root).
+Product-specific presentation source for T-0165 remediation V2. Reusable rendering, strict QA and export logic is owned by `wow-my-zsh/connectors/slides-generator/`.
 
-## Rebuild
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new \
-      --disable-gpu --hide-scrollbars --window-size=1280,10800 \
-      --screenshot=deck-full.png "file://$PWD/deck.html"
-    # Slices: PIL crop je 720px → slide-NN.png
-    # PDF:   PIL save_all(resolution=200)
-    # PPTX: node build_pptx.js (pptxgenjs, Vollbild-PNGs)
+## Facts
 
-## Krönen (final tauschen)
-    ./crown-premium.sh
+- `deck.html`: 15 slides at 1280×720.
+- `quality.json`: strict deck-specific rules including semantic collision and readability checks.
+- `sourceCommit` `3a8aa93054df7ec897c1dc3fec200ecf8526965a` is the historical product/screenshot snapshot used by the deck. It is not automatically the presentation HEAD or deployed SHA.
+- Live Health and DB readiness are separate runtime evidence. Deployment identity is only claimed when independently proven.
+
+## Layout contract
+
+Every presentation-facing slide uses intentional semantic regions. `data-zone="content"` and `data-zone="visual"` must never overlap accidentally. The footer is reserved and may not be used as spare layout space. Screenshots must remain readable at presentation scale; miniature walls are not acceptable evidence.
+
+## Portable pipeline
+
+Set the central connector root. Example on macOS:

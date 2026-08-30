@@ -4,6 +4,25 @@
 
 Diese Datei ist die gemeinsame Design-Quelle für alle drei Produktflächen. Bestehende Funktionalität, Produktlogik und Sicherheitsregeln bleiben bestehen. Die drei Oberflächen dürfen sich in Informationsarchitektur und Nutzungskontext unterscheiden, müssen sich aber wie **ein einziges hochwertiges Produkt** anfühlen.
 
+## 0. Visuelle Source of Truth · Notion App Design
+
+Für Portal-UI (`/app`, `/pro`, Auth und responsive Shells) ist die Notion-Seite **App Design** die verbindliche visuelle Referenz für die tatsächlich gezeigten Zustände:
+
+`https://app.notion.com/p/App-Design-3c8b784cdffc80a1a5d1ed2269dbdd0d`
+
+Reihenfolge bei visuellen Konflikten:
+
+1. Notion-Screenshots für tatsächlich gezeigte visuelle Charakteristik und Interaktionszustände.
+2. Diese `DESIGN.md` für semantische Tokens, Accessibility, responsive Ableitung und nicht gezeigte Zustände.
+3. Shared Portal-Primitives/Tokens in der Implementierung.
+4. Route-lokale Overrides nur für echte Produktsemantik — niemals als zweites Theme.
+
+Die Notion-Referenz bestätigt einen **hellen, ruhigen, großzügigen, mobile-first Consumer-Look** mit warmem Off-White, weißen Surfaces und Grün als primärer Marken-/Aktionsfarbe. Große dunkle Flächen bleiben Ausnahme. Eigentümer- und Partner-App verwenden dieselbe visuelle Foundation; die Partner-App darf informationsdichter sein, aber kein eigenes Dark-/Admin-Theme bilden.
+
+Die Screenshots bestätigen **nicht** automatisch exakte Hexwerte, Desktop-/Tablet-Kompositionen, sämtliche Pro-Screens oder Produkttexte. Screenshot-Copy ist keine fachliche Anforderung. Für diese Punkte bleibt diese Datei verbindlich.
+
+Die Premium-Präsentation übersetzt dasselbe System: Original-Logo aus dem Repo, dieselbe semantische Grün-/Neutral-Palette, helle Slides als Standard und schlanke Device-Frames. Ein separates Marketing-Brand ist ausdrücklich nicht vorgesehen.
+
 ## 1. Markenwirkung
 
 Einfach Hausen soll auf den ersten Blick wirken wie eine etablierte, große digitale Plattform für Eigenheime — nicht wie ein Experiment, MVP, KI-Demo oder kleines Vermittlungs-Startup.
