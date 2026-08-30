@@ -10,7 +10,7 @@ const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), 'eh-t0104-db-'));
 process.env.DATABASE_PATH = path.join(dbDir, 'regression.db');
 process.chdir(dbDir);
 fs.symlinkSync(path.join(root, 'node_modules'), path.join(scratch, 'node_modules'), 'dir');
-for (const rel of ['src/lib/db.ts', 'src/lib/notifications.ts']) {
+for (const rel of ['src/lib/db.ts', 'src/lib/mailer.ts', 'src/lib/notifications.ts']) {
   const src = fs.readFileSync(path.join(root, rel), 'utf8');
   const stripped = stripTypeScriptTypes(src).replace(/(from\s*['"])(\.\.?\/[^'"]+)(['"])/g, (_m, a, s, b) => `${a}${s}.mjs${b}`);
   const dest = path.join(scratch, rel.replace(/\.ts$/, '.mjs'));
@@ -46,9 +46,9 @@ try {
   check('priority clamps to 1..9', queued.priority === 9 && queued.event_id === eventId);
 
   // Dispatch delivers in-app immediately and exactly once.
-  let result = n.dispatchDueNotifications();
+  let result = await n.dispatchDueNotifications();
   check('in-app dispatch sends', result.sent === 1);
-  result = n.dispatchDueNotifications();
+  result = await n.dispatchDueNotifications();
   check('dispatch is idempotent (nothing double-sent)', result.sent === 0);
   check('sent row exists once', db.prepare("SELECT COUNT(*) c FROM notifications WHERE status='sent' AND id=?").get(nid).c === 1);
 
@@ -57,24 +57,25 @@ try {
   check('second mark-read is a no-op', n.markNotificationRead(userId, nid) === false);
   check('unread toggle works', n.markNotificationUnread(userId, nid) === true);
 
-  // Unknown channel: retry with backoff, then dead-letter.
+  // Unknown channel: retry with backoff, then dead-letter. ('sms' has no
+  // adapter on purpose; 'email' now has a real SMTP-backed one, EH T-0201.)
   const badId = n.enqueueNotification({ userId, title: 'extern', kind: 'info', channel: 'in_app' });
-  db.prepare("UPDATE notifications SET channel='email' WHERE id=?").run(badId);
-  let r = n.dispatchDueNotifications(Date.now());
+  db.prepare("UPDATE notifications SET channel='sms' WHERE id=?").run(badId);
+  let r = await n.dispatchDueNotifications(Date.now());
   check('failed attempt schedules retry', r.retried === 1);
   const attempt1 = db.prepare('SELECT retry_count,next_retry_at FROM notifications WHERE id=?').get(badId);
   check('retry counter incremented', attempt1.retry_count === 1 && attempt1.next_retry_at > new Date().toISOString());
-  r = n.dispatchDueNotifications(Date.now());
+  r = await n.dispatchDueNotifications(Date.now());
   check('not due yet -> untouched', r.retried === 0 && r.dead === 0);
   const dueAt = db.prepare('SELECT next_retry_at FROM notifications WHERE id=?').get(badId).next_retry_at;
-  r = n.dispatchDueNotifications(new Date(dueAt).getTime() + 1000);
+  r = await n.dispatchDueNotifications(new Date(dueAt).getTime() + 1000);
   check('second failure retries again', r.retried === 1);
   const attempt2 = db.prepare('SELECT retry_count,next_retry_at FROM notifications WHERE id=?').get(badId);
   check('backoff grows exponentially', attempt2.retry_count === 2 && attempt2.next_retry_at > attempt1.next_retry_at);
   const dueAt2 = db.prepare('SELECT next_retry_at FROM notifications WHERE id=?').get(badId).next_retry_at;
-  r = n.dispatchDueNotifications(new Date(dueAt2).getTime() + 1000);
+  r = await n.dispatchDueNotifications(new Date(dueAt2).getTime() + 1000);
   check('third failure dead-letters', r.dead === 1 && db.prepare("SELECT status,retry_count FROM notifications WHERE id=?").get(badId).status === 'dead');
-  r = n.dispatchDueNotifications(Date.now());
+  r = await n.dispatchDueNotifications(Date.now());
   check('dead letters are never re-dispatched', r.dead === 0 && r.sent === 0 && r.retried === 0);
 
   // Channel adapters + delivery receipts (EH T-0106).
@@ -84,12 +85,12 @@ try {
   check('every failed attempt is receipted in order', failedHistory.length === 3
     && failedHistory[0].state === 'failed' && failedHistory[1].state === 'failed' && failedHistory[2].state === 'dead');
   check('failure receipts explain the cause', failedHistory.every(r => r.detail.includes('adapter')));
-  check('unknown channel is detectable', n.knownChannel('email') === false && n.knownChannel('in_app') === true);
+  check('unknown channel is detectable', n.knownChannel('sms') === false && n.knownChannel('email') === true && n.knownChannel('in_app') === true);
   const seen = [];
   n.registerChannelAdapter('test_channel', () => { seen.push(1); return 'sent'; });
   const testId = n.enqueueNotification({ userId, title: 'adapter test', kind: 'info', channel: 'in_app' });
   db.prepare("UPDATE notifications SET channel='test_channel' WHERE id=?").run(testId);
-  const r2 = n.dispatchDueNotifications(Date.now());
+  const r2 = await n.dispatchDueNotifications(Date.now());
   check('registered adapter delivers its channel', r2.sent === 1 && seen.length === 1);
   check('custom adapter delivery leaves a sent receipt', n.deliveryReceipts(testId)[0]?.state === 'sent');
 

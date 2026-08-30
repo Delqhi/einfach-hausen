@@ -1,4 +1,5 @@
 import { db } from './db';
+import { sendMail } from './mailer';
 
 export function createNotification(userId: number, title: string, body: string, href: string, kind = 'info') {
   return db
@@ -24,6 +25,25 @@ export function markAllNotificationsRead(userId: number): number {
   return db
     .prepare('UPDATE notifications SET read_at=CURRENT_TIMESTAMP WHERE user_id=? AND read_at IS NULL')
     .run(userId).changes;
+}
+
+// --- Email channel (EH T-0201) ---------------------------------------------
+// Recipient resolution stays server-side: notifications reference app users,
+// never raw addresses, so the outbox cannot leak or spoof arbitrary targets.
+function userEmail(userId: number): string | null {
+  const row = db.prepare('SELECT email FROM users WHERE id=?').get(userId) as { email?: string } | undefined;
+  return row?.email ?? null;
+}
+
+function emailHtml(title: string, body: string, href: string): string {
+  const appUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://einfachhausen.de').replace(/\/$/, '');
+  const link = href ? `${appUrl}${href.startsWith('/') ? href : `/${href}`}` : appUrl;
+  return `<div style="font-family:Helvetica,Arial,sans-serif;max-width:520px;margin:auto">
+    <h2 style="color:#14735c">${title}</h2>
+    ${body ? `<p style="color:#33484f">${body}</p>` : ''}
+    <a href="${link}" style="display:inline-block;background:#14735c;color:#fff;padding:12px 24px;border-radius:14px;text-decoration:none;font-weight:700;margin-top:8px">In der App ansehen</a>
+    <p style="color:#9aa9ad;font-size:12px;margin-top:24px">Diese E-Mail wurde dir von einfachhausen gesendet.</p>
+  </div>`;
 }
 
 // --- Durable outbox (EH T-0104) -------------------------------------------
@@ -78,10 +98,16 @@ export function enqueueNotification(input: EnqueueNotificationInput): number {
 // Each channel delivers one message and reports success or failure. In-app is
 // delivered by the row itself; external channels register adapters here as
 // they become available. Unknown channels fail honestly so retries stay real.
-export type ChannelAdapter = (message: { userId: number; title: string; body: string; href: string; kind: string }) => 'sent' | 'failed';
+// Adapters may be async; the dispatcher awaits them so retries stay real.
+export type ChannelAdapter = (message: { userId: number; title: string; body: string; href: string; kind: string }) => Promise<'sent' | 'failed'> | 'sent' | 'failed';
 
 const channelAdapters = new Map<string, ChannelAdapter>([
   ['in_app', () => 'sent'],
+  ['email', async ({ userId, title, body, href }) => {
+    const to = userEmail(userId);
+    if (!to) return 'failed';
+    return (await sendMail(to, title, emailHtml(title, body, href))) ? 'sent' : 'failed';
+  }],
 ]);
 
 export function registerChannelAdapter(channel: string, adapter: ChannelAdapter): void {
@@ -101,7 +127,9 @@ export function deliveryReceipts(notificationId: number): Array<{ channel: strin
 }
 
 // Deliver every due pending notification through its channel adapter.
-export function dispatchDueNotifications(nowMs: number = Date.now()): { sent: number; retried: number; dead: number } {
+// Async so channel adapters (e.g. SMTP email) can await real delivery results;
+// the outbox transactionality lives in the database, not in this loop.
+export async function dispatchDueNotifications(nowMs: number = Date.now()): Promise<{ sent: number; retried: number; dead: number }> {
   const due = db
     .prepare("SELECT id,user_id,kind,title,body,href,channel,retry_count FROM notifications WHERE status='pending' AND (next_retry_at IS NULL OR next_retry_at<=?) ORDER BY priority ASC, created_at ASC LIMIT 200")
     .all(new Date(nowMs).toISOString()) as Array<{ id: number; user_id: number; kind: string; title: string; body: string; href: string; channel: string; retry_count: number }>;
@@ -110,7 +138,7 @@ export function dispatchDueNotifications(nowMs: number = Date.now()): { sent: nu
   let dead = 0;
   for (const row of due) {
     const adapter = channelAdapters.get(row.channel);
-    const outcome = adapter ? adapter({ userId: row.user_id, title: row.title, body: row.body, href: row.href, kind: row.kind }) : 'failed';
+    const outcome = adapter ? await adapter({ userId: row.user_id, title: row.title, body: row.body, href: row.href, kind: row.kind }) : 'failed';
     if (outcome === 'sent') {
       db.prepare("UPDATE notifications SET status='sent' WHERE id=? AND status='pending'").run(row.id);
       recordReceipt(row.id, row.channel, 'sent', 'delivered');

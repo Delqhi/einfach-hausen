@@ -1,0 +1,10 @@
+[Unit]
+Description=Dispatch due Einfach Hausen notifications every few minutes
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=5min
+Unit=einfach-hausen-dispatch.service
+
+[Install]
+WantedBy=timers.target
