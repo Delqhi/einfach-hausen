@@ -1,5 +1,5 @@
 .site {
-  --eh-green-900: #0e3d33;
+  --eh-green-900: #0a3539;
   --eh-green-700: #105258;
   --eh-green-600: #1b8569;
   --eh-green-100: #eaf5ee;
@@ -527,7 +527,7 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
    petrol teal #105258 (house mark + "hausen"), charcoal #1C2129 ("einfach").
    Contrast: teal/white 8.86:1, charcoal/white 16.2:1. */
 .site {
-  --eh-green-900: #0e3d33;
+  --eh-green-900: #0a3539;
   --eh-green-700: #105258;
   --eh-green-600: #1b8569;
   --eh-green-100: #dcebec;
