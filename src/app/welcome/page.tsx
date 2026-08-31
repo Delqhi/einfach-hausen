@@ -27,7 +27,7 @@ export default function WelcomePage() {
   return (
     <div className="wl-page safe-top safe-bottom">
       <header className="wl-logo">
-        <svg width="52" height="46" viewBox="0 0 72 64" fill="none" aria-hidden="true"><path d="M8 30 L36 8 L64 30 M14 26 V58 H30 M58 58 V26 M30 58 V44 a6 6 0 0112 0 V58" stroke="#00565b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        <svg width="52" height="46" viewBox="0 0 72 64" fill="none" aria-hidden="true"><path d="M8 30 L36 8 L64 30 M14 26 V58 H30 M58 58 V26 M30 58 V44 a6 6 0 0112 0 V58" stroke="#105258" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
         <div className="wl-logo-text"><span className="wl-1">einfach</span><span className="wl-2">hausen</span></div>
         <p className="wl-tagline">Dein Zuhause. <span>Alles geregelt.</span></p>
       </header>

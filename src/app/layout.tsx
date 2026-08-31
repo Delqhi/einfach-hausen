@@ -1,9 +1,20 @@
 import type { Metadata,Viewport } from 'next';
+import localFont from 'next/font/local';
 import './globals.css';
 import './design-system.css';
 import { PwaRegister } from '@/components/pwa-register';
 import { AuthProvider } from '@/components/AuthContext';
 import NativeInit from '@/components/NativeInit';
+
+// Brand typography: self-hosted Inter Variable for ALL surfaces (site, funnel, app).
+const interVariable = localFont({
+  src: '../fonts/InterVariable.woff2',
+  weight: '100 900',
+  style: 'normal',
+  display: 'swap',
+  variable: '--font-marketing',
+  fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+});
 
 export const metadata: Metadata = {
   applicationName:'Einfach Hausen',
@@ -18,5 +29,5 @@ export const metadata: Metadata = {
 export const viewport:Viewport={width:'device-width',initialScale:1,viewportFit:'cover',themeColor:'#ffffff'};
 
 export default function RootLayout({children}:{children:React.ReactNode}){
-  return <html lang="de" data-scroll-behavior="smooth"><body><NativeInit><AuthProvider><PwaRegister/>{children}</AuthProvider></NativeInit></body></html>;
+  return <html lang="de" data-scroll-behavior="smooth" className={interVariable.variable}><body><NativeInit><AuthProvider><PwaRegister/>{children}</AuthProvider></NativeInit></body></html>;
 }

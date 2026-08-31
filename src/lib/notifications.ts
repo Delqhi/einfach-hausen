@@ -39,9 +39,9 @@ function emailHtml(title: string, body: string, href: string): string {
   const appUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://einfachhausen.de').replace(/\/$/, '');
   const link = href ? `${appUrl}${href.startsWith('/') ? href : `/${href}`}` : appUrl;
   return `<div style="font-family:Helvetica,Arial,sans-serif;max-width:520px;margin:auto">
-    <h2 style="color:#14735c">${title}</h2>
+    <h2 style="color:#105258">${title}</h2>
     ${body ? `<p style="color:#33484f">${body}</p>` : ''}
-    <a href="${link}" style="display:inline-block;background:#14735c;color:#fff;padding:12px 24px;border-radius:14px;text-decoration:none;font-weight:700;margin-top:8px">In der App ansehen</a>
+    <a href="${link}" style="display:inline-block;background:#105258;color:#fff;padding:12px 24px;border-radius:14px;text-decoration:none;font-weight:700;margin-top:8px">In der App ansehen</a>
     <p style="color:#9aa9ad;font-size:12px;margin-top:24px">Diese E-Mail wurde dir von einfachhausen gesendet.</p>
   </div>`;
 }

@@ -41,7 +41,7 @@ export default async function Register({searchParams}:{searchParams:Promise<Reco
   return <main className="ehn-reg-page safe-top safe-bottom">
     <header className="ehn-reg-head">
       {!provider&&<Link className="ehn-reg-back" href="/role" aria-label="Zurück zur Rollenwahl">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="#16333d" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="#1c2129" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
       </Link>}
       <div className="oreg-logo">
         <Image src={logoMark} alt="" width={40} height={30} priority style={{ height: 'auto' }} />
@@ -116,7 +116,7 @@ export default async function Register({searchParams}:{searchParams:Promise<Reco
         ))}
       </div>
       <div className="oreg-made">
-        <div className="oreg-made-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.5" stroke="#14735c" strokeWidth="1.5" /><path d="M8.5 10.5V8a3.5 3.5 0 017 0v2.5" stroke="#14735c" strokeWidth="1.5" /><path d="M12 14v2.5" stroke="#14735c" strokeWidth="1.5" strokeLinecap="round" /></svg></div>
+        <div className="oreg-made-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.5" stroke="#105258" strokeWidth="1.5" /><path d="M8.5 10.5V8a3.5 3.5 0 017 0v2.5" stroke="#105258" strokeWidth="1.5" /><path d="M12 14v2.5" stroke="#105258" strokeWidth="1.5" strokeLinecap="round" /></svg></div>
         <div><strong>Sicher. Einfach. Für dich gemacht.</strong><span>Made in Germany <FlagDeIcon /></span></div>
       </div>
     </section>
@@ -124,5 +124,5 @@ export default async function Register({searchParams}:{searchParams:Promise<Reco
   </main>;
 }
 
-function GearPickIcon(){return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l2 2h3v3l2 2-2 2v3h-3l-2 2-2-2H7v-3l-2-2 2-2V5h3l2-2z" stroke="#14735c" strokeWidth="1.4" strokeLinejoin="round"/><circle cx="12" cy="12" r="2.6" stroke="#14735c" strokeWidth="1.4"/></svg>;}
-function ClockPickIcon(){return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="#14735c" strokeWidth="1.4"/><path d="M12 7.5V12l3 2" stroke="#14735c" strokeWidth="1.4" strokeLinecap="round"/></svg>;}
+function GearPickIcon(){return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l2 2h3v3l2 2-2 2v3h-3l-2 2-2-2H7v-3l-2-2 2-2V5h3l2-2z" stroke="#105258" strokeWidth="1.4" strokeLinejoin="round"/><circle cx="12" cy="12" r="2.6" stroke="#105258" strokeWidth="1.4"/></svg>;}
+function ClockPickIcon(){return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="#105258" strokeWidth="1.4"/><path d="M12 7.5V12l3 2" stroke="#105258" strokeWidth="1.4" strokeLinecap="round"/></svg>;}

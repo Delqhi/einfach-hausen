@@ -72,7 +72,7 @@ export default function OnboardingProSchrittPage() {
         <>
           <div className="ob-form">
             <div className="if-wrap"><span className="if-label">Postleitzahl (Einsatzgebiet)</span><input inputMode="numeric" maxLength={5} value={plz} onChange={(e) => setPlz(e.target.value)} placeholder="z. B. 22587" /></div>
-            <div style={{ padding: "6px 4px" }}><div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}><strong style={{ fontSize: 14 }}>Umkreis: {umkreis} km</strong></div><input type="range" min={5} max={100} step={5} value={umkreis} onChange={(e) => setUmkreis(Number(e.target.value))} style={{ width: "100%", accentColor: "#14735c" }} /></div>
+            <div style={{ padding: "6px 4px" }}><div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}><strong style={{ fontSize: 14 }}>Umkreis: {umkreis} km</strong></div><input type="range" min={5} max={100} step={5} value={umkreis} onChange={(e) => setUmkreis(Number(e.target.value))} style={{ width: "100%", accentColor: "#105258" }} /></div>
           </div>
           <div className="ob-actions"><button className="btn-primary btn-full" disabled={plz.length !== 5} onClick={async () => { await saveMeta({ plz_liste: [plz], umkreis_km: umkreis }); router.push("/onboarding/pro/fertig"); }}>Weiter</button></div>
         </>

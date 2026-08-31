@@ -15,10 +15,10 @@ export default function KiCard() {
       <div className="ki-head" onClick={() => router.push("/ki-chat")}>
         <div className="ki-avatar">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-            <rect x="5" y="8" width="14" height="11" rx="4" stroke="#14735c" strokeWidth="1.7" />
-            <circle cx="9.5" cy="13" r="1.4" fill="#14735c" />
-            <circle cx="14.5" cy="13" r="1.4" fill="#14735c" />
-            <path d="M12 8V5M12 5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" stroke="#14735c" strokeWidth="1.5" />
+            <rect x="5" y="8" width="14" height="11" rx="4" stroke="#105258" strokeWidth="1.7" />
+            <circle cx="9.5" cy="13" r="1.4" fill="#105258" />
+            <circle cx="14.5" cy="13" r="1.4" fill="#105258" />
+            <path d="M12 8V5M12 5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" stroke="#105258" strokeWidth="1.5" />
             <path d="M9 16.5h6" stroke="#a3d4c3" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </div>

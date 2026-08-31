@@ -87,10 +87,10 @@ export default function ProOnboardingPage() {
     <div className="safe-top safe-bottom page ob-page">
       <div className="ob-header">
         <button className="back-btn" onClick={() => (step === 1 ? router.back() : setStep(1))}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#16333d" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#1c2129" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
         <div className="ob-logo">
-          <svg width="30" height="34" viewBox="0 0 72 78" fill="none"><path d="M10 34 L36 12 L62 34 V70 H30" stroke="#14735c" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" /><rect x="30" y="22" width="5" height="5" rx="1" fill="#14735c" /><rect x="39" y="22" width="5" height="5" rx="1" fill="#14735c" /></svg>
+          <svg width="30" height="34" viewBox="0 0 72 78" fill="none"><path d="M10 34 L36 12 L62 34 V70 H30" stroke="#105258" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" /><rect x="30" y="22" width="5" height="5" rx="1" fill="#105258" /><rect x="39" y="22" width="5" height="5" rx="1" fill="#105258" /></svg>
           <span className="logo-word green-word" style={{ fontSize: 22 }}>einfach</span>
           <span className="logo-word ink-word" style={{ fontSize: 22 }}>hausen</span>
         </div>
@@ -129,7 +129,7 @@ export default function ProOnboardingPage() {
                 {openSubCat === cat.id && <div className="subcat-list">{cat.subs.map((s) => { const sel = selectedSubs.includes(s.id); return (<button type="button" key={s.id} className={`subcat-item ${sel ? "sel" : ""}`} onClick={() => setSelectedSubs((prev) => (prev.includes(s.id) ? prev.filter((x) => x !== s.id) : [...prev, s.id]))}><span className={`checkbox-square ${sel ? "on" : ""}`}>{sel && <CheckIcon color="#fff" size={11} />}</span><span className="subcat-text"><strong>{s.title}</strong><span>{s.sub}</span></span></button>); })}</div>}
               </div>
             ))}
-            <div className="weitere"><span>Weitere Leistungen (optional)</span><div className="weitere-row"><input value={weitereInput} onChange={(e) => setWeitereInput(e.target.value)} placeholder="z. B. Winterdienst, Grünflächenpflege…" /><button type="button" className="plus-btn" onClick={() => { if (weitereInput.trim()) { setWeitere((w) => [...w, weitereInput.trim()]); setWeitereInput(""); } }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#16333d" strokeWidth="1.8" strokeLinecap="round" /></svg></button></div>{weitere.length > 0 && <div className="chips">{weitere.map((w, i) => (<span className="chip" key={i} onClick={() => setWeitere((p) => p.filter((_, j) => j !== i))}>{w} ✕</span>))}</div>}</div>
+            <div className="weitere"><span>Weitere Leistungen (optional)</span><div className="weitere-row"><input value={weitereInput} onChange={(e) => setWeitereInput(e.target.value)} placeholder="z. B. Winterdienst, Grünflächenpflege…" /><button type="button" className="plus-btn" onClick={() => { if (weitereInput.trim()) { setWeitere((w) => [...w, weitereInput.trim()]); setWeitereInput(""); } }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#1c2129" strokeWidth="1.8" strokeLinecap="round" /></svg></button></div>{weitere.length > 0 && <div className="chips">{weitere.map((w, i) => (<span className="chip" key={i} onClick={() => setWeitere((p) => p.filter((_, j) => j !== i))}>{w} ✕</span>))}</div>}</div>
           </section>
           <div className="ob-actions"><button className="btn-primary btn-full" onClick={saveStep2}>Weiter: Arbeitsgebiet festlegen <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg></button><button className="save-later">Speichern & später fortfahren</button></div>
         </>

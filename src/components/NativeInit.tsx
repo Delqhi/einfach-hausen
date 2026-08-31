@@ -9,7 +9,7 @@ export default function NativeInit({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
     StatusBar.setStyle({ style: Style.Light }).catch(() => {});
-    StatusBar.setBackgroundColor({ color: "#faf6ef" }).catch(() => {});
+    StatusBar.setBackgroundColor({ color: "#f4f7f7" }).catch(() => {});
     Keyboard.setStyle({ style: KeyboardStyle.Light }).catch(() => {});
     Keyboard.setResizeMode({ mode: "native" } as any).catch(() => {});
   }, []);

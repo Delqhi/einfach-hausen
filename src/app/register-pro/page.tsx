@@ -56,10 +56,10 @@ export default function RegisterProPage() {
           <div className="pro-hero-fade" />
         </div>
         <button type="button" className="back-btn-float" onClick={() => router.back()}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#16333d" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#1c2129" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
         <div className="pro-logo">
-          <svg width="34" height="38" viewBox="0 0 72 78" fill="none"><path d="M10 34 L36 12 L62 34 V70 H30" stroke="#14735c" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /><rect x="30" y="22" width="3.2" height="3.2" rx="0.8" fill="#14735c" /><rect x="36" y="22" width="3.2" height="3.2" rx="0.8" fill="#14735c" /></svg>
+          <svg width="34" height="38" viewBox="0 0 72 78" fill="none"><path d="M10 34 L36 12 L62 34 V70 H30" stroke="#105258" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /><rect x="30" y="22" width="3.2" height="3.2" rx="0.8" fill="#105258" /><rect x="36" y="22" width="3.2" height="3.2" rx="0.8" fill="#105258" /></svg>
           <div style={{ display: "flex", alignItems: "baseline", marginLeft: -6 }}><span className="logo-word green-word" style={{ fontSize: 26 }}>einfach</span><span className="logo-word ink-word" style={{ fontSize: 26 }}>hausen</span></div>
         </div>
         <p className="pro-tagline">Dein Zuhause. <span className="green">Alles geregelt.</span></p>

@@ -421,13 +421,13 @@ button,a,input,textarea,select{touch-action:manipulation}
    T-0005 · Notion-1:1 owner convergence (dashboard, drawer, welcome, role,
    register). Reference: public/notion/notion-originals (390px first).
    Palette measured from the originals:
-   cream #fbf9f7 · drawer #f5f3f1 · ink #16333d · teal #066a6f (actions)
+   cream #fbf9f7 · drawer #f5f3f1 · ink #1c2129 · teal #066a6f (actions)
    deep teal #02545a (FAB/send/crown) · mint surface #e8f0ec · mint icon #eaf4ee
    ========================================================================= */
 :root{
   --ehn-cream:#fbf9f7;
   --ehn-cream-2:#f5f3f1;
-  --ehn-ink:#16333d;
+  --ehn-ink:#1c2129;
   --ehn-teal:#066a6f;
   --ehn-teal-deep:#02545a;
   --ehn-mint:#e8f0ec;
@@ -451,10 +451,10 @@ button,a,input,textarea,select{touch-action:manipulation}
   .app-shell-v3.ehn-owner .screen-v3.ehn-dash-screen{padding:0 0 132px}
   .ehn-center-logo-text{display:flex;flex-direction:column;line-height:.95}
   .ehn-center-logo .own-logo-line1{font-size:17px;font-weight:800;color:var(--ehn-ink);letter-spacing:-.4px}
-  .ehn-center-logo .own-logo-line2{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:16px;color:#00565b;margin-left:14px}
+  .ehn-center-logo .own-logo-line2{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:16px;color:#105258;margin-left:14px}
   .app-shell-v3 .ehn-owner-top .top-actions{gap:8px;order:4}
-  .app-shell-v3 .ehn-owner-top .notification-link{position:relative;width:42px;height:42px;border-radius:15px;background:#fffdfa;box-shadow:0 2px 8px rgba(22,51,61,.07);display:grid;place-items:center;color:var(--ehn-ink)}
-  .app-shell-v3 .ehn-owner-top .notification-link:hover{background:#fffdfa}
+  .app-shell-v3 .ehn-owner-top .notification-link{position:relative;width:42px;height:42px;border-radius:15px;background:#ffffff;box-shadow:0 2px 8px rgba(28,33,41,.07);display:grid;place-items:center;color:var(--ehn-ink)}
+  .app-shell-v3 .ehn-owner-top .notification-link:hover{background:#ffffff}
   .app-shell-v3 .ehn-owner-top .notification-link .ehn-bell-dot{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:#2e9e63}
   .app-shell-v3 .ehn-owner-top .top-user-avatar{width:38px;height:38px}
 }
@@ -483,7 +483,7 @@ button,a,input,textarea,select{touch-action:manipulation}
   .ehn-menu[open] summary svg{opacity:0}
   .ehn-menu summary::-webkit-details-marker{display:none}
   .ehn-menu summary span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  .ehn-drawer{transform:none;width:min(88%,360px);background:var(--ehn-cream-2);border-radius:0 26px 26px 0;box-shadow:16px 0 50px rgba(22,51,61,.12);padding:26px 20px 18px;z-index:60}
+  .ehn-drawer{transform:none;width:min(88%,360px);background:var(--ehn-cream-2);border-radius:0 26px 26px 0;box-shadow:16px 0 50px rgba(28,33,41,.12);padding:26px 20px 18px;z-index:60}
 }
 .ehn-acc{display:flex;flex-direction:column;gap:2px;margin-top:22px}
 .ehn-acc-sec>summary{list-style:none;cursor:pointer}
@@ -495,7 +495,7 @@ button,a,input,textarea,select{touch-action:manipulation}
 .ehn-acc-body{display:flex;flex-direction:column;padding:2px 0 12px 8px}
 .ehn-acc-row{margin:0;padding:0;border:0}
 .ehn-acc-link{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;padding:8px 6px;font-family:inherit;font-size:14.5px;font-weight:600;color:#33484f;text-align:left;cursor:pointer;border-radius:10px}
-.ehn-acc-link:hover{background:rgba(22,51,61,.045)}
+.ehn-acc-link:hover{background:rgba(28,33,41,.045)}
 .ehn-acc-link.ehn-acc-active{color:var(--ehn-teal);font-weight:800}
 .ehn-acc-ico{display:grid;place-items:center;width:20px;flex:0 0 20px;color:#33484f}
 .ehn-acc-ico svg{display:block}
@@ -514,10 +514,10 @@ button,a,input,textarea,select{touch-action:manipulation}
 /* composer inside the KI card: white pill input + round send + Foto/Sprache chips */
 .ehn-composer{margin-top:14px}
 .ehn-owner .ehn-composer .agent-composer{position:relative;display:block;background:transparent;border:0;padding:0;margin:0;box-shadow:none}
-.ehn-owner .ehn-composer .agent-composer textarea{width:100%;height:54px;min-height:54px;border:0;border-radius:30px;background:#fffdfa;box-shadow:0 5px 18px rgba(22,51,61,.05);padding:17px 64px 0 22px;font-size:15px;line-height:1.3;color:var(--ehn-ink);resize:none;margin:0}
-.ehn-owner .ehn-composer .agent-composer textarea:focus{outline:none;box-shadow:0 5px 18px rgba(22,51,61,.05),0 0 0 2px rgba(2,84,90,.25)}
+.ehn-owner .ehn-composer .agent-composer textarea{width:100%;height:54px;min-height:54px;border:0;border-radius:30px;background:#ffffff;box-shadow:0 5px 18px rgba(28,33,41,.05);padding:17px 64px 0 22px;font-size:15px;line-height:1.3;color:var(--ehn-ink);resize:none;margin:0}
+.ehn-owner .ehn-composer .agent-composer textarea:focus{outline:none;box-shadow:0 5px 18px rgba(28,33,41,.05),0 0 0 2px rgba(2,84,90,.25)}
 .ehn-owner .ehn-composer .agent-composer .agent-actions{display:flex;align-items:center;gap:10px;margin-top:12px}
-.ehn-owner .ehn-composer .agent-composer .icon-action{display:inline-flex;align-items:center;gap:8px;background:#fffdfa;border:0;border-radius:24px;padding:11px 18px;font-size:13.5px;font-weight:600;color:var(--ehn-ink);cursor:pointer;box-shadow:0 2px 8px rgba(22,51,61,.05)}
+.ehn-owner .ehn-composer .agent-composer .icon-action{display:inline-flex;align-items:center;gap:8px;background:#ffffff;border:0;border-radius:24px;padding:11px 18px;font-size:13.5px;font-weight:600;color:var(--ehn-ink);cursor:pointer;box-shadow:0 2px 8px rgba(28,33,41,.05)}
 .ehn-owner .ehn-composer .agent-composer .icon-action input{position:absolute;width:1px;height:1px;opacity:0}
 .ehn-owner .ehn-composer .agent-composer .icon-action.recording{box-shadow:0 0 0 2px rgba(201,32,32,.35)}
 .ehn-owner .ehn-composer .agent-composer .send-action{position:absolute;top:3px;right:5px;width:48px;height:48px;border-radius:50%;border:0;background:var(--ehn-teal-deep);color:#fff;display:grid;place-items:center;cursor:pointer}
@@ -531,14 +531,14 @@ button,a,input,textarea,select{touch-action:manipulation}
 .wl-logo{display:flex;flex-direction:column;align-items:center;gap:0}
 .wl-logo-text{display:flex;flex-direction:column;line-height:.9;margin-top:-4px}
 .wl-logo-text .wl-1{font-size:31px;font-weight:800;letter-spacing:-.6px;color:var(--ehn-ink)}
-.wl-logo-text .wl-2{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:29px;color:#00565b;margin-left:26px}
+.wl-logo-text .wl-2{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:29px;color:#105258;margin-left:26px}
 .wl-tagline{font-size:13.5px;color:var(--ehn-ink);margin:6px 0 0;font-weight:600}
 .wl-tagline span{color:#0f6a66;font-weight:700}
 .wl-title{font-size:25px;font-weight:800;color:var(--ehn-ink);margin:26px 0 0;letter-spacing:-.3px}
 .wl-sub{font-size:14.5px;line-height:1.5;color:#3f545c;margin:10px 0 0;max-width:330px}
 .wl-hero{width:calc(100% + 40px);max-width:none;margin:14px -20px 0;display:block}
 .wl-cards{width:100%;display:flex;flex-direction:column;gap:14px;margin-top:18px}
-.wl-card{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid rgba(22,51,61,.04);border-radius:20px;padding:18px 16px;text-align:left;box-shadow:0 6px 18px rgba(22,51,61,.05)}
+.wl-card{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid rgba(28,33,41,.04);border-radius:20px;padding:18px 16px;text-align:left;box-shadow:0 6px 18px rgba(28,33,41,.05)}
 .wl-card-mint{background:#f1f5f2;border-color:transparent}
 .wl-card-icon{width:54px;height:54px;border-radius:50%;background:#dce8e0;display:grid;place-items:center;flex:0 0 54px}
 .wl-card-text{flex:1;display:flex;flex-direction:column;gap:3px}
@@ -557,11 +557,11 @@ button,a,input,textarea,select{touch-action:manipulation}
 .role2-page{min-height:100dvh;background:var(--ehn-cream);display:flex;flex-direction:column;padding:26px 18px 30px;align-items:center}
 .role2-logo{display:flex;align-items:center;gap:4px}
 .role2-logo-word{display:flex;align-items:baseline;line-height:1}
-.role2-logo-green{font-size:24px;font-weight:800;letter-spacing:-.5px;color:#00565b}
+.role2-logo-green{font-size:24px;font-weight:800;letter-spacing:-.5px;color:#105258}
 .role2-logo-ink{font-size:24px;font-weight:800;letter-spacing:-.5px;color:var(--ehn-ink)}
 .role2-title{font-size:31px;font-weight:800;color:#0e2f43;text-align:center;line-height:1.12;letter-spacing:-.5px;margin:26px 0 0}
 .role2-sub{font-size:14.5px;line-height:1.5;color:#3f545c;text-align:center;margin:12px 0 0}
-.role2-owner-card{position:relative;width:100%;background:#fff;border-radius:24px;margin-top:22px;overflow:hidden;box-shadow:0 10px 30px rgba(22,51,61,.07);display:flex;flex-direction:column}
+.role2-owner-card{position:relative;width:100%;background:#fff;border-radius:24px;margin-top:22px;overflow:hidden;box-shadow:0 10px 30px rgba(28,33,41,.07);display:flex;flex-direction:column}
 .role2-owner-photo{position:absolute;top:0;right:0;bottom:38%;width:56%;pointer-events:none}
 .role2-owner-photo img{width:100%;height:100%;object-fit:cover;object-position:center}
 .role2-owner-copy{position:relative;z-index:1;padding:24px 20px 18px;max-width:62%}
@@ -585,7 +585,7 @@ button,a,input,textarea,select{touch-action:manipulation}
 /* ---------- register (eigentumer.login) ---------- */
 .ehn-reg-page{min-height:100dvh;background:var(--ehn-cream);display:flex;flex-direction:column;align-items:center;padding:24px 16px 30px}
 .ehn-reg-head{position:relative;width:100%;display:flex;flex-direction:column;align-items:center}
-.ehn-reg-back{position:absolute;left:2px;top:12px;display:grid;place-items:center;width:40px;height:40px;border-radius:14px;background:#fff;box-shadow:0 2px 8px rgba(22,51,61,.07)}
+.ehn-reg-back{position:absolute;left:2px;top:12px;display:grid;place-items:center;width:40px;height:40px;border-radius:14px;background:#fff;box-shadow:0 2px 8px rgba(28,33,41,.07)}
 .ehn-reg-hero{width:100%;max-width:430px;margin-top:18px}
 .ehn-reg-hero h1{font-size:30px;font-weight:800;color:var(--ehn-ink);line-height:1.12;letter-spacing:-.5px;margin:0}
 .ehn-reg-hero p{margin:12px 0 0;font-size:14px;line-height:1.55;color:#3f545c}
@@ -640,7 +640,7 @@ main.app-page.ehn-owner{--owner-bg:var(--ehn-cream)}
   .ehn-center-logo-house{position:absolute;right:2px;top:0}
   .ehn-center-logo-text{position:absolute;left:2px;bottom:1px;display:flex;flex-direction:column;line-height:1}
   .ehn-center-logo .own-logo-line1{font-size:20px;font-weight:800;color:var(--ehn-ink);letter-spacing:-.4px;line-height:1}
-  .ehn-center-logo .own-logo-line2{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:19px;color:#00565b;margin-left:24px;line-height:1;margin-top:1px}
+  .ehn-center-logo .own-logo-line2{font-family:"Snell Roundhand","Brush Script MT",cursive;font-size:19px;color:#105258;margin-left:24px;line-height:1;margin-top:1px}
 }
 
 /* ---------- dashboard geometry (Homesceen_EH_02 @390) ---------- */

@@ -58,10 +58,10 @@ export default function RegisterOwnerPage() {
     <div className="safe-top safe-bottom page owner-reg-page">
       <div className="oreg-hero">
         <button type="button" className="back-btn-float" onClick={() => router.back()}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#16333d" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#1c2129" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
         <div className="oreg-logo">
-          <svg width="44" height="48" viewBox="0 0 72 78" fill="none"><path d="M10 34 L36 12 L62 34 V70 H30" stroke="#14735c" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /><rect x="30" y="22" width="3.2" height="3.2" rx="0.8" fill="#14735c" /><rect x="36" y="22" width="3.2" height="3.2" rx="0.8" fill="#14735c" /></svg>
+          <svg width="44" height="48" viewBox="0 0 72 78" fill="none"><path d="M10 34 L36 12 L62 34 V70 H30" stroke="#105258" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /><rect x="30" y="22" width="3.2" height="3.2" rx="0.8" fill="#105258" /><rect x="36" y="22" width="3.2" height="3.2" rx="0.8" fill="#105258" /></svg>
           <div style={{ display: "flex", alignItems: "baseline", marginLeft: -6 }}><span className="logo-word green-word" style={{ fontSize: 30 }}>einfach</span><span className="logo-word ink-word" style={{ fontSize: 30 }}>hausen</span></div>
         </div>
         <p className="oreg-tagline">Dein Zuhause. <span className="green">Alles geregelt.</span></p>
@@ -104,7 +104,7 @@ export default function RegisterOwnerPage() {
           ))}
         </div>
         <div className="oreg-made">
-          <div className="oreg-made-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.5" stroke="#14735c" strokeWidth="1.5" /><path d="M8.5 10.5V8a3.5 3.5 0 017 0v2.5" stroke="#14735c" strokeWidth="1.5" /><path d="M12 14v2.5" stroke="#14735c" strokeWidth="1.5" strokeLinecap="round" /></svg></div>
+          <div className="oreg-made-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.5" stroke="#105258" strokeWidth="1.5" /><path d="M8.5 10.5V8a3.5 3.5 0 017 0v2.5" stroke="#105258" strokeWidth="1.5" /><path d="M12 14v2.5" stroke="#105258" strokeWidth="1.5" strokeLinecap="round" /></svg></div>
           <div><strong>Sicher. Einfach. Für dich gemacht.</strong><span>Made in Germany <FlagDeIcon /></span></div>
         </div>
       </section>
