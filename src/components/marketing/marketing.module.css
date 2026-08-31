@@ -109,7 +109,7 @@
 .feature h3 { margin:22px 0 8px; font-size:19px; letter-spacing:-.02em; }
 .feature p { margin:0; color:var(--eh-text-secondary); line-height:1.6; font-size:14px; }
 .tone_dark .featureGrid { border-color:#105258; background:#105258; }
-.tone_dark .feature { background:#0e3d33; }
+.tone_dark .feature { background:#0a3539; }
 .tone_dark .featureIcon { background:#174b50; color:#9fcfd2; }
 .split { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
 .infoPanel { border:1px solid var(--eh-border); border-radius:20px; padding:30px; background:white; min-width:0; }
@@ -545,9 +545,9 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 
 /* Recolor hardcoded accents from the previous green family to logo teal */
 .primaryButton { box-shadow: 0 10px 22px -12px rgba(16,82,88,.5); }
-.ctaBand { background: linear-gradient(135deg, #1b8569 0%, #0e3d33 85%); box-shadow: 0 32px 80px -36px rgba(10,53,57,.45); }
+.ctaBand { background: linear-gradient(135deg, #105258 0%, #0a3539 85%); box-shadow: 0 32px 80px -36px rgba(10,53,57,.45); }
 .tone_dark .featureGrid { background: #174b50; border-color: #174b50; }
-.tone_dark .feature { background: #0e3d33; }
+.tone_dark .feature { background: #0d4448; }
 .tone_dark .featureIcon { background: #174b50; color: #9fcfd2; }
 .processLine { background: linear-gradient(90deg, #105258, #8fc0c4); }
 .timelineScrub { background: linear-gradient(180deg, #105258, #a5cccc); }
