@@ -30,3 +30,8 @@ Taskplans.
 
 Pflege-Regel: Nur verifizierte Fakten eintragen. Technische Abschlusswellen
 autorisiert keine Legal-/Business-Fakten.
+6. **Google/Apple-SSO in den App-Registrierungen (T-0206 B7)** — die
+   Notion-Referenz zeigt „Mit Google/Apple anmelden"-Buttons. Echte
+   OAuth-Credentials (Google Cloud + Apple Developer, verifyte Domains) sind
+   Betriebervollmacht; Fake-Buttons ohne funktionierendes Backend sind
+   verboten. Erst nach Credential-Bereitstellung umsetzbar.

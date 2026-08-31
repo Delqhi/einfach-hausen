@@ -51,6 +51,7 @@ export default function RolePage() {
         <span className="role2-trust-icon"><LockIcon /></span>
         <span className="wl-card-text"><strong>Sicher. Einfach. Für dich gemacht.</strong><span>Deine Daten sind bei uns sicher und geschützt.</span></span>
       </footer>
+      <svg className="role2-wave" viewBox="0 0 390 42" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 C 65 8 130 8 195 22 C 260 36 325 40 390 18 L 390 42 L 0 42 Z" fill="#e7f0ec" /></svg>
       <div className="home-indicator" />
     </div>
   );
