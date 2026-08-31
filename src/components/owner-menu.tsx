@@ -120,7 +120,28 @@ export function OwnerMobileMenu({ active }: { active: string }) {
     >
       <summary aria-label="Hauptmenü öffnen"><HamburgerIcon /><span>Menü</span></summary>
       <div className="menu-overlay open" onClick={() => setOpen(false)} aria-hidden="true" />
-      <aside className="side-menu ehn-drawer" aria-label="Hauptnavigation">
+      <aside
+        className="side-menu ehn-drawer"
+        aria-label="Hauptnavigation"
+        onPointerDown={(event) => {
+          const panel = event.currentTarget;
+          const startX = event.clientX;
+          let lastX = startX;
+          const move = (moveEvent: PointerEvent) => {
+            lastX = moveEvent.clientX;
+            const delta = Math.max(0, lastX - startX);
+            panel.style.transform = `translateX(${delta}px)`;
+          };
+          const up = () => {
+            panel.removeEventListener("pointermove", move);
+            panel.removeEventListener("pointerup", up);
+            panel.style.transform = "";
+            if (lastX - startX > 96) setOpen(false);
+          };
+          panel.addEventListener("pointermove", move);
+          panel.addEventListener("pointerup", up);
+        }}
+      >
         <div className="sm-head">
           <div className="sm-logo">
             <svg width="70" height="52" viewBox="0 0 120 88" fill="none" aria-hidden="true"><path d="M38 34 L74 12 L96 26 V82 H52" stroke="#105258" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>

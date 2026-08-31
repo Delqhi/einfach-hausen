@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, BadgeCheck, CalendarDays, ClipboardList, FileText, Flame, Leaf, MapPin, MessageSquare, Sprout, UserRound } from 'lucide-react';
 import { AppShell } from '@/components/shell';
+import { CountUp } from '@/components/count-up';
 import { ProviderAccessBoundary, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
@@ -114,7 +115,7 @@ export default async function Pro() {
         {stats.map(({ icon: Icon, value, label }) => (
           <div className="pdx-stat" key={label}>
             <span className="pdx-stat-icon"><Icon size={19} /></span>
-            <strong>{value}</strong>
+            <strong><CountUp value={value} /></strong>
             <small>{label}</small>
           </div>
         ))}

@@ -974,3 +974,54 @@ main.app-page.ehn-owner .ehn-composer .agent-composer .icon-action span{display:
 /* T-0206 B6: bottom wave decoration on /role (Notion first_action) */
 .role2-page{position:relative;padding-bottom:74px}
 .role2-wave{position:absolute;left:0;right:0;bottom:14px;width:100%;height:42px;pointer-events:none}
+
+/* ============ T-0208 premium feel: view transitions + native micro-interactions ============ */
+/* Cross-document view transitions (Chrome 126+): app navigations morph instead of flash. */
+@view-transition{navigation:auto}
+@view-transition{navigation:auto;type:slide-up}
+
+/* Logo + Topbar survive navigation as morphing elements (premium anchor). */
+.ehn-center-logo,.mobile-brand .brand{view-transition-name:app-logo}
+.bottom-nav{view-transition-name:app-bottom-nav}
+
+::view-transition-old(app-logo),::view-transition-new(app-logo){animation:none;mix-blend-mode:normal;height:100%}
+::view-transition-old(app-bottom-nav),::view-transition-new(app-bottom-nav){animation:none}
+
+/* iOS/Android feel: no tap flash, no text selection on chrome, instant touch. */
+.app-page{-webkit-tap-highlight-color:transparent}
+.app-page .topbar-v3,.app-page .bottom-nav,.app-page .mobile-menu,.app-page .ehn-menu{user-select:none;-webkit-user-select:none}
+.app-page a,.app-page button,.app-page summary,.app-page label{touch-action:manipulation}
+.app-page{overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+
+/* Press feedback on every tappable surface: the #1 "feels app-like" lever. */
+@media(hover:hover){
+  .app-page a:active,.app-page button:not(:disabled):active{opacity:.85}
+}
+.app-page .pro-request,.app-page .pdx-request,.app-page .pdx-appointment,.app-page .pdx-quote-cta,
+.app-page .pdx-appointment-time,.app-page .house-menu,.app-page .ov-card,.app-page .role2-owner-card,
+.app-page .role2-pro-row,.app-page .verification-card,.app-page .wz-category,.app-page .wz-service,
+.app-page .pdx-stat,.app-page .metrics div,.app-page .provider-leads-card,.app-page .sm-pro-card{
+  transition:transform .14s cubic-bezier(.2,.7,.3,1),box-shadow .14s ease,opacity .14s ease;
+}
+.app-page .pro-request:active,.app-page .pdx-request:active,.app-page .pdx-appointment:active,
+.app-page .pdx-quote-cta:active,.app-page .ov-card:active,.app-page .house-menu:active,
+.app-page .verification-card:active,.app-page .role2-owner-card:active,.app-page .role2-pro-row:active,
+.app-page .wz-category:active,.app-page .wz-service:active,.app-page .pdx-stat:active{
+  transform:scale(.982)
+}
+.app-page button:not(:disabled):active,.app-page .btn-primary:active,.app-page .btn-ghost:active,
+.app-page .btn-danger:active,.app-page .wz-submit:active,.app-page .role2-owner-cta:active{
+  transform:scale(.975)
+}
+@media(prefers-reduced-motion:reduce){
+  .app-page *,::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+
+/* ============ T-0208 C: toasts (sonner-style, zero deps) ============ */
+.eh-toast-host{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));z-index:120;display:grid;gap:8px;width:min(92vw,420px);pointer-events:none}
+.eh-toast{background:#1c332a;color:#fff;font-size:13.5px;line-height:1.45;padding:12px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(18,60,42,.28);opacity:0;transform:translateY(12px) scale(.98);transition:opacity .22s ease,transform .22s cubic-bezier(.2,.7,.3,1)}
+.eh-toast-in{opacity:1;transform:translateY(0) scale(1)}
+.eh-toast-out{opacity:0;transform:translateY(8px) scale(.98)}
+.eh-toast-success{background:#14523f}
+.eh-toast-error{background:#8f2f2a}
+@media(prefers-reduced-motion:reduce){.eh-toast{transition-duration:.01ms}}

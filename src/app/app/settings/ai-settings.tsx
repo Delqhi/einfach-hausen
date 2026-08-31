@@ -1,5 +1,6 @@
 "use client";
 
+import { uiToast } from "@/components/ui-toast";
 import { useEffect, useState } from "react";
 
 // EH T-0207: AI access settings — BYOK (own OpenAI-compatible key), freemium
@@ -44,7 +45,7 @@ export function AiSettings() {
       const res = await fetch("/api/ai/byok", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ apiKey, baseUrl, model }) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Speichern fehlgeschlagen.");
-      setMessage("Key verschlüsselt gespeichert.");
+      uiToast("Key verschlüsselt gespeichert.", { kind: "success" });
       setApiKey("");
       await load();
     } catch (e) { setError(e instanceof Error ? e.message : "Fehler."); } finally { setBusy(false); }
@@ -52,7 +53,7 @@ export function AiSettings() {
 
   async function disableKey() {
     setBusy(true);
-    try { await fetch("/api/ai/byok", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ disable: true }) }); await load(); setMessage("BYOK deaktiviert."); }
+    try { await fetch("/api/ai/byok", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ disable: true }) }); await load(); uiToast("BYOK deaktiviert.", { kind: "info" }); }
     finally { setBusy(false); }
   }
 
@@ -64,7 +65,7 @@ export function AiSettings() {
       const res = await fetch("/api/ai/credits", { method: "POST" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Fehler.");
-      setMessage(`+${data.granted} KI-Aktionen erhalten.`);
+      uiToast(`+${data.granted} KI-Aktionen erhalten.`, { kind: "success" });
       await load();
     } catch (e) { setError(e instanceof Error ? e.message : "Fehler."); } finally { setBusy(false); }
   }
