@@ -101,12 +101,17 @@ export function rotateAndIssueUserSession(userId: number): { token: string; expi
 }
 
 // Best-effort expiry of pre-__Host- cookie names so upgraded clients stop
-// carrying dead legacy cookies.
+// carrying dead legacy cookies. __Host- names are only cleared when the
+// secure flag can actually be sent (https or explicit E2E exception); a
+// Secure-less Set-Cookie for a __Host- name is rejected by browsers and
+// logs a console error on Firefox (T-0160 acceptance).
 async function clearLegacyCookies(current: string): Promise<void> {
   const store = await jar();
+  const secure = process.env.NODE_ENV === 'production' && process.env.E2E_INSECURE_COOKIES !== '1';
   const expired = cookieOptions(new Date(0));
   for (const name of [DEV_COOKIE, PROD_COOKIE]) {
     if (name === current) continue;
+    if (name.startsWith('__Host-') && !secure) continue;
     try { store.set(name, '', expired); } catch {}
   }
 }

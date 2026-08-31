@@ -56,9 +56,19 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const request = event.request;
-  const url = new URL(request.url);
+  // Firefox can deliver fetch events with an empty/relative URL (prefetch
+  // edge case); constructing a URL would throw inside the worker and surface
+  // as "unexpected error" for the whole interception. Ignore those requests
+  // exactly like the non-GET/cross-origin ones below (T-0160 matrix fix).
+  if (!request || !request.url || request.method !== 'GET') return;
+  let url;
+  try {
+    url = new URL(request.url);
+  } catch {
+    return;
+  }
 
-  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+  if (url.origin !== self.location.origin) return;
 
   if (PUBLIC_SHELL_SET.has(url.pathname)) {
     event.respondWith(
@@ -73,6 +83,17 @@ self.addEventListener('fetch', (event) => {
   // always network-only. Navigation gets only a generated recovery page when
   // the network itself is unavailable; no private response is written to CacheStorage.
   if (request.mode === 'navigate') {
-    event.respondWith(fetch(request).catch(() => offlineResponse()));
+    // Firefox surfaces any rejection inside respondWith as "unexpected error"
+    // on the whole interception (e.g. aborted preloads with empty URLs during
+    // fast navigations). respondWith never rejects: network failure falls back
+    // to the generated recovery page, every other error passes through.
+    event.respondWith((async () => {
+      try {
+        return await fetch(request);
+      } catch (error) {
+        if (error && (error.name === 'TypeError' || /aborted|network/i.test(String(error)))) return offlineResponse();
+        throw error;
+      }
+    })());
   }
 });

@@ -1,6 +1,6 @@
 # Einfach Hausen — Canonical Next-Agent Contract
 
-**Updated:** 2026-08-31 — **Release-Gate-Welle DONE: T-0157 vereinfachter Pflicht-Release-Gate (lint/types/security/fixtures/build/a11y/visual/perf) implementiert, 10/10 grün, als Pflichtschritt in deploy/update-on-oci.sh verdrahtet; `/login`-Kontrast-Defekt gefixt. Nächster Schritt: Abnahme-Kette T-0160 (Website) / T-0161 (Homeowner) / T-0162 (Partner) → T-0163.**
+**Updated:** 2026-08-31 (Abend) — **Acceptance-Welle DONE: T-0157 Release-Gate (10/10, Deploy-Pflicht) + T-0160/T-0161/T-0162 Produkt-Final-Acceptance (Website/Homeowner/Partner) mit Evidenz bestanden. Produktionsfixes dieser Welle: /login-Kontrast (WCAG AA), __Host-Cookie-Secure-Skip, sw.js-Härtung (Firefox/WebKit), E2E-Engine-Toleranz dokumentiert. T-0163 finaler Convergence-Gate läuft als letzter Schritt dieser Welle; danach höchste eligible Tasks = T-0152/T-0153 (Visual Regression App-Tiefen), T-0129 (Cross-Surface-Suite inkl. Firefox-App-Fullflow unter ruhiger Last), T-0113 i18n-Kette.**
 
 **Website-Wave DONE: `/` ist wieder die öffentliche Lead-Magnet-Homepage (main=1cedf03, gepusht). Höchster eligible Task bleibt T-0006 (e2e tech-persona seam).**
 
@@ -403,4 +403,32 @@ task: T-0157
 updated: 2026-08-31T21:16:05+00:00
 actor: local-agent
 evidence-sha256: 7f99e3ef8bfd11d211e6dbda80fa766914a185971e4f6883515209aba957fb5f
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0160
+updated: 2026-08-31T22:25:51+00:00
+actor: local-agent
+evidence-sha256: a0374312071e4a6d50a86e2706a720cb563cff292dd03c20102c6c0ac8b63098
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0161
+updated: 2026-08-31T22:54:54+00:00
+actor: local-agent
+evidence-sha256: 8347892ea96120456d7b66b9aba1440561a66d689fce427bda41928e3e8003b4
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0162
+updated: 2026-08-31T22:54:54+00:00
+actor: local-agent
+evidence-sha256: ff5ccd0484ed2266c6ce264e4b9f21b41f1bd97f7e8c73ff4c98e9216edf19cd
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0163
+updated: 2026-08-31T22:56:47+00:00
+actor: local-agent
+evidence-sha256: fb1882e2df32385413315728fdb2731a84376c39873250aa2cf0335a2c913c98
 -->

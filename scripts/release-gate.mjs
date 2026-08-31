@@ -226,9 +226,21 @@ async function liveGates() {
       if (url.startsWith(base)) responses.push({ url, size: Number(response.headers()['content-length'] || 0), status: response.status() });
     });
     if (!runPerf) { return; }
+    // CLS via LayoutShift observer, installed before navigation (CWV lab proxy;
+    // field telemetry is T-0117 scope).
+    await perfPage.addInitScript(() => {
+      window.__gateCls = 0;
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (!entry.hadRecentInput) window.__gateCls += entry.value;
+        }
+      }).observe({ type: 'layout-shift', buffered: true });
+    });
     const navStart = Date.now();
     await perfPage.goto(`${base}/`, { waitUntil: 'networkidle', timeout: 60000 });
     const loadMs = Date.now() - navStart;
+    const cls = await perfPage.evaluate(() => window.__gateCls).catch(() => -1);
+    record('home CLS (<= 0.1)', cls >= 0 && cls <= 0.1, `CLS=${Number(cls).toFixed(4)}`);
     const transferBytes = responses.reduce((sum, response) => sum + (response.size || 0), 0);
     const contentLengthMissing = responses.filter((response) => response.size === 0 && response.status === 200).length;
     // Fallback: measure body sizes when content-length is missing (gzip/streaming).

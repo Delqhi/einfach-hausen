@@ -24,6 +24,12 @@ der technische Abschluss weder erfinden noch erledigen kann:
    einem echten Postfach (z. B. Antwort-Handling) benötigt ein betreibereitens
    gepflegtes Postfach und ist deshalb nicht agentenseitig beweisbar.
 
+6. **GitHub Actions fuer dieses private Repo nicht nutzbar (T-0157, 2026-08-31 verifiziert)** —
+   alle 90 letzten Runs `startup_failure` mit 0 Jobs (Actions-Minuten/Plan-Sache des Accounts).
+   Der einheitliche Release-Gate greift deshalb repo-seitig als Pflichtschritt in
+   `deploy/update-on-oci.sh`; `quality.yml` ist vorbereitet (inkl. Supabase-Secrets) und
+   startet automatisch, sobald Actions aktiviert ist.
+
 Nicht-Blocker, aber grenzwertig erwähnt: App-Store-Auslieferung (Capacitor) ist
 Teil historischer Planung (T-0167, nie ausgeführt) und nicht Teil des aktuellen
 Taskplans.

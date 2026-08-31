@@ -70,11 +70,16 @@ export function rotateAndIssueAdminSession(): { token: string; expires: Date } {
   }).immediate();
 }
 
+// __Host- cookies must never be sent without Secure over http; skip them when
+// the runtime cannot emit a valid __Host- attribute set (Firefox logs a console
+// error for rejected prefixes, which fails the browser acceptance matrix).
 async function clearLegacyCookies(current: string): Promise<void> {
   const store = await jar();
-  const expired = { httpOnly: true, sameSite: 'strict' as const, secure: process.env.NODE_ENV === 'production' && process.env.E2E_INSECURE_COOKIES !== '1', path: '/', expires: new Date(0) };
+  const secure = process.env.NODE_ENV === 'production' && process.env.E2E_INSECURE_COOKIES !== '1';
+  const expired = { httpOnly: true, sameSite: 'strict' as const, secure, path: '/', expires: new Date(0) };
   for (const name of [DEV_COOKIE, PROD_COOKIE]) {
     if (name === current) continue;
+    if (name.startsWith('__Host-') && !secure) continue;
     try { store.set(name, '', expired); } catch {}
   }
 }

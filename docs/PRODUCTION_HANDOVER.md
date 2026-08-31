@@ -1,6 +1,6 @@
 # Einfach Hausen — Production Handover and Continuation Runbook
 
-**Status snapshot:** 2026-08-28 — **Execution migration to OCI-VM; SIN Supabase OSS on OCI is the target production auth/data authority.** The previous cutover `dcd53ca1f463e9d64ee3fc6838d1cdb3fb2bb557` remains the known production baseline. Self-hosted HA/PITR/failover must be re-proven on the actual OCI stack before being described as active.
+**Status snapshot:** 2026-08-31 — **Production runs `b74876a` on OCI (`/srv/einfach-hausen`), deployed through the mandatory unified release gate (T-0157, 10/10 green) with live smoke 200 on `/`, `/preise`, `/login`, `/admin/login`, `/api/health`. Product Final Acceptance Website/Homeowner/Partner (T-0160/T-0161/T-0162) passed with evidence on 2026-08-31 (evidence dir `.sin-gpt-web/evidence/acceptance-20260831/`). SIN Supabase OSS on OCI remains the production auth/data authority. Self-hosted HA/PITR/failover must be re-proven on the actual OCI stack before being described as active.**
 
 **Execution boundary:** complete the one-time verified Mac-M1 → GitHub handoff, then run `einfach-hausen` engineering and Prime Agent Luna on **OCI-VM**. GitHub is the only transfer boundary; do not copy a dirty Mac working tree directly to OCI. Supabase Cloud is not part of the target architecture.
 
@@ -621,4 +621,32 @@ task: T-0157
 updated: 2026-08-31T21:16:05+00:00
 actor: local-agent
 evidence-sha256: 7f99e3ef8bfd11d211e6dbda80fa766914a185971e4f6883515209aba957fb5f
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0160
+updated: 2026-08-31T22:25:51+00:00
+actor: local-agent
+evidence-sha256: a0374312071e4a6d50a86e2706a720cb563cff292dd03c20102c6c0ac8b63098
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0161
+updated: 2026-08-31T22:54:54+00:00
+actor: local-agent
+evidence-sha256: 8347892ea96120456d7b66b9aba1440561a66d689fce427bda41928e3e8003b4
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0162
+updated: 2026-08-31T22:54:54+00:00
+actor: local-agent
+evidence-sha256: ff5ccd0484ed2266c6ce264e4b9f21b41f1bd97f7e8c73ff4c98e9216edf19cd
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0163
+updated: 2026-08-31T22:56:47+00:00
+actor: local-agent
+evidence-sha256: fb1882e2df32385413315728fdb2731a84376c39873250aa2cf0335a2c913c98
 -->
