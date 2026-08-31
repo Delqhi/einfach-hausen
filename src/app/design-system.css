@@ -352,7 +352,7 @@ button,a,input,textarea,select{touch-action:manipulation}
   --eh-bg:#F7F8F7;--eh-surface:#FFFFFF;--eh-soft:#F4FAF6;--eh-soft-2:#EAF5EE;
   --eh-text:#171A18;--eh-muted:#66706A;--eh-border:#E4E8E5;--eh-border-strong:#D5DCD7;
   --eh-accent:#105258;--eh-accent-hover:#1b8569;--eh-accent-soft:#EAF5EE;
-  --eh-brand:#123C2A;--eh-brand-2:#105258;
+  --eh-brand:#0A3539;--eh-brand-2:#105258;
 }
 .app-shell-v3{background:var(--eh-bg)}
 .app-shell-v3 .workspace-shell{background:var(--eh-bg);grid-template-columns:72px minmax(0,1fr)}
