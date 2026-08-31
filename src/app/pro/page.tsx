@@ -74,9 +74,9 @@ export default async function Pro() {
     );
   }
 
-  const requests = ctx.canManageJobs
-    ? db.prepare(`SELECT d.id dispatch_id,d.status dispatch_status,d.match_score,d.distance_km,d.sent_at,j.*,(SELECT amount FROM quotes q WHERE q.job_id=j.id AND q.provider_id=?) my_quote FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status IN ('sent','viewed','quoted') AND j.status IN ('open','quoted') ORDER BY d.sent_at DESC LIMIT 30`).all(ctx.providerId, ctx.providerId) as any[]
-    : [];
+  // Dispatches belong to the company (provider_id = owner user id): every
+  // member sees the shared request pool; /pro/jobs enforces per-person rights.
+  const requests = db.prepare(`SELECT d.id dispatch_id,d.status dispatch_status,d.match_score,d.distance_km,d.sent_at,j.*,(SELECT amount FROM quotes q WHERE q.job_id=j.id AND q.provider_id=?) my_quote FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status IN ('sent','viewed','quoted') AND j.status IN ('open','quoted') ORDER BY d.sent_at DESC LIMIT 30`).all(ctx.providerId, ctx.providerId) as any[];
   const companyOpen = ctx.canManageJobs
     ? (db.prepare(`SELECT COUNT(*) c FROM job_dispatches d JOIN jobs j ON j.id=d.job_id WHERE d.provider_id=? AND d.status='accepted' AND j.status!='completed'`).get(ctx.providerId) as any).c
     : 0;
@@ -120,8 +120,7 @@ export default async function Pro() {
         ))}
       </section>
 
-      {ctx.canManageJobs ? (
-        <>
+      <>
           <div className="pdx-section-head">
             <h2>Anfragen in deiner Nähe</h2>
             <Link href="/pro/orders">Alle anzeigen <ArrowRight size={13} /></Link>
@@ -161,7 +160,7 @@ export default async function Pro() {
           </div>
           {requests.length > 4 && <Link className="pdx-show-all" href="/pro/orders">Alle Anfragen anzeigen <ArrowRight size={14} /></Link>}
 
-          {quoteCandidates > 0 && (
+          {ctx.canManageJobs && quoteCandidates > 0 && (
             <Link href={`/pro/jobs/${requests.find((job) => !job.my_quote && job.request_kind !== 'contact')?.id}`} className="pdx-quote-cta">
               <span className="pdx-quote-icon"><FileText size={20} /></span>
               <div className="grow">
@@ -172,13 +171,6 @@ export default async function Pro() {
             </Link>
           )}
         </>
-      ) : (
-        <ProviderState
-          icon={<ClipboardList size={21} />}
-          title="Ansichtsrechte: eigene Aufträge"
-          description="Du siehst nur die dir zugewiesenen Aufträge und Kunden. Neue betriebliche Anfragen verwaltet der Firmeninhaber bzw. eine berechtigte Person."
-        />
-      )}
 
       {/* Next appointments (Notion: date tile + time) */}
       <div className="pdx-section-head pdx-section-head-tight">
