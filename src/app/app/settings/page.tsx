@@ -5,6 +5,7 @@ import { InstallAppCard } from '@/components/install-app-card';
 import { requireUser } from '@/lib/auth';
 import { PwaSettingsStatus } from './pwa-settings-status';
 import { AccountActions } from './account-actions';
+import { AiSettings } from './ai-settings';
 import styles from './settings.module.css';
 
 export default async function AppSettingsPage() {
@@ -57,6 +58,14 @@ export default async function AppSettingsPage() {
           </span>
           <input type="checkbox" disabled aria-label="Checklisten-Erinnerungen per Push noch nicht verfügbar" />
         </div>
+      </section>
+
+      <section className={styles.section} aria-labelledby="ai-heading">
+        <div className={styles.sectionHeading}>
+          <ShieldCheck aria-hidden="true" />
+          <div><h2 id="ai-heading">KI-Assistent</h2><p>Kontingent, Bonus-Aktionen und eigener API-Key (BYOK).</p></div>
+        </div>
+        <AiSettings />
       </section>
 
       <section className={styles.section} aria-labelledby="account-heading">

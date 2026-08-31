@@ -259,3 +259,17 @@ for(const h of legacyOwners){
   db.prepare(`UPDATE provider_invites SET property_id=COALESCE(property_id,?) WHERE homeowner_id=?`).run(propertyId,h.user_id);
   db.prepare(`UPDATE house_transfers SET property_id=COALESCE(property_id,?) WHERE homeowner_id=?`).run(propertyId,h.user_id);
 }
+
+// ============ AI 3-stage cost architecture (EH T-0207) ============
+db.exec(`CREATE TABLE IF NOT EXISTS user_settings (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,ai_byok_enabled INTEGER NOT NULL DEFAULT 0,ai_byok_provider TEXT NOT NULL DEFAULT '',updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)`);
+// ai_usage: per-user monthly freemium consumption of cloud AI actions.
+// ai_credits: granted bonus actions (rewarded ads / purchases), consumed
+// after the monthly allowance. mode: 'freemium' | 'ad' | 'purchase'.
+db.exec(`CREATE TABLE IF NOT EXISTS ai_usage (id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,period TEXT NOT NULL,action TEXT NOT NULL DEFAULT 'chat',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)`);
+db.exec(`CREATE INDEX IF NOT EXISTS idx_ai_usage_user_period ON ai_usage(user_id,period,created_at DESC)`);
+db.exec(`CREATE TABLE IF NOT EXISTS ai_credits (id INTEGER PRIMARY KEY AUTOINCREMENT,user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,granted INTEGER NOT NULL,mode TEXT NOT NULL CHECK(mode IN ('ad','purchase','manual')),source TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)`);
+db.exec(`CREATE INDEX IF NOT EXISTS idx_ai_credits_user ON ai_credits(user_id,created_at DESC)`);
+addColumnIfMissing('ai_usage','credit_id','credit_id INTEGER REFERENCES ai_credits(id)');
+addColumnIfMissing('user_settings','ai_byok_key_enc','ai_byok_key_enc TEXT');
+addColumnIfMissing('user_settings','ai_byok_base_url',"ai_byok_base_url TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing('user_settings','ai_byok_model',"ai_byok_model TEXT NOT NULL DEFAULT ''");

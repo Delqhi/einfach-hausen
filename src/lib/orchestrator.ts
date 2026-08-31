@@ -1,5 +1,17 @@
 import { db } from './db';
-import { analyzeRequest, answerHouseQuestion } from './request-ai';
+import { analyzeRequest, answerHouseQuestion, parseRequest } from './request-ai';
+import { classifyLocally, byokEnabled, consumeCloudAction, type IntentResult } from './ai-engine';
+
+// Stage-1 local assistant: a deterministic, template-based reply built from
+// the local intent result. Zero cloud cost, instant.
+function localAssistantReply(intent:IntentResult,body:string,context:string):string{
+  const urgency=intent.urgency==='emergency'?'Sofort-Hilfe: das klingt dringend.':intent.urgency==='short_notice'?'Kurzfristig lässt sich das gut koordinieren.':'Das lässt sich gut planen.';
+  const mode=intent.mode==='consultation'
+    ?'Ich stelle dir gern eine fachliche Person für eine Beratung zusammen — oder du entscheidest dich direkt für einen Auftrag.'
+    :'Ich kann daraus eine Anfrage machen und passende geprüfte Betriebe in deiner Region fragen.';
+  const category=intent.category!=='Hausmeister & Sonstiges'?`Eingeordnet als: ${intent.category}.`:'';
+  return `${urgency} ${category} ${mode}`.trim();
+}
 import { geocodePostcode, distanceKm, regionalPostcodeGeo } from './geocode';
 import { berlinRequestTimestamp, classifyAvailabilityFreshness, emergencyAvailableAt, emergencyResponseScore, explainMatchScore, preferredRequestWindow, type MatchReason } from './matching';
 import { resolveDispatchService, type DispatchService } from './dispatch-config';
@@ -112,7 +124,21 @@ export async function answerHausmeisterQuestion(userId:number,body:string,channe
   const recent=db.prepare(`SELECT title,category,status,updated_at FROM jobs WHERE homeowner_id=? ORDER BY updated_at DESC LIMIT 6`).all(userId) as any[];
   const history=property?db.prepare(`SELECT category,title,performed_at,company_name,cost_amount,guarantee_until,maintenance_due FROM house_history_entries WHERE property_id=? ORDER BY performed_at DESC LIMIT 10`).all(property.id) as any[]:[];
   const context=JSON.stringify({house:property?{postcode:property.postcode,address:property.address,houseType:property.property_type,buildYear:property.build_year,livingArea:property.living_area,plotArea:property.plot_area,estimatedValueMin:property.estimated_value_min,estimatedValueMax:property.estimated_value_max}:{postcode:user.postcode,address:user.address,houseType:user.house_type,buildYear:user.build_year,livingArea:user.living_area,plotArea:user.plot_area},assets,maintenance,contacts,history,recentJobs:recent});
-  const reply=await answerHouseQuestion(body,context);
+  // Stage 1 (EH T-0207): try the local intent engine first. Only fall back to
+  // the cloud model when the local classification says the request needs real
+  // reasoning (open question / no trade match).
+  const intent=classifyLocally(body);
+  let reply:string;
+  if(!intent.needsCloud){
+    reply=localAssistantReply(intent,body,context);
+  }else if(byokEnabled(userId)){
+    // BYOK runs unmetered against the user's own gateway.
+    reply=await answerHouseQuestion(body,context);
+  }else if(consumeCloudAction(userId).ok){
+    reply=await answerHouseQuestion(body,context);
+  }else{
+    reply='Dein kostenloses KI-Kontingent für diesen Monat ist aufgebraucht. Du kannst in den Einstellungen einen eigenen API-Key hinterlegen (unbegrenzt) oder über eine Werbeanzeige 10 weitere Aktionen freischalten. Für konkrete Aufträge kannst du natürlich jederzeit eine Anfrage stellen.';
+  }
   addAgentMessage(threadId,'assistant',reply,{assistantOnly:true});
   return {threadId,reply};
 }
@@ -127,7 +153,12 @@ export async function createHausmeisterRequest(userId:number,body:string,channel
   const effectiveIntent=draft?.intent||intent;
   const combined=draft?`${draft.combined_text}\nErgänzung: ${body}`:body;
   const effectivePhoto=photoPath||draft?.photo_path||null;
-  const parsed=await analyzeRequest(combined);
+  // Stage 1 first (EH T-0207): cloud analysis only when the local engine
+  // says reasoning is needed. BYOK runs unmetered; freemium consumes quota.
+  const localIntent=classifyLocally(combined);
+  const useLocal=!localIntent.needsCloud&&localIntent.confidence>=0.5;
+  const parsed=useLocal?parseRequest(combined):await analyzeRequest(combined);
+  if(useLocal&&localIntent.serviceHint)parsed.category=localIntent.category;
   const service=findService(combined,parsed.category);
   const postcode=parsed.postcode||user.postcode||'';
 
