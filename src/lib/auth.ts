@@ -171,7 +171,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   // failures are retried; hard auth failures stay fail-closed immediately.
   let identity: any = null;
   let lastError: { message?: string; status?: number } | null = null;
-  for (let attempt = 0; attempt < 5; attempt++) {
+  for (let attempt = 0; attempt < 8; attempt++) {
     const { data, error } = await client.auth.getUser();
     if (!error && data.user) { identity = data.user; break; }
     lastError = error as any;
