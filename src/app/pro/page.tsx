@@ -133,7 +133,7 @@ export default async function Pro() {
               const BadgeIcon = badge.icon;
               const price = job.my_quote ? euro(job.my_quote) : job.budget_min && job.budget_max ? `ca. ${euro((job.budget_min + job.budget_max) / 2)}` : job.budget_max ? `ca. ${euro(job.budget_max)}` : null;
               return (
-                <Link href={`/pro/jobs/${job.id}`} className="pdx-request" key={job.dispatch_id}>
+                <Link href={`/pro/jobs/${job.id}`} className="pdx-request pro-request" key={job.dispatch_id}>
                   <span className={`pdx-request-icon ${badge.kind}`}><BadgeIcon size={18} /></span>
                   <div className="pdx-request-main">
                     <div className="pdx-request-title">
