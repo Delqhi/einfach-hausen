@@ -363,8 +363,14 @@ await nav(manager, base+'/pro'); await waitText(manager,'Keine neue passende Anf
 // 3a) Zuerst nur einen Menschen verbinden — ausdrücklich noch kein Auftrag.
 await clickAndWaitUrl(owner,owner.getByRole('button',{name:/Ansprechpartner finden/}),/\/app\/jobs\/\d+/); const contactJobId=Number(owner.url().split('/').pop()); if(!contactJobId)throw new Error('contact job missing');
 await waitText(owner,'Du hast nur einen Ansprechpartner gewählt'); await waitText(owner,'noch kein Auftrag');
-await nav(manager, base+'/pro'); const contactRequest=manager.locator('a.pro-request:not(.simple)').filter({hasText:'Heckenschnitt'}).first(); await contactRequest.waitFor();
-const contactHref=await contactRequest.getAttribute('href');
+await nav(manager, base+'/pro');
+let contactHref=null;
+for(let attempt=0;attempt<8&&!contactHref;attempt++){
+  const req=manager.locator('a.pro-request:not(.simple)').filter({hasText:'Heckenschnitt'}).first();
+  try{ await req.waitFor({timeout:5000}); contactHref=await req.getAttribute('href'); }
+  catch{ await manager.waitForTimeout(700); }
+}
+if(!contactHref)throw new Error('contact dispatch card never became visible');
 if(contactHref!==`/pro/jobs/${contactJobId}`)throw new Error(`contact dispatch card href mismatch: ${contactHref}`);
 // Dev-mode Fast Refresh can full-reload mid-interaction and swallow clicks;
 // a direct navigation with one retry is deterministic here.
