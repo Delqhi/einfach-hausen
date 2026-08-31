@@ -1,6 +1,6 @@
 # Einfach Hausen — Canonical Next-Agent Contract
 
-**Updated:** 2026-08-31 (Abend) — **Acceptance-Welle DONE: T-0157 Release-Gate (10/10, Deploy-Pflicht) + T-0160/T-0161/T-0162 Produkt-Final-Acceptance (Website/Homeowner/Partner) mit Evidenz bestanden. Produktionsfixes dieser Welle: /login-Kontrast (WCAG AA), __Host-Cookie-Secure-Skip, sw.js-Härtung (Firefox/WebKit), E2E-Engine-Toleranz dokumentiert. T-0163 finaler Convergence-Gate läuft als letzter Schritt dieser Welle; danach höchste eligible Tasks = T-0152/T-0153 (Visual Regression App-Tiefen), T-0129 (Cross-Surface-Suite inkl. Firefox-App-Fullflow unter ruhiger Last), T-0113 i18n-Kette.**
+**Updated:** 2026-08-31 (Abend) — **Acceptance-Welle DONE: T-0157 Release-Gate (10/10, Deploy-Pflicht) + T-0160/T-0161/T-0162 Produkt-Final-Acceptance (Website/Homeowner/Partner) mit Evidenz bestanden. Produktionsfixes dieser Welle: /login-Kontrast (WCAG AA), __Host-Cookie-Secure-Skip, sw.js-Härtung (Firefox/WebKit), E2E-Engine-Toleranz dokumentiert. T-0163 finaler Convergence-Gate DONE. Firefox-App-Fullflow nachgeholt und PASS (15/15, zweifach, auch unter Last) — Browser-Matrix chromium+firefox voll green, WebKit via Website-Matrix 12/12. Danach höchste eligible Tasks = T-0152/T-0153 (Visual Regression App-Tiefen), T-0129 (WebKit-App-Fullflow mit 3 dokumentierten Diagnosen + Cross-Surface-Suite), T-0113 i18n-Kette.**
 
 **Website-Wave DONE: `/` ist wieder die öffentliche Lead-Magnet-Homepage (main=1cedf03, gepusht). Höchster eligible Task bleibt T-0006 (e2e tech-persona seam).**
 

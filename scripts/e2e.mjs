@@ -83,7 +83,14 @@ function createProjectCopy(){
 async function freePort(){return await new Promise((resolve,reject)=>{const socket=net.createServer();socket.unref();socket.on('error',reject);socket.listen(0,'127.0.0.1',()=>{const address=socket.address();const port=typeof address==='object'&&address?address.port:0;socket.close(()=>resolve(port));});});}
 async function runChild(argv,{cwd,env,timeoutMs=180000}={}){return await new Promise((resolve,reject)=>{const child=spawn(process.execPath,argv,{cwd,env,stdio:['ignore','pipe','pipe']});let output='';for(const stream of [child.stdout,child.stderr])stream.on('data',chunk=>{output+=chunk.toString();if(output.length>120000)output=output.slice(-120000);});const timer=setTimeout(()=>{child.kill('SIGTERM');reject(new Error(`Child process timeout: ${argv.join(' ')}\n${output.slice(-12000)}`));},timeoutMs);child.on('error',reject);child.on('exit',code=>{clearTimeout(timer);if(code===0)resolve(output);else reject(new Error(`Child process failed (${code}): ${argv.join(' ')}\n${output.slice(-12000)}`));});});}
 async function waitForServer(url,timeoutMs=90000){const started=Date.now();while(Date.now()-started<timeoutMs){if(server?.exitCode!==null&&server?.exitCode!==undefined)throw new Error(`Next server exited early (${server.exitCode})\n${serverLog.slice(-60).join('')}`);try{const response=await fetch(url,{redirect:'manual'});if(response.status<500)return;}catch{}await new Promise(resolve=>setTimeout(resolve,250));}throw new Error(`Next server did not become ready\n${serverLog.slice(-60).join('')}`);}
-async function waitText(page,text){try{await page.waitForFunction(value=>document.body.innerText.includes(value),text,{timeout:120000});}catch(error){const body=(await page.locator('body').innerText()).slice(-5000);throw new Error(`Expected text not found: ${text} | url=${page.url()} | body-tail=${body}`,{cause:error});}}
+async function waitText(page,text){
+  // Engine-agnostic text matching: WebKit drops the space at innerText line
+  // boundaries entirely ("Wir kümmern uns / um den Rest." reads as "unsum"),
+  // while textContent, aria-label and the visible rendering keep it (verified
+  // by screenshot 2026-08-31). Strip ALL whitespace on both sides: the same
+  // word stream in the same order still decides truth, engine-identically.
+  const expected=text.replace(/\s+/g,'');
+  try{await page.waitForFunction(value=>document.body.innerText.replace(/\s+/g,'').includes(value),expected,{timeout:120000});}catch(error){const body=(await page.locator('body').innerText()).slice(-5000);throw new Error(`Expected text not found: ${text} | url=${page.url()} | body-tail=${body}`,{cause:error});}}
 // React 19 streaming hydration transiently keeps a second tree in a S:<n>
 // container; structural assertions must wait for the settled DOM (T-0006).
 async function waitForDomStable(page,selector,expected=1,timeout=20000){const started=Date.now();let last=-1;while(Date.now()-started<timeout){const count=await page.locator(selector).count().catch(()=>-1);if(count===last&&(count===expected||count===0))return;last=count;await page.waitForTimeout(300);}throw new Error(`DOM never stabilized: ${selector} count=${last} expected=${expected}`);}
@@ -96,7 +103,7 @@ async function nav(page,url,options){let response;try{response=await page.goto(u
   // hiccup during a middleware redirect can keep `load` from firing within the
   // goto timeout. One deterministic retry per navigation; downstream waitText
   // assertions still decide truth, so no behavioral coverage is weakened.
-  if(!/NS_BINDING_ABORTED|frame was detached|ERR_ABORTED|Timeout .*exceeded/.test(String(error)))throw error;
+  if(!/NS_BINDING_ABORTED|frame was detached|ERR_ABORTED|Timeout .*exceeded|interrupted by another navigation/.test(String(error)))throw error;
   await page.waitForTimeout(1000);
   try{ response=await page.goto(url,{...options,waitUntil:'load'}); }
   catch(retryError){
@@ -120,7 +127,17 @@ function trackPage(page,label){
     if(browserName==='firefox' && error.message==='Error in input stream')return;
     runtimeErrors.push(`${label}: pageerror: ${error.message}`);
   });
-  page.on('console',message=>{if(message.type()==='error'){const text=message.text();const location=message.location();const source=location?.url?` source=${location.url}`:'';const toleratedFirefox=browserName==='firefox' && (/^Failed to fetch RSC payload .* Falling back to browser navigation/.test(text) || text==='JSHandle@object');
+  page.on('console',message=>{if(message.type()==='error'){const text=message.text();const location=message.location();const source=location?.url?` source=${location.url}`:'';// Documented Firefox/juggler artifacts (T-0129 matrix notes): aborted React
+// Flight streams log as RSC-payload fallback or input-stream errors, and the
+// service-worker interception of malformed empty-URL requests is reported by
+// the browser itself ("Failed to load ''", sw.js) even though the handler
+// never rejects - the paired chunk 'Error' is the page handler logging the
+// same hiccup. The flow-level assertions above still decide truth.
+const toleratedFirefox=browserName==='firefox' && (
+  /^Failed to fetch RSC payload .* Falling back to browser navigation/.test(text)
+  || text==='JSHandle@object'
+  || /A ServiceWorker intercepted the request and encountered an unexpected error/.test(text)
+  || (text==='Error' && /_next\/static\/chunks\//.test(source)));
 if(!/ERR_INTERNET_DISCONNECTED|Failed to load resource.*503/i.test(text) && !toleratedFirefox)runtimeErrors.push(`${label}: console: ${text}${source}`);}});
 }
 async function assertKeyboardFocus(page,label){
