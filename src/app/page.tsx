@@ -150,7 +150,7 @@ export default async function HomePage() {
       <a className={styles.textLink} href="/hilfe">Alle Fragen und Hilfe ansehen</a>
     </Section>
 
-    <Statement kicker="Einfach Hausen" tone="green">Dein Haus vergisst nichts. Wir auch nicht.</Statement>
+    <Statement kicker="Einfach Hausen" tone="green">Dein Haus <mark>vergisst nichts.</mark> Wir auch nicht.</Statement>
     <CtaBand title="Beim nächsten Thema nicht wieder von vorne anfangen." text="Lege dein Hauskonto kostenlos an und beschreibe einfach, was bei deinem Eigenheim ansteht." />
   </MarketingShell>;
 }
