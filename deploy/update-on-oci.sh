@@ -95,11 +95,20 @@ if [[ -r "$BUILD_ENV_FILE" ]]; then
 fi
 
 "$NPM_BIN" ci
-BUILD_DATABASE_PATH="${BUILD_DATABASE_PATH:-/tmp/einfach-hausen-build-$$.db}"
-DATABASE_PATH="$BUILD_DATABASE_PATH" "$NPM_BIN" run build
-if [[ "$BUILD_DATABASE_PATH" == /tmp/einfach-hausen-build-* ]]; then
-  rm -f "$BUILD_DATABASE_PATH" "$BUILD_DATABASE_PATH-wal" "$BUILD_DATABASE_PATH-shm"
+
+# T-0157 unified release gate: mandatory pre-release verification (lint, types,
+# security, fixtures, production build, axe a11y, visual regression, perf
+# budgets). A failed gate must abort the deployment before the service restarts.
+if ! DATABASE_PATH="${GATE_DATABASE_PATH:-/tmp/einfach-hausen-gate.db}" \
+     SUPABASE_URL="${SUPABASE_URL:-}" SUPABASE_ANON_KEY="${SUPABASE_ANON_KEY:-}" \
+     "$NPM_BIN" run release-gate; then
+  echo 'Release gate failed — deployment aborted.' >&2
+  exit 1
 fi
+
+# The release gate above already performed the production build (same build-env
+# sourcing as this script used to do); .next/BUILD_ID is its build artifact.
+[[ -f .next/BUILD_ID ]] || { echo 'Release gate did not produce a build.' >&2; exit 1; }
 sudo systemctl daemon-reload
 sudo systemctl restart "$SERVICE"
 

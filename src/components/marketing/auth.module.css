@@ -71,7 +71,7 @@
 .authSubmit:hover:not(:disabled) svg { translate: 3px 0; }
 .authSwitch { margin: 20px 0 0; text-align: center; font-size: 14px; color: var(--a-muted); }
 .authSwitch a { color: var(--a-teal); font-weight: 680; }
-.authLegal { margin: 14px 0 0; text-align: center; font-size: 11.5px; color: #8a9793; line-height: 1.6; }
+.authLegal { margin: 14px 0 0; text-align: center; font-size: 11.5px; color: var(--a-muted); line-height: 1.6; }
 .authLegal a { color: var(--a-muted); text-decoration: underline; text-underline-offset: 2px; }
 
 @media (max-width: 880px) {

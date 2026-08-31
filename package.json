@@ -26,7 +26,12 @@
     "test:matching:benchmark": "node scripts/t0108-matching-benchmark.mjs",
     "test:review": "node scripts/t0110-review-regression.mjs",
     "test:t0168-auth": "node scripts/t0168-dual-auth-regression.mjs",
-    "test:t0170-auth": "node scripts/t0170-auth-e2e.mjs"
+    "test:t0170-auth": "node scripts/t0170-auth-e2e.mjs",
+    "release-gate": "node scripts/release-gate.mjs",
+    "test:a11y": "node scripts/release-gate.mjs --only=static,build,a11y",
+    "test:visual": "node scripts/visual-regression.mjs",
+    "test:visual:update": "GATE_UPDATE_BASELINES=1 node scripts/visual-regression.mjs --update-baselines",
+    "test:perf": "node scripts/release-gate.mjs --only=build,perf"
   },
   "dependencies": {
     "@capacitor/keyboard": "^8.0.5",
@@ -55,9 +60,12 @@
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "axe-core": "^4.13.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
+    "pixelmatch": "^7.2.0",
     "playwright-core": "^1.62.1",
+    "pngjs": "^7.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

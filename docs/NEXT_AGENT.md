@@ -1,6 +1,8 @@
 # Einfach Hausen — Canonical Next-Agent Contract
 
-**Updated:** 2026-08-30 — **Website-Wave DONE: `/` ist wieder die öffentliche Lead-Magnet-Homepage (main=1cedf03, gepusht). Höchster eligible Task bleibt T-0006 (e2e tech-persona seam).**
+**Updated:** 2026-08-31 — **Release-Gate-Welle DONE: T-0157 vereinfachter Pflicht-Release-Gate (lint/types/security/fixtures/build/a11y/visual/perf) implementiert, 10/10 grün, als Pflichtschritt in deploy/update-on-oci.sh verdrahtet; `/login`-Kontrast-Defekt gefixt. Nächster Schritt: Abnahme-Kette T-0160 (Website) / T-0161 (Homeowner) / T-0162 (Partner) → T-0163.**
+
+**Website-Wave DONE: `/` ist wieder die öffentliche Lead-Magnet-Homepage (main=1cedf03, gepusht). Höchster eligible Task bleibt T-0006 (e2e tech-persona seam).**
 
 ## 0-b. Website-Wave 2026-08-30 (Commit 1cedf03, Operator-Direktiva)
 
@@ -394,4 +396,11 @@ task: T-0176
 updated: 2026-08-31T20:53:09+00:00
 actor: local-agent
 evidence-sha256: 48a6469d9986ed404e1e7aeabe1156491db410f54682f13015cd57bb8a212e48
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0157
+updated: 2026-08-31T21:16:05+00:00
+actor: local-agent
+evidence-sha256: 7f99e3ef8bfd11d211e6dbda80fa766914a185971e4f6883515209aba957fb5f
 -->
