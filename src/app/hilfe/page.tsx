@@ -3,7 +3,6 @@ import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
 import { HeroHelp } from '@/components/marketing/hero-visuals';
 import { FaqExplorer } from './faq-explorer';
-import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = { title: 'Hilfe & FAQ', description: 'Antworten zu Anliegen, Ansprechpartnern, Aufträgen, Hausakte, Preisen und Partnern.' };
 const faq=[
