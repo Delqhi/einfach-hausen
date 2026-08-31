@@ -791,3 +791,7 @@ html { scroll-behavior: smooth; }
   border-color: #105258; box-shadow: 0 0 0 4px rgba(16,82,88,.10);
 }
 .oreg-logo svg path, .oreg-logo svg { stroke: #105258; }
+
+/* 404 Illustration */
+.nf-scene { margin-bottom: 10px; }
+.nf-house { width: 220px; height: auto; }

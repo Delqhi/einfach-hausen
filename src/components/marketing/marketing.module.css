@@ -811,3 +811,44 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 @media (min-width: 900px) {
   .faqTwoCol { max-width: none; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
 }
+
+/* ============ v15: FAQ Explorer (hilfe) ============ */
+.faqSearchWrap { max-width: 860px; margin-bottom: 24px; }
+.faqSearch { display: flex; align-items: center; gap: 10px; background: var(--eh-surface);
+  border: 1px solid var(--eh-border-strong); border-radius: 14px; padding: 0 16px; min-height: 54px;
+  transition: border-color .15s ease, box-shadow .15s ease; }
+.faqSearch:focus-within { border-color: var(--eh-green-700); box-shadow: 0 0 0 4px rgba(16,82,88,.10); }
+.faqSearch svg { color: var(--eh-muted, #57686b); flex: 0 0 auto; }
+.faqSearch input { flex: 1; border: 0; outline: none; background: transparent; font-size: 15.5px;
+  font-family: inherit; color: var(--eh-text); min-width: 0; }
+.faqSearch input::placeholder { color: #9aa8a4; }
+.faqCatRow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.faqCat { min-height: 36px; padding: 0 14px; border: 1px solid var(--eh-border); border-radius: 999px;
+  background: var(--eh-surface); color: var(--eh-text-secondary); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: background-color .15s ease, color .15s ease, border-color .15s ease; font-family: inherit; }
+.faqCat:hover { border-color: rgba(16,82,88,.35); }
+.faqCatActive { background: var(--eh-green-700); color: #fff; border-color: var(--eh-green-700); }
+.faqCatActive:hover { color: #fff; }
+.faqEmpty { max-width: 860px; color: var(--eh-text-secondary); font-size: 14.5px; }
+.faqEmpty a { color: var(--eh-green-700); font-weight: 620; }
+
+@media (max-width: 540px) {
+  .faqSearch { min-height: 48px; padding: 0 12px; }
+  .faqCat { padding: 0 11px; font-size: 12px; }
+}
+
+/* ============ v16: price toggle ============ */
+.priceToggleRow { display: flex; justify-content: flex-start; margin-bottom: 30px; }
+.priceToggle { display: inline-flex; background: var(--eh-surface); border: 1px solid var(--eh-border-strong);
+  border-radius: 999px; padding: 4px; gap: 2px; }
+.priceToggle button { min-height: 42px; padding: 0 18px; border: 0; border-radius: 999px; background: transparent;
+  color: var(--eh-text-secondary); font-size: 14px; font-weight: 620; cursor: pointer; font-family: inherit;
+  transition: background-color .15s ease, color .15s ease; }
+.priceToggle button:hover { color: var(--eh-green-700); }
+.priceToggleActive { background: var(--eh-green-700) !important; color: #fff !important; box-shadow: 0 6px 16px -8px rgba(10,53,57,.5); }
+.priceToggleActive:hover { color: #fff !important; }
+
+@media (max-width: 540px) {
+  .priceToggle { width: 100%; }
+  .priceToggle button { flex: 1; min-height: 44px; padding: 0 10px; font-size: 13.5px; }
+}
