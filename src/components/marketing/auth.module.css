@@ -1,7 +1,7 @@
 /* Premium auth shell — logo-calibrated tokens, shared with the marketing site. */
 .authShell {
   --a-teal: #105258;
-  --a-teal-deep: #0a3539;
+  --a-teal-deep: #0e3d33;
   --a-teal-soft: #edf5f5;
   --a-mint: #dcebec;
   --a-ink: #1c2129;
@@ -20,7 +20,7 @@
   background:
     radial-gradient(700px 420px at 88% -10%, rgba(255,255,255,.10), transparent 60%),
     radial-gradient(520px 320px at -10% 110%, rgba(255,255,255,.06), transparent 58%),
-    linear-gradient(160deg, #117a80 0%, var(--a-teal-deep) 82%); }
+    linear-gradient(160deg, #1b8569 0%, var(--a-teal-deep) 82%); }
 .authAside::after { content: ''; position: absolute; inset: 0; pointer-events: none;
   background-image: radial-gradient(rgba(255,255,255,.10) 1px, transparent 1.3px);
   background-size: 26px 26px;
@@ -64,7 +64,7 @@
   background: var(--a-teal); color: #fff; border: 0; border-radius: 14px; font-size: 15.5px; font-weight: 680;
   font-family: inherit; cursor: pointer; box-shadow: 0 14px 30px -14px rgba(10,53,57,.55);
   transition: background-color .16s ease, transform .12s ease; }
-.authSubmit:hover { background: #147078; }
+.authSubmit:hover { background: #1b8569; }
 .authSubmit:active { transform: scale(.985); }
 .authSubmit:disabled { background: #e6edeb; color: #8a9793; box-shadow: none; cursor: default; }
 .authSubmit svg { transition: translate .16s ease; }

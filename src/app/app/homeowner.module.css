@@ -1,7 +1,7 @@
 .ownerScope {
-  --owner-green-900: #123c2a;
-  --owner-green-700: #176b45;
-  --owner-green-600: #238454;
+  --owner-green-900: #0e3d33;
+  --owner-green-700: #105258;
+  --owner-green-600: #1b8569;
   --owner-green-100: #eaf5ee;
   --owner-green-50: #f4faf6;
   --owner-bg: #f7f8f7;
@@ -11,7 +11,7 @@
   --owner-muted: #66706a;
   --owner-border: #e4e8e5;
   --owner-border-strong: #d5dcd7;
-  --owner-focus: #176b45;
+  --owner-focus: #105258;
   min-height: 100vh;
   background: var(--owner-bg);
   color: var(--owner-text);
@@ -943,7 +943,7 @@
 }
 
 .ownerScope :global(.recommend) {
-  border-color: #cfe4d6;
+  border-color: #dcebec;
   background: var(--owner-green-50);
   color: var(--owner-green-700);
 }
@@ -1012,7 +1012,7 @@
 }
 
 .ownerScope :global(.msg.mine) {
-  border-color: #cce2d4;
+  border-color: #dcebec;
   background: var(--owner-green-100);
 }
 
@@ -1328,7 +1328,7 @@
 }
 
 .ownerScope :global(.plan-card.featured) {
-  border-color: #9fc9ad;
+  border-color: #9fcfd2;
   box-shadow: none;
 }
 
