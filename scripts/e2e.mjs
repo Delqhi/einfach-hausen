@@ -400,7 +400,7 @@ let supabaseTechUserId=null;
   else if(mk.status===422){const list=await (await fetch(`${supabaseAdminBase}/auth/v1/admin/users?email=${encodeURIComponent(techEmail)}`,{headers:{apikey:supabaseServiceKey,Authorization:`Bearer ${supabaseServiceKey}`}})).json();supabaseTechUserId=list.users?.[0]?.id||null;}
   else throw new Error(`Supabase identity creation failed: HTTP ${mk.status}`);
 }
-await nav(tech, base+'/login'); await tech.locator('.auth-head h1').waitFor(); if(!(await tech.locator('.auth-head h1').innerText()).startsWith('Willkommen zurück'))throw new Error('Login visual surface missing Anmeldung heading'); const loginButton=tech.getByRole('button',{name:'Anmelden'}); const loginBox=await loginButton.boundingBox(); if(!loginBox || loginBox.height < 44)throw new Error('Login primary action must be at least 44px high');
+await nav(tech, base+'/login'); await tech.getByRole('heading',{name:/Willkommen zurück/}).waitFor(); const loginButton=tech.getByRole('button',{name:'Anmelden'}); const loginBox=await loginButton.boundingBox(); if(!loginBox || loginBox.height < 44)throw new Error('Login primary action must be at least 44px high');
 let loggedIn=false;
 for(let attempt=0;attempt<3&&!loggedIn;attempt++){
   await tech.waitForLoadState('networkidle').catch(()=>{}); await tech.waitForTimeout(800*attempt);
@@ -409,7 +409,7 @@ for(let attempt=0;attempt<3&&!loggedIn;attempt++){
   let enabled=false;
   try{ await tech.waitForFunction(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('Anmelden'));return b&&!b.disabled;},{timeout:8000}); enabled=true; }catch{}
   if(enabled){
-    await Promise.all([tech.waitForURL('**/pro',{timeout:60000}).catch(e=>{ throw new Error('post-click nav failed: '+tech.url()+' | errbox='+(tech.locator('.error-box').textContent().catch(()=>'(none)'))); }),loginButton.click()]);
+    await Promise.all([tech.waitForURL('**/pro',{timeout:60000}).catch(e=>{ throw new Error('post-click nav failed: '+tech.url()+' | errbox='+'(see page)'); }),loginButton.click()]);
     loggedIn=true;
     const sbCookies=await techCtx.cookies(base+'/app');
     console.error('E2EDIAG sb cookies after login:',JSON.stringify(sbCookies.map(c=>c.name)));
