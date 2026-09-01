@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Section, Split, InfoPanel, BulletList, CtaBand, LinkButton, Statement } from '@/components/marketing/ui';
 import Link from 'next/link';
+import { GatewaySection } from '@/components/marketing/gateway-section';
 import { Reveal, Stagger, ScrubLine, Activate, DrawPath, SplitLines } from '@/components/marketing/motion';
 import { IntakeForm } from '@/components/home/intake-form';
 import styles from '@/components/marketing/marketing.module.css';
@@ -43,6 +44,11 @@ export default async function HomePage() {
     <section className={styles.hero}>
       <div className={styles.heroInner}>
         <Stagger className={styles.heroCopy} gap={0.12}>
+          <a href="/pilotphase" className={styles.pilotBanner}>
+            <span className={styles.pilotBannerTag}>Pilotphase startet</span>
+            <span className={styles.pilotBannerText}>Die ersten 1.000 Haushalte sichern sich 15% Dauer-Vorteil auf alle Pakete</span>
+            <ArrowRight size={15} aria-hidden="true" />
+          </a>
           <span className={styles.heroBadgeRow}>
             <span className={styles.heroBadge}><CircleCheck size={15} aria-hidden="true"/> Geprüfte Partner</span>
             <span className={styles.heroBadge}><Home size={15} aria-hidden="true"/> Digitale Hausakte</span>
@@ -121,6 +127,8 @@ export default async function HomePage() {
         </div></div>
       </Split>
     </Section>
+
+    <GatewaySection />
 
     <Section eyebrow="Für Betriebe" title="Gute Kundenbeziehungen statt Lead-Handel." text="Partner erhalten passende Anfragen, arbeiten mit konkreten Ansprechpartnern und behalten 100 % ihres Auftragswertes. Einfach Hausen finanziert sich über planbare Partnertarife – nicht über Auftragsprovision." tone="dark">
       <div className={styles.featureGrid}>
