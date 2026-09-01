@@ -1025,3 +1025,35 @@ main.app-page.ehn-owner .ehn-composer .agent-composer .icon-action span{display:
 .eh-toast-success{background:#14523f}
 .eh-toast-error{background:#8f2f2a}
 @media(prefers-reduced-motion:reduce){.eh-toast{transition-duration:.01ms}}
+
+/* ---------- Desktop workspace layout (T-goal wave 1) ----------
+   Mobile (<=720px) keeps the Notion-1:1 design untouched. From 721px the app
+   becomes a real desktop workspace: expanded sidebar, wider content column,
+   desktop-proportioned cards, no mobile-only floating FAB. */
+
+@media (min-width: 721px) {
+  .app-shell-v3 .desktop-sidebar .fab-plus { display: none; }
+  .app-shell-v3 .fab-plus { display: none; }
+  .app-shell-v3 .screen-v3 { max-width: 1120px; padding: 44px 48px 80px; }
+  .app-shell-v3 .workspace-shell { grid-template-columns: 248px minmax(0, 1fr); }
+  .app-shell-v3 .sidebar-nav a { padding: 10px 12px; font-size: 13px; }
+  .app-shell-v3 .sidebar-brand { padding: 4px 8px 20px; }
+}
+
+@media (min-width: 921px) {
+  /* Dashboard (owner home) in desktop proportions */
+  .app-shell-v3 .qa-row { gap: 16px; padding: 26px 0 0; }
+  .app-shell-v3 .qa-card { min-height: 168px; padding: 22px 20px 16px; border-radius: 20px; }
+  .app-shell-v3 .ki-card { margin: 22px 0 0; padding: 26px 28px 24px; }
+  .app-shell-v3 .ki-input-row input { padding: 16px 62px 16px 24px; }
+  .app-shell-v3 .overview-grid { gap: 16px; padding: 28px 0 0; }
+  .app-shell-v3 .ov-wide { width: 100%; margin: 16px 0 0; }
+  .app-shell-v3 .own-section-title { padding: 36px 0 0; font-size: 24px; }
+
+  /* Generic screens: page headers and stacked sections use the wider column */
+  .app-shell-v3 .stack { gap: 14px; }
+
+  /* Partner workspace (pro) uses the same desktop proportions */
+  .app-shell-v3.pro-theme .qa-row { gap: 16px; padding: 26px 0 0; }
+  .app-shell-v3.pro-theme .ki-card { margin: 22px 0 0; padding: 26px 28px 24px; }
+}

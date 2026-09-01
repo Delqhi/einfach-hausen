@@ -36,7 +36,10 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
   return <main className={pro?'app-page app-shell-v3 pro-theme':'app-page app-shell-v3 ehn-owner'}>
     <div className="workspace-shell">
       <aside className="desktop-sidebar">
-        <details className="app-menu">
+        {/* Desktop shows the workspace navigation expanded by default; the
+        summary stays clickable so users can collapse it. Mobile hides this
+        aside entirely (bottom nav + mobile menu own that breakpoint). */}
+        <details className="app-menu" open>
           <summary className="app-menu-summary" aria-label="Menü öffnen oder schließen">
             <span className="app-menu-mark"><Menu size={19} strokeWidth={1.9}/></span>
             <span className="app-menu-summary-label">Menü</span>
