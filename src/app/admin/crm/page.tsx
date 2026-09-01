@@ -11,6 +11,9 @@ export default async function CrmPage({searchParams}:{searchParams:Promise<Recor
   await requireAdmin();
   const sp=await searchParams;
   const page=Number(sp.page||1)||1;
+  // T-0119 hot-path: lifecycle sync now collapses only leads updated since the
+  // last full pass (watermark, see syncCrmLifecycle) — the previous full
+  // SELECT * over 155k+ rows cost ~3.9s per render in production.
   syncCrmLifecycle();
   const stats=crmStats();
   const result=listCrmLeads({q:sp.q,status:sp.status,type:sp.type,category:sp.category,followup:sp.followup,page,limit:60});

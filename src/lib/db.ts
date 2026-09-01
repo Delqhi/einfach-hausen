@@ -12,6 +12,13 @@ if (process.env.NODE_ENV !== 'production') globalForDb.hausmeisterDb = db;
 // deterministic startup both depend on it.
 db.pragma('busy_timeout = 5000');
 db.pragma('journal_mode = WAL'); db.pragma('foreign_keys = ON');
+// T-0119 hot-path: WAL can grow unbounded under sustained write bursts (127MB
+// observed in production) and synchronous=FULL fsyncs twice per commit for
+// little benefit in WAL mode. NORMAL keeps durability across app crashes
+// (only a power/OS failure may lose recent commits), and autocheckpoint
+// bounds the WAL so large reader snapshots stay cheap.
+db.pragma('synchronous = NORMAL');
+db.pragma('wal_autocheckpoint = 1000');
 
 // Startup statements run while Next.js may evaluate this module in several
 // workers at once; tolerate transient SQLITE_BUSY with bounded retries.

@@ -163,6 +163,7 @@ export function ensureCrmSchema(){
     CREATE INDEX IF NOT EXISTS idx_crm_location ON crm_leads(country,postcode,locality);
     CREATE INDEX IF NOT EXISTS idx_crm_category ON crm_leads(category);
     CREATE INDEX IF NOT EXISTS idx_crm_source_external ON crm_leads(source_type,source_external_id);
+    CREATE INDEX IF NOT EXISTS idx_crm_updated_at ON crm_leads(updated_at);
     CREATE TABLE IF NOT EXISTS crm_events (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       lead_id TEXT NOT NULL REFERENCES crm_leads(id) ON DELETE CASCADE,
@@ -174,14 +175,22 @@ export function ensureCrmSchema(){
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
     CREATE INDEX IF NOT EXISTS idx_crm_events_lead ON crm_events(lead_id,created_at DESC);
+    CREATE TABLE IF NOT EXISTS crm_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
   `);
   addColumnIfMissing('next_follow_up_at','next_follow_up_at TEXT');
   addColumnIfMissing('normalized_email',"normalized_email TEXT NOT NULL DEFAULT ''");
   addColumnIfMissing('normalized_phone',"normalized_phone TEXT NOT NULL DEFAULT ''");
   addColumnIfMissing('normalized_profile_url',"normalized_profile_url TEXT NOT NULL DEFAULT ''");
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_crm_normalized_email ON crm_leads(normalized_email) WHERE normalized_email!='';
-    CREATE INDEX IF NOT EXISTS idx_crm_normalized_phone ON crm_leads(normalized_phone) WHERE normalized_phone!='';
-    CREATE INDEX IF NOT EXISTS idx_crm_normalized_profile ON crm_leads(normalized_profile_url) WHERE normalized_profile_url!='';`);
+  // T-0119: these must be FULL indexes. Partial (WHERE col!='') identity
+  // indexes are never picked by the SQLite planner for equality lookups
+  // ("no query solution"), forcing 0.5-0.8s table scans per matchCandidates
+  // call on the 155k research corpus.
+  db.exec(`DROP INDEX IF EXISTS idx_crm_normalized_email;
+    DROP INDEX IF EXISTS idx_crm_normalized_phone;
+    DROP INDEX IF EXISTS idx_crm_normalized_profile;
+    CREATE INDEX IF NOT EXISTS idx_crm_normalized_email ON crm_leads(normalized_email);
+    CREATE INDEX IF NOT EXISTS idx_crm_normalized_phone ON crm_leads(normalized_phone);
+    CREATE INDEX IF NOT EXISTS idx_crm_normalized_profile ON crm_leads(normalized_profile_url);`);
   refreshNormalizedIdentity();
   installUserLinkTriggers();
   crmReady=true;
@@ -196,7 +205,21 @@ function matchCandidates(input:MatchInput){
   if(profile){clauses.push('normalized_profile_url=?');params.push(profile);}
   if(external){clauses.push('(source_type=? AND source_external_id=?)');params.push(String(input.sourceType||''),external);}
   if(!clauses.length)return [] as CrmLead[];
-  return db.prepare(`SELECT * FROM crm_leads WHERE ${clauses.join(' OR ')} ORDER BY id`).all(...params) as CrmLead[];
+  // T-0119: a single OR query over identity columns degenerates into a full
+  // index scan (SQLite will not build an index-union here, measured 0.5-0.8s
+  // at 155k rows). Query each identity clause separately so every lookup uses
+  // its own index, then dedupe by id preserving OR semantics.
+  const byId=new Map<string,CrmLead>();
+  // clause i consumes 1 param, except the source clause which consumes 2
+  const paramSpans=clauses.map(c=>c.includes(' AND ')?2:1);
+  let offset=0;
+  for(let i=0;i<clauses.length;i++){
+    const span=paramSpans[i];
+    const rows=db.prepare(`SELECT * FROM crm_leads WHERE ${clauses[i]} ORDER BY id`).all(...params.slice(offset,offset+span)) as CrmLead[];
+    for(const row of rows)if(!byId.has(row.id))byId.set(row.id,row);
+    offset+=span;
+  }
+  return [...byId.values()].sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
 }
 
 function leadsCanMerge(a:CrmLead,b:CrmLead){
@@ -232,11 +255,56 @@ function mergeLeadRows(primary:CrmLead,duplicate:CrmLead){
 }
 
 export function collapseCrmDuplicates(){
+  return collapseCrmDuplicatesInternal('all');
+}
+
+/**
+ * T-0119 hot-path: collapse ran `SELECT *` over all 155k+ rows (~3.2s in
+ * production) and was invoked twice per /admin/crm render via syncCrmLifecycle.
+ * The grouping pass only needs identity columns; full rows are hydrated lazily
+ * for actual duplicate groups. With scope=recent it only re-examines rows
+ * updated since the last full pass (watermark), which keeps the per-render
+ * sync cheap while the explicit research-import path still does a full pass.
+ */
+function collapseCrmDuplicatesInternal(scope:'all'|'recent'):number {
   ensureCrmSchema();
-  refreshNormalizedIdentity();
-  const rows=db.prepare('SELECT * FROM crm_leads ORDER BY id').all() as CrmLead[];
+  // Full identity re-normalization (all 155k rows, ~0.4s) belongs to the full
+  // pass; recent passes normalize only the rows they examine below.
+  const watermarkRow=db.prepare("SELECT value FROM crm_meta WHERE key='lifecycle_full_sync_at'").get() as {value:string}|undefined;
+  const useRecent=scope==='recent'&&Boolean(watermarkRow?.value);
+  if(!useRecent)refreshNormalizedIdentity();
+  const scanColumns='id,lead_type,name,company_name,category,locality,postcode,region,country,email,phone,website,profile_url,status,contact_permission,source_type,source_external_id,notes,next_follow_up_at,last_seen_at,last_contacted_at,converted_user_id,normalized_email,normalized_phone,normalized_profile_url';
+  const rows=(useRecent
+    ? db.prepare(`SELECT ${scanColumns} FROM crm_leads WHERE updated_at>=? ORDER BY id`).all(watermarkRow?.value)
+    : db.prepare(`SELECT ${scanColumns} FROM crm_leads ORDER BY id`).all()) as CrmLead[];
+  if(useRecent){
+    const normalizeRow=db.prepare('UPDATE crm_leads SET normalized_email=?,normalized_phone=?,normalized_profile_url=? WHERE id=?');
+    for(const row of rows){
+      const email=normalizeCrmEmail(row.email),phone=normalizeCrmPhone(row.phone),profile=normalizeCrmProfile(row.profile_url);
+      if(email!==row.normalized_email||phone!==row.normalized_phone||profile!==row.normalized_profile_url){
+        normalizeRow.run(email,phone,profile,row.id);
+        row.normalized_email=email;row.normalized_phone=phone;row.normalized_profile_url=profile;
+      }
+    }
+  }
+  const fullRow=db.prepare('SELECT * FROM crm_leads WHERE id=?') as unknown as {get:(id:string)=>CrmLead|undefined};
+  const fullCache=new Map<string,CrmLead>();
+  const hydrate=(row:CrmLead):CrmLead=>{
+    let full=fullCache.get(row.id);
+    if(!full){full=fullRow.get(row.id)||row;fullCache.set(row.id,full);}
+    return full;
+  };
   const live=new Map(rows.map(row=>[row.id,row]));
   const ownerByKey=new Map<string,string>();
+  // Lazy prior-seed: rebuild the identity->owner index from the pre-watermark
+  // corpus only when a candidate lookup actually needs it (empty recent
+  // windows skip the 155k-row seed entirely).
+  let priorSeeded=scope!=='recent';
+  const seedPrior=()=>{
+    if(priorSeeded)return;priorSeeded=true;
+    const prior=db.prepare(`SELECT id,normalized_email,normalized_phone,normalized_profile_url,source_type,source_external_id FROM crm_leads WHERE updated_at<? ORDER BY id`).all(watermarkRow?.value) as CrmLead[];
+    for(const row of prior)for(const key of keys(row)){const owner=ownerByKey.get(key);if(!owner)ownerByKey.set(key,row.id);}
+  };
   let merged=0;
   const keys=(lead:CrmLead)=>[
     lead.normalized_email?`e:${lead.normalized_email}`:'',
@@ -247,13 +315,18 @@ export function collapseCrmDuplicates(){
   const tx=db.transaction(()=>{
     for(const initial of rows){
       let current=live.get(initial.id);if(!current)continue;
+      if(!priorSeeded&&useRecent)seedPrior();
       const candidates=[...new Set(keys(current).map(key=>ownerByKey.get(key)).filter((id):id is string=>Boolean(id)))].sort();
       for(const candidateId of candidates){
         const candidate=live.get(candidateId);if(!candidate||!current||!leadsCanMerge(candidate,current))continue;
         const primaryId=[candidate.id,current.id].sort()[0];
         const duplicateId=primaryId===candidate.id?current.id:candidate.id;
-        const primary=live.get(primaryId),duplicate=live.get(duplicateId);if(!primary||!duplicate)continue;
+        // Merge needs the full row (wide columns); hydrate lazily, then drop
+        // the cache entry for the deleted duplicate.
+        const primary=hydrate(live.get(primaryId) as CrmLead),duplicate=hydrate(live.get(duplicateId) as CrmLead);
+        if(!primary||!duplicate)continue;
         const mergedRow=mergeLeadRows(primary,duplicate);
+        fullCache.set(primaryId,mergedRow);fullCache.delete(duplicateId);
         live.set(primaryId,mergedRow);live.delete(duplicateId);current=mergedRow;merged++;
         for(const [key,id] of ownerByKey.entries())if(id===duplicateId)ownerByKey.set(key,primaryId);
       }
@@ -351,7 +424,12 @@ export function syncCrmLifecycle(){
   if(lifecycleSyncing)return {deduplicated:0,linked:0,created:0};
   lifecycleSyncing=true;
   try{
-    let deduplicated=collapseCrmDuplicates();let linked=0,created=0;
+    // T-0119 hot-path: per-render syncs collapse only rows updated since the
+    // last FULL pass (watermark in crm_meta); full passes run in the research
+    // import and on first boot, when the watermark is absent.
+    const hasWatermark=Boolean(db.prepare("SELECT value FROM crm_meta WHERE key='lifecycle_full_sync_at'").get());
+    const watermark=db.prepare("SELECT datetime('now') as t").get() as {t:string};
+    let deduplicated=collapseCrmDuplicatesInternal(hasWatermark?'recent':'all');let linked=0,created=0;
     const users=db.prepare(`SELECT u.id,u.email,u.phone,u.role,u.first_name,u.last_name,p.business_name,p.trades,p.postcode provider_postcode,h.postcode homeowner_postcode,
       EXISTS(SELECT 1 FROM sale_leads s WHERE s.homeowner_id=u.id AND s.status!='cancelled') has_sale
       FROM users u LEFT JOIN provider_profiles p ON p.user_id=u.id LEFT JOIN homeowner_profiles h ON h.user_id=u.id ORDER BY u.id`).all() as CrmLifecycleUser[];
@@ -375,7 +453,11 @@ export function syncCrmLifecycle(){
       }
     });
     tx();
-    deduplicated+=collapseCrmDuplicates();
+    // Second collapse only matters when the user loop added or mutated rows;
+    // otherwise it re-scans the corpus for a provably unchanged set.
+    if(linked>0||created>0)deduplicated+=collapseCrmDuplicatesInternal(hasWatermark?'recent':'all');
+    db.prepare(`INSERT INTO crm_meta(key,value) VALUES('lifecycle_full_sync_at',?)
+      ON CONFLICT(key) DO UPDATE SET value=excluded.value`).run(watermark.t);
     return {deduplicated,linked,created};
   }finally{lifecycleSyncing=false;}
 }
