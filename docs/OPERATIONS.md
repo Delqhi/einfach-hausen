@@ -149,3 +149,15 @@ Verified live state after repository convergence to `f0198ee`:
 - No redeploy required for convergence commit `f0198ee`: `git diff --name-only dcd53ca1..f0198ee` contains no paths under `src/`, `deploy/`, package manifests, `next.config.ts` or middleware — the diff is docs/tooling only.
 - Login page reachable; the platform has no fixed demo accounts by design (E2E creates random credentials), so no demo login check applies.
 - Access path used: SSH relayed through the trusted fleet Mac; direct non-interactive SSH from this agent host to sin-supabase is not provisioned.
+
+## SSH-Zugang OCI (dauerhaft, kein Tailscale-Check)
+
+Tailscale SSH wurde auf sin-supabase deaktiviert (2026-09-01) weil der
+Check-Mode periodisch eine Browser-Auth erzwang und Deployments blockierte.
+
+- Port 22: normaler sshd (openssh), keine Tailscale SSH-Interception mehr
+- Port 2222: zweiter sshd als Fallback
+- SSH-Config-Alias: `sin-supabase` (Port 22) + `sin-supabase-direct` (Port 2222)
+- Auth: SSH-Key (id_ed25519) - kein Tailscale Browser-Login mehr nötig
+- Wenn Tailscale SSH wieder aktiviert werden soll: `sudo tailscale set --ssh=true`
+  (ACHTUNG: nur über Port 2222 verbinden, sonst Session-Abbruch)
