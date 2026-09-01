@@ -21,8 +21,8 @@ const moreServices = [
 ] as const;
 
 const story = [
-  { img:'/images/premium/hero-homeowner.jpg', kicker:'1 · Beschreiben', title:'Sag einfach, was ansteht.', text:'Schreib, sprich oder zeig per Foto. Die fachliche Einordnung übernehmen wir – ohne dass du wissen musst, welches Gewerk zuständig ist.' },
-  { img:'/images/premium/category-heizung.jpg', kicker:'2 · Der passende Mensch', title:'Ein konkreter Ansprechpartner.', text:'Geprüfte Vertragspartner aus deiner Region – kein anonymer Marktplatz. Du sprichst mit Menschen, bevor etwas beauftragt wird.' },
+  { img:'/images/premium/story-beschreiben.jpg', kicker:'1 · Beschreiben', title:'Sag einfach, was ansteht.', text:'Schreib, sprich oder zeig per Foto. Die fachliche Einordnung übernehmen wir – ohne dass du wissen musst, welches Gewerk zuständig ist.' },
+  { img:'/images/premium/story-ansprechpartner.jpg', kicker:'2 · Der passende Mensch', title:'Ein konkreter Ansprechpartner.', text:'Geprüfte Vertragspartner aus deiner Region – kein anonymer Marktplatz. Du sprichst mit Menschen, bevor etwas beauftragt wird.' },
   { img:'/images/premium/hausakte.jpg', kicker:'3 · Erledigt & behalten', title:'Alles landet in deiner Hausakte.', text:'Rechnungen, Garantien, Wartungen und Kontakte bleiben dauerhaft geordnet – dein Haus vergisst nichts.' },
 ] as const;
 
