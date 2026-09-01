@@ -101,7 +101,7 @@
 .sectionHead h2, .ctaBand h2 { margin:0; font-size:clamp(32px,4vw,48px); line-height:1.08; letter-spacing:-.04em; font-weight:740; }
 .sectionHead > p { margin:16px 0 0; color:var(--eh-text-secondary); font-size:17px; line-height:1.65; }
 .tone_dark .sectionHead p, .tone_dark .feature p { color:#c5d2ca; }
-.tone_dark .eyebrow { color:#9fcfd2; }
+.tone_dark .eyebrow { color:#bfe8ea; }
 .tone_dark .textLink { color:#dff2e6; }
 .featureGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; border:1px solid var(--eh-border); border-radius:20px; overflow:hidden; background:var(--eh-border); }
 .feature { background:white; padding:28px; min-height:220px; }

@@ -584,3 +584,31 @@ updated: 2026-09-01T13:24:20+00:00
 actor: local-agent
 evidence-sha256: bceab63e963dd389c859027e3e4221a6a50386a99dfad656912ed9445f0038fe
 -->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0113
+updated: 2026-09-01T13:55:36+00:00
+actor: local-agent
+evidence-sha256: 07b6275707f950b590ed96ec928ab841e01791e4761d591f616d20f0fc5e80cc
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0114
+updated: 2026-09-01T13:57:24+00:00
+actor: local-agent
+evidence-sha256: db6e60f478405d43372683fbf7d760ddb32ef5fb7c5c608ca152e3115cca052b
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0116
+updated: 2026-09-01T17:55:42+00:00
+actor: local-agent
+evidence-sha256: cfbef8fb88b67a309e81fa923357ecfc6f2a6808005e9d697e457401171f9ce5
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0117
+updated: 2026-09-01T17:55:42+00:00
+actor: local-agent
+evidence-sha256: 32b178026b6612aa0bc5ea8813b094a8e7b84293e8c9f8a5706a02435767ed03
+-->

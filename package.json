@@ -36,7 +36,9 @@
     "test:visual:apps": "node scripts/app-visual-regression.mjs",
     "test:visual:apps:update": "node scripts/app-visual-regression.mjs --update-baselines",
     "test:responsive": "node scripts/responsive-matrix.mjs",
-    "test:a11y:apps": "node scripts/a11y-apps.mjs"
+    "test:a11y:apps": "node scripts/a11y-apps.mjs",
+    "test:a11y:matrix": "node scripts/a11y-matrix.mjs",
+    "test:i18n": "node scripts/i18n-regression.mjs"
   },
   "dependencies": {
     "@capacitor/keyboard": "^8.0.5",

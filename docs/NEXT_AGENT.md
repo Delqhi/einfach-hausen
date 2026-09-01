@@ -1,5 +1,7 @@
 # Einfach Hausen — Canonical Next-Agent Contract
 
+**Updated:** 2026-09-01 18:00Z — **Jcode-Takeover FINAL (Operator-Befehl 17:22Z „mach du ales fertig…endgültig abschließend"): Prime-Agent-Session 01a05952 nach GLM-401 übernommen und abgeschlossen. DONE & committed: T-0113/T-0114 i18n (src/lib/i18n.ts typed contract de-Default, 56 Keys, Intl-Formatierung, npm run test:i18n 5/5), T-0116 a11y-matrix (scripts/a11y-matrix.mjs, frisch 36/36 PASS 17:33Z, npm run test:a11y:matrix + CI-Step), T-0117 CWV nachgeschlossen (Implementierung war in 0518f31, verifiziert), Kontrast-Fixes (#5e6862 sidebar, #136b59 brand, #bfe8ea eyebrow, WCAG-verifiziert), Poisoned-Baseline-Fix (/pro/jobs ist Detail-only-Route ohne List-Page — 404-Baselines entfernt, Harness providerRoutes korrigiert, APP VISUAL PASS 24 Captures), docs/OPERATOR_COMMAND_LOG.md (Befehlsprotokoll mit Zeitstempeln/Begründung). Gates: lint 0 errors, build OK, website-visual 11/11. Taskplan: T-0113/T-0114/T-0116/T-0117 DONE, render+validate PASS. Vorherige Welle: Apps-Qualitätswelle Teil 2 (0518f31, Gate 11/11, deployed): T-0122 Observability-Kern, T-0138/T-0125 Feature-Flags, T-0126/T-0142 Ops-Console /admin/ops, T-0117 CWV-Feldtelemetrie. Trust T-0111/T-0112 DONE (9860303). Datenschutz-Kette T-0127/T-0128/T-0143/T-0144/T-0145 DONE (T-0146 offen). Nächste offene Tasks (hohe Prio): T-0136 Vollständiger Restore-Drill (critical), T-0147 Browser-E2E Website (critical), T-0133 Produktmetriken & SLOs (high), T-0120/T-0121 Security-Fuzz/Supply-Chain (critical), T-0118/T-0119 Performance-Remediation, T-0129 Cross-Surface-Suite v2 (inkl. Firefox-App-Fullflow unter ruhiger Last, T-0146 Dateninventar. Genau eine nächste Aktion: **T-0136 Vollständiger Restore-Drill** (critical, höchste eligible Prio).
+
 **Updated:** 2026-09-01 — **Apps-Qualitätswelle Teil 2 DONE (0518f31, Gate 11/11, deployed): T-0122 Observability-Kern (structuredLog+Taxonomie+Redaction+Correlation-IDs via middleware), T-0138/T-0125 Feature-Flags (typed, fail-safe, deterministisch getestet, admin toggle), T-0126/T-0142 Ops-Console /admin/ops (Lookup/Outbox/Trace/Flags), T-0117 CWV-Feldtelemetrie (web-vitals → /api/telemetry → cwv_metrics, privacy-safe, bounded). Offen im Goal: T-0116+T-0114+T-0113 (i18n-Kette vor a11y-matrix), T-0118/T-0119 Performance-Remediation, T-0120/T-0121 Security-Fuzz/Supply-Chain, Trust T-0111/T-0112 DONE, Datenschutz T-0127/T-0128/T-0143/T-0144/T-0145 DONE (T-0146 Inventar offen), T-0129 WebKit-Fullflow, T-0136 Restore-Drill.****Apps-Qualitätswelle Progress: T-0154 (States) + T-0155 (Offline-Resilienz: SubmitButton-Guard auf Workflow-Forms, KI-Draft persistiert) + T-0152/T-0153 (26 App-Visual-Baselines, stable) + T-0156 (63/63 Responsive-Matrix) + T-0115 (A11y-Apps: 0 blocking, Kontrast-Serie gefixt) DONE — alle deployed (f6afe0d), Gate 11/11. Neue Gates: test:responsive / test:a11y:apps / test:visual:apps (+CI). Verbleibend im Goal: Trust (T-0111/T-0112), Datenschutz-Kette (T-0127/T-0128/T-0143/T-0144/T-0145/T-0146), T-0129 WebKit-Fullflow, T-0117..T-0119 Performance, T-0126/T-0142 Admin-Console.****Brand/Truth-Welle DONE (84d7d54, Gate 11/11, deployed): Parallel-Agent-Gateway-Welle konvergiert — Hub-Typo+LOGO_03-Mark gefixt, Pilot-Versprechen (15% für 1.000 Haushalte) jetzt technisch wahr (pilot_cohort, automatischer Abzug in Membership/Paket-Checkouts, Job-Zahlungen bewusst ausgenommen wegen 0%-Provision), Copy präzisiert. apps-quality goal läuft weiter: T-0156 → T-0115 → Trust-Kette → Datenschutz-Kette → T-0129 WebKit → Performance/Admin-Console.****Apps-Qualitätswelle (Operator-Goal) läuft: Welle 1 DONE — Desktop-Workspace-Layout für /app und /pro (Sidebar expanded, 1120px Content, Desktop-Kartenproportionen, FAB hidden; Mobile 390 bleibt 1:1 Notion; Gate 11/11, deployed f1974bd). Betr-Hinweis: auth.users wurde durch shopsin.delqhi.com (geteilter Gateway, service_role) geleert — Demo-Identities neu gebunden, EXTERNAL-BLOCKERS #7. Nächste Wellen: T-0154 Unified States → T-0152/T-0153 App-Visual-Baselines → T-0155 Offline-Resilienz → T-0156 Responsive-Matrix → T-0115 A11y → Trust/Datenschutz-Kette → T-0129 WebKit-Fullflow → Performance/Admin-Console.** **Acceptance-Welle DONE: T-0157 Release-Gate (10/10, Deploy-Pflicht) + T-0160/T-0161/T-0162 Produkt-Final-Acceptance (Website/Homeowner/Partner) mit Evidenz bestanden. Produktionsfixes dieser Welle: /login-Kontrast (WCAG AA), __Host-Cookie-Secure-Skip, sw.js-Härtung (Firefox/WebKit), E2E-Engine-Toleranz dokumentiert. T-0163 finaler Convergence-Gate DONE. Firefox-App-Fullflow nachgeholt und PASS (15/15, zweifach, auch unter Last) — Browser-Matrix chromium+firefox voll green, WebKit via Website-Matrix 12/12. Danach höchste eligible Tasks = T-0152/T-0153 (Visual Regression App-Tiefen), T-0129 (WebKit-App-Fullflow mit 3 dokumentierten Diagnosen + Cross-Surface-Suite), T-0113 i18n-Kette.**
 
 **Website-Wave DONE: `/` ist wieder die öffentliche Lead-Magnet-Homepage (main=1cedf03, gepusht). Höchster eligible Task bleibt T-0006 (e2e tech-persona seam).**
@@ -502,4 +504,32 @@ task: T-0142
 updated: 2026-09-01T13:24:20+00:00
 actor: local-agent
 evidence-sha256: bceab63e963dd389c859027e3e4221a6a50386a99dfad656912ed9445f0038fe
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0113
+updated: 2026-09-01T13:55:36+00:00
+actor: local-agent
+evidence-sha256: 07b6275707f950b590ed96ec928ab841e01791e4761d591f616d20f0fc5e80cc
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0114
+updated: 2026-09-01T13:57:24+00:00
+actor: local-agent
+evidence-sha256: db6e60f478405d43372683fbf7d760ddb32ef5fb7c5c608ca152e3115cca052b
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0116
+updated: 2026-09-01T17:55:42+00:00
+actor: local-agent
+evidence-sha256: cfbef8fb88b67a309e81fa923357ecfc6f2a6808005e9d697e457401171f9ce5
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0117
+updated: 2026-09-01T17:55:42+00:00
+actor: local-agent
+evidence-sha256: 32b178026b6612aa0bc5ea8813b094a8e7b84293e8c9f8a5706a02435767ed03
 -->

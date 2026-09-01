@@ -23,7 +23,11 @@ const serviceKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERV
 if (!serviceKey) { console.error('SUPABASE_SERVICE_KEY required (identity create/cleanup).'); process.exit(2); }
 
 const ownerRoutes = ['/app', '/app/home', '/app/jobs', '/app/messages', '/app/documents', '/app/partners', '/app/profile'];
-const providerRoutes = ['/pro', '/pro/jobs', '/pro/orders', '/pro/messages', '/pro/team', '/pro/profile'];
+// /pro/jobs is intentionally absent: it is a detail-only route (/pro/jobs/[id])
+// with no list page and no nav entry; the provider nav links /pro/orders.
+// Capturing /pro/jobs bare races the prod middleware login redirect vs the 404
+// and poisoned the old baseline with a 404 screenshot (removed 2026-09-01).
+const providerRoutes = ['/pro', '/pro/orders', '/pro/messages', '/pro/team', '/pro/profile'];
 const viewports = [{ name: 'mobile', width: 390, height: 844 }, { name: 'desktop', width: 1320, height: 900 }];
 const baselineDir = path.join(root, 'tests', 'visual-baselines', 'app');
 const actualDir = path.join(root, '.sin-gpt-web', 'evidence', 'release-gate', 'app-visual-actual');

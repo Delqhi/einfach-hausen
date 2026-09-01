@@ -59,12 +59,19 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: npm run test:a11y:apps
+      - name: Accessibility matrix (keyboard + axe, all surfaces)
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: npm run test:a11y:matrix
       - name: Security regressions
         run: npm run test:security
       - name: Deterministic fixture factory
         run: npm run test:fixtures
       - name: Domain regression suites
         run: |
+          npm run test:i18n
           npm run test:intake
           npm run test:matching
           npm run test:onboarding
