@@ -185,6 +185,14 @@ const runtimeEnv={...sanitizedEnv,DATABASE_PATH:databasePath,ADMIN_PASSWORD:admi
 // StrictMode/Fast-Refresh double-mounting races the Supabase SSR cookie and
 // drops sessions mid-flow. The production server is the reliable, truthful path.
 if(!fs.existsSync(path.join(projectRoot,'.next','BUILD_ID'))){throw new Error('No production build found — run `npm run build` (with the Supabase build env) before npm run test:e2e.');}
+// The client Supabase client is inlined at build time (NEXT_PUBLIC_*). A build
+// without the Supabase build env silently degrades the login form to the
+// fail-soft proxy: register works server-side, but the browser never calls
+// GoTrue /token and the tech-persona login times out (T-0147 root cause,
+// 2026-09-01). Fail fast instead of burning a full run.
+if(!fs.readdirSync(path.join(projectRoot,'.next','static','chunks'),{recursive:true}).some(f=>String(f).endsWith('.js')&&fs.readFileSync(path.join(projectRoot,'.next','static','chunks',f),'utf8').includes(new URL(supabaseUrl).hostname))){
+  throw new Error('Client bundle lacks the inlined Supabase origin — rebuild with the Supabase build env (NEXT_PUBLIC_SUPABASE_URL/NEXT_PUBLIC_SUPABASE_ANON_KEY, see /etc/einfach-hausen-build.env, T-0200) before npm run test:e2e.');
+}
 server=spawn(process.execPath,[nextBin,'start','-H','127.0.0.1','-p',String(port)],{cwd:projectRoot,env:runtimeEnv,stdio:['ignore','pipe','pipe']});
 for(const stream of [server.stdout,server.stderr])stream.on('data',chunk=>{serverLog.push(chunk.toString());if(serverLog.length>300)serverLog.shift();});
 await waitForServer(`${base}/`,120000);
