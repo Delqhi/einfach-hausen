@@ -32,7 +32,9 @@
     "test:visual": "node scripts/visual-regression.mjs",
     "test:visual:update": "GATE_UPDATE_BASELINES=1 node scripts/visual-regression.mjs --update-baselines",
     "test:perf": "node scripts/release-gate.mjs --only=build,perf",
-    "test:website-matrix": "node scripts/website-acceptance-matrix.mjs"
+    "test:website-matrix": "node scripts/website-acceptance-matrix.mjs",
+    "test:visual:apps": "node scripts/app-visual-regression.mjs",
+    "test:visual:apps:update": "node scripts/app-visual-regression.mjs --update-baselines"
   },
   "dependencies": {
     "@capacitor/keyboard": "^8.0.5",
