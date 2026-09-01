@@ -13,7 +13,7 @@ import { stripTypeScriptTypes } from 'node:module';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'eh-dispatch-src-'));
 fs.symlinkSync(path.join(root, 'node_modules'), path.join(scratch, 'node_modules'), 'dir');
-for (const rel of ['src/lib/db.ts', 'src/lib/mailer.ts', 'src/lib/notifications.ts']) {
+for (const rel of ['src/lib/db.ts', 'src/lib/mailer.ts', 'src/lib/notifications.ts', 'src/lib/retention.ts']) {
   const src = fs.readFileSync(path.join(root, rel), 'utf8');
   const stripped = stripTypeScriptTypes(src).replace(/(from\s*['"])(\.\.?\/[^'"]+)(['"])/g, (_m, a, s, b) => `${a}${s}.mjs${b}`);
   const dest = path.join(scratch, rel.replace(/\.ts$/, '.mjs'));
@@ -24,7 +24,11 @@ for (const rel of ['src/lib/db.ts', 'src/lib/mailer.ts', 'src/lib/notifications.
 try {
   const n = await import(pathToFileURL(path.join(scratch, 'src/lib/notifications.mjs')).href);
   const result = await n.dispatchDueNotifications();
-  console.log(JSON.stringify(result));
+  // T-0145 retention sweep runs on the same cadence (cheap when nothing is due).
+  const { db } = await import(pathToFileURL(path.join(scratch, 'src/lib/db.mjs')).href);
+  const sweep = await import(pathToFileURL(path.join(scratch, 'src/lib/retention.mjs')).href);
+  const retention = await sweep.runRetentionSweep();
+  console.log(JSON.stringify({ ...result, retention_finalized: retention.finalized }));
 } finally {
   try { fs.rmSync(scratch, { recursive: true, force: true }); } catch {}
 }

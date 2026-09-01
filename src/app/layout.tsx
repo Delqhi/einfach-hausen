@@ -5,6 +5,7 @@ import './design-system.css';
 import { PwaRegister } from '@/components/pwa-register';
 import { AuthProvider } from '@/components/AuthContext';
 import NativeInit from '@/components/NativeInit';
+import { CwvTelemetry } from '@/components/telemetry/cwv-telemetry';
 
 // Brand typography: self-hosted Inter Variable for ALL surfaces (site, funnel, app).
 const interVariable = localFont({
@@ -29,5 +30,5 @@ export const metadata: Metadata = {
 export const viewport:Viewport={width:'device-width',initialScale:1,viewportFit:'cover',themeColor:'#ffffff'};
 
 export default function RootLayout({children}:{children:React.ReactNode}){
-  return <html lang="de" data-scroll-behavior="smooth" className={interVariable.variable}><body><NativeInit><AuthProvider><PwaRegister/>{children}</AuthProvider></NativeInit></body></html>;
+  return <html lang="de" data-scroll-behavior="smooth" className={interVariable.variable}><body><NativeInit><AuthProvider><PwaRegister/><CwvTelemetry/>{children}</AuthProvider></NativeInit></body></html>;
 }

@@ -35,8 +35,17 @@ export async function GET() {
     subscriptions: all("SELECT plan_slug,status,current_period_end,created_at FROM subscriptions WHERE homeowner_id=?"),
     partner_subscriptions: all("SELECT plan_slug,status,current_period_end,created_at FROM partner_subscriptions WHERE provider_id=?"),
     invoices: allBoth("SELECT invoice_number,issue_date,service_date,currency,seller_name,buyer_name,subtotal_net,tax_amount,total_gross,status,created_at FROM invoices WHERE provider_id=? OR homeowner_id=?"),
+    appointments: allBoth(`SELECT a.start_at,a.status,a.created_at,j.title job_title FROM appointments a JOIN jobs j ON j.id=a.job_id WHERE a.homeowner_id=? OR a.provider_id=?`),
+    reviews_written: all("SELECT job_id,rating,comment,hidden,created_at FROM reviews WHERE homeowner_id=?"),
+    messages: all("SELECT m.job_id,m.body,m.created_at FROM messages m WHERE m.sender_id=?"),
+    reviews_about_me_as_provider: all("SELECT job_id,rating,comment,hidden,created_at FROM reviews WHERE provider_id=?"),
+    package_orders: all("SELECT package_slug,status,created_at FROM package_orders WHERE homeowner_id=?"),
+    house_transfers_initiated: all("SELECT property_id,status,created_at FROM house_transfers WHERE homeowner_id=?"),
+    claims: allBoth(`SELECT c.id,c.kind,c.description,c.status,c.created_at FROM claims c WHERE c.homeowner_id=? OR c.provider_id=?`),
     notifications: all("SELECT kind,title,body,href,created_at FROM notifications WHERE user_id=?"),
   };
+  db.prepare("INSERT INTO data_requests(user_id,kind,status,detail,completed_at) VALUES(?, 'export', 'completed', ?, CURRENT_TIMESTAMP)")
+    .run(id, `scope=${Object.keys(payload).length} sectionen; format=json`);
   logSecurityEvent("account_export", `user:${id}`);
   return new NextResponse(JSON.stringify(payload, null, 2), {
     status: 200,

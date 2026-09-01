@@ -547,6 +547,14 @@ export async function reviewAction(jobId:number, fd:FormData){
   revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/notifications');
 }
 
+export async function toggleFeatureFlagAction(key:string){
+  await requireAdmin();
+  const { isFeatureEnabled, setFeatureEnabled } = await import('@/lib/feature-flags');
+  setFeatureEnabled(key, !isFeatureEnabled(key), 'admin-ops');
+  logAdminAudit('feature-flag', isFeatureEnabled(key)?'disabled':'enabled', key);
+  revalidatePath('/admin/ops');
+}
+
 export async function reportReviewAction(reviewId:number, fd:FormData){
   const user=await requireUser();
   const reason=String(fd.get('reason')??'').slice(0,500);
