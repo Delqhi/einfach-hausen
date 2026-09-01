@@ -30,6 +30,8 @@
 
 ## 0. SSH-Zugang OCI (dauerhaft)
 
+Skills aktualisiert: sin-setup-tailscale, sin-setup-orca, oci-vm, gpt-web-oci, sin-frontend-design (component-engineering-2026.md §7-8). Sin-Brain Memory (core): SSH-Zugang, Deploy-Workflow, Brand-Palette, Design-Audit-Gates.
+
 Tailscale SSH deaktiviert (2026-09-01) — kein Browser-Login mehr nötig. Port 22 = normaler sshd, Port 2222 = Fallback. Aliase: `sin-supabase` / `sin-supabase-direct`. Deploy: `ssh sin-supabase-direct bash deploy/update-on-oci.sh`.
 
 ## 0. Read this first
