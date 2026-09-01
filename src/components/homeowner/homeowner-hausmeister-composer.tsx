@@ -4,6 +4,11 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Camera, Mic, Send, Square } from 'lucide-react';
 import { sendHausmeisterAction } from '@/app/actions';
 
+// T-0155: the intake draft survives network failures. The text is mirrored to
+// localStorage on every keystroke, restored on mount, and only cleared after
+// the action resolved (redirect counts as success). Server-action errors are
+// caught inline - the error boundary must never eat the user's draft.
+
 export function HomeownerHausmeisterComposer({
   continuingIntent,
   starterHint,
@@ -11,7 +16,13 @@ export function HomeownerHausmeisterComposer({
   continuingIntent?: 'service' | 'contact' | null;
   starterHint?: string;
 }) {
-  const [text, setText] = useState('');
+  const [text, setText] = useState(() => {
+    // Draft restore via lazy initializer (T-0155): survives network loss and
+    // accidental reloads without an extra render pass.
+    try { return window.localStorage.getItem('eh-draft:hausmeister-intake') ?? ''; } catch { return ''; }
+  });
+  const [submitError, setSubmitError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const [listening, setListening] = useState(false);
   const [offline, setOffline] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(true);
@@ -20,6 +31,35 @@ export function HomeownerHausmeisterComposer({
   const descriptionId = useId();
   const fileId = useId();
   const statusId = useId();
+  const draftKey = 'eh-draft:hausmeister-intake';
+
+  useEffect(() => {
+    try {
+      if (text) window.localStorage.setItem(draftKey, text);
+      else window.localStorage.removeItem(draftKey);
+    } catch {}
+  }, [text]);
+
+  async function submitDraft(formData: FormData) {
+    if (submitting) return; // double-action guard
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      await sendHausmeisterAction(formData);
+      // Redirect inside the action navigates away; reaching here without one
+      // means the action handled the request (e.g. clarify flow).
+      try { window.localStorage.removeItem(draftKey); } catch {}
+      setText('');
+    } catch (error) {
+      // Next.js redirect() throws a control-flow error with a NEXT_REDIRECT
+      // digest - it must bubble so the router navigates.
+      const digest = (error as { digest?: string })?.digest ?? '';
+      if (typeof digest === 'string' && digest.startsWith('NEXT_REDIRECT')) throw error;
+      setSubmitError('Senden fehlgeschlagen. Dein Text bleibt erhalten - versuch es erneut, sobald du wieder online bist.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   useEffect(() => {
     const syncNetwork = () => setOffline(!navigator.onLine);
@@ -87,7 +127,7 @@ export function HomeownerHausmeisterComposer({
       : voiceStatus;
 
   return (
-    <form action={sendHausmeisterAction} className="agent-composer" aria-describedby={connectionStatus ? statusId : undefined}>
+    <form action={submitDraft} className="agent-composer" aria-describedby={connectionStatus ? statusId : undefined}>
       <label className="owner-visually-hidden" htmlFor={descriptionId}>Anliegen an den Hausmeister</label>
       <textarea
         id={descriptionId}
@@ -121,10 +161,13 @@ export function HomeownerHausmeisterComposer({
           {listening ? <Square size={18} aria-hidden="true" /> : <Mic size={19} aria-hidden="true" />}
           <span>{listening ? 'Stopp' : speechSupported ? 'Sprache' : 'Nur Text'}</span>
         </button>
-        <button className="send-action" type="submit" disabled={offline || text.trim().length < 4}>
+        <button className="send-action" type="submit" disabled={offline || submitting || text.trim().length < 4} aria-busy={submitting}>
           <Send size={18} aria-hidden="true" />
-          <span>{continuingIntent ? 'Weiter' : 'Senden'}</span>
+          <span>{submitting ? 'Wird gesendet…' : continuingIntent ? 'Weiter' : 'Senden'}</span>
         </button>
+        {submitError && (
+          <p className="owner-composer-status" role="alert" style={{ color: '#a12b25' }}>{submitError}</p>
+        )}
       </div>
       {connectionStatus && (
         <p id={statusId} className="owner-composer-status" role="status" aria-live="polite" aria-atomic="true">

@@ -795,3 +795,8 @@ html { scroll-behavior: smooth; }
 /* 404 Illustration */
 .nf-scene { margin-bottom: 10px; }
 .nf-house { width: 220px; height: auto; }
+
+/* T-0155 submit pending feedback */
+.submit-spinner { width: 14px; height: 14px; border-radius: 999px; border: 2px solid currentColor; border-top-color: transparent; display: inline-block; animation: eh-spin .7s linear infinite; }
+@keyframes eh-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .submit-spinner { animation-duration: 1.6s; } }

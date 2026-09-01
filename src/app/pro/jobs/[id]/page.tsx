@@ -37,6 +37,7 @@ import { canAccessProviderJob, getProviderMembers } from '@/lib/provider';
 import { DocumentForm } from './document-form';
 import { InvoiceForm } from './invoice-form';
 import { invoiceStatusLabel } from '@/lib/invoices';
+import { SubmitButton } from '@/components/ui/submit-button';
 
 export default async function ProJob({
   params,
@@ -152,11 +153,11 @@ export default async function ProJob({
                   ))}
                 </select>
               </label>
-              <button className="btn light">Kontakt übernehmen</button>
+              <SubmitButton className="btn light" pendingLabel="Wird übernommen…">Kontakt übernehmen</SubmitButton>
             </form>
           </ProviderNextStep>
           <form action={declineDispatchAction.bind(null, access.id)} className="decline-form">
-            <button className="btn ghost pro-ghost wide"><XCircle size={16} />Kontaktanfrage ablehnen</button>
+            <SubmitButton className="btn ghost pro-ghost wide" pendingLabel="Wird abgelehnt…"><XCircle size={16} />Kontaktanfrage ablehnen</SubmitButton>
           </form>
         </>
       )}
@@ -182,12 +183,12 @@ export default async function ProJob({
               <label>Gesamtpreis (€)<input name="amount" type="number" min="1" required defaultValue={quote ? quote.amount / 100 : ''} /></label>
               <label>Verfügbar ab<input name="availableAt" type="datetime-local" defaultValue={quote?.available_at?.slice(0, 16) || ''} /></label>
               <label>Leistungsumfang<textarea name="message" rows={4} defaultValue={quote?.message || ''} placeholder="Leistung, Material, Entsorgung, Gewährleistung/Ausschlüsse …" required /></label>
-              <button className="btn light wide">{quote ? 'Angebot aktualisieren' : 'Angebot senden'}</button>
+              <SubmitButton className="btn light wide" pendingLabel="Angebot wird gesendet…">{quote ? 'Angebot aktualisieren' : 'Angebot senden'}</SubmitButton>
             </form>
           </ProviderNextStep>
           {!quote && (
             <form action={declineDispatchAction.bind(null, access.id)} className="decline-form">
-              <button className="btn ghost pro-ghost wide"><XCircle size={16} />Anfrage ablehnen</button>
+              <SubmitButton className="btn ghost pro-ghost wide" pendingLabel="Wird abgelehnt…"><XCircle size={16} />Anfrage ablehnen</SubmitButton>
             </form>
           )}
         </>
@@ -232,7 +233,7 @@ export default async function ProJob({
                     ))}
                   </select>
                 </label>
-                <button className="btn light">Ansprechpartner festlegen</button>
+                <SubmitButton className="btn light" pendingLabel="Wird festgelegt…">Ansprechpartner festlegen</SubmitButton>
               </form>
             </ProviderNextStep>
           )}
@@ -251,7 +252,7 @@ export default async function ProJob({
                     ))}
                   </select>
                 </label>
-                <button className="btn ghost pro-ghost">Zuweisung speichern</button>
+                <SubmitButton className="btn ghost pro-ghost" pendingLabel="Wird gespeichert…">Zuweisung speichern</SubmitButton>
               </form>
             </details>
           )}
@@ -267,7 +268,7 @@ export default async function ProJob({
           {mine && !isContact && access.status === 'accepted' && (
             <ProviderNextStep description="Arbeit starten, sobald Termin und Ausführung mit dem Kunden abgestimmt sind.">
               <form action={markInProgressAction.bind(null, access.id)}>
-                <button className="btn light">Arbeit starten</button>
+                <SubmitButton className="btn light" pendingLabel="Wird gestartet…">Arbeit starten</SubmitButton>
               </form>
             </ProviderNextStep>
           )}
@@ -275,7 +276,7 @@ export default async function ProJob({
           {mine && !isContact && access.status === 'in_progress' && (
             <ProviderNextStep description="Auftrag abschließen, wenn die vereinbarte Leistung vollständig erledigt ist.">
               <form action={markCompleteAction.bind(null, access.id)}>
-                <button className="btn light">Als erledigt markieren</button>
+                <SubmitButton className="btn light" pendingLabel="Wird gespeichert…">Als erledigt markieren</SubmitButton>
               </form>
             </ProviderNextStep>
           )}
@@ -339,7 +340,7 @@ export default async function ProJob({
                 >
                   <label className="sr-only" htmlFor="provider-job-message">Nachricht</label>
                   <input id="provider-job-message" name="body" placeholder="Nachricht an Kunden …" required />
-                  <button aria-label="Nachricht senden">↗</button>
+                  <SubmitButton pendingLabel="…"><span aria-hidden="true">↗</span><span className="provider-visually-hidden">Nachricht senden</span></SubmitButton>
                 </form>
               </div>
             </>
