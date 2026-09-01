@@ -138,7 +138,7 @@
 
 .providerScope :global(.app-shell-v3.pro-theme .bottom-nav a) {
   min-height: 56px;
-  color: #727b75;
+  color: #4e5751;
 }
 
 .providerScope :global(.app-shell-v3.pro-theme .bottom-nav a.active) {

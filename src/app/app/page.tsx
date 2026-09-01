@@ -15,6 +15,7 @@ export default async function Dashboard() {
   return (
     <AppShell role="homeowner" active="/app" title="Mein Zuhause" subtitle="Dein Haus-Copilot">
       <div className="own-dash ehn-dash">
+        <h1 className="owner-visually-hidden">Mein Zuhause</h1>
         {onboardingPending && (
           <section className="owner-onboarding-banner ehn-onboard-banner" aria-label="Einrichtung unvollständig">
             <p>Du hast die Ersteinrichtung noch nicht abgeschlossen.</p>
