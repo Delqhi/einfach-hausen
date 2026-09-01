@@ -10,12 +10,19 @@ export const metadata: Metadata = { title: "So funktioniert's", description: 'So
 export default function Page(){return <MarketingShell>
   <PageHero eyebrow="So funktioniert's" title="Du beschreibst das Problem. Du entscheidest den nächsten Schritt." text="Einfach Hausen beginnt nicht mit einer Kategorienwand. Du sagst in normalen Worten, was an deinem Haus los ist – und entscheidest erst nach der Einordnung, was daraus werden soll." aside={<HeroChoices />} actions={<><LinkButton href="/register?role=homeowner">Anliegen starten</LinkButton><LinkButton href="/leistungen" secondary>Leistungen ansehen</LinkButton></>} />
   <Section eyebrow="Der Ablauf" title="Vier Schritte, die sich wie einer anfühlen." text="Die Organisation im Hintergrund darf komplex sein. Für dich bleibt der Weg klar.">
-    <div className={styles.processList}>{[
-      ['01','Anliegen beschreiben','Text, Foto oder Sprache: Du startest so, wie du das Problem selbst erklären würdest.'],
-      ['02','Sinnvoll einordnen','Relevante Hausdaten können helfen. Fehlt etwas Wichtiges, folgt eine gezielte Rückfrage statt eines langen Formulars.'],
-      ['03','Bewusst entscheiden','Nur Rat, einen passenden Menschen sprechen oder einen echten Auftrag organisieren lassen.'],
-      ['04','Alles zusammenhalten','Bei einem Auftrag werden passende Partner, Angebote, Termine, Dokumente und der konkrete Ansprechpartner gebündelt.'],
-    ].map(([n,t,x])=><article className={styles.processStep} key={n}><b>{n}</b><h3>{t}</h3><p>{x}</p></article>)}</div>
+    <div className={styles.stepCards}>{[
+      ['1','Beschreiben','Text, Foto oder Sprache: Du startest so, wie du das Problem selbst erklären würdest.','Hausanliegen'],
+      ['2','Einordnen','Relevante Hausdaten können helfen. Fehlt etwas Wichtiges, folgt eine gezielte Rückfrage statt eines langen Formulars.','Was wichtig ist'],
+      ['3','Entscheiden','Nur Rat, ein passender Mensch zum Sprechen oder ein echter Auftrag - du wählst.','Bewusst wählen'],
+      ['4','Behalten','Bei einem Auftrag werden passende Partner, Angebote, Termine, Dokumente und der konkrete Ansprechpartner gebündelt.','Alles in der Akte'],
+    ].map(([n,t,x,sub])=>
+      <article className={styles.stepCard} key={n}>
+        <span className={styles.stepCardNum}>{n}</span>
+        <h3>{t}</h3>
+        <p>{x}</p>
+        <span className={styles.stepCardVisual}><span className={styles.stepCardChip}>{sub}</span></span>
+      </article>
+    )}</div>
   </Section>
   <Statement kicker="Das Prinzip" tone="soft">Eine Frage ist noch kein Auftrag.</Statement>
   <Section eyebrow="Drei Wege" title="Drei bewusste Wege statt einer Formularstrecke." text="Beratung, persönlicher Kontakt und Beauftragung sind getrennte Entscheidungen – du gehst jeden Weg nur, wenn du es willst." tone="soft">

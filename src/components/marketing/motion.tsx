@@ -333,3 +333,32 @@ export function SplitLines({ children, className, delay = 0 }: {
 
   return <h1 ref={ref} className={className}>{children}</h1>;
 }
+
+/**
+ * Animiert alle path-Elemente im Gateway-Linien-SVG (DrawSVG-Ersatz via
+ * dashoffset, scroll-gescrubbt). Reduced motion: Linien sofort sichtbar.
+ */
+export function GatewayLinesAnimation({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useGSAP(() => {
+    const root = ref.current;
+    if (!root) return;
+    const paths = root.querySelectorAll('path');
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      paths.forEach((path) => {
+        const len = (path as SVGPathElement).getTotalLength();
+        gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+      });
+      gsap.to(paths, {
+        strokeDashoffset: 0,
+        duration: 1.6,
+        ease: 'none',
+        stagger: 0.15,
+        scrollTrigger: { trigger: root, start: 'top 65%', end: 'center 45%', scrub: true },
+      });
+    });
+    return () => mm.revert();
+  }, { scope: ref });
+  return <div ref={ref}>{children}</div>;
+}

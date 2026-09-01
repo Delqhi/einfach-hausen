@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Bug, Droplets, Hammer, Home, Leaf, Paintbrush, Plug, Shield, Snowflake, Sparkles, ThermometerSun, Trees } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
@@ -23,7 +24,13 @@ const groups=[
 export default function Page(){return <MarketingShell>
   <PageHero eyebrow="Leistungen" title="Du musst das Gewerk nicht kennen. Das Problem reicht." text="Die Kategorien helfen bei der Orientierung – dein Einstieg bleibt trotzdem das konkrete Anliegen. Umfang und Verfügbarkeit hängen vom regional aktiven Partnernetzwerk ab." aside={<HeroServices />} actions={<LinkButton href="/register?role=homeowner">Anliegen starten</LinkButton>} />
   <Section eyebrow="Leistungsbereiche" title="Breit genug für den Alltag eines Eigenheims." text="Die Plattform ist auf unterschiedliche Haus- und Grundstücksthemen ausgelegt. Nicht jede Leistung ist in jeder Region jederzeit verfügbar.">
-    <div className={styles.serviceGrid}>{groups.map(x=><div className={styles.serviceItem} key={x.title}><span>{x.icon}</span><div><strong>{x.title}</strong><span>{x.text}</span></div></div>)}</div>
+    <div className={styles.catCardGrid}>{groups.map(x=>
+      <Link className={styles.catCard} href="/register?role=homeowner" key={x.title} aria-label={`${x.title}: Anliegen starten`}>
+        <span className={styles.catCardIcon}>{x.icon}</span>
+        <span className={styles.catCardBody}><strong>{x.title}</strong><span className={styles.catCardText}>{x.text}</span></span>
+        <span className={styles.catCardArrow} aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+      </Link>
+    )}</div>
   </Section>
   <Statement kicker="So startest du" tone="green">Erst das Anliegen. Dann die Lösung.</Statement>
   <Section eyebrow="So startest du" title="Nicht durchklicken. Beschreiben." text="Einfach Hausen soll zuerst verstehen, was tatsächlich ansteht, und erst danach die passenden nächsten Schritte zeigen." tone="soft">

@@ -1,5 +1,5 @@
 import { CalendarCheck2, Hammer, HardHat, House, Leaf, Paintbrush, ThumbsUp, Wrench } from 'lucide-react';
-import { Reveal } from './motion';
+import { Reveal, GatewayLinesAnimation } from './motion';
 import styles from './marketing.module.css';
 
 const TRADES = [
@@ -28,14 +28,14 @@ export function GatewaySection() {
             <p>Handwerker und Eigentümer treffen sich an einem Ort — ohne Lead-Handel, ohne anonyme Formulare.</p>
           </Reveal>
         </div>
-        <svg className={styles.gatewayLines} viewBox="0 0 1200 420" preserveAspectRatio="none" aria-hidden="true">
+        <GatewayLinesAnimation><svg className={styles.gatewayLines} viewBox="0 0 1200 420" preserveAspectRatio="none" aria-hidden="true">
           <path d="M 340 60 C 430 100, 470 150, 560 190" />
           <path d="M 340 160 C 430 180, 470 200, 560 210" />
           <path d="M 340 260 C 430 260, 470 260, 560 230" />
           <path d="M 640 190 C 730 160, 770 100, 860 60" />
           <path d="M 640 210 C 730 200, 770 180, 860 160" />
           <path d="M 640 230 C 730 260, 770 260, 860 260" />
-        </svg>
+        </svg></GatewayLinesAnimation>
         <div className={styles.gatewayCols}>
           <div className={styles.gatewayCol}>
             {TRADES.map((trade, index) => (

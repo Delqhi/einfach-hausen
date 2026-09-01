@@ -941,3 +941,57 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
   .pilotBanner { flex-wrap: wrap; border-radius: 18px; }
   .pilotBannerText { font-size: 12px; }
 }
+
+/* ============ v19: DoktorABC cat-cards ============ */
+.catCardGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.catCard { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px;
+  background: var(--eh-surface); border: 1px solid var(--eh-border); border-radius: 18px;
+  padding: 20px 22px; text-decoration: none; color: inherit;
+  transition: border-color .18s ease, box-shadow .18s ease, translate .18s ease; }
+.catCard:hover { border-color: rgba(16,82,88,.4); box-shadow: 0 18px 44px -22px rgba(10,53,57,.35); translate: 0 -2px; }
+.catCardIcon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 15px;
+  background: var(--eh-green-soft); color: var(--eh-green-700); transition: background-color .18s ease, color .18s ease; }
+.catCard:hover .catCardIcon { background: var(--eh-green-700); color: #fff; }
+.catCardBody strong { display: block; font-size: 15.5px; letter-spacing: -.015em; color: var(--eh-text); }
+.catCardText { display: block; margin-top: 3px; color: var(--eh-text-secondary); font-size: 13px; line-height: 1.5; }
+.catCardArrow { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px;
+  border: 1px solid var(--eh-border); background: var(--eh-green-50); color: var(--eh-green-700);
+  transition: background-color .18s ease, color .18s ease, translate .18s ease; }
+.catCard:hover .catCardArrow { background: var(--eh-green-700); color: #fff; translate: 3px 0; }
+@media (min-width: 1100px) { .catCardGrid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .catCardGrid { grid-template-columns: 1fr; } .catCard { padding: 16px 18px; } }
+
+/* ============ v20: step cards (doktorabc 3-schritte pattern) ============ */
+.stepCards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: start; }
+.stepCard { position: relative; background: var(--eh-surface); border: 1px solid var(--eh-border);
+  border-radius: 22px; padding: 30px 26px 24px; min-height: 320px; overflow: hidden;
+  display: flex; flex-direction: column; }
+.stepCardNum { position: absolute; top: 18px; right: 20px; width: 40px; height: 40px; display: grid; place-items: center;
+  border-radius: 999px; background: var(--eh-green-700); color: #fff; font-size: 15px; font-weight: 750;
+  box-shadow: 0 8px 20px -8px rgba(10,53,57,.5); }
+.stepCard h3 { margin: 0 0 12px; font-size: 21px; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; color: var(--eh-text); }
+.stepCardVerb { color: var(--eh-green-700); }
+.stepCard p { margin: 0; color: var(--eh-text-secondary); font-size: 14.5px; line-height: 1.6; flex: 1; }
+.stepCardVisual { display: grid; place-items: center; padding: 18px 0 4px; }
+.stepCardChip { display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px;
+  border-radius: 12px; background: var(--eh-green-soft); border: 1px solid rgba(16,82,88,.14);
+  font-size: 12.5px; font-weight: 650; color: var(--eh-green-700); }
+.stepCard:nth-child(2) { margin-top: 26px; }
+.stepCard:nth-child(4) { margin-top: 26px; }
+@media (max-width: 900px) {
+  .stepCards { grid-template-columns: 1fr; }
+  .stepCard:nth-child(2), .stepCard:nth-child(4) { margin-top: 0; }
+  .stepCard { min-height: 0; }
+}
+
+@media (min-width: 901px) {
+  .stepCards { grid-template-columns: 1fr 1fr; }
+  .stepCard:nth-child(2) { margin-top: 0; }
+  .stepCard:nth-child(4) { margin-top: 0; }
+  .stepCard:nth-child(even) { translate: 0 26px; }
+  .stepCards { padding-bottom: 26px; }
+}
+
+/* ============ v21: footer link hover arrows ============ */
+.footerGrid nav a { transition: color .15s ease, translate .15s ease; }
+.footerGrid nav a:hover { color: #fff; translate: 3px 0; }
