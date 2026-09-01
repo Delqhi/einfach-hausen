@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS service_catalog (slug TEXT PRIMARY KEY,title TEXT NOT
 CREATE TABLE IF NOT EXISTS membership_plans (slug TEXT PRIMARY KEY,title TEXT NOT NULL,monthly_amount INTEGER NOT NULL,description TEXT NOT NULL,priority_level INTEGER NOT NULL DEFAULT 0,annual_house_check INTEGER NOT NULL DEFAULT 0,partner_discount_bps INTEGER NOT NULL DEFAULT 0,active INTEGER NOT NULL DEFAULT 1);
 CREATE TABLE IF NOT EXISTS subscriptions (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,plan_slug TEXT NOT NULL REFERENCES membership_plans(slug),status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','active','past_due','cancelled')),stripe_subscription_id TEXT UNIQUE,current_period_end TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS service_packages (slug TEXT PRIMARY KEY,title TEXT NOT NULL,price_amount INTEGER NOT NULL,description TEXT NOT NULL,services_json TEXT NOT NULL DEFAULT '[]',active INTEGER NOT NULL DEFAULT 1);
+CREATE TABLE IF NOT EXISTS review_reports (id INTEGER PRIMARY KEY AUTOINCREMENT,review_id INTEGER NOT NULL UNIQUE REFERENCES reviews(id) ON DELETE CASCADE,reported_by INTEGER NOT NULL REFERENCES users(id),reason TEXT NOT NULL DEFAULT '',status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open','actioned','dismissed')),created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,handled_at TEXT);
 CREATE TABLE IF NOT EXISTS pilot_cohort (user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,discount_bps INTEGER NOT NULL DEFAULT 1500,joined_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS package_orders (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,package_slug TEXT NOT NULL REFERENCES service_packages(slug),status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','paid','scheduled','completed','cancelled')),stripe_session_id TEXT UNIQUE,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS house_assets (id INTEGER PRIMARY KEY AUTOINCREMENT,homeowner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,kind TEXT NOT NULL,name TEXT NOT NULL,details TEXT NOT NULL DEFAULT '',installed_year INTEGER,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
@@ -144,6 +145,7 @@ function addColumnIfMissing(table:string,column:string,definition:string){
   }
 }
 addColumnIfMissing('provider_profiles','stripe_account_id','stripe_account_id TEXT');
+addColumnIfMissing('reviews','hidden','hidden INTEGER NOT NULL DEFAULT 0');
 addColumnIfMissing('provider_profiles','stripe_onboarded','stripe_onboarded INTEGER NOT NULL DEFAULT 0');
 addColumnIfMissing('homeowner_profiles','lat','lat REAL');
 addColumnIfMissing('homeowner_profiles','lon','lon REAL');

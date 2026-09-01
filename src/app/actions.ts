@@ -541,10 +541,45 @@ export async function reviewAction(jobId:number, fd:FormData){
   const row=db.prepare('SELECT j.homeowner_id,q.provider_id FROM jobs j LEFT JOIN quotes q ON q.id=j.accepted_quote_id WHERE j.id=?').get(jobId) as any;
   if (!row || !row.provider_id || row.homeowner_id !== user.id) redirect(`/app/jobs/${jobId}?error=Selbstbewertung%20nicht%20erlaubt`);
   db.prepare('INSERT OR REPLACE INTO reviews(job_id,homeowner_id,provider_id,rating,comment,verified,eligibility_reason) VALUES(?,?,?,?,?,?,?)').run(jobId, user.id, row.provider_id, rating, text(fd, 'comment'), 1, eligible.reason);
-  const agg=db.prepare('SELECT AVG(rating) avg,COUNT(*) count FROM reviews WHERE provider_id=?').get(row.provider_id) as any;
+  const agg=db.prepare('SELECT AVG(rating) avg,COUNT(*) count FROM reviews WHERE provider_id=? AND hidden=0').get(row.provider_id) as any;
   db.prepare('UPDATE provider_profiles SET rating=?,rating_count=? WHERE user_id=?').run(agg.avg||0,agg.count||0,row.provider_id);
   const assigned=db.prepare('SELECT contact_user_id FROM job_assignments WHERE job_id=?').get(jobId) as {contact_user_id:number}|undefined; const recipients=new Set<number>([...getProviderManagerIds(row.provider_id),...(assigned?[assigned.contact_user_id]:[])]); for(const recipient of recipients)createNotification(recipient,'Neue Bewertung',`Der Auftrag hat eine ${rating}-Sterne-Bewertung erhalten.`,`/pro/orders`,'review');
   revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/notifications');
+}
+
+export async function reportReviewAction(reviewId:number, fd:FormData){
+  const user=await requireUser();
+  const reason=String(fd.get('reason')??'').slice(0,500);
+  const review=db.prepare('SELECT id,provider_id FROM reviews WHERE id=? AND hidden=0').get(reviewId) as {id:number}|undefined;
+  if(!review) redirect('/app/partners?error=Bewertung%20nicht%20mehr%20vorhanden');
+  db.prepare(`INSERT INTO review_reports(review_id,reported_by,reason) VALUES(?,?,?)
+    ON CONFLICT(review_id) DO UPDATE SET reason=excluded.reason`).run(reviewId,user.id,reason);
+  logSecurityEvent('review_reported','trust',`review=${reviewId} by=${user.id}`);
+  revalidatePath('/app/partners'); revalidatePath('/admin');
+  redirect(`/app/partners?message=Danke.%20Die%20Bewertung%20wurde%20gemeldet%20und%20wird%20geprueft.`);
+}
+
+export async function moderateReviewAction(reviewId:number, fd:FormData){
+  await requireAdmin();
+  const decision=String(fd.get('decision')??'');
+  const note=String(fd.get('note')??'').slice(0,500);
+  if(decision==='hide'){
+    db.prepare('UPDATE reviews SET hidden=1 WHERE id=?').run(reviewId);
+    db.prepare("UPDATE review_reports SET status='actioned',handled_at=CURRENT_TIMESTAMP WHERE review_id=?").run(reviewId);
+  } else if(decision==='dismiss'){
+    db.prepare("UPDATE review_reports SET status='dismissed',handled_at=CURRENT_TIMESTAMP WHERE review_id=?").run(reviewId);
+  } else if(decision==='restore'){
+    db.prepare('UPDATE reviews SET hidden=0 WHERE id=?').run(reviewId);
+    db.prepare("UPDATE review_reports SET status='dismissed',handled_at=CURRENT_TIMESTAMP WHERE review_id=?").run(reviewId);
+  } else return;
+  // Recompute aggregate on moderation (hidden reviews leave the public average).
+  const row=db.prepare('SELECT provider_id FROM reviews WHERE id=?').get(reviewId) as {provider_id:number}|undefined;
+  if(row){
+    const agg=db.prepare('SELECT AVG(rating) avg,COUNT(*) count FROM reviews WHERE provider_id=? AND hidden=0').get(row.provider_id) as any;
+    db.prepare('UPDATE provider_profiles SET rating=?,rating_count=? WHERE user_id=?').run(agg.avg||0,agg.count||0,row.provider_id);
+  }
+  logAdminAudit('moderate-review',decision,`review=${reviewId} ${note}`);
+  revalidatePath('/admin'); revalidatePath('/app/partners');
 }
 
 export async function saveProfileAction(fd:FormData){

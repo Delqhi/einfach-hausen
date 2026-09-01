@@ -21,6 +21,7 @@ export type SecurityEventKind =
   | 'auth_login_fail'
   | 'admin_login_ok'
   | 'admin_login_fail'
+  | 'review_reported'
   | 'rate_limit_block'
   | 'rate_limit_blocked_request'
   | 'security_validation_reject';

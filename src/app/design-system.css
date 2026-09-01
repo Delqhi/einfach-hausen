@@ -1057,3 +1057,10 @@ main.app-page.ehn-owner .ehn-composer .agent-composer .icon-action span{display:
   .app-shell-v3.pro-theme .qa-row { gap: 16px; padding: 26px 0 0; }
   .app-shell-v3.pro-theme .ki-card { margin: 22px 0 0; padding: 26px 28px 24px; }
 }
+
+/* T-0111 trust: review report control */
+.review-report{margin-top:8px}
+.review-report summary{cursor:pointer;font-size:11px;color:var(--eh-brand,#105258);list-style:none}
+.review-report summary::-webkit-details-marker{display:none}
+.review-report form{display:flex;gap:8px;margin-top:6px}
+.review-report input{flex:1;font-size:12px;padding:9px 11px}
