@@ -1,30 +1,29 @@
 import { redirect } from 'next/navigation';
-import { ArrowRight, BadgeCheck, CalendarCheck2, ChevronDown, CircleCheck, FileText, Hammer, HeartHandshake, Home, Landmark, Leaf, MessageCircle, Paintbrush, Plug, Search, ShieldCheck, Sparkles, ThermometerSun, Trees, UserRound, Wrench } from 'lucide-react';
+import { ArrowRight, BadgeCheck, ChevronDown, CircleCheck, FileText, Home, ShieldCheck, UserRound } from 'lucide-react';
+import Image from 'next/image';
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Section, Split, InfoPanel, BulletList, CtaBand, LinkButton, Statement } from '@/components/marketing/ui';
-import Link from 'next/link';
-import { GatewaySection } from '@/components/marketing/gateway-section';
-import { Reveal, Stagger, ScrubLine, Activate, DrawPath, SplitLines } from '@/components/marketing/motion';
+import { Reveal, Stagger, DrawPath, SplitLines } from '@/components/marketing/motion';
 import { IntakeForm } from '@/components/home/intake-form';
 import styles from '@/components/marketing/marketing.module.css';
+import premium from '@/components/marketing/premium.module.css';
 
-const services = [
-  { icon:<Wrench size={20}/>, title:'Reparatur & Montage', text:'Kleine und größere Arbeiten am Haus' },
-  { icon:<Plug size={20}/>, title:'Elektro & Energie', text:'Elektro, Wallbox, PV und Smart Home' },
-  { icon:<ThermometerSun size={20}/>, title:'Heizung & Sanitär', text:'Wärme, Wasser, Klima und Wartung' },
-  { icon:<Landmark size={20}/>, title:'Dach & Gebäudehülle', text:'Dach, Fenster, Türen und Fassade' },
-  { icon:<Paintbrush size={20}/>, title:'Ausbau & Renovierung', text:'Maler, Boden, Schreiner und Sanierung' },
-  { icon:<Trees size={20}/>, title:'Garten & Außenbereich', text:'Pflege, Baumarbeiten und Pflaster' },
-  { icon:<Leaf size={20}/>, title:'Pflege & Reinigung', text:'Reinigung, Dachrinne und Winterdienst' },
-  { icon:<Hammer size={20}/>, title:'Weitere Hausdienste', text:'Umzug, Entrümpelung und Spezialfälle' },
+const categories = [
+  { img:'/images/premium/category-heizung.jpg', title:'Heizung & Sanitär', text:'Wärme, Wasser, Wartung' },
+  { img:'/images/premium/category-elektro.jpg', title:'Elektro & Energie', text:'Wallbox, PV, Installationen' },
+  { img:'/images/premium/category-dach.jpg', title:'Dach & Gebäudehülle', text:'Dach, Rinne, Fassade' },
+  { img:'/images/premium/category-garten.jpg', title:'Garten & Außenbereich', text:'Pflege, Bäume, Wege' },
 ] as const;
 
-const steps = [
-  ['01','Beschreiben','Schreib, sprich oder zeig per Foto, was ansteht.'],
-  ['02','Einordnen','Das Anliegen wird verständlich strukturiert und der nächste sinnvolle Schritt vorbereitet.'],
-  ['03','Entscheiden','Du wählst bewusst: Frage klären, Ansprechpartner finden oder Auftrag organisieren.'],
-  ['04','Behalten','Kontakte, Dokumente, Termine und erledigte Arbeiten landen in deiner Hausakte.'],
+const moreServices = [
+  'Reparatur & Montage','Ausbau & Renovierung','Pflege & Reinigung','Weitere Hausdienste',
+] as const;
+
+const story = [
+  { img:'/images/premium/hero-homeowner.jpg', kicker:'1 · Beschreiben', title:'Sag einfach, was ansteht.', text:'Schreib, sprich oder zeig per Foto. Die fachliche Einordnung übernehmen wir – ohne dass du wissen musst, welches Gewerk zuständig ist.' },
+  { img:'/images/premium/category-heizung.jpg', kicker:'2 · Der passende Mensch', title:'Ein konkreter Ansprechpartner.', text:'Geprüfte Vertragspartner aus deiner Region – kein anonymer Marktplatz. Du sprichst mit Menschen, bevor etwas beauftragt wird.' },
+  { img:'/images/premium/hausakte.jpg', kicker:'3 · Erledigt & behalten', title:'Alles landet in deiner Hausakte.', text:'Rechnungen, Garantien, Wartungen und Kontakte bleiben dauerhaft geordnet – dein Haus vergisst nichts.' },
 ] as const;
 
 const faqs = [
@@ -41,101 +40,78 @@ export default async function HomePage() {
   if (user) redirect(user.role === 'provider' ? '/pro' : '/app');
 
   return <MarketingShell>
-    <section className={styles.hero}>
-      <div className={styles.heroInner}>
-        <Stagger className={styles.heroCopy} gap={0.12}>
-          <a href="/pilotphase" className={styles.pilotBanner}>
-            <span className={styles.pilotBannerTag}>Pilotphase startet</span>
-            <span className={styles.pilotBannerText}>Die ersten 1.000 Haushalte sichern sich 15% Dauer-Vorteil auf alle Pakete</span>
-            <ArrowRight size={15} aria-hidden="true" />
-          </a>
-          <span className={styles.heroBadgeRow}>
-            <span className={styles.heroBadge}><CircleCheck size={15} aria-hidden="true"/> Geprüfte Partner</span>
-            <span className={styles.heroBadge}><Home size={15} aria-hidden="true"/> Digitale Hausakte</span>
-            <span className={styles.heroBadge}><UserRound size={15} aria-hidden="true"/> Persönlicher Ansprechpartner</span>
-          </span>
-          <SplitLines className={styles.heroH1}>Du hast ein Haus. <span className={styles.heroAccent}>Wir kümmern uns&nbsp;<span className={styles.underlineSlot}>um den Rest.<DrawPath className={styles.heroUnderlineWrap}><svg viewBox="0 0 320 14" preserveAspectRatio="none" className={styles.heroUnderline} aria-hidden="true"><path d="M4 10 C 80 3, 240 3, 316 8" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/></svg></DrawPath></span></span></SplitLines>
-          <p className={styles.heroLead}>Weniger kümmern, mehr zuhause sein: <strong>Einfach Hausen bündelt alles rund ums Eigenheim.</strong> Beschreibe, was ansteht – wir helfen beim Einordnen, verbinden dich mit passenden Menschen und organisieren Aufträge, wenn du sie wirklich vergibst.</p>
-          <IntakeForm />
-          <Link href="/hausakte" className={styles.heroAkteStrip} aria-label="So sieht deine digitale Hausakte aus – zur Hausakte-Seite">
-            <span className={styles.heroAkteIcon}><Home size={19} aria-hidden="true"/></span>
-            <span className={styles.heroAkteCopy}><strong>So sieht deine Hausakte aus.</strong><small>Technik, Dokumente und Ansprechpartner – geordnet an einem Ort.</small></span>
-            <ArrowRight size={17} className={styles.heroAkteArrow} aria-hidden="true"/>
-          </Link>
-          <div className={styles.heroLinks}><span>Mehr erfahren:</span><a href="/so-funktionierts">So funktioniert&apos;s</a><a href="/leistungen">Leistungen ansehen</a><a href="/preise">Preise</a></div>
+    {/* ============ HERO: one promise, intake primary, human visual anchor ============ */}
+    <section className={premium.hero}>
+      <div className={premium.heroGrid}>
+        <div className={premium.heroPhoto}>
+          <Image src="/images/premium/hero-homeowner.jpg" alt="Eigentümerin an der Tür ihres gepflegten Eigenheims" fill priority sizes="(max-width: 900px) 100vw, 520px" className={premium.heroPhotoImg} />
+          <div className={premium.heroPhotoCard}>
+            <FileText size={18} aria-hidden="true"/>
+            <span><strong>Rechnung abgelegt</strong><small>Heizung · Hausakte</small></span>
+          </div>
+        </div>
+        <Stagger className={premium.heroCopy} gap={0.1}>
+          <SplitLines className={premium.heroH1}>Dein Zuhause. <span className={styles.heroAccent}>Organisiert.<DrawPath className={styles.heroUnderlineWrap}><svg viewBox="0 0 320 14" preserveAspectRatio="none" className={styles.heroUnderline} aria-hidden="true"><path d="M4 10 C 80 3, 240 3, 316 8" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round"/></svg></DrawPath></span></SplitLines>
+          <p className={premium.heroLead}>Beschreibe, was ansteht – wir helfen beim Einordnen, bringen dich mit passenden <strong>geprüften Partnern</strong> zusammen und behalten alles in deiner <strong>digitalen Hausakte</strong>.</p>
+          <div className={premium.intakeWrap}><IntakeForm /></div>
+          <div className={premium.heroProof}>
+            <span><CircleCheck size={15} aria-hidden="true"/> Geprüfte Vertragspartner</span>
+            <span><UserRound size={15} aria-hidden="true"/> Persönlicher Ansprechpartner</span>
+            <span><ShieldCheck size={15} aria-hidden="true"/> Kein Auftrag ohne deine Entscheidung</span>
+          </div>
+          <a href="/pilotphase" className={premium.pilotNote}>Pilotphase: die ersten 1.000 Haushalte sichern sich 15&nbsp;% Dauer-Vorteil <ArrowRight size={14} aria-hidden="true"/></a>
         </Stagger>
-        <Reveal delay={0.25} y={34} className={styles.productPreviewWrap}>
-          <Link href="/register?role=homeowner" className={styles.heroMockLink} aria-label="Produktvorschau: kostenloses Hauskonto erstellen">
-            <span className={styles.heroMockStage}>
-            <div className={styles.productPreview} aria-label="Produktvorschau Hausmeisterservice">
-            <div className={styles.previewHead}><div className={styles.previewMark}><Home size={19} aria-hidden="true"/></div><div><small>Hausmeisterservice</small><strong>Was brauchst du gerade?</strong></div><span className={styles.livePill}>bereit</span></div>
-            <div className={styles.previewBody}>
-              <div className={styles.userBubble}>Meine Heizung macht seit gestern komische Geräusche. Muss da jemand kommen?</div>
-              <div className={styles.assistantBox}><p>Wir helfen dir zuerst beim Einordnen. Danach entscheidest du, wie es weitergeht.</p>
-                <div className={styles.choice}><span className={styles.choiceIcon}><MessageCircle size={17} aria-hidden="true"/></span><span><strong>Frage klären</strong><small>Erst verstehen, was sinnvoll ist</small></span></div>
-                <div className={styles.choice}><span className={styles.choiceIcon}><UserRound size={17} aria-hidden="true"/></span><span><strong>Ansprechpartner finden</strong><small>Mit einem passenden Menschen sprechen</small></span></div>
-                <div className={`${styles.choice} ${styles.choiceFeatured}`}><span className={styles.choiceIcon}><Wrench size={17} aria-hidden="true"/></span><span><strong>Auftrag organisieren</strong><small>Angebote, Termin und Ausführung</small></span></div>
-              </div>
-            </div>
-            <div className={styles.previewFoot}>Du entscheidest. Nichts wird automatisch beauftragt.</div>
-            <div className={`${styles.floatCard} ${styles.floatCardA}`}><CalendarCheck2 size={19} aria-hidden="true"/><span><strong>Termin bestätigt</strong><small>Dachrinne reinigen · Di 9:00</small></span></div>
-            <div className={`${styles.floatCard} ${styles.floatCardB}`}><FileText size={19} aria-hidden="true"/><span><strong>Rechnung abgelegt</strong><small>Hausakte · Energie</small></span></div>
-            </div>
-            <span className={styles.heroMockHint}>App öffnen <ArrowRight size={14} aria-hidden="true"/></span>
-            </span>
-          </Link>
-        </Reveal>
       </div>
     </section>
 
-    <div className={styles.trustBar}><div className={styles.trustBarInner}>
-      <div className={styles.trustItem}><BadgeCheck size={20} aria-hidden="true"/><div><strong>Geprüfte Vertragspartner</strong><small>Kein offener Lead-Marktplatz</small></div></div>
-      <div className={styles.trustItem}><ShieldCheck size={20} aria-hidden="true"/><div><strong>Matching nach Eignung</strong><small>Tarife kaufen keine bessere Platzierung</small></div></div>
-      <div className={styles.trustItem}><UserRound size={20} aria-hidden="true"/><div><strong>Konkrete Ansprechpartner</strong><small>Menschen und Beziehungen bleiben sichtbar</small></div></div>
-      <div className={styles.trustItem}><FileText size={20} aria-hidden="true"/><div><strong>Digitale Hausakte</strong><small>Hauswissen bleibt langfristig geordnet</small></div></div>
-    </div></div>
-
-    <Section eyebrow="Leistungen" title="Vom kleinen Defekt bis zur langfristigen Hauspflege." text="Du musst nicht zuerst wissen, welches Gewerk zuständig ist. Starte mit deinem Anliegen – die fachliche Einordnung kommt danach." tone="soft">
-      <div className={styles.serviceGrid}>{services.map((item)=><a className={styles.serviceItem} href="/leistungen" key={item.title}><span className={styles.serviceIcon}>{item.icon}</span><span className={styles.serviceText}><strong>{item.title}</strong><span>{item.text}</span></span><span className={styles.serviceArrow}><ArrowRight size={16} aria-hidden="true"/></span></a>)}</div>
-      <a className={styles.textLink} href="/leistungen">Alle Leistungsbereiche im Detail <ArrowRight size={15} aria-hidden="true"/></a>
+    {/* ============ VISUAL SERVICE CATEGORIES (spec §9.3) ============ */}
+    <Section eyebrow="Leistungen" title="Vom defekten Heizungsventil bis zur Jahrespflege." text="Du musst nicht wissen, welches Gewerk zuständig ist. Starte mit deinem Anliegen." tone="soft">
+      <div className={premium.catGrid}>
+        {categories.map((c,i)=>(
+          <Reveal key={c.title} delay={i*0.06}>
+            <a className={premium.catCard} href="/leistungen">
+              <span className={premium.catImg}><Image src={c.img} alt="" fill sizes="320px"/></span>
+              <span className={premium.catBody}><strong>{c.title}</strong><small>{c.text}</small><span className={premium.catMore}>Ansehen <ArrowRight size={14} aria-hidden="true"/></span></span>
+            </a>
+          </Reveal>
+        ))}
+      </div>
+      <p className={premium.moreRow}>{moreServices.map(s=><a key={s} href="/leistungen">{s}</a>)}<a className={premium.allLink} href="/leistungen">Alle Bereiche <ArrowRight size={14} aria-hidden="true"/></a></p>
     </Section>
 
-    <Section eyebrow="So funktioniert's" title="Weniger suchen. Weniger hinterherlaufen. Mehr Überblick." text="Einfach Hausen bündelt die Organisation, ohne dir die Entscheidung abzunehmen.">
-      <div className={styles.processWrap}>
-        <ScrubLine axis="x" className={styles.processLine} />
-        <div className={styles.processList}>
-          {steps.map(([n,t,x])=>(
-            <Activate className={styles.processStep} key={n}>
-              <b>{n}</b>
-              <h3>{t}</h3>
-              <p>{x}</p>
-            </Activate>
-          ))}
-        </div>
+    {/* ============ 3 STORY MOMENTS (spec §9.4) ============ */}
+    <Section eyebrow="So funktioniert's" title="Drei Schritte. Null Bürokratie." text="Weniger suchen, weniger hinterherlaufen, mehr Überblick.">
+      <div className={premium.storyCol}>
+        {story.map((s,i)=>(
+          <Reveal key={s.kicker}>
+            <article className={`${premium.storyRow} ${i%2 ? premium.storyFlip : ''}`}>
+              <span className={premium.storyImg}><Image src={s.img} alt="" fill sizes="460px"/></span>
+              <span className={premium.storyBody}>
+                <span className={premium.storyKicker}>{s.kicker}</span>
+                <h3>{s.title}</h3>
+                <p>{s.text}</p>
+              </span>
+            </article>
+          </Reveal>
+        ))}
       </div>
       <a className={styles.textLink} href="/so-funktionierts">Den ganzen Ablauf ansehen <ArrowRight size={15} aria-hidden="true"/></a>
     </Section>
 
-    <Section eyebrow="Mein Haus" title="Die Hausakte wird mit jedem erledigten Thema wertvoller." text="Nicht nur der nächste Auftrag zählt. Technik, Historie, Dokumente, Wartungen und Ansprechpartner wachsen zu einem dauerhaften Gedächtnis deiner Immobilie." tone="green">
+    {/* ============ HAUSAKTE VALUE (spec §9.5) ============ */}
+    <Section eyebrow="Mein Haus" title="Die Hausakte wird mit jedem erledigten Thema wertvoller." tone="green">
       <Split>
         <InfoPanel label="Digitale Hausakte"><h3>Alles, was später wieder wichtig wird.</h3><BulletList items={['Arbeiten und Sanierungen dokumentieren','Rechnungen, Belege und Garantien wiederfinden','Technik und Anlagen am Haus erfassen','Persönliche Ansprechpartner nach Bereichen behalten','Hausbezogene Historie bei Eigentümerwechsel kontrolliert weitergeben']} /></InfoPanel>
-        <div className={styles.previewCard}><div className={styles.previewCardHead}><strong>Mein Haus · Beispielansicht</strong><span>geordnet</span></div><div className={styles.timeline}>
-          <ScrubLine axis="y" className={styles.timelineScrub} />
-          <div className={styles.timelineRow}><time>2026</time><span className={styles.timelineDot}/><div className={styles.timelineContent}><strong>Gartenpflege</strong><small>Ansprechpartner und Rechnung abgelegt</small></div></div>
-          <div className={styles.timelineRow}><time>2025</time><span className={styles.timelineDot}/><div className={styles.timelineContent}><strong>Dacharbeiten</strong><small>Dokumentation und Garantiehinweis gespeichert</small></div></div>
-          <div className={styles.timelineRow}><time>2024</time><span className={styles.timelineDot}/><div className={styles.timelineContent}><strong>Heizung</strong><small>Anlage erfasst · Wartung planbar</small></div></div>
-        </div></div>
+        <div className={premium.akteVisual}>
+          <Image src="/images/premium/hausakte.jpg" alt="Geordnete Hausdokumente und digitale Hausakte" fill sizes="460px"/>
+          <div className={premium.akteChips} aria-hidden="true">
+            <span>Heizung gewartet</span><span>Garantie vorhanden</span><span>Ansprechpartner bekannt</span>
+          </div>
+        </div>
       </Split>
     </Section>
 
-    <GatewaySection />
-
     <Section eyebrow="Für Betriebe" title="Gute Kundenbeziehungen statt Lead-Handel." text="Partner erhalten passende Anfragen, arbeiten mit konkreten Ansprechpartnern und behalten 100 % ihres Auftragswertes. Einfach Hausen finanziert sich über planbare Partnertarife – nicht über Auftragsprovision." tone="dark">
-      <div className={styles.featureGrid}>
-        <article className={styles.feature}><div className={styles.featureIcon}><HeartHandshake size={20} aria-hidden="true"/></div><h3>0 % Auftragsprovision</h3><p>Keine Gebühr pro ausgeführtem Auftrag. Der Partner bleibt Rechnungssteller seiner Leistung.</p></article>
-        <article className={styles.feature}><div className={styles.featureIcon}><Search size={20} aria-hidden="true"/></div><h3>Qualität vor Tarif</h3><p>Bezahlte Tarife kaufen keine bessere Position im Matching. Eignung und Qualität bleiben entscheidend.</p></article>
-        <article className={styles.feature}><div className={styles.featureIcon}><Sparkles size={20} aria-hidden="true"/></div><h3>Einfacher Arbeitsbereich</h3><p>Anfragen, Team, Termine, Dokumente und Rechnungen – ohne unnötige ERP-Komplexität.</p></article>
-      </div>
       <div className={styles.heroActions}><a className={styles.primaryButton} href="/partner">Partner-Modell ansehen</a><a className={styles.secondaryButton} href="/preise">Partnerpreise</a></div>
     </Section>
 
