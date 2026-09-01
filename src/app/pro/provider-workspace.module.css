@@ -1850,3 +1850,29 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* T-0154 provider offline banner (mirror of owner offline contract, dark theme) */
+.providerScope :global(.provider-offline-banner) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #3b2f16;
+  color: #ffe9b8;
+  border-bottom: 1px solid #6b5626;
+  font-size: 12.5px;
+  line-height: 1.4;
+  position: sticky;
+  top: 0;
+  z-index: 45;
+}
+.providerScope :global(.provider-offline-banner svg) { flex-shrink: 0; }
+.providerScope :global(.provider-visually-hidden) {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
