@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // T-0160 Website acceptance matrix: the 12 public website core routes across
 // chromium/firefox/webkit with deterministic acceptance assertions (render,
-// no overflow, zero runtime errors, 200s). Complements the full product-flow
-// E2E (scripts/e2e.mjs), which owns the authenticated journey coverage.
+// no overflow, zero runtime errors, 200s). T-0147: adds the register ->
+// authenticated-onboarding journey per engine (unique ephemeral identity per
+// run, created through the real /register form, cleaned up afterwards), so
+// the public registration path is proven cross-browser, not just rendered.
 import { chromium, firefox, webkit } from 'playwright-core';
 import fs from 'node:fs';
 import net from 'node:net';
@@ -15,6 +17,10 @@ const root = process.cwd();
 const routes = ['/', '/so-funktionierts', '/eigenheimbesitzer', '/leistungen', '/hausakte', '/partner', '/preise', '/ueber-uns', '/hilfe', '/kontakt', '/sicherheit', '/login'];
 const engines = (process.env.MATRIX_ENGINES || 'chromium,firefox,webkit').split(',');
 const viewport = { width: 390, height: 844 };
+const runRegisterJourney = process.env.MATRIX_REGISTER !== '0';
+const supabaseUrl = process.env.SUPABASE_URL || 'https://supabase.delqhi.com';
+const svc = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const runId = randomUUID().replaceAll('-', '').slice(0, 10);
 
 function browserExecutable(engine) {
   let bundled = '';
@@ -110,6 +116,44 @@ try {
     if (engineErrors.length) { failures.push(`${engine}: ${engineErrors.length} runtime errors (first: ${engineErrors[0]})`); }
     results.push(`${engine}: ${routes.length - engineFail}/${routes.length} routes ok, ${engineErrors.length} runtime errors`);
     await context.close();
+
+    // T-0147 register journey: real /register form -> authenticated /app/onboarding.
+    if (runRegisterJourney) {
+      if (!svc) { failures.push(`${engine} register: SUPABASE_SERVICE_KEY missing`); }
+      else {
+        const email = `matrix-register-${runId}-${engine}@e2e.einfachhausen.de`;
+        const password = `MatrixReg!${randomUUID().replaceAll('-', '').slice(0, 14)}`;
+        let identityId = '';
+        try {
+          const regContext = await browser.newContext({ viewport });
+          const regPage = await regContext.newPage();
+          await regPage.goto(`${base}/register`, { waitUntil: 'domcontentloaded', timeout: 60000 });
+          await regPage.fill('input[name="firstName"]', 'Matrix');
+          await regPage.fill('input[name="lastName"]', 'Register');
+          await regPage.fill('input[name="email"]', email);
+          await regPage.fill('input[name="password"]', password);
+          await regPage.fill('input[name="postcode"]', '10115');
+          await regPage.fill('input[name="address"]', 'Matrixweg 1');
+          await Promise.all([
+            regPage.waitForURL(/\/app\/onboarding/, { timeout: 60000 }),
+            regPage.click('button[type="submit"]'),
+          ]);
+          results.push(`${engine}: register journey ok -> ${new URL(regPage.url()).pathname}`);
+          await regContext.close();
+        } catch (error) {
+          failures.push(`${engine} register journey: ${String(error).slice(0, 140)}`);
+        }
+        // Cleanup ephemeral identity (best effort; response gives the id on create —
+        // we resolve by email via admin list to stay independent of form internals).
+        try {
+          const listResponse = await fetch(`${supabaseUrl}/auth/v1/admin/users?email=${encodeURIComponent(email)}`, { headers: { apikey: svc, Authorization: `Bearer ${svc}` } });
+          const listData = await listResponse.json();
+          identityId = listData?.users?.find((u) => u.email === email)?.id || '';
+          if (identityId) await fetch(`${supabaseUrl}/auth/v1/admin/users/${identityId}`, { method: 'DELETE', headers: { apikey: svc, Authorization: `Bearer ${svc}` } });
+        } catch {}
+      }
+    }
+
     await browser.close();
   }
 } finally {
