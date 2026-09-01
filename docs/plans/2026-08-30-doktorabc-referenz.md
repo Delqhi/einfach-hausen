@@ -64,3 +64,9 @@ uebersetzen.
 - Hero: Suchfeld IM Hero (wir haben Composer ✓)
 - Hover: Karten heben sich an (translateY -2..4px) + Schatten verstaerkt
 - Sektions-Hintergründe: sanfte Verlaeufe statt flat colors
+
+## Weitere Design-Referenz: xKiro (orca-drops, 2026-09-01)
+Dark-Gateway-Layout: Grid-Hintergrund, zentrale Hub-Grafik mit Verbindungslinien
+zu Icon-Listen (links: IDEs/Agenten, rechts: AI-Modelle). Grungy Glow-Akzente.
+=> Muster für eine spätere "Wie funktioniert Einfach Hausen"-Sektion:
+   Homeowner <-> einfachhaus <-> Partnernetzwerk als Verbindungsgrafik.
