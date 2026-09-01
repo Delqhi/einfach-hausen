@@ -1,10 +1,14 @@
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
+
+// T-0118: browser Supabase client is lazy now (async chunk, not first-load).
 
 export async function getEigeneAnfragen() {
+  const supabase = await getSupabase();
   return supabase.from("anfragen").select("*").order("created_at", { ascending: false });
 }
 
 export async function getOffeneAnfragenFuerPro(leistungen: string[], plzListe: string[]) {
+  const supabase = await getSupabase();
   let query: any = supabase.from("anfragen").select("*").eq("status", "offen").order("created_at", { ascending: false }).limit(30);
   if (leistungen.length > 0) query = query.in("kategorie", leistungen);
   if (plzListe.length > 0) {
@@ -18,14 +22,17 @@ export async function getOffeneAnfragenFuerPro(leistungen: string[], plzListe: s
 }
 
 export async function getMeineAnfragen(userId: string) {
+  const supabase = await getSupabase();
   const { data } = await supabase.from("anfragen").select("*").eq("user_id", userId).order("created_at", { ascending: false });
   return data ?? [];
 }
 
 export async function getAngeboteFuerAnfrage(anfrageId: string) {
+  const supabase = await getSupabase();
   return supabase.from("angebote").select("*").eq("anfrage_id", anfrageId);
 }
 
 export async function getMeineAngebote(proId: string) {
+  const supabase = await getSupabase();
   return supabase.from("angebote").select("*, anfragen(titel, plz, ort, status)").eq("pro_id", proId).order("created_at", { ascending: false });
 }

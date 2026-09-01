@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { BackIcon } from "@/components/icons";
 import { VisualAuftraege, VisualGebiet, VisualFertig } from "@/components/onboard-visuals";
 
@@ -28,6 +28,7 @@ export default function OnboardingProSchrittPage() {
   const step = schritt as string;
 
   async function saveMeta(patch: object) {
+    const supabase = await getSupabase();
     await supabase.auth.updateUser({ data: { ...(user as any)?.user_metadata, ...patch } as any });
   }
 

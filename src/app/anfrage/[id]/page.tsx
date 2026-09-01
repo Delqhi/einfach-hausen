@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { BackIcon, ChatBubbleIcon } from "@/components/icons";
 
 export default function AnfrageDetailPage() {
@@ -17,17 +17,21 @@ export default function AnfrageDetailPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined" && sessionStorage.getItem("eh_role") === "pro") queueMicrotask(() => setProMode(true));
-    supabase.from("anfragen").select("*").eq("id", id as string).single().then(({ data }: any) => setAnfrage(data));
-    supabase.from("angebote").select("*").eq("anfrage_id", id as string).then(({ data }: any) => setAngebote((data as any) ?? []));
+    getSupabase().then((supabase) => {
+      supabase.from("anfragen").select("*").eq("id", id as string).single().then(({ data }: any) => setAnfrage(data));
+      supabase.from("angebote").select("*").eq("anfrage_id", id as string).then(({ data }: any) => setAngebote((data as any) ?? []));
+    });
   }, [id]);
 
   async function annehmen(angebotId: string) {
+    const supabase = await getSupabase();
     await supabase.from("angebote").update({ status: "angenommen" } as any).eq("id", angebotId);
     await supabase.from("anfragen").update({ status: "in_bearbeitung" } as any).eq("id", id as string);
     setAngebote((a) => a.map((x) => (x.id === angebotId ? { ...x, status: "angenommen" } : x)));
   }
 
   async function angebotSenden() {
+    const supabase = await getSupabase();
     const { data: auth }: any = await supabase.auth.getUser();
     await supabase.from("angebote").insert({ anfrage_id: id as string, pro_id: auth.user?.id, firma: (auth.user as any)?.user_metadata?.company_name || (auth.user as any)?.user_metadata?.full_name || "Dienstleister", text: angebotText, preis: parseFloat(angebotPreis.replace(",", ".")) || 0, bewertung: 4.8, entfernung: 12, status: "offen" } as any);
     setGesendet(true);

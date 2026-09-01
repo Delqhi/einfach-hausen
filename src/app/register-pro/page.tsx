@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { StoreIcon, PersonIcon, MailIcon, LockSmallIcon, EyeIcon, GoogleIcon, AppleIcon, ShieldIcon, PinIcon, CheckCircleIcon, SearchIcon, StarIcon, CalendarBigIcon, ChatIcon } from "@/components/icons";
 
 const benefits = [
@@ -34,6 +34,7 @@ export default function RegisterProPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+    const supabase = await getSupabase();
     const { data, error: err } = await supabase.auth.signUp({
       email: email.trim(),
       password,

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import Stepper from "@/components/Stepper";
 
 export default function GebietPage() {
@@ -15,6 +15,7 @@ export default function GebietPage() {
   const [done, setDone] = useState(false);
 
   async function finish() {
+    const supabase = await getSupabase();
     await supabase.auth.updateUser({ data: { area_mode: mode, area_center: plzZentrum, area_radius_km: mode === "radius" ? radius : null, area_plz: mode === "plz" ? plzListe : null, onboarding_complete: true } as any });
     setDone(true);
     setTimeout(() => router.replace("/pro"), 1200);

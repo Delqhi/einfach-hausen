@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { BackIcon, PlusIcon2 } from "@/components/icons";
 
 export default function AnsprechpartnerPage() {
@@ -12,8 +12,9 @@ export default function AnsprechpartnerPage() {
   const [liste, setListe] = useState<any[]>([]);
   const [addOpen, setAddOpen] = useState(false);
   const [form, setForm] = useState({ name: "", rolle: "", telefon: "", email: "", notiz: "" });
-  useEffect(() => { if (!user) return; supabase.from("ansprechpartner").select("*").order("created_at", { ascending: false }).then(({ data }: any) => setListe(data ?? [])); }, [user]);
+  useEffect(() => { if (!user) return; getSupabase().then((supabase) => supabase.from("ansprechpartner").select("*").order("created_at", { ascending: false }).then(({ data }: any) => setListe(data ?? []))); }, [user]);
   async function save() {
+    const supabase = await getSupabase();
     await supabase.from("ansprechpartner").insert({ user_id: (user as any).id, ...form } as any);
     setAddOpen(false); setForm({ name: "", rolle: "", telefon: "", email: "", notiz: "" });
     const { data }: any = await supabase.from("ansprechpartner").select("*").order("created_at", { ascending: false });

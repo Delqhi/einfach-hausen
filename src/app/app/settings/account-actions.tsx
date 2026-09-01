@@ -3,7 +3,7 @@
 import { uiToast } from "@/components/ui-toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 
 // GDPR self-service (EH T-0203): JSON export of the own account and real
 // deletion. The server derives the identity from the session; no ids travel
@@ -40,7 +40,7 @@ export function AccountActions() {
     try {
       const res = await fetch("/api/konto-loeschen", { method: "POST" });
       if (!res.ok) throw new Error("Löschen fehlgeschlagen.");
-      try { await supabase.auth.signOut(); } catch {}
+      try { const supabase = await getSupabase(); await supabase.auth.signOut(); } catch {}
       router.replace("/");
     } catch {
       setError("Löschen fehlgeschlagen. Bitte Support kontaktieren.");

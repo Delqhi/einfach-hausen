@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import Stepper from "@/components/Stepper";
 import { categories } from "@/lib/categories";
 import { BuildingIcon, ShieldSmallIcon, CalendarIcon, PhoneIcon, GlobeIcon, PinSmallIcon, GearIcon, ChevronDown, CatGartenIcon, CatElektroIcon, CatSanitaerIcon, CatDachIcon, CatFensterIcon, CatReinigungIcon, CatInnenIcon, CatMalerIcon, CatPoolIcon, CatMehrIcon, CheckIcon } from "@/components/icons";
@@ -46,10 +46,12 @@ export default function ProOnboardingPage() {
   const [weitereInput, setWeitereInput] = useState("");
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }: any) => {
-      const meta: any = data.user?.user_metadata;
-      if (meta?.company_name) setFirma(meta.company_name);
-    });
+    getSupabase().then((supabase) =>
+      supabase.auth.getUser().then(({ data }: any) => {
+        const meta: any = data.user?.user_metadata;
+        if (meta?.company_name) setFirma(meta.company_name);
+      })
+    );
   }, []);
 
   const subsOfSelected = useMemo(() => categories.filter((c) => selectedCats.includes(c.id)), [selectedCats]);
@@ -60,6 +62,7 @@ export default function ProOnboardingPage() {
   }
 
   async function saveStep1() {
+    const supabase = await getSupabase();
     await supabase.auth.updateUser({
       data: {
         company_name: firma,
@@ -77,6 +80,7 @@ export default function ProOnboardingPage() {
   }
 
   async function saveStep2() {
+    const supabase = await getSupabase();
     await supabase.auth.updateUser({
       data: { categories: selectedCats, subcategories: selectedSubs, extra_services: weitere } as any,
     });

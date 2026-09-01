@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { categories } from "@/lib/categories";
 import Stepper from "@/components/Stepper";
 import { CameraIcon, MicIcon, ArrowRightWhite, CheckIcon, PinSmallIcon, BackIcon } from "@/components/icons";
@@ -23,6 +23,7 @@ export default function NeueAnfragePage() {
   const [sent, setSent] = useState(false);
   const selCat = categories.find((c) => c.id === cat);
   async function submit() {
+    const supabase = await getSupabase();
     const { data } = await supabase.auth.getUser();
     await supabase.from("anfragen").insert({ user_id: (data as any).user?.id, kategorie: cat, unterkategorie: sub, titel, beschreibung, fotos, plz, ort, wunschtermin: termin || null, budget: budget || null, dringend, status: "offen" } as any);
     setSent(true);

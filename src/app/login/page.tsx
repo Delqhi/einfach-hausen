@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CircleCheck, Home } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { BackIcon } from "@/components/icons";
 import logoMark from "@/components/marketing/assets/logo-mark.png";
 import authStyles from "@/components/marketing/auth.module.css";
@@ -20,6 +20,7 @@ export default function LoginPage() {
   async function login() {
     setErr("");
     setBusy(true);
+    const supabase = await getSupabase();
     const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
     setBusy(false);
     if (error) { setErr(error.message === "Invalid login credentials" ? "E-Mail oder Passwort falsch." : error.message); return; }

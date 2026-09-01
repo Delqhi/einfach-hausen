@@ -2,8 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
+import type { Session, User } from "@supabase/supabase-js";
+import { getSupabase } from "@/lib/supabase";
 
 type Ctx = {
   user: User | null;
@@ -36,14 +36,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }: any) => {
-      setSession(data.session);
-      setLoading(false);
+    let cancelled = false;
+    // T-0118: the browser Supabase client is lazy (async chunk) — await it.
+    getSupabase().then((supabase) => {
+      if (cancelled) return;
+      supabase.auth.getSession().then(({ data }: any) => {
+        if (cancelled) return;
+        setSession(data.session);
+        setLoading(false);
+      });
+      const { data: sub } = supabase.auth.onAuthStateChange((_e: any, s: any) => {
+        if (cancelled) return;
+        setSession(s);
+      });
+      if (cancelled) sub.subscription.unsubscribe();
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((_e: any, s: any) => {
-      setSession(s);
-    });
-    return () => sub.subscription.unsubscribe();
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
@@ -61,6 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [session, loading, pathname, router]);
 
   async function signOut() {
+    const supabase = await getSupabase();
     await supabase.auth.signOut();
     setSession(null);
   }

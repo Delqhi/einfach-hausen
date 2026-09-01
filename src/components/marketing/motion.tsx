@@ -13,13 +13,28 @@
 
 import { useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
 import { useGSAP } from '@gsap/react';
 
-gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+// T-0118 bundle remediation: Lenis and SplitText are feature-scoped addons and
+// load dynamically where their feature runs, so the marketing first-load graph
+// ships only gsap core + ScrollTrigger.
+type SplitTextCtor = typeof import('gsap/SplitText').SplitText;
+let SplitTextPlugin: SplitTextCtor | null = null;
+async function ensureSplitText(): Promise<SplitTextCtor | null> {
+  if (!SplitTextPlugin) {
+    try {
+      const mod = await import('gsap/SplitText');
+      SplitTextPlugin = mod.SplitText;
+      gsap.registerPlugin(SplitTextPlugin);
+    } catch {
+      return null;
+    }
+  }
+  return SplitTextPlugin;
+}
 
 const REVEAL_DURATION = 0.7;
 const EASE = 'power3.out';
@@ -278,14 +293,22 @@ export function SmoothScroll() {
   useGSAP(() => {
     const mm = gsap.matchMedia();
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      const lenis = new Lenis({ lerp: 0.11, wheelMultiplier: 1, autoRaf: false });
-      lenis.on('scroll', ScrollTrigger.update);
-      const tick = (time: number) => lenis.raf(time * 1000);
-      gsap.ticker.add(tick);
-      gsap.ticker.lagSmoothing(0);
+      let tick: ((time: number) => void) | undefined;
+      let lenis: import('lenis').default | undefined;
+      let cancelled = false;
+      import('lenis').then(({ default: Lenis }) => {
+        if (cancelled) return;
+        lenis = new Lenis({ lerp: 0.11, wheelMultiplier: 1, autoRaf: false });
+        lenis.on('scroll', ScrollTrigger.update);
+        const instance = lenis;
+        tick = (time: number) => instance.raf(time * 1000);
+        gsap.ticker.add(tick);
+        gsap.ticker.lagSmoothing(0);
+      });
       return () => {
-        gsap.ticker.remove(tick);
-        lenis.destroy();
+        cancelled = true;
+        if (tick) gsap.ticker.remove(tick);
+        lenis?.destroy();
       };
     });
     return () => mm.revert();
@@ -311,11 +334,11 @@ export function SplitLines({ children, className, delay = 0 }: {
     const mm = gsap.matchMedia();
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      let split: SplitText | undefined;
+      let split: { lines: Element[]; revert: () => void } | undefined;
       let killed = false;
-      document.fonts.ready.then(() => {
-        if (killed) return;
-        split = SplitText.create(el, { type: 'lines' });
+      Promise.all([ensureSplitText(), document.fonts.ready]).then(([SplitTextCtor]) => {
+        if (killed || !SplitTextCtor) return;
+        split = SplitTextCtor.create(el, { type: 'lines' });
         gsap.from(split.lines, {
           yPercent: 130,
           autoAlpha: 0,
