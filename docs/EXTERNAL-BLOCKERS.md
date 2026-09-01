@@ -30,6 +30,15 @@ der technische Abschluss weder erfinden noch erledigen kann:
    `deploy/update-on-oci.sh`; `quality.yml` ist vorbereitet (inkl. Supabase-Secrets) und
    startet automatisch, sobald Actions aktiviert ist.
 
+7. **Geteilter Supabase-Gateway: fremde Projekte können Auth-User löschen (2026-09-01 verifiziert)** —
+   `auth.users` wurde von `service_role` mit Referer `shopsin.delqhi.com` vollständig geleert (Logs
+   `supabase-auth`: `user_deleted` x N, actor `service_role`). Die Demo-/Test-Identities von
+   einfach-hausen waren dadurch weg; Benutzer-Logins am geteilten Gateway sind strukturell nicht
+   gegen fremde Projekte geschützt, solange Projekte dieselbe Instanz/Keys teilen. Betreiber-
+   Entscheidung nötig: eigenes Supabase-Projekt/Keys für einfach-hausen (empfohlen) oder
+   Aufteilung der admin-Rechte. Demo-Logins wurden 2026-09-01 neu erstellt (Passwörter wie
+   zuvor, auth_subject neu gebunden).
+
 Nicht-Blocker, aber grenzwertig erwähnt: App-Store-Auslieferung (Capacitor) ist
 Teil historischer Planung (T-0167, nie ausgeführt) und nicht Teil des aktuellen
 Taskplans.
