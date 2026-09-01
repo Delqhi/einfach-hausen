@@ -23,6 +23,7 @@ export default function Page(){return <MarketingShell>
   <Section eyebrow="Tarife" title="Wähle deine Sichtweise: Eigentümer oder Betrieb." text="Alle Beträge pro Monat. Kein Auftrag entsteht automatisch, und Tarife kaufen keine bessere Matching-Position.">
     <PriceToggle customer={customer} partner={partner} />
     <p className={styles.note}>Ein Haus-Anliegen wird nicht automatisch zum Auftrag. Beratung, Ansprechpartner und organisierte Beauftragung bleiben getrennte Entscheidungen.</p>
+    <p className={styles.note}>Pilotphase: Die ersten 1.000 Haushalte erhalten 15% Dauer-Vorteil auf Pakete und Mitgliedschaften — wird im Konto automatisch angewendet. <a className="text-link" href="/pilotphase">Details</a></p>
   </Section>
   <CtaBand title="Kostenlos starten und später entscheiden." text="Das FREE-Hauskonto kostet 0 € pro Monat. Zusätzlicher Service ist optional." />
 </MarketingShell>}

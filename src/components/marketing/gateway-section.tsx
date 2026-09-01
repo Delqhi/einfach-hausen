@@ -51,12 +51,12 @@ export function GatewaySection() {
           <Reveal delay={0.2}>
             <div className={styles.gatewayHub}>
               <div className={styles.gatewayHubLogo} aria-hidden="true">
-                <svg viewBox="0 0 72 64" fill="none">
-                  <path d="M8 30 L36 8 L64 30" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M14 26 V58 H30 M58 58 V26 M30 58 V44 a6 6 0 0 1 12 0 V58" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                {/* Brand contract (DESIGN.md LOGO_03): the real house mark, not a redrawn SVG. */}
+                <svg viewBox="0 0 120 88" fill="none">
+                  <path d="M38 34 L74 12 L96 26 V82 H52" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-              <span className={styles.gatewayHubLabel}>einfachhaus</span>
+              <span className={styles.gatewayHubLabel}>einfachhausen</span>
             </div>
           </Reveal>
           <div className={styles.gatewayCol}>
