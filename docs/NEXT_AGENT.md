@@ -26,6 +26,10 @@
 - T-0205 Hygiene: 10 verwaiste Client-only-Routen entfernt (dashboard, dashboard-pro, profil, historie, auftraege, notfall, chat, meine-angebote, einstellungen, benachrichtigungen + SideMenu/ActionSheet); Redirects auf /pro, /app, /app/jobs umgebogen; E2E-DB-Isolation bleibt offen fuer T-0006.
 - Bekannte Restpunkte: Production-DB enthaelt 6 historische E2E-Test-User (Aug 21-26), bewusst nicht mutiert. E-Mail-Empfangs-Nachweis in einem echten Postfach + Offsite-Backup-Ziel stehen in docs/EXTERNAL-BLOCKERS.md.
 
+## 0. SSH-Zugang OCI (dauerhaft)
+
+Tailscale SSH deaktiviert (2026-09-01) — kein Browser-Login mehr nötig. Port 22 = normaler sshd, Port 2222 = Fallback. Aliase: `sin-supabase` / `sin-supabase-direct`. Deploy: `ssh sin-supabase-direct bash deploy/update-on-oci.sh`.
+
 ## 0. Read this first
 
 - Canonical taskplan: `.sin-gpt-web/taskplan.sqlite3` in the **canonical OCI worktree**

@@ -77,9 +77,9 @@ Die gewünschte visuelle Richtung verbindet:
 
 - Inter Variable, self-hosted (`src/fonts/InterVariable.woff2`), Display 700, UI 550–650, Body 400; globales Tracking −0.011em, Display −0.03em bis −0.035em.
 
-### App-Delta (bekannt, bewusst offen)
+### App-Palette (konvergiert seit 2026-08-30)
 
-Die Eigentümer-App ist pixelgenau auf die Notion-Referenzen kalibriert (aktuell `#14735c`-Grün, `src/app/globals.css` v2-Block) und wurde so abgenommen. Eine Konvergenz der App-Oberflächen auf die Logo-Teal-Palette ist ein eigener Wave mit erneuter Visual-Acceptance — wird hier nicht stillschweigend umgefärbt.
+Die Eigentümer-App nutzt die gleiche Logo-Teal-Palette wie die Website (#105258). Die Notion-Grün-Referenz (#14735c) wurde vom Operator ausgemustert und ist nicht mehr die Farb-Autorität. Die App-Layouts bleiben strukturell an die Notion-Referenzen angelehnt, die Farben sind vollständig auf die Logo-Palette konvergiert.
 
 ### Typografie
 
