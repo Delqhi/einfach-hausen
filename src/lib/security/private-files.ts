@@ -10,7 +10,17 @@ function isContained(root:string,candidate:string){
 }
 
 function hasTraversalSegment(storedPath:string){
-  return storedPath.split(/[\\/]+/).some(segment=>segment==='..');
+  // Percent-decode first: an attacker who can write into data/private can plant
+  // literal "%2e%2e"-style names, and any downstream URL-decoding consumer would
+  // otherwise turn them into traversal after this check (T-0120 fuzz finding).
+  let decoded=storedPath;
+  for(let i=0;i<3;i++){
+    let next:string;
+    try{ next=decodeURIComponent(decoded); }catch{ return true; }
+    if(next===decoded)break;
+    decoded=next;
+  }
+  return [storedPath,decoded].some(p=>p.split(/[\\/]+/).some(segment=>segment==='..'));
 }
 
 
