@@ -1,9 +1,60 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, BadgeCheck, CalendarCheck2, CircleCheck, FileText, Home, MessageCircle, ReceiptText, ShieldCheck, UserRound, Wrench } from 'lucide-react';
 import styles from './marketing.module.css';
+import premium from './premium.module.css';
 
 const OWNER_HREF = '/register?role=homeowner';
 const PARTNER_HREF = '/register?role=provider';
+
+/**
+ * Premium photo hero: visual category gallery for /leistungen (spec §10.2).
+ * Real service photography instead of an abstract UI mockup.
+ */
+export function HeroCategoryGallery() {
+  const cats = [
+    { img: '/images/premium/category-heizung.jpg', label: 'Heizung & Sanitär' },
+    { img: '/images/premium/category-elektro.jpg', label: 'Elektro & Energie' },
+    { img: '/images/premium/category-dach.jpg', label: 'Dach & Gebäudehülle' },
+    { img: '/images/premium/category-garten.jpg', label: 'Garten & Außen' },
+  ] as const;
+  return (
+    <div className={premium.gallery} aria-hidden="true">
+      <span className={`${premium.galleryCell} ${premium.galleryMain}`}>
+        <Image src={cats[0].img} alt="" fill sizes="380px" />
+        <span className={premium.galleryLabel}>{cats[0].label}</span>
+      </span>
+      {cats.slice(1).map((c) => (
+        <span className={premium.galleryCell} key={c.img}>
+          <Image src={c.img} alt="" fill sizes="200px" />
+          <span className={premium.galleryLabel}>{c.label}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Premium photo hero: Hausakte composite for /hausakte (spec §10.2 —
+ * strongest product/lifestyle composite page).
+ */
+export function HeroHausaktePhoto() {
+  return (
+    <div className={premium.akteHero} aria-hidden="true">
+      <span className={premium.akteHeroImg}>
+        <Image src="/images/premium/hausakte.jpg" alt="" fill sizes="460px" priority />
+      </span>
+      <span className={`${premium.akteFloatCard} ${premium.akteFloatTop}`}>
+        <FileText size={16} aria-hidden="true" />
+        <span><strong>Rechnung abgelegt</strong><small>Heizung · Vorgang #142</small></span>
+      </span>
+      <span className={`${premium.akteFloatCard} ${premium.akteFloatBottom}`}>
+        <CircleCheck size={16} aria-hidden="true" />
+        <span><strong>Wartung geplant</strong><small>Nächster Termin automatisch vorgeschlagen</small></span>
+      </span>
+    </div>
+  );
+}
 
 /**
  * Clickable hero mockup: the whole card links into the product funnel

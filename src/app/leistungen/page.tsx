@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Bug, Droplets, Hammer, Home, Leaf, Paintbrush, Plug, Shield, Snowflake, Sparkles, ThermometerSun, Trees } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
-import { HeroServices } from '@/components/marketing/hero-visuals';
+import { HeroCategoryGallery } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = { title: 'Leistungen', description: 'Leistungsbereiche rund ums Eigenheim – von Reparatur und Garten bis Energie, Wartung und Sanierung.' };
@@ -22,7 +22,7 @@ const groups=[
   {icon:<Shield size={22}/>,title:'Beratung & dringende Fälle',text:'Passende Ansprechpartner für fachliche Fragen oder dringenden Unterstützungsbedarf'},
 ] as const;
 export default function Page(){return <MarketingShell>
-  <PageHero eyebrow="Leistungen" title="Du musst das Gewerk nicht kennen. Das Problem reicht." text="Die Kategorien helfen bei der Orientierung – dein Einstieg bleibt trotzdem das konkrete Anliegen. Umfang und Verfügbarkeit hängen vom regional aktiven Partnernetzwerk ab." aside={<HeroServices />} actions={<LinkButton href="/register?role=homeowner">Anliegen starten</LinkButton>} />
+  <PageHero eyebrow="Leistungen" title="Du musst das Gewerk nicht kennen. Das Problem reicht." text="Die Kategorien helfen bei der Orientierung – dein Einstieg bleibt trotzdem das konkrete Anliegen. Umfang und Verfügbarkeit hängen vom regional aktiven Partnernetzwerk ab." aside={<HeroCategoryGallery />} actions={<LinkButton href="/register?role=homeowner">Anliegen starten</LinkButton>} />
   <Section eyebrow="Leistungsbereiche" title="Breit genug für den Alltag eines Eigenheims." text="Die Plattform ist auf unterschiedliche Haus- und Grundstücksthemen ausgelegt. Nicht jede Leistung ist in jeder Region jederzeit verfügbar.">
     <div className={styles.catCardGrid}>{groups.map(x=>
       <Link className={styles.catCard} href="/register?role=homeowner" key={x.title} aria-label={`${x.title}: Anliegen starten`}>
