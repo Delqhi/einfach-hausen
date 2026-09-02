@@ -42,7 +42,7 @@ Before editing, create `.sin-gpt-web/T-0170_OCI_FULL_CODE_GOAL.md` from the exac
 - `src/lib/db.ts`
 - `src/lib/supabase.ts`
 - `src/components/AuthContext.tsx`
-- `middleware.ts`
+- `src/proxy.ts`
 - `src/app/layout.tsx`
 - `src/app/app/layout.tsx`
 - `src/app/pro/layout.tsx`

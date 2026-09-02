@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
-import { HeroHelp } from '@/components/marketing/hero-visuals';
+import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
 import { FaqExplorer } from './faq-explorer';
 
 export const metadata: Metadata = { title: 'Hilfe & FAQ', description: 'Antworten zu Anliegen, Ansprechpartnern, Aufträgen, Hausakte, Preisen und Partnern.' };
@@ -16,7 +16,7 @@ const faq=[
  { q: 'Sind alle Leistungen überall verfügbar?', a: 'Nein. Verfügbarkeit hängt vom regional aktiven, passenden Partnernetzwerk und der jeweiligen Kapazität ab.', cat: 'Ablauf' },
 ] as const;
 export default function Page(){return <MarketingShell>
-  <PageHero eyebrow="Hilfe & FAQ" title="Klare Antworten, bevor du etwas beauftragst." text="Hier findest du die wichtigsten Grundlagen zum Ablauf, zur Hausakte und zum Partnernetzwerk." aside={<HeroHelp />} actions={<LinkButton href="/kontakt" secondary>Kontakt aufnehmen</LinkButton>} />
+  <PageHero eyebrow="Hilfe & FAQ" title="Klare Antworten, bevor du etwas beauftragst." text="Hier findest du die wichtigsten Grundlagen zum Ablauf, zur Hausakte und zum Partnernetzwerk." aside={<HeroEditorialPhoto src="/images/premium/story-beschreiben.jpg" label="Erst verstehen, dann entscheiden" detail="Eine Frage wird nicht automatisch zum Auftrag." />} actions={<LinkButton href="/kontakt" secondary>Kontakt aufnehmen</LinkButton>} />
   <Statement kicker="Unser Anspruch" tone="soft">Verständlich bleiben – bei jeder Frage, in jedem Schritt.</Statement>
   <Section eyebrow="Häufige Fragen" title="Was du über Einfach Hausen wissen solltest.">
     <FaqExplorer entries={faq} />

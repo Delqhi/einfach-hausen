@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
 import { CtaBand, LinkButton, PageHero, Section, Numbered, Statement } from '@/components/marketing/ui';
 
 export const metadata: Metadata = {
@@ -14,6 +15,7 @@ export default function PilotphasePage() {
         eyebrow="Pilotphase"
         title="Die ersten 1.000 Haushalte bauen Einfach Hausen mit uns auf."
         text="Wir starten in der Pilotphase mit einer begrenzten Zahl an Haushalten. Als Dank für dein Vertrauen bekommst du als früher Nutzer 15% Dauer-Vorteil auf alle Paket- und Tarifrechnungen - dauerhaft, nicht nur im ersten Jahr."
+        aside={<HeroEditorialPhoto src="/images/premium/hero-homeowner.jpg" label="Pilotphase · 1.000 Haushalte" detail="15 % Dauer-Vorteil auf bezahlte Pakete und Mitgliedschaften." />}
         actions={<LinkButton href="/register?role=homeowner">Platz sichern</LinkButton>}
       />
       <Statement kicker="Was das bedeutet" tone="soft">Einmal Pilot sein - dauerhaft weniger zahlen.</Statement>

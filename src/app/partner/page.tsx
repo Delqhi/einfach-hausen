@@ -3,12 +3,12 @@ import { BadgeCheck, BriefcaseBusiness, Building2, Handshake, ReceiptText, Users
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Statement } from '@/components/marketing/ui';
 import { BulletList, CtaBand, FeatureGrid, InfoPanel, LinkButton, PageHero, Section, Split } from '@/components/marketing/ui';
-import { HeroPartner } from '@/components/marketing/hero-visuals';
+import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = { title: 'Für Betriebe', description: 'Partnernetzwerk für regionale Betriebe: passende Anfragen, direkter Kundenkontakt und 0 % Auftragsprovision.' };
 export default function Page(){return <MarketingShell>
-  <PageHero eyebrow="Für Betriebe" title="Passende Anfragen. Persönlicher Kundenkontakt. 0 % Provision." text="Einfach Hausen ist kein offener Lead-Marktplatz. Geprüfte und vertraglich gebundene Unternehmen arbeiten in einem regionalen Qualitätsnetzwerk mit planbaren Monatstarifen." aside={<HeroPartner />} actions={<><LinkButton href="/register?role=provider">Als Partner starten</LinkButton><LinkButton href="/preise" secondary>Partnerpreise</LinkButton></>} />
+  <PageHero eyebrow="Für Betriebe" title="Passende Anfragen. Persönlicher Kundenkontakt. 0 % Provision." text="Einfach Hausen ist kein offener Lead-Marktplatz. Geprüfte und vertraglich gebundene Unternehmen arbeiten in einem regionalen Qualitätsnetzwerk mit planbaren Monatstarifen." aside={<HeroEditorialPhoto src="/images/premium/story-ansprechpartner.jpg" label="0 % Auftragsprovision" detail="Der ausführende Betrieb bleibt Rechnungssteller." />} actions={<><LinkButton href="/register?role=provider">Als Partner starten</LinkButton><LinkButton href="/preise" secondary>Partnerpreise</LinkButton></>} />
   <Statement kicker="Das Modell" tone="soft">Du bleibst Rechnungssteller. Wir sind deine Organisations-Ebene.</Statement>
   <Section eyebrow="Das Modell" title="Auftragswert bleibt beim Betrieb." text="Einfach Hausen monetarisiert Partner über Monatsabos, nicht über eine Gebühr pro Auftrag.">
     <FeatureGrid items={[{icon:<ReceiptText size={20}/>,title:'0 % Auftragsprovision',text:'Der ausführende Betrieb bleibt Rechnungssteller und behält 100 % des Auftragswertes.'},{icon:<Handshake size={20}/>,title:'Kundenbeziehung statt Lead-Verkauf',text:'Nach einer Verbindung kann ein konkreter Ansprechpartner dauerhaft beim Haus des Kunden gespeichert bleiben.'},{icon:<BriefcaseBusiness size={20}/>,title:'Einfacher Arbeitsbereich',text:'Anfragen, Termine, Team, Dokumentation und Rechnung – mit möglichst wenig Verwaltungsballast.'}]}/>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import auth from "@/components/marketing/auth-convergence.module.css";
 import { getSupabase } from "@/lib/supabase";
 import { StoreIcon, PersonIcon, MailIcon, LockSmallIcon, EyeIcon, GoogleIcon, AppleIcon, ShieldIcon, PinIcon, CheckCircleIcon, SearchIcon, StarIcon, CalendarBigIcon, ChatIcon } from "@/components/icons";
 
@@ -50,10 +51,10 @@ export default function RegisterProPage() {
   }
 
   return (
-    <div className="safe-top safe-bottom page pro-page">
+    <div className={['safe-top safe-bottom page pro-page', auth.authConverged, auth.proRegister].join(' ')}>
       <div className="pro-hero">
         <div className="pro-hero-bg">
-          <Image src="/images/haus.jpg" alt="Handwerker vor Fahrzeug" width={900} height={700} priority />
+          <Image src="/images/premium/story-ansprechpartner.jpg" alt="Fachbetrieb im persönlichen Austausch" width={900} height={700} priority />
           <div className="pro-hero-fade" />
         </div>
         <button type="button" className="back-btn-float" onClick={() => router.back()}>

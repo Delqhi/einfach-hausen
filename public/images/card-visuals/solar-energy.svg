@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+<defs><filter id="s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#105258" flood-opacity=".16"/></filter></defs>
+<g filter="url(#s)">
+<circle cx="155" cy="165" r="61" fill="#F4C66A" stroke="#105258" stroke-width="11"/>
+<path d="M155 67v-27M155 263v-27M57 165H30M280 165h-27M86 96 67 77M224 234l-19-19M86 234l-19 19M224 96l19-19" stroke="#105258" stroke-width="11" stroke-linecap="round"/>
+<path d="m116 291 220-48 70 153-220 48z" fill="#D9F0ED" stroke="#105258" stroke-width="12" stroke-linejoin="round"/>
+<path d="m171 279 60 139M240 264l60 139M309 249l60 139M130 331l220-48M151 376l220-48" stroke="#105258" stroke-width="7"/>
+<path d="M115 421h306" stroke="#1C2129" stroke-width="14" stroke-linecap="round"/>
+</g></svg>

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "palette": {
+    "brand": "#105258",
+    "ink": "#1C2129",
+    "mint": "#D9F0ED",
+    "warm": "#F4C66A"
+  },
+  "assets": [
+    "digital-home-file-v4",
+    "verified-partners-v4",
+    "property-valuation-v4",
+    "solar-energy-v4",
+    "craftsmen-service-v4",
+    "heat-pump-v4",
+    "key-handover-v4",
+    "property-matching-v4"
+  ],
+  "format": "PNG RGBA 1254x1254 with transparent background (operator ChatGPT 3D renders, v4)",
+  "sourceFormat": "SVG kept beside each PNG for future edits"
+}

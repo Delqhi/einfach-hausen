@@ -167,7 +167,8 @@
 .pageHero h1 { font-size:clamp(42px,6vw,68px); }
 .pageHero p { max-width:760px; margin:22px auto 0; color:var(--eh-text-secondary); font-size:18px; line-height:1.65; }
 .pageHero .heroActions { justify-content:center; }
-.faq { max-width:860px; display:flex; flex-direction:column; gap:10px; }
+.faq { max-width:860px; border:1px solid var(--eh-border); border-radius:16px; background:var(--eh-surface); padding:0 20px; transition:border-color .16s ease; }
+.faq[data-state=open] { border-color:var(--eh-border-strong); }
 .faq details { border:1px solid var(--eh-border); border-radius:14px; background:white; padding:0 18px; }
 .faq summary { min-height:58px; display:flex; align-items:center; cursor:pointer; font-weight:720; }
 .faq details p { margin:0; padding:0 0 18px; color:var(--eh-text-secondary); line-height:1.65; }
@@ -185,18 +186,23 @@
 .ctaBand .primaryButton { background:white; color:var(--eh-green-900); border-color:white; flex:0 0 auto; }
 .ctaBand .primaryButton:hover { background:#f1f7f3; }
 
-.footer { background:white; border-top:1px solid var(--eh-border); }
-.footerInner { padding:58px 0 44px; display:grid; grid-template-columns:1.05fr 2fr; gap:60px; }
-.footerBrand p { max-width:330px; margin:20px 0 20px; color:var(--eh-text-secondary); font-size:13px; line-height:1.65; }
-.footerBrand > span { color:#66706a; font-size:12px; }
+/* Spec Section 9: dunkler Premium-Footer (Marke: petrol, ruhig, hochwertig). */
+.footer { background:linear-gradient(180deg,#0c3f45 0%,#0a343a 60%,#092d33 100%); color:#eaf4f1; border-top:none; }
+.footerInner { padding:64px 0 48px; display:grid; grid-template-columns:1.05fr 2fr; gap:60px; }
+.footerBrand p { max-width:330px; margin:20px 0 20px; color:rgba(222,240,235,.72); font-size:13px; line-height:1.65; }
+.footerBrand > span { color:rgba(222,240,235,.5); font-size:12px; }
 .footerGrid { display:grid; grid-template-columns:repeat(4,1fr); gap:28px; }
-.footerGrid h2 { margin:0 0 14px; font-size:13px; }
+.footerGrid h2 { margin:0 0 14px; font-size:12px; font-weight:760; letter-spacing:.06em; text-transform:uppercase; color:rgba(217,240,237,.55); }
 .footerGrid nav { display:flex; flex-direction:column; gap:10px; }
-.footerGrid a { color:var(--eh-text-secondary); font-size:13px; line-height:1.4; }
-.footerGrid a:hover { color:var(--eh-text); text-decoration:underline; }
-.footerBottom { min-height:62px; border-top:1px solid var(--eh-border); display:flex; align-items:center; justify-content:space-between; gap:20px; color:#626c66; font-size:11px; }
+.footerGrid a { color:rgba(234,244,241,.82); font-size:13px; line-height:1.4; }
+.footerGrid a:hover { color:#ffffff; text-decoration:underline; text-underline-offset:3px; }
+.trustBadges { display:flex; flex-wrap:wrap; gap:10px; padding:0 0 30px; width:min(1200px,calc(100% - 40px)); margin:0 auto; }
+.trustBadge { display:inline-flex; align-items:center; gap:7px; min-height:36px; padding:0 14px; border:1px solid rgba(217,240,237,.22); border-radius:999px; color:rgba(222,240,235,.85); font-size:12px; font-weight:600; }
+.trustBadge svg { color:#8fd4c9; }
+.footerBottom { min-height:62px; border-top:1px solid rgba(217,240,237,.14); display:flex; align-items:center; justify-content:space-between; gap:20px; color:rgba(222,240,235,.5); font-size:11px; padding-inline:min(1200px,calc(100% - 40px)) 0; width:100%; margin-inline:auto; }
 .footerBottom p { margin:0; }
-.footerBottom a { font-weight:700; }
+.footerBottom a { font-weight:700; color:rgba(234,244,241,.85); }
+.footerBottom a:hover { color:#ffffff; }
 
 .publicStatePage { min-height:70vh; display:grid; place-items:center; padding:72px 20px; background:linear-gradient(180deg,#ffffff 0%,#f7f9f7 100%); color:var(--eh-text); }
 .publicStateCard { width:min(620px,100%); border:1px solid var(--eh-border); border-radius:24px; background:white; padding:38px; box-shadow:0 18px 50px rgba(19,45,30,.06); }
@@ -963,7 +969,7 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 
 /* ============ v20: step cards (doktorabc 3-schritte pattern) ============ */
 .stepCards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: start; }
-.stepCard { position: relative; background: var(--eh-surface); border: 1px solid var(--eh-border);
+.stepCard { position: relative; overflow: hidden; background: var(--eh-surface); border: 1px solid var(--eh-border);
   border-radius: 22px; padding: 30px 26px 24px; min-height: 320px; overflow: hidden;
   display: flex; flex-direction: column; }
 .stepCardNum { position: absolute; top: 18px; right: 20px; width: 40px; height: 40px; display: grid; place-items: center;
@@ -995,3 +1001,14 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 /* ============ v21: footer link hover arrows ============ */
 .footerGrid nav a { transition: color .15s ease, translate .15s ease; }
 .footerGrid nav a:hover { color: #fff; translate: 3px 0; }
+
+/* Dark footer: logo needs brightness to survive the petrol background. */
+.footer .logoImg { filter: brightness(0) invert(1); opacity:.92; }
+.footer .footerBrand strong, .footer .footerBrand b { color:#ffffff; }
+/* T-0210 premium: step cards get brand visual anchors (CardVisual). */
+.stepCardArt { position:absolute; right:-34px; bottom:-30px; width:46%; height:62%; opacity:.95; pointer-events:none; filter:drop-shadow(0 16px 30px rgba(16,60,64,.13)); transition:transform .32s ease; }
+.stepCard:hover .stepCardArt { transform:translateY(-5px); }
+
+/* Workflow-Demo: Container-Zentrierung robust erzwingen (shadcn init-Reihenfolge-Bug). */
+/* Workflow-Demo: Zentrierung robust (shadcn-Reset-Reihenfolgen-Bug umgehen). */
+.workflow-demo-inner { margin-inline: auto !important; width: min(1180px, 100%); }

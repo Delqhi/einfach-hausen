@@ -1,6 +1,6 @@
 import fs from "node:fs";
 const browserAuthSource = fs.readFileSync(new URL("../src/lib/supabase.ts", import.meta.url), "utf8");
-const middlewareSource = fs.readFileSync(new URL("../middleware.ts", import.meta.url), "utf8");
+const proxySource = fs.readFileSync(new URL("../src/proxy.ts", import.meta.url), "utf8");
 const authSource = fs.readFileSync(new URL("../src/lib/auth.ts", import.meta.url), "utf8");
 const source = fs.readFileSync(new URL("../src/components/AuthContext.tsx", import.meta.url), "utf8");
 const protectedPaths = ["/app", "/pro"];
@@ -14,7 +14,8 @@ for (const path of protectedPaths) {
 }
 if (!browserAuthSource.includes("createBrowserClient")) throw new Error("browser auth must sync SSR cookies");
 if (!authSource.includes("your-project.supabase.co")) throw new Error("placeholder Supabase config must fail closed");
-if (!middlewareSource.includes("/app/:path*") || !middlewareSource.includes("/pro/:path*")) throw new Error("production protected route matcher missing");
+if (!proxySource.includes("export function proxy")) throw new Error("Next 16 proxy handler missing");
+if (!proxySource.includes("/app/:path*") || !proxySource.includes("/pro/:path*")) throw new Error("production protected route matcher missing");
 if (!authSource.includes("process.env.AUTH_MODE || 'supabase'")) throw new Error('default auth mode must be Supabase');
 if (!authSource.includes("mode === 'local' && process.env.NODE_ENV === 'production'")) throw new Error('local auth must fail closed in production');
 if (!authSource.includes('createServerClient') || !authSource.includes('client.auth.getUser') || !authSource.includes('store.getAll')) throw new Error('server auth must verify Supabase user');

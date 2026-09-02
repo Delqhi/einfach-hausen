@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
 import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
 
 import { PriceToggle } from './price-toggle';
@@ -18,7 +19,7 @@ const partner=[
  {name:'PREMIUM',price:'199 €',text:'Höchster definierter Partner-Monatstarif.'},
 ] as const;
 export default function Page(){return <MarketingShell>
-  <PageHero eyebrow="Preise" title="Transparent für Eigentümer und Betriebe." text="Kunden starten kostenlos. Partner arbeiten ohne Auftragsprovision. Bezahlte Funktionen und Tarife sind klar getrennt." actions={<><LinkButton href="/register?role=homeowner">Kostenlos starten</LinkButton><LinkButton href="/register?role=provider" secondary>Als Partner starten</LinkButton></>} />
+  <PageHero eyebrow="Preise" title="Transparent für Eigentümer und Betriebe." text="Kunden starten kostenlos. Partner arbeiten ohne Auftragsprovision. Bezahlte Funktionen und Tarife sind klar getrennt." aside={<HeroEditorialPhoto src="/images/premium/hausakte.jpg" label="FREE bleibt 0 €" detail="Bezahlte Services sind eine bewusste Zusatzentscheidung." />} actions={<><LinkButton href="/register?role=homeowner">Kostenlos starten</LinkButton><LinkButton href="/register?role=provider" secondary>Als Partner starten</LinkButton></>} />
   <Statement kicker="Unser Preisprinzip" tone="soft">Keine versteckten Kosten. Keine Provision auf dein Handwerk.</Statement>
   <Section eyebrow="Tarife" title="Wähle deine Sichtweise: Eigentümer oder Betrieb." text="Alle Beträge pro Monat. Kein Auftrag entsteht automatisch, und Tarife kaufen keine bessere Matching-Position.">
     <PriceToggle customer={customer} partner={partner} />

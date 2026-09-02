@@ -24,6 +24,7 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { Badge } from '@/components/ui/badge';
 import styles from './newsletter-app-promo.module.css';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -58,21 +59,26 @@ export function NewsletterAppPromo({
     const mm = gsap.matchMedia();
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.fromTo(
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: section, start: 'top 72%', once: true },
+      });
+      // Phone: tief von unten hochgleiten, mit kleiner Rotation einpendeln
+      tl.fromTo(
         phone,
-        { y: 140, autoAlpha: 0 },
-        {
-          y: 0,
-          autoAlpha: 1,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: section, start: 'top 68%', once: true },
-        },
+        { y: 260, autoAlpha: 0, rotate: 6 },
+        { y: 0, autoAlpha: 1, rotate: 0, duration: 1.1, ease: 'power3.out' },
+      );
+      // Copy-Seite folgt leicht versetzt
+      tl.fromTo(
+        `.${styles.newsletterContent}`,
+        { y: 34, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.7, ease: 'power3.out' },
+        '-=0.7',
       );
     });
 
     mm.add('(prefers-reduced-motion: reduce)', () => {
-      gsap.set(phone, { y: 0, autoAlpha: 1 });
+      gsap.set([phone, `.${styles.newsletterContent}`], { y: 0, autoAlpha: 1, rotate: 0 });
     });
 
     return () => mm.revert();
@@ -83,7 +89,7 @@ export function NewsletterAppPromo({
       <div className={styles.newsletterCard}>
         {/* LEFT */}
         <div className={styles.newsletterContent}>
-          <div className={styles.newsletterEyebrow}>{eyebrow}</div>
+          <Badge variant="outline" className={styles.newsletterEyebrow}>{eyebrow}</Badge>
           <h2 className={styles.newsletterTitle}>{title}</h2>
           <p className={styles.newsletterDescription}>{description}</p>
           <div className={styles.newsletterStoreButtons}>

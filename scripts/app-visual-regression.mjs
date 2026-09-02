@@ -7,12 +7,13 @@
 import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 import net from 'node:net';
-import os from 'node:os';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
+import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
 
 const root = process.cwd();
 const update = process.argv.includes('--update-baselines');
@@ -20,7 +21,7 @@ const budget = Number(process.env.GATE_PIXEL_BUDGET || 0.08);
 const supabaseUrl = process.env.SUPABASE_URL || 'https://supabase.delqhi.com';
 const anonKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 const serviceKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-if (!serviceKey) { console.error('SUPABASE_SERVICE_KEY required (identity create/cleanup).'); process.exit(2); }
+if (!serviceKey || !anonKey) { console.error('Supabase service and anon keys are required.'); process.exit(2); }
 
 const ownerRoutes = ['/app', '/app/home', '/app/jobs', '/app/messages', '/app/documents', '/app/partners', '/app/profile'];
 // /pro/jobs is intentionally absent: it is a detail-only route (/pro/jobs/[id])
@@ -70,11 +71,24 @@ async function createIdentity(email, password) {
   });
   const data = await response.json();
   if (!data.id) throw new Error(`identity create failed: ${JSON.stringify(data).slice(0, 200)}`);
-  return data.id;
+  const client = createClient(supabaseUrl, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const signed = await client.auth.signInWithPassword({ email, password });
+  if (signed.error || !signed.data.session) throw new Error(`identity sign-in failed: ${signed.error?.message || email}`);
+  let cookies = [];
+  const serverClient = createServerClient(supabaseUrl, anonKey, {
+    cookies: {
+      getAll: () => cookies,
+      setAll: (items) => { cookies = items.map(({ name, value }) => ({ name, value })); },
+    },
+  });
+  const session = signed.data.session;
+  const set = await serverClient.auth.setSession({ access_token: session.access_token, refresh_token: session.refresh_token });
+  if (set.error || !cookies.length) throw new Error(`SSR cookie session failed: ${set.error?.message || email}`);
+  return { id: data.id, email, cookies };
 }
 
-async function deleteIdentity(id) {
-  await fetch(`${supabaseUrl}/auth/v1/admin/users/${encodeURIComponent(id)}`, {
+async function deleteIdentity(identity) {
+  await fetch(`${supabaseUrl}/auth/v1/admin/users/${encodeURIComponent(identity.id)}`, {
     method: 'DELETE', headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
   });
 }
@@ -85,24 +99,21 @@ if (!fs.existsSync(path.join(root, '.next', 'BUILD_ID'))) {
 }
 
 // Deterministic fixture DB with homeowner/provider/property/job data.
-fs.rmSync('/tmp/eh-app-visual.db', { force: true });
-fs.rmSync('/tmp/eh-app-visual.db-wal', { force: true });
-fs.rmSync('/tmp/eh-app-visual.db-shm', { force: true });
+const dbPath = '/tmp/eh-app-visual.db';
+for (const suffix of ['', '-wal', '-shm']) fs.rmSync(dbPath + suffix, { force: true });
+const savedDatabasePath = process.env.DATABASE_PATH;
+process.env.DATABASE_PATH = dbPath;
 const { createE2EFixture } = await import('./e2e-fixtures.mjs');
 const { db } = await import('../src/lib/db.ts');
-const savedDatabasePath = process.env.DATABASE_PATH;
-process.env.DATABASE_PATH = '/tmp/eh-app-visual.db';
-// src/lib/db.ts reads DATABASE_PATH at import; import after setting env:
 const fixture = createE2EFixture(db, { namespace: 'appvisual' });
 const owner = db.prepare('SELECT id,email FROM users WHERE id=?').get(fixture.homeownerId);
 const provider = db.prepare('SELECT id,email FROM users WHERE id=?').get(fixture.providerId);
-process.env.DATABASE_PATH = savedDatabasePath;
 
 const password = `AppVisual!${randomUUID().replaceAll('-', '').slice(0, 16)}`;
-const ownerId = await createIdentity(owner.email, password);
-const providerId = await createIdentity(provider.email, password);
-db.prepare('UPDATE users SET auth_subject=? WHERE id=?').run(ownerId, owner.id);
-db.prepare('UPDATE users SET auth_subject=? WHERE id=?').run(providerId, provider.id);
+const ownerIdentity = await createIdentity(owner.email, password);
+const providerIdentity = await createIdentity(provider.email, password);
+db.prepare('UPDATE users SET auth_subject=? WHERE id=?').run(ownerIdentity.id, owner.id);
+db.prepare('UPDATE users SET auth_subject=? WHERE id=?').run(providerIdentity.id, provider.id);
 
 const port = await freePort();
 const base = `http://127.0.0.1:${port}`;
@@ -121,14 +132,15 @@ try {
   fs.mkdirSync(actualDir, { recursive: true });
   browser = await chromium.launch({ headless: true, executablePath: browserExecutable() });
 
-  async function capture(role, email, routes) {
+  async function capture(role, identity, routes) {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, reducedMotion: 'reduce' });
+    await context.addCookies(identity.cookies.map(({ name, value }) => ({ name, value, url: base })));
     const page = await context.newPage();
-    await page.goto(`${base}/login`, { waitUntil: 'networkidle' });
-    await page.fill('input[type="email"]', email);
-    await page.fill('input[type="password"]', password);
-    await Promise.all([page.waitForURL(new RegExp(role === 'owner' ? '/app' : '/pro'), { timeout: 60000 }).catch(() => {}), page.click('button[type="submit"]')]);
-    await page.waitForTimeout(4000);
+    const landing = role === 'owner' ? '/app' : '/pro';
+    await page.goto(`${base}${landing}`, { waitUntil: 'load', timeout: 60000 });
+    if (!new URL(page.url()).pathname.startsWith(landing)) {
+      throw new Error(`${role} authenticated landing failed closed: ${page.url()}`);
+    }
 
     for (const viewport of viewports) {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -162,14 +174,15 @@ try {
     summary.push(`${role}: ${routes.length * viewports.length} captures`);
   }
 
-  await capture('owner', owner.email, ownerRoutes);
-  await capture('provider', provider.email, providerRoutes);
+  await capture('owner', ownerIdentity, ownerRoutes);
+  await capture('provider', providerIdentity, providerRoutes);
 } finally {
   if (browser) await browser.close().catch(() => {});
   server.kill('SIGTERM');
-  await deleteIdentity(ownerId).catch(() => {});
-  await deleteIdentity(providerId).catch(() => {});
-  for (const suffix of ['', '-wal', '-shm']) { try { fs.rmSync('/tmp/eh-app-visual.db' + suffix, { force: true }); } catch {} }
+  await deleteIdentity(ownerIdentity).catch(() => {});
+  await deleteIdentity(providerIdentity).catch(() => {});
+  process.env.DATABASE_PATH = savedDatabasePath;
+  for (const suffix of ['', '-wal', '-shm']) { try { fs.rmSync(dbPath + suffix, { force: true }); } catch {} }
 }
 console.log(summary.join(' | '));
 if (failures.length) { console.log(`FAILURES (${failures.length}):`); for (const failure of failures.slice(0, 12)) console.log(`  ${failure}`); process.exit(1); }

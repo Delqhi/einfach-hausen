@@ -2,11 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { BackIcon } from "@/components/icons";
+import auth from "@/components/marketing/auth-convergence.module.css";
 
 export default function CheckEmailPage() {
   const router = useRouter();
   return (
-    <div className="safe-top page ob-page" style={{ paddingBottom: 40 }}>
+    <div className={['safe-top page ob-page', auth.authConverged, auth.checkEmail].join(' ')} style={{ paddingBottom: 40 }}>
       <header className="ob-header"><button className="back-btn" onClick={() => router.back()}><BackIcon /></button></header>
       <div className="center-page" style={{ paddingTop: 60 }}>
         <div className="success-circle">📬</div>
