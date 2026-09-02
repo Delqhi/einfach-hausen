@@ -1008,3 +1008,7 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 /* T-0210 premium: step cards get brand visual anchors (CardVisual). */
 .stepCardArt { position:absolute; right:-34px; bottom:-30px; width:46%; height:62%; opacity:.95; pointer-events:none; filter:drop-shadow(0 16px 30px rgba(16,60,64,.13)); transition:transform .32s ease; }
 .stepCard:hover .stepCardArt { transform:translateY(-5px); }
+
+/* Workflow-Demo: Container-Zentrierung robust erzwingen (shadcn init-Reihenfolge-Bug). */
+/* Workflow-Demo: Zentrierung robust (shadcn-Reset-Reihenfolgen-Bug umgehen). */
+.workflow-demo-inner { margin-inline: auto !important; width: min(1180px, 100%); }

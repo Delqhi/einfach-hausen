@@ -375,7 +375,7 @@ export function WorkflowDemoBlock({
       className={`overflow-hidden bg-[#f0f6f4] py-14 ${className}`}
       aria-label="Animated workflow demo"
     >
-      <div className="mx-auto grid w-full max-w-[1180px] overflow-hidden rounded-[28px] border border-black/[0.06] bg-white shadow-[0_36px_90px_-36px_rgba(10,53,57,0.3)] lg:grid-cols-[1fr_1fr]">
+      <div className="workflow-demo-inner grid w-full max-w-[1180px] overflow-hidden rounded-[28px] border border-black/[0.06] bg-white shadow-[0_36px_90px_-36px_rgba(10,53,57,0.3)] lg:grid-cols-[1fr_1fr]">
         <div className="border-black/[0.06] lg:border-r">
           <WorkflowSteps steps={normalizedSteps} scene={scene} />
         </div>
