@@ -969,7 +969,7 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 
 /* ============ v20: step cards (doktorabc 3-schritte pattern) ============ */
 .stepCards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: start; }
-.stepCard { position: relative; background: var(--eh-surface); border: 1px solid var(--eh-border);
+.stepCard { position: relative; overflow: hidden; background: var(--eh-surface); border: 1px solid var(--eh-border);
   border-radius: 22px; padding: 30px 26px 24px; min-height: 320px; overflow: hidden;
   display: flex; flex-direction: column; }
 .stepCardNum { position: absolute; top: 18px; right: 20px; width: 40px; height: 40px; display: grid; place-items: center;
@@ -1005,3 +1005,6 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 /* Dark footer: logo needs brightness to survive the petrol background. */
 .footer .logoImg { filter: brightness(0) invert(1); opacity:.92; }
 .footer .footerBrand strong, .footer .footerBrand b { color:#ffffff; }
+/* T-0210 premium: step cards get brand visual anchors (CardVisual). */
+.stepCardArt { position:absolute; right:-34px; bottom:-30px; width:46%; height:62%; opacity:.95; pointer-events:none; filter:drop-shadow(0 16px 30px rgba(16,60,64,.13)); transition:transform .32s ease; }
+.stepCard:hover .stepCardArt { transform:translateY(-5px); }

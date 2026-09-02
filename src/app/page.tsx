@@ -9,7 +9,8 @@ import { IntakeForm } from '@/components/home/intake-form';
 import { HomeServicesGrid } from '@/components/marketing/home-services-grid';
 import { TrustSection } from '@/components/marketing/trust-section';
 import { SecuritySection } from '@/components/marketing/security-section';
-import NewsletterAppPromo from '@/components/marketing/newsletter-app-promo';
+import { WorkflowDemoBlock } from '@/components/blocks/WorkflowDemoBlock';
+import { GetStartedBlock } from '@/components/blocks/get-started-block';
 import {
   Accordion,
   AccordionContent,
@@ -124,7 +125,42 @@ export default async function HomePage() {
 
     <Statement kicker="Einfach Hausen" tone="green">Dein Haus <mark>vergisst nichts.</mark> Wir auch nicht.</Statement>
     <SecuritySection />
-    <NewsletterAppPromo />
+    <WorkflowDemoBlock
+      modelLabel="einfach-hausen KI"
+      prompt="Prüfe meine Immobilie und erstelle eine persönliche Empfehlung"
+      steps={[
+        {
+          icon: 'workflow',
+          title: 'Anliegen beschreiben',
+          description: 'Sag uns einfach, wobei du rund um deine Immobilie Unterstützung benötigst.',
+        },
+        {
+          icon: 'connect',
+          title: 'Daten intelligent verbinden',
+          description: 'Dokumente, Immobiliendaten und passende Dienste werden automatisch zusammengeführt.',
+        },
+        {
+          icon: 'review',
+          title: 'Ergebnis prüfen',
+          description: 'Du erhältst eine transparente Empfehlung und entscheidest selbst über die nächsten Schritte.',
+        },
+      ]}
+      processingItems={[
+        'Immobiliendaten analysieren',
+        'Passende Möglichkeiten prüfen',
+        'Persönliche Empfehlung erstellen',
+      ]}
+    />
+    <GetStartedBlock
+      title="Einfach loslegen"
+      subtitle="Nutze einfach-hausen auf deinem Computer, Smartphone oder direkt im Browser."
+      desktopImage="/images/premium/app-preview-home.png"
+      mobileImage="/images/premium/app-preview-home.png"
+      webImage="/images/premium/app-preview-home.png"
+      appStoreHref="#"
+      playStoreHref="#"
+      webHref="/app"
+    />
     <CtaBand title="Beim nächsten Thema nicht wieder von vorne anfangen." text="Lege dein Hauskonto kostenlos an und beschreibe einfach, was bei deinem Eigenheim ansteht." />
   </MarketingShell>;
 }

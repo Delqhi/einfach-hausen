@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { MessageCircle, ShieldCheck, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { CardVisual } from '@/components/visuals/CardVisual';
 import { CtaBand, FeatureGrid, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
 import { Reveal } from '@/components/marketing/motion';
 import { HeroChoices } from '@/components/marketing/hero-visuals';
@@ -20,16 +21,17 @@ export default function Page(){return <MarketingShell>
   <PageHero eyebrow="So funktioniert's" title="Du beschreibst das Problem. Du entscheidest den nächsten Schritt." text="Einfach Hausen beginnt nicht mit einer Kategorienwand. Du sagst in normalen Worten, was an deinem Haus los ist – und entscheidest erst nach der Einordnung, was daraus werden soll." aside={<HeroChoices />} actions={<><LinkButton href="/register?role=homeowner">Anliegen starten</LinkButton><LinkButton href="/leistungen" secondary>Leistungen ansehen</LinkButton></>} />
   <Section eyebrow="Der Ablauf" title="Vier Schritte, die sich wie einer anfühlen." text="Die Organisation im Hintergrund darf komplex sein. Für dich bleibt der Weg klar.">
     <div className={styles.stepCards}>{[
-      ['1','Beschreiben','Text, Foto oder Sprache: Du startest so, wie du das Problem selbst erklären würdest.','Hausanliegen'],
-      ['2','Einordnen','Relevante Hausdaten können helfen. Fehlt etwas Wichtiges, folgt eine gezielte Rückfrage statt eines langen Formulars.','Was wichtig ist'],
-      ['3','Entscheiden','Nur Rat, ein passender Mensch zum Sprechen oder ein echter Auftrag - du wählst.','Bewusst wählen'],
-      ['4','Behalten','Bei einem Auftrag werden passende Partner, Angebote, Termine, Dokumente und der konkrete Ansprechpartner gebündelt.','Alles in der Akte'],
-    ].map(([n,t,x,sub])=>
+      ['1','Beschreiben','Text, Foto oder Sprache: Du startest so, wie du das Problem selbst erklären würdest.','Hausanliegen','digitalHomeFile'],
+      ['2','Einordnen','Relevante Hausdaten können helfen. Fehlt etwas Wichtiges, folgt eine gezielte Rückfrage statt eines langen Formulars.','Was wichtig ist','propertyValuation'],
+      ['3','Entscheiden','Nur Rat, ein passender Mensch zum Sprechen oder ein echter Auftrag - du wählst.','Bewusst wählen','verifiedPartners'],
+      ['4','Behalten','Bei einem Auftrag werden passende Partner, Angebote, Termine, Dokumente und der konkrete Ansprechpartner gebündelt.','Alles in der Akte','keyHandover'],
+    ].map(([n,t,x,sub,visual])=>
       <article className={styles.stepCard} key={n}>
         <span className={styles.stepCardNum}>{n}</span>
         <h3>{t}</h3>
         <p>{x}</p>
         <span className={styles.stepCardVisual}><span className={styles.stepCardChip}>{sub}</span></span>
+        <CardVisual kind={visual as 'craftsmenService'} size="md" decorative className={styles.stepCardArt} />
       </article>
     )}</div>
   </Section>
