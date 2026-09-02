@@ -7,15 +7,15 @@
     "warm": "#F4C66A"
   },
   "assets": [
-    "digital-home-file",
-    "verified-partners",
-    "property-valuation",
-    "solar-energy",
-    "craftsmen-service",
-    "heat-pump",
-    "key-handover",
-    "property-matching"
+    "digital-home-file-v2",
+    "verified-partners-v2",
+    "property-valuation-v2",
+    "solar-energy-v2",
+    "craftsmen-service-v2",
+    "heat-pump-v2",
+    "key-handover-v2",
+    "property-matching-v2"
   ],
-  "format": "PNG RGBA 1254x1254 with transparent background",
+  "format": "PNG RGBA 1254x1254 with transparent background (operator ChatGPT 3D renders, v2 cache-bust)",
   "sourceFormat": "SVG kept beside each PNG for future edits"
 }
