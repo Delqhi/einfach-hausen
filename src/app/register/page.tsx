@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PwField } from '@/components/pw-field';
 import logoMark from '@/components/marketing/assets/logo-mark.png';
+import auth from '@/components/marketing/auth-convergence.module.css';
 import {
   BuildingIcon,
   ClipboardSmallIcon,
@@ -38,7 +39,7 @@ export default async function Register({searchParams}:{searchParams:Promise<Reco
   const sp=await searchParams; const provider=sp.role==='provider'; const initialRequest=!provider?String(sp.request||'').trim().slice(0,700):'';
   const categories=provider?db.prepare(`SELECT slug,title,description FROM provider_categories WHERE active=1 ORDER BY CASE slug WHEN 'handwerk' THEN 1 WHEN 'dienstleistung' THEN 2 WHEN 'makler' THEN 3 WHEN 'gutachter' THEN 4 ELSE 9 END,title`).all() as any[]:[];
   const services=provider?db.prepare(`SELECT slug,title,category FROM service_catalog WHERE active=1 ORDER BY category,title`).all() as any[]:[];
-  return <main className="ehn-reg-page safe-top safe-bottom">
+  return <main className={['ehn-reg-page safe-top safe-bottom', auth.authConverged, auth.registerPage].join(' ')}>
     <header className="ehn-reg-head">
       {!provider&&<Link className="ehn-reg-back" href="/role" aria-label="Zurück zur Rollenwahl">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke="#1c2129" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>

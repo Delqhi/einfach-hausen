@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import auth from "@/components/marketing/auth-convergence.module.css";
 import { getSupabase } from "@/lib/supabase";
 import { PersonIcon, MailIcon, LockTinyIcon, EyeIcon, EyeOffIcon, GoogleIcon, AppleIcon, ShieldIcon, PinIcon, HeartIcon, HomeOutlineIcon, SearchThinIcon, ClipboardSmallIcon, ShieldSmallIcon, ChatFaceIcon, FlagDeIcon } from "@/components/icons";
 
@@ -56,7 +57,7 @@ export default function RegisterOwnerPage() {
   }
 
   return (
-    <div className="safe-top safe-bottom page owner-reg-page">
+    <div className={['safe-top safe-bottom page owner-reg-page', auth.authConverged, auth.ownerRegister].join(' ')}>
       <div className="oreg-hero">
         <button type="button" className="back-btn-float" onClick={() => router.back()}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="#1c2129" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -66,7 +67,7 @@ export default function RegisterOwnerPage() {
           <div style={{ display: "flex", alignItems: "baseline", marginLeft: -6 }}><span className="logo-word green-word" style={{ fontSize: 30 }}>einfach</span><span className="logo-word ink-word" style={{ fontSize: 30 }}>hausen</span></div>
         </div>
         <p className="oreg-tagline">Dein Zuhause. <span className="green">Alles geregelt.</span></p>
-        <div className="oreg-house"><Image src="/images/haus.jpg" alt="Modernes Einfamilienhaus" width={800} height={600} priority /></div>
+        <div className="oreg-house"><Image src="/images/premium/hero-homeowner.jpg" alt="Person im eigenen Zuhause" width={800} height={600} priority /></div>
         <div className="oreg-headline">
           <h1>Willkommen,<br /><span className="green">Eigentümer!</span></h1>
           <p>Behalte dein Zuhause im Blick,<br />finde zuverlässige Dienstleister<br />und verwalte alles an einem Ort.</p>

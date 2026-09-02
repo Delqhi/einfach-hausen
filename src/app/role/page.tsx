@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { ArrowRightThin, BriefcaseIcon, ClipboardIcon, HomeOutlineIcon, HomeSmallIcon, LockIcon, PersonSearchIcon, ShieldSmallIcon } from "@/components/icons";
+import auth from "@/components/marketing/auth-convergence.module.css";
 
 const ownerBenefits = [
   { icon: <HomeSmallIcon />, title: "Haus organisieren", text: "Dokumente, Verträge und Daten sicher verwalten." },
@@ -13,7 +14,7 @@ const ownerBenefits = [
 export default function RolePage() {
   const router = useRouter();
   return (
-    <div className="role2-page safe-top safe-bottom">
+    <div className={['role2-page safe-top safe-bottom', auth.authConverged, auth.rolePage].join(' ')}>
       <header className="role2-logo">
         <svg width="34" height="32" viewBox="0 0 72 64" fill="none" aria-hidden="true"><path d="M8 30 L36 8 L64 30 M14 26 V58 H30 M58 58 V26 M30 58 V44 a6 6 0 0112 0 V58" stroke="#105258" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
         <div className="role2-logo-word"><span className="role2-logo-green">einfach</span><span className="role2-logo-ink">hausen</span></div>
