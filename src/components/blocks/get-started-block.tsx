@@ -61,7 +61,7 @@ export function GetStartedBlock({
         {/* Cards */}
         <div className="mt-16 grid items-stretch gap-5 lg:mt-24 lg:grid-cols-3">
           {/* Desktop */}
-          <article className="flex min-h-[590px] flex-col overflow-hidden rounded-[20px] border border-black/[0.10] bg-white">
+          <article className="flex min-h-[520px] flex-col overflow-hidden rounded-[20px] border border-black/[0.10] bg-white">
             <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
               <Image
                 src={desktopImage}
@@ -72,7 +72,7 @@ export function GetStartedBlock({
             </div>
             <div className="flex flex-1 flex-col p-7">
               <div className="mb-5 flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-neutral-100">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#e7f2f0]">
                   <Monitor className="h-5 w-5" />
                 </div>
                 <h3 className="text-[25px] font-semibold tracking-[-0.03em] text-neutral-950">
@@ -100,7 +100,7 @@ export function GetStartedBlock({
             </div>
           </article>
           {/* Mobile */}
-          <article className="flex min-h-[590px] flex-col overflow-hidden rounded-[20px] border border-black/[0.10] bg-white">
+          <article className="flex min-h-[520px] flex-col overflow-hidden rounded-[20px] border border-black/[0.10] bg-white">
             <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
               <Image
                 src={mobileImage}
@@ -111,7 +111,7 @@ export function GetStartedBlock({
             </div>
             <div className="flex flex-1 flex-col p-7">
               <div className="mb-5 flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-neutral-100">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#e7f2f0]">
                   <Smartphone className="h-5 w-5" />
                 </div>
                 <h3 className="text-[25px] font-semibold tracking-[-0.03em] text-neutral-950">
@@ -157,7 +157,7 @@ export function GetStartedBlock({
             </div>
           </article>
           {/* Web Version */}
-          <article className="flex min-h-[590px] flex-col overflow-hidden rounded-[20px] border border-black/[0.10] bg-white">
+          <article className="flex min-h-[520px] flex-col overflow-hidden rounded-[20px] border border-black/[0.10] bg-white">
             <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
               <Image
                 src={webImage}
@@ -168,7 +168,7 @@ export function GetStartedBlock({
             </div>
             <div className="flex flex-1 flex-col p-7">
               <div className="mb-5 flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-neutral-100">
+                <div className="grid h-10 w-10 place-items-center rounded-xl bg-[#e7f2f0]">
                   <Globe2 className="h-5 w-5" />
                 </div>
                 <h3 className="text-[25px] font-semibold tracking-[-0.03em] text-neutral-950">
