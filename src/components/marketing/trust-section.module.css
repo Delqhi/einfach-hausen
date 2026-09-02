@@ -1,0 +1,75 @@
+/* TrustSection — shadcn Primitives + Markenbildwelt. */
+
+.visualStack {
+  position: relative;
+  min-height: 460px;
+}
+
+.trustVisualMain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.trustVisualFloat {
+  position: absolute;
+  right: -8%;
+  bottom: -10%;
+  width: 52%;
+  height: 52%;
+  filter: drop-shadow(0 20px 36px rgba(16, 60, 64, 0.16));
+  pointer-events: none;
+}
+
+.trustPanels {
+  display: grid;
+  gap: 22px;
+}
+
+.trustPanels :global(h3) {
+  margin: 0;
+  font-size: 21px;
+  letter-spacing: -0.03em;
+  font-weight: 740;
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.badge {
+  border-color: rgba(20, 127, 125, 0.28);
+  color: #0f5c58;
+  background: rgba(217, 240, 237, 0.4);
+  font-weight: 640;
+}
+
+.separator {
+  margin: 16px 0 12px;
+  background: rgba(16, 60, 64, 0.12);
+}
+
+.microProof {
+  margin: 0;
+  color: rgba(15, 19, 20, 0.55);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+@media (max-width: 820px) {
+  .visualStack {
+    min-height: 0;
+    height: 280px;
+    order: -1;
+  }
+
+  .trustVisualFloat {
+    right: 0;
+    bottom: -6%;
+    width: 46%;
+    height: 46%;
+  }
+}

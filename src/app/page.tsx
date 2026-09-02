@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { ArrowRight, ChevronDown, CircleCheck, FileText, ShieldCheck, UserRound } from 'lucide-react';
+import { ArrowRight, CircleCheck, FileText, ShieldCheck, UserRound } from 'lucide-react';
 import Image from 'next/image';
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
@@ -7,6 +7,14 @@ import { Section, Split, InfoPanel, BulletList, CtaBand, LinkButton, Statement }
 import { Reveal, Stagger, DrawPath, SplitLines } from '@/components/marketing/motion';
 import { IntakeForm } from '@/components/home/intake-form';
 import { HomeServicesGrid } from '@/components/marketing/home-services-grid';
+import { TrustSection } from '@/components/marketing/trust-section';
+import { SecuritySection } from '@/components/marketing/security-section';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import styles from '@/components/marketing/marketing.module.css';
 import premium from '@/components/marketing/premium.module.css';
 
@@ -89,6 +97,7 @@ export default async function HomePage() {
       </Split>
     </Section>
 
+    <TrustSection />
     <Section eyebrow="Für Betriebe" title="Gute Kundenbeziehungen statt Lead-Handel." text="Partner erhalten passende Anfragen, arbeiten mit konkreten Ansprechpartnern und behalten 100 % ihres Auftragswertes. Einfach Hausen finanziert sich über planbare Partnertarife – nicht über Auftragsprovision." tone="dark">
       <div className={styles.heroActions}><a className={styles.primaryButton} href="/partner">Partner-Modell ansehen</a><a className={styles.secondaryButton} href="/preise">Partnerpreise</a></div>
     </Section>
@@ -101,18 +110,19 @@ export default async function HomePage() {
     </Section>
 
     <Section eyebrow="Häufige Fragen" title="Klare Antworten, bevor du startest." text="Die wichtigsten Fragen zum Ablauf, zu Kosten, Partnern und Daten – ohne Kleingedrucktes." tone="plain">
-      <div className={styles.faqList}>
+      <Accordion type="single" collapsible className={styles.faqList}>
         {faqs.map(([question, answer]) => (
-          <details className={styles.faq} key={question}>
-            <summary className={styles.faqSummary}><span>{question}</span><ChevronDown size={18} aria-hidden="true"/></summary>
-            <div className={styles.faqBody}><p>{answer}</p></div>
-          </details>
+          <AccordionItem className={styles.faq} key={question} value={question}>
+            <AccordionTrigger className={styles.faqSummary}>{question}</AccordionTrigger>
+            <AccordionContent className={styles.faqBody}><p>{answer}</p></AccordionContent>
+          </AccordionItem>
         ))}
-      </div>
+      </Accordion>
       <a className={styles.textLink} href="/hilfe">Alle Fragen und Hilfe ansehen</a>
     </Section>
 
     <Statement kicker="Einfach Hausen" tone="green">Dein Haus <mark>vergisst nichts.</mark> Wir auch nicht.</Statement>
+    <SecuritySection />
     <CtaBand title="Beim nächsten Thema nicht wieder von vorne anfangen." text="Lege dein Hauskonto kostenlos an und beschreibe einfach, was bei deinem Eigenheim ansteht." />
   </MarketingShell>;
 }

@@ -1,0 +1,105 @@
+/* SecuritySection — dunkler Premium-Vertrauensabschluss (shadcn Badge). */
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+
+.copy {
+  display: grid;
+  gap: 24px;
+  justify-items: start;
+}
+
+.lead {
+  margin: 0;
+  font-size: clamp(18px, 1.7vw, 23px);
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.94);
+  font-weight: 460;
+  max-width: 560px;
+}
+
+.points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 13px;
+}
+
+.points li {
+  color: rgba(230, 242, 238, 0.85);
+  line-height: 1.55;
+  font-size: 15px;
+  padding-left: 26px;
+  position: relative;
+}
+
+.points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(217, 240, 237, 0.22);
+  border: 2px solid rgba(217, 240, 237, 0.5);
+}
+
+.points strong {
+  color: #ffffff;
+  font-weight: 660;
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge {
+  border-color: rgba(217, 240, 237, 0.35);
+  color: #d9f0ed;
+  background: rgba(217, 240, 237, 0.08);
+  font-weight: 600;
+}
+
+.link {
+  color: #9fe3d9;
+  text-decoration: none;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(159, 227, 217, 0.4);
+  padding-bottom: 2px;
+  transition: border-color 160ms ease;
+}
+
+.link:hover {
+  border-color: #9fe3d9;
+}
+
+.visual {
+  position: relative;
+  min-height: 380px;
+  display: grid;
+  place-items: center;
+}
+
+.visual :global([data-card-visual]) {
+  filter: drop-shadow(0 26px 48px rgba(0, 0, 0, 0.35));
+}
+
+@media (max-width: 820px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .visual {
+    min-height: 0;
+    order: -1;
+  }
+}
