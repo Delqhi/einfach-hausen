@@ -4,7 +4,7 @@
 
 ## GENAU EINE nächste Aktion
 
-**Auf Operator-Freigabe warten; Vergleich: https://einfach-hausen-preview.delqhi.com (neu) vs https://einfachhausen.de (alt).**
+**Auf Operator-Freigabe warten; Vergleich: https://einfach-hausen-preview.delqhi.com (neu, kanonische Preview-Infra: einfach-hausen-preview.service Port 3011 + Tunnel eh-preview) vs https://einfachhausen.de (alt).**
 
 Konkret:
 1. Bei Freigabe: fast-forward merge `design/premium-consumer-v1` nach main, `bash deploy/update-on-oci.sh`, Smoke 17/17, `sin-gpt-web-state complete T-0210`, render+validate, Handover-Blöcke, Preview-Instanz abschalten (`sudo systemctl disable --now einfach-hausen-preview cloudflared-eh-preview`).
@@ -12,7 +12,7 @@ Konkret:
 
 ## Kontext
 - **Preview-LIVE:** Design-Branch läuft als zweite Instanz parallel zur Produktion: `einfach-hausen-preview.service`, Port 3011, eigene SQLite-DB (`/var/lib/einfach-hausen-preview/`), eigene Env (`/etc/einfach-hausen-preview.env`), öffentlich via dediziertem Cloudflare-Tunnel `eh-preview` (`cloudflared-eh-preview.service`) unter `https://einfach-hausen-preview.delqhi.com`. Produktion einfachhausen.de unangetastet (200).
-- **Wichtig:** sin-kestra-Tunnel ist remote-managed (Config v3 vom Dashboard) — lokale `/etc/cloudflared/sin-kestra.yml`-Edits sind wirkungslos. Neue Hostnames: eigenen Tunnel anlegen (`cloudflared tunnel create` + `route dns`), nicht sin-kestra editieren. Backup mit Test-Zeile: `/etc/cloudflared/sin-kestra.yml.bak-20260902T0100`; CNAME `preview.einfachhausen.de.delqhi.com` in Zone delqhi.com ist ein Irrläufer (harmlos, löschbar).
+- **Wichtig:** sin-kestra-Tunnel ist remote-managed (aktuell Config v5) — lokale `/etc/cloudflared/sin-kestra.yml`-Edits sind wirkungslos. Neue Hostnames: eigenen Tunnel anlegen, nicht sin-kestra editieren. Duplikat-Setup (CNAME neu.einfachhausen.de + sin-kestra-Ingress 3457 + npm-Server 3457) wurde bereinigt; einzig kanonische Preview ist einfach-hausen-preview.delqhi.com. Irrläufer-CNAME preview.einfachhausen.de.delqhi.com (Zone delqhi.com) ist harmlos/loeschbar.
 - Redesign V1 implementiert auf `design/premium-consumer-v1`: Assets (FLUX.2-klein-4b via OmniRoute Route `vag/bfl/flux-2-klein-4b` — free, 429-Retry), Homepage nach Spec §9, `premium.module.css` Namespace, Subpage-Heroes §10.2, e2e-Assertions an neue Copy, dedizierte Story-Assets. Aktuellster Stand: siehe Branch-HEAD (andere Session arbeitet parallel im selben Worktree).
 - **Achtung zweite Session:** Der Worktree eh-premium-redesign wird von einer zweiten Agent-Session aktiv weiterentwickelt (neuere Commits als 943ad7e, NEXT_AGENT-Updates). Bei Änderungen dort: Preview-Service rebuilt neu starten (`sudo systemctl restart einfach-hausen-preview` nach `npm run build`).
 - Redesign V1 KOMPLETT implementiert auf `design/premium-consumer-v1` (56d42d1): Assets e7a5be9 (FLUX.2-klein-4b via OmniRoute Route `vag/bfl/flux-2-klein-4b` — free, 429-Rate-Limits via Retry, 6 Bilder q78), Homepage nach Spec §9, `premium.module.css` Namespace, e2e-Assertions an neue Copy angepasst (0482052).
