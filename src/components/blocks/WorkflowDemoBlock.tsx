@@ -303,7 +303,7 @@ function AgentCard({
             >
               <div className="min-h-[28px] pr-2 text-[15px] leading-[1.5] tracking-[-0.015em] text-neutral-900">
                 {showPlaceholder && isTyping ? (
-                  <span className="text-neutral-500">What can i do for you?</span>
+                  <span className="text-neutral-500">Womit kann ich dir helfen?</span>
                 ) : (
                   <span>
                     {isConnecting ? prompt : typedPrompt}

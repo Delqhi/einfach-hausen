@@ -154,9 +154,9 @@ export default async function HomePage() {
     <GetStartedBlock
       title="Einfach loslegen"
       subtitle="Nutze einfach-hausen auf deinem Computer, Smartphone oder direkt im Browser."
-      desktopImage="/images/premium/app-preview-home.png"
-      mobileImage="/images/premium/app-preview-home.png"
-      webImage="/images/premium/app-preview-home.png"
+      desktopImage="/images/get-started/desktop.png"
+      mobileImage="/images/get-started/mobile.png"
+      webImage="/images/get-started/web.png"
       appStoreHref="#"
       playStoreHref="#"
       webHref="/app"

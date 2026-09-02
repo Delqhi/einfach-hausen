@@ -101,13 +101,17 @@ export function GetStartedBlock({
           </article>
           {/* Mobile */}
           <article className="flex min-h-[520px] flex-col overflow-hidden rounded-[20px] border border-black/[0.10] bg-white">
-            <div className="relative aspect-[16/9] overflow-hidden bg-neutral-100">
-              <Image
-                src={mobileImage}
-                alt="Mobile App"
-                fill
-                className="object-cover"
-              />
+            <div className="relative aspect-[16/9] overflow-hidden bg-[#eef4f2]">
+              <div className="absolute inset-0 grid place-items-center">
+                <div className="relative h-[calc(100%+60px)] w-auto aspect-[390/844] overflow-hidden rounded-[24px] border-[6px] border-neutral-900 shadow-xl">
+                  <Image
+                    src={mobileImage}
+                    alt="Mobile App"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
             </div>
             <div className="flex flex-1 flex-col p-7">
               <div className="mb-5 flex items-center gap-3">
