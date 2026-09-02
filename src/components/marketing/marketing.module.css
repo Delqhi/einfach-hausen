@@ -363,7 +363,7 @@ details[open] .faqSummary svg { transform: rotate(180deg); }
 /* --- Composer: the living intake --- */
 .intake { border-radius: 20px; padding: 12px; box-shadow: 0 32px 80px -32px rgba(18,60,42,.26), 0 4px 16px -8px rgba(18,60,42,.08); }
 .intakeField { position: relative; flex: 1; min-width: 0; display: flex; }
-.intakeGhost { position: absolute; left: 14px; right: 12px; top: 50%; translate: 0 -50%; pointer-events: none; color: #7e8b84; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .38s ease; }
+.intakeGhost { position: absolute; left: 14px; right: 12px; top: 50%; translate: 0 -50%; pointer-events: none; color: #66756c; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .38s ease; }
 
 /* --- Product preview: depth + floating proof cards --- */
 .productPreview { border-radius: 26px; box-shadow: 0 40px 90px -32px rgba(18,60,42,.30), 0 12px 32px -18px rgba(18,60,42,.14); }
