@@ -1,24 +1,14 @@
 import { redirect } from 'next/navigation';
-import { ArrowRight, BadgeCheck, ChevronDown, CircleCheck, FileText, Home, ShieldCheck, UserRound } from 'lucide-react';
+import { ArrowRight, ChevronDown, CircleCheck, FileText, ShieldCheck, UserRound } from 'lucide-react';
 import Image from 'next/image';
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Section, Split, InfoPanel, BulletList, CtaBand, LinkButton, Statement } from '@/components/marketing/ui';
 import { Reveal, Stagger, DrawPath, SplitLines } from '@/components/marketing/motion';
 import { IntakeForm } from '@/components/home/intake-form';
+import { HomeServicesGrid } from '@/components/marketing/home-services-grid';
 import styles from '@/components/marketing/marketing.module.css';
 import premium from '@/components/marketing/premium.module.css';
-
-const categories = [
-  { img:'/images/premium/category-heizung.jpg', title:'Heizung & Sanitär', text:'Wärme, Wasser, Wartung' },
-  { img:'/images/premium/category-elektro.jpg', title:'Elektro & Energie', text:'Wallbox, PV, Installationen' },
-  { img:'/images/premium/category-dach.jpg', title:'Dach & Gebäudehülle', text:'Dach, Rinne, Fassade' },
-  { img:'/images/premium/category-garten.jpg', title:'Garten & Außenbereich', text:'Pflege, Bäume, Wege' },
-] as const;
-
-const moreServices = [
-  'Reparatur & Montage','Ausbau & Renovierung','Pflege & Reinigung','Weitere Hausdienste',
-] as const;
 
 const story = [
   { img:'/images/premium/story-beschreiben.jpg', kicker:'1 · Beschreiben', title:'Sag einfach, was ansteht.', text:'Schreib, sprich oder zeig per Foto. Die fachliche Einordnung übernehmen wir – ohne dass du wissen musst, welches Gewerk zuständig ist.' },
@@ -64,20 +54,8 @@ export default async function HomePage() {
       </div>
     </section>
 
-    {/* ============ VISUAL SERVICE CATEGORIES (spec §9.3) ============ */}
-    <Section eyebrow="Leistungen" title="Vom defekten Heizungsventil bis zur Jahrespflege." text="Du musst nicht wissen, welches Gewerk zuständig ist. Starte mit deinem Anliegen." tone="soft">
-      <div className={premium.catGrid}>
-        {categories.map((c,i)=>(
-          <Reveal key={c.title} delay={i*0.06}>
-            <a className={premium.catCard} href="/leistungen">
-              <span className={premium.catImg}><Image src={c.img} alt="" fill sizes="320px"/></span>
-              <span className={premium.catBody}><strong>{c.title}</strong><small>{c.text}</small><span className={premium.catMore}>Ansehen <ArrowRight size={14} aria-hidden="true"/></span></span>
-            </a>
-          </Reveal>
-        ))}
-      </div>
-      <p className={premium.moreRow}>{moreServices.map(s=><a key={s} href="/leistungen">{s}</a>)}<a className={premium.allLink} href="/leistungen">Alle Bereiche <ArrowRight size={14} aria-hidden="true"/></a></p>
-    </Section>
+    {/* ============ HOMEOWNER SERVICE MOSAIC — editorial category discovery ============ */}
+    <HomeServicesGrid />
 
     {/* ============ 3 STORY MOMENTS (spec §9.4) ============ */}
     <Section eyebrow="So funktioniert's" title="Drei Schritte. Null Bürokratie." text="Weniger suchen, weniger hinterherlaufen, mehr Überblick.">
