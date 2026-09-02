@@ -1,10 +1,10 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-02 ~23:20 UTC · main = bda08b4 = Produktion (einfachhausen.de, Smoke 17/17) · T-0210 + T-0211 abgeschlossen · Premium-Redesign ist LIVE**
+**Status 2026-09-02 ~23:50 UTC · main = 4046cea = Produktion (bda08b4 deployed, Smoke 17/17) · T-0210 + T-0211 + T-0120 abgeschlossen · Premium-Redesign ist LIVE**
 
 ## GENAU EINE nächste Aktion
 
-**Welle 1 (Website-Redesign) ist Produktion + kanonisch abgeschlossen. Genau eine nächste Aktion: höchste priorisierte, eligible Aufgabe aus dem Taskplan übernehmen (`sin-gpt-web-state list` / TASKPLAN.md).**
+**T-0120 (Security-Fuzz) abgeschlossen: scripts/t0120-security-fuzz.mjs ist permanenter Teil von test:security (Release-Gate-Kette); ein gefundener Gap (percent-encoded Traversal in resolvePrivatePath) ist im selben Commit gefixt. Genau eine nächste Aktion: nächste priorisierte, eligible Aufgabe aus dem Taskplan übernehmen (T-0121 Supply-Chain-Gates ist der kritische Nachfolger, blocked war nur auf T-0120).**
 
 1. Abgeschlossen: T-0210 (Premium-Redesign) + T-0211 (App-Promo) — Merge 9356305, Gate-Fixes (intakeGhost-Kontrast, un-layered a{color}-Regeln → @layer base, Commits 893fb3f/363068e/bda08b4), Release-Gate 11/11, Deploy, Smoke 17/17, Preview abgeschaltet (einfach-hausen-preview + cloudflared-eh-preview sind disabled; Tunnel-Domain liefert 502, das ist gewollt).
 2. Rollback-Pfade: Branch `website-original` (7962d6d = main vor Redesign) lokal+GitHub; Archive-Tags `archive/*` für alte WIP-Branches; Revert von 9356305 möglich.
@@ -428,4 +428,11 @@ task: T-0211
 updated: 2026-09-02T23:18:41+00:00
 actor: local-agent
 evidence-sha256: 60f232b4e4d8bb71c603011e8a96ba47b0b2b4f04b45106ed5ab759dbc9d69a0
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0120
+updated: 2026-09-02T23:49:07+00:00
+actor: local-agent
+evidence-sha256: 73903ba5ee89d8c893c1f1fd2a10d42aeeba247966ba2045494555aa353d28e5
 -->
