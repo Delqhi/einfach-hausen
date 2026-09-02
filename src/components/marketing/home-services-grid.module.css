@@ -1,3 +1,11 @@
+/*
+ * HomeServicesGrid — Premium-Mosaik in der Markenbildwelt (T-0210 Spec §4.2/§5.1).
+ *
+ * Fläche: ruhiges Mint-Tint auf warmem Papiergrund. Karten: weiße Flächen mit
+ * klarem Petrol-Rahmenverlauf, CardVisual Line-Art als Anker (rechts unten,
+ * großzügig beschnitten). Keine Stockfotos, keine Gradient-Kacheln.
+ */
+
 .section {
   background: #fbfaf7;
   padding: clamp(88px, 10vw, 150px) 24px clamp(96px, 11vw, 164px);
@@ -18,7 +26,6 @@
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
   min-height: 42px;
   padding: 0 20px;
   border: 1px solid rgba(21, 55, 61, 0.18);
@@ -27,23 +34,19 @@
   background: rgba(255, 255, 255, 0.82);
   box-shadow: 0 3px 16px rgba(16, 42, 46, 0.04);
   font-size: 13px;
-  font-weight: 760;
-  letter-spacing: 0.015em;
-}
-
-.eyebrow svg {
-  color: #137c7c;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .title {
   display: grid;
   gap: 8px;
   margin: 22px 0 0;
-  font-size: clamp(42px, 4.5vw, 68px);
-  line-height: 0.98;
-  letter-spacing: -0.052em;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
   color: #0e1213;
-  font-weight: 800;
+  font-weight: 740;
 }
 
 .title span,
@@ -58,15 +61,15 @@
 
 .mosaic {
   display: grid;
-  grid-template-columns: minmax(0, 0.37fr) minmax(0, 0.63fr);
+  grid-template-columns: minmax(0, 0.38fr) minmax(0, 0.62fr);
   gap: 18px;
   align-items: stretch;
 }
 
 .rightGrid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-template-rows: minmax(270px, 0.92fr) minmax(320px, 1.08fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(252px, auto);
   gap: 18px;
   min-width: 0;
 }
@@ -77,16 +80,18 @@
   display: block;
   min-width: 0;
   border-radius: 24px;
-  background: #f3f4f2;
   color: #0f1314;
-  box-shadow: 0 18px 45px rgba(18, 35, 38, 0.055);
+  background: #ffffff;
+  border: 1px solid rgba(16, 60, 64, 0.09);
+  box-shadow: 0 16px 40px rgba(18, 35, 38, 0.05);
   isolation: isolate;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
 .card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 24px 54px rgba(18, 35, 38, 0.1);
+  border-color: rgba(16, 60, 64, 0.16);
+  box-shadow: 0 24px 54px rgba(18, 35, 38, 0.09);
 }
 
 .card:focus-visible {
@@ -94,181 +99,211 @@
   outline-offset: 4px;
 }
 
+/* ----------------------------- Feature card ----------------------------- */
+
 .featureCard {
-  min-height: 610px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 620px;
+  padding: 34px 32px 30px;
+  color: #f6f9f8;
+  background:
+    radial-gradient(120% 90% at 12% 4%, rgba(217, 240, 237, 0.16), transparent 46%),
+    linear-gradient(168deg, #105258 0%, #0c3f45 58%, #0a343a 100%);
+  border: none;
 }
 
-.coverImage,
-.cardImage {
-  object-fit: cover;
-  transition: transform 400ms ease;
+.featureCard:hover {
+  border: none;
 }
 
-.card:hover .coverImage,
-.card:hover .cardImage {
-  transform: scale(1.025);
-}
-
-.featureShade {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(180deg, rgba(7, 15, 16, 0.42) 0%, rgba(7, 15, 16, 0.04) 46%, rgba(7, 15, 16, 0.14) 100%);
+.featureBody {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 12px;
 }
 
 .featureTitle {
-  position: absolute;
-  z-index: 2;
-  top: 34px;
-  left: 36px;
-  color: white;
+  font-size: clamp(26px, 2.3vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  font-weight: 740;
+}
+
+.featureCopy {
   max-width: 300px;
-  font-size: clamp(30px, 3vw, 42px);
-  line-height: 1.02;
-  letter-spacing: -0.04em;
-  font-weight: 790;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.18);
+  color: rgba(233, 245, 242, 0.82);
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
-.wideCard {
-  grid-column: span 3;
+.featureCard .arrow {
+  color: #0c3f45;
+  background: #ffffff;
+  border: none;
 }
 
-.smallCard,
-.moreCard {
-  grid-column: span 2;
-}
-
-.cardImage {
-  object-position: center;
-  filter: saturate(0.93) contrast(0.98) brightness(1.02);
-}
-
-.wideCard::after,
-.smallCard::after {
-  content: '';
+.featureVisual {
   position: absolute;
-  inset: 0;
   z-index: 1;
+  right: -40px;
+  bottom: -30px;
+  width: 64%;
+  height: 64%;
+  opacity: 1;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(250, 250, 248, 0.02) 42%, rgba(250, 250, 248, 0.9) 83%, rgba(250, 250, 248, 0.98) 100%);
+  filter: drop-shadow(0 24px 40px rgba(6, 34, 38, 0.28));
 }
 
-.icon {
-  position: absolute;
-  z-index: 3;
-  top: 22px;
-  left: 22px;
+/* ------------------------------ Tile cards ------------------------------ */
+
+.tileCard {
+  display: flex;
+  align-items: flex-end;
+  padding: 30px 24px 22px;
+  background:
+    radial-gradient(110% 80% at 90% 0%, rgba(217, 240, 237, 0.42), transparent 52%),
+    #ffffff;
+}
+
+.tileBody {
+  position: relative;
+  z-index: 2;
   display: grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  color: #147f7d;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(26, 83, 85, 0.08);
-  box-shadow: 0 8px 24px rgba(13, 35, 38, 0.08);
-  backdrop-filter: blur(10px);
+  gap: 6px;
+  max-width: 100%;
+  padding-right: 64px;
 }
 
 .cardLabel {
+  text-wrap: balance;
+  font-size: clamp(19px, 1.6vw, 24px);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.tileCopy {
+  color: rgba(15, 19, 20, 0.6);
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.tileVisual {
   position: absolute;
-  z-index: 3;
-  left: 24px;
-  bottom: 24px;
-  max-width: calc(100% - 96px);
-  font-size: clamp(22px, 2.1vw, 31px);
-  line-height: 1.02;
-  letter-spacing: -0.042em;
-  font-weight: 770;
+  z-index: 1;
+  right: -20px;
+  bottom: -16px;
+  width: 46%;
+  height: 60%;
+  opacity: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 28px rgba(16, 60, 64, 0.14));
+}
+
+.tileCard:hover .tileVisual,
+.featureCard:hover .featureVisual {
+  transform: translateY(-5px);
+}
+
+.tileVisual,
+.featureVisual {
+  transition: transform 320ms ease;
+}
+
+/* ------------------------------ More card ------------------------------- */
+
+.moreCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 26px 24px;
+  background: linear-gradient(150deg, #ffffff 0%, #f4faf8 100%);
+}
+
+.moreIcon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  color: #147f7d;
+  background: rgba(217, 240, 237, 0.55);
+  border: 1px solid rgba(20, 127, 125, 0.16);
+}
+
+.moreBody {
+  display: grid;
+  gap: 6px;
+}
+
+.moreTitle {
+  font-size: clamp(19px, 1.6vw, 24px);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.moreCount {
+  margin-left: auto;
+  color: #147f7d;
+  font-size: clamp(48px, 4vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  font-weight: 600;
 }
 
 .arrow {
   position: absolute;
   z-index: 4;
   right: 20px;
-  bottom: 20px;
+  top: 20px;
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   color: #172023;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(25, 45, 48, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(25, 45, 48, 0.1);
   box-shadow: 0 9px 24px rgba(20, 35, 38, 0.1);
-  backdrop-filter: blur(10px);
   transition: transform 180ms ease, background 180ms ease;
+}
+
+.moreCard .arrow {
+  position: static;
+  margin-left: auto;
+}
+
+.featureCard .arrow {
+  top: 30px;
+  right: 28px;
 }
 
 .card:hover .arrow {
   transform: translateX(3px);
-  background: #fff;
+  background: #ffffff;
 }
 
-.moreCard {
-  background: linear-gradient(145deg, #f8f8f6 0%, #f1f2ef 100%);
-  min-height: 100%;
-}
-
-.moreTitle {
-  position: absolute;
-  z-index: 2;
-  top: 98px;
-  left: 24px;
-  right: 20px;
-  font-size: clamp(22px, 2vw, 29px);
-  line-height: 1.06;
-  letter-spacing: -0.04em;
-  font-weight: 770;
-}
-
-.moreCount {
-  position: absolute;
-  z-index: 2;
-  left: 22px;
-  bottom: 42px;
-  color: #198b72;
-  font-size: clamp(76px, 7vw, 112px);
-  line-height: 0.82;
-  letter-spacing: -0.065em;
-  font-weight: 570;
-}
+/* ------------------------------ Responsive ------------------------------ */
 
 @media (max-width: 1080px) {
   .mosaic {
     grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
   }
 
-  .rightGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(3, minmax(240px, 1fr));
-  }
-
-  .wideCard,
-  .smallCard {
-    grid-column: span 1;
-  }
-
-  .moreCard {
-    grid-column: span 2;
-  }
-
   .featureCard {
-    min-height: 756px;
+    min-height: 720px;
   }
 
-  .moreCard {
-    min-height: 240px;
-  }
-
-  .moreTitle {
-    top: 26px;
-    left: 92px;
-  }
-
-  .moreCount {
-    bottom: 34px;
+  .rightGrid {
+    grid-auto-rows: minmax(236px, auto);
   }
 }
 
@@ -300,69 +335,51 @@
   }
 
   .featureCard {
-    min-height: min(126vw, 570px);
+    min-height: 0;
+    padding: 96px 26px 24px;
+  }
+
+  .featureVisual {
+    right: -46px;
+    bottom: 34px;
+    width: 64%;
+    height: 62%;
   }
 
   .rightGrid {
     grid-template-columns: 1fr;
-    grid-template-rows: none;
+    grid-auto-rows: auto;
     gap: 14px;
   }
 
-  .wideCard,
-  .smallCard,
-  .moreCard {
-    grid-column: auto;
-    min-height: 300px;
+  .tileCard {
+    padding: 24px 22px 20px;
   }
 
-  .moreCard {
-    min-height: 270px;
+  .tileBody {
+    max-width: 70%;
+  }
+
+  .tileVisual {
+    right: -34px;
+    bottom: -30px;
+    width: 58%;
+    height: 70%;
   }
 
   .featureTitle {
-    top: 26px;
-    left: 26px;
-    font-size: 34px;
-  }
-
-  .icon {
-    top: 18px;
-    left: 18px;
-    width: 48px;
-    height: 48px;
+    font-size: 32px;
   }
 
   .cardLabel {
-    left: 20px;
-    bottom: 22px;
-    font-size: 27px;
-  }
-
-  .arrow {
-    right: 16px;
-    bottom: 16px;
-    width: 52px;
-    height: 52px;
-  }
-
-  .moreTitle {
-    top: 82px;
-    left: 20px;
-    font-size: 25px;
-  }
-
-  .moreCount {
-    left: 18px;
-    bottom: 34px;
-    font-size: 92px;
+    font-size: 26px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .card,
-  .coverImage,
-  .cardImage,
+  .tileVisual,
+  .featureVisual,
   .arrow {
     transition: none;
   }
