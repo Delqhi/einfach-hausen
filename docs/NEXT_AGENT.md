@@ -1,24 +1,22 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-02 ~04:50 UTC · main = e8c70ed · Design-Branch = 8ecf9f9 · Alle Agents konsolidiert**
+**Status 2026-09-02 ~08:55 UTC · main = e8c70ed · Design-Branch = 5b6ef92 · Welle 1 komplett, wartet auf Operator-Freigabe**
 
 ## GENAU EINE nächste Aktion
 
-**T-0210 Abschluss-Kette: Website-QA auf dem Design-Branch (8ecf9f9) fahren, dann Operator-Freigabe einholen, dann mergen.**
+**Operator visuelle Freigabe für design/premium-consumer-v1 (5b6ef92) abwarten, dann Welle-1-Abschluss fahren:**
 
-Konkret:
-1. Webpack-Build nutzen (`npx next build --webpack`) — Turbopack panic't am `private`-Symlink (bekannt, nicht fixen, nicht am Symlink drehen).
-2. Preview-Instanz aktualisieren: `sudo systemctl restart einfach-hausen-preview` (läuft auf Port 3011 aus dem Worktree, öffentlich via https://einfach-hausen-preview.delqhi.com). Hinweis: Design-Worktree wird nicht mehr von anderen Sessions parallel bearbeitet — dieser Agent (dove) ist jetzt allein zuständig.
-3. Operator hat die ChatGPT-Web-Spezifikation (Architektur: Consumer-Brand statt SaaS, visuelle Anker pro Sektion, Wellen 1-6) bereits freigegeben; Website-Redesign läuft auf dem Design-Branch. Nach Freigabe: FF-Merge nach main, `bash deploy/update-on-oci.sh`, Smoke 17/17, `sin-gpt-web-state complete T-0210`, render+validate, Handover-Blöcke, Preview-Instanz abschalten (`sudo systemctl disable --now einfach-hausen-preview cloudflared-eh-preview`).
-4. T-0211 (App-Promo-Sektion) ist VORGEBAUT auf main (e8c70ed): Komponente + Scroll-Motion + echter App-Screenshot; chatgpt-web muss nur noch in page.tsx einbauen nach T-0210-Merge.
+1. Bei Freigabe: FF-Merge nach main → `bash deploy/update-on-oci.sh` → Smoke 17/17 → `sin-gpt-web-state complete T-0210 --evidence ...` → render+validate → Handover-Blöcke. Preview danach abschalten (`sudo systemctl disable --now einfach-hausen-preview cloudflared-eh-preview`).
+2. Bei Änderungswünschen: im Worktree `/home/ubuntu/dev/eh-premium-redesign` nacharbeiten (Build: `npx next build --webpack` — Turbopack panic't am private-Symlink!), erneut vorlegen.
 
 ## Kontext
-- **Rollback-Vertrag aktiv:** main unangetastet bis Operator-Freigabe; Design-Branch = design/premium-consumer-v1 @ 8ecf9f9 (8 Commits über 56d42d1 hinaus).
-- **Konsole für Build:** Turbopack-Panic durch private-Symlink in globals.css-Verarbeitung ist known issue; `--webpack` funktioniert.
-- **T-0172-Komponenten** (Agent 2): CardVisual/FeatureVisualCard/FeatureVisualGrid + Registry + Manifest + Contract-Test sind im Branch 1fa757d.
-- **App-Polish-Verträge:** scripts/premium-app-polish-contract.mjs (nav/structure locked) und scripts/premium-app-visual-contract.mjs sind GREEN und müssen nach jedem App-CSS-Change grün bleiben.
-- **Preview-Infrastruktur:** einfach-hausen-preview.service (Port 3011, /var/lib/einfach-hausen-preview, eigene SQLite) + cloudflared-eh-preview.service (Tunnel d81a6644, Hostnames: einfach-hausen-preview.delqhi.com, napp.delqhi.com -> 3012 Test-Server, napp-shots.delqhi.com -> 3013 Statik-Server). sin-kestra-Tunnel ist remote-managed (lokalEdits wirkungslos).
-- **Session-Readback:** Agent-1-Spezifikation aus ChatGPT-Web-Sitzung via OCI-Chromium-CDP (sin-gpt-web-browser.service, Port 9223) extrahiert; vollständige Architektur-/Designprinzipien in /tmp/chatgpt-session.txt (ungeprüft transitorisch).
+- **Welle 1 (Website) komplett:** Homepage mit allen 9 Spec-Sections (Hero+Intake, Services-Mosaik mit Operator-3D-Visuals v4, Story, Hausakte, Vertrauen, Betriebe, Preise, FAQ als shadcn Accordion, Security-Kapitel), dunkler Premium-Footer, App-Promo-Sektion mit Scroll-Motion über dem CTA-Band. Alle 11 Unterseiten mit Premium-Photo-Heroes (Audit bestätigt).
+- **shadcn/ui integriert:** init (radix/nova/tailwind-v4) + button/card/badge/separator/accordion/tabs/tooltip/hover-card/avatar; --font-sans auf Inter gemappt (DESIGN.md), legacy --muted gerettet. sin-frontend-design Skill v1.1.0 um references/shadcn.md erweitert.
+- **Bilder-Workflow:** Card-Visuals unter public/images/card-visuals/*-v4.png (Operator-Drops aus .orca/drops). Nach Asset-Tausch IMMER: Filename-Bump (Cache-Bust) + `.next/cache/images` moven, sonst liefert /_next/image alte Varianten (max-age=14400).
+- **Build-Hinweis:** Turbopack panic't am private-Symlink (globals.css-Verarbeitung) — Webpack verwenden: `npx next build --webpack`.
+- **Preview-Infra:** einfach-hausen-preview.service (Port 3011, Worktree eh-premium-redesign, eigene SQLite /var/lib/einfach-hausen-preview) + cloudflared-eh-preview.service (Tunnel d81a6644: einfach-hausen-preview.delqhi.com→3011, napp.delqhi.com→3012 Testserver, napp-shots.delqhi.com→3013). sin-kestra-Tunnel ist remote-managed — lokale Config-Edits wirkungslos.
+- **T-0211 (App-Promo):** Komponente ist auch im Design-Branch live eingebaut. Der Task bleibt offen für main-Verifikation nach Merge.
+- **T-0120 (Security-Fuzz):** bleibt geparkt hinter T-0210.
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0169
