@@ -114,7 +114,7 @@ function WorkflowSteps({
   scene: WorkflowScene;
 }) {
   return (
-    <div className="grid min-h-[444px] grid-rows-3 bg-white">
+    <div className="grid min-h-[444px] grid-rows-3 gap-4 bg-[#f7fafa] p-6">
       {steps.map((step, index) => {
         const active = scene.step === index;
         const progress = active ? scene.progress * 100 : scene.step > index ? 100 : 0;
@@ -122,7 +122,11 @@ function WorkflowSteps({
         return (
           <div
             key={step.title}
-            className="relative flex flex-col justify-center border-b border-black/[0.07] px-6 py-7 last:border-b-0 sm:px-8 lg:px-9"
+            className={`relative flex flex-col justify-center rounded-2xl px-6 py-6 transition-all duration-500 ${
+                active
+                  ? "border border-emerald-600/25 bg-white shadow-[0_16px_40px_-18px_rgba(16,82,88,0.28)]"
+                  : "border border-black/[0.06] bg-white/70"
+              }`}
           >
             <div
               className={`flex items-center gap-3 transition-colors duration-500 ${
@@ -250,7 +254,7 @@ function AgentCard({
     <motion.div
       layout
       transition={{ layout: { duration: 0.52, ease: [0.22, 1, 0.36, 1] } }}
-      className="relative w-[min(360px,calc(100vw-48px))] overflow-hidden rounded-[13px] border border-black/[0.12] bg-white shadow-[0_14px_32px_rgba(0,0,0,0.07),0_2px_5px_rgba(0,0,0,0.06)]"
+      className="relative w-[min(340px,calc(100vw-80px))] overflow-hidden rounded-[14px] border border-black/[0.08] bg-white"
     >
       <AnimatePresence initial={false} mode="popLayout">
         {(isConnecting || isSuccess) && (
@@ -376,7 +380,7 @@ export function WorkflowDemoBlock({
           <WorkflowSteps steps={normalizedSteps} scene={scene} />
         </div>
 
-        <div className="relative grid min-h-[390px] place-items-center overflow-hidden px-6 py-14 lg:min-h-[444px]">
+        <div className="relative grid place-items-center overflow-hidden bg-[#f0f6f4] px-6 py-16 lg:min-h-[444px]">
           <div
             aria-hidden="true"
             className="absolute left-1/2 top-6 z-10 -translate-x-1/2"
@@ -389,21 +393,8 @@ export function WorkflowDemoBlock({
               Live-Demo
             </span>
           </div>
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle, rgba(17, 24, 39, 0.115) 0.8px, transparent 0.9px)",
-              backgroundSize: "14px 14px",
-              WebkitMaskImage:
-                "radial-gradient(circle at center, black 22%, rgba(0,0,0,.82) 47%, transparent 82%)",
-              maskImage:
-                "radial-gradient(circle at center, black 22%, rgba(0,0,0,.82) 47%, transparent 82%)",
-            }}
-          />
 
-          <div className="relative z-10">
+          <div className="relative z-10 rounded-[24px] border border-black/[0.07] bg-white/95 p-4 shadow-[0_30px_70px_-28px_rgba(10,53,57,0.4)] backdrop-blur">
             <AgentCard
               scene={scene}
               prompt={prompt}
