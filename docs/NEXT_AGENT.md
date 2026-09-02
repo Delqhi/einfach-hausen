@@ -1,6 +1,6 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-02 ~00:00 UTC · main = 5156bbb · T-0210 in_progress auf design/premium-consumer-v1 @ 943ad7e**
+**Status 2026-09-02 ~00:00 UTC · main = 5156bbb · T-0210 in_progress auf design/premium-consumer-v1 @ 56d42d1**
 
 ## GENAU EINE nächste Aktion
 
@@ -12,7 +12,7 @@ Konkret:
 3. Bei Änderungswünschen: im Worktree nacharbeiten (Spec §9 bleibt Vertrag), neue Gates, erneut vorlegen.
 
 ## Kontext
-- Redesign V1 KOMPLETT implementiert auf `design/premium-consumer-v1` (943ad7e): Assets e7a5be9 (FLUX.2-klein-4b via OmniRoute Route `vag/bfl/flux-2-klein-4b` — free, 429-Rate-Limits via Retry, 6 Bilder q78), Homepage nach Spec §9, `premium.module.css` Namespace, e2e-Assertions an neue Copy angepasst (0482052).
+- Redesign V1 KOMPLETT implementiert auf `design/premium-consumer-v1` (56d42d1): Assets e7a5be9 (FLUX.2-klein-4b via OmniRoute Route `vag/bfl/flux-2-klein-4b` — free, 429-Rate-Limits via Retry, 6 Bilder q78), Homepage nach Spec §9, `premium.module.css` Namespace, e2e-Assertions an neue Copy angepasst (0482052).
 - Gates im Worktree: lint 0 errors, build OK, fullflow e2e **ok:true**, Screenshots Desktop 1440 + Mobile 390 verifiziert.
 - **main ist unangetastet** (2eb24a7) — Rollback-Vertrag aktiv bis Operator-Freigabe.
 - Worktree-Setup: `node_modules` ist echte Kopie (Turbopack lehnt Root-Symlinks ab).
