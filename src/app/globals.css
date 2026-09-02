@@ -818,3 +818,6 @@ html { scroll-behavior: smooth; }
     @apply bg-background text-foreground;}
   html {
     @apply font-sans;}}
+
+/* Workflow-Demo: Zentrierung robust (CSS-Module-Hash greift hier nicht). */
+.workflow-demo-inner { margin-inline: auto !important; width: min(1180px, 100%); }
