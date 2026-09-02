@@ -1,13 +1,14 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-02 ~08:55 UTC · main = e8c70ed · Design-Branch = 5b6ef92 · Welle 1 komplett, wartet auf Operator-Freigabe**
+**Status 2026-09-02 ~22:35 UTC · main = 357fb5c (MERGE von design/premium-consumer-v1 durch, E2E grün) · Backup: website-original · Produktion-Deploy + T-0210-Abschluss offen**
 
 ## GENAU EINE nächste Aktion
 
-**Operator visuelle Freigabe für design/premium-consumer-v1 (5b6ef92) abwarten, dann Welle-1-Abschluss fahren:**
+**Merge ist durch (Operator-Anweisung 2026-09-02): main enthält das Premium-Redesign. Genau eine nächste Aktion: Welle-1-Abschluss fahren.**
 
-1. Bei Freigabe: FF-Merge nach main → `bash deploy/update-on-oci.sh` → Smoke 17/17 → `sin-gpt-web-state complete T-0210 --evidence ...` → render+validate → Handover-Blöcke. Preview danach abschalten (`sudo systemctl disable --now einfach-hausen-preview cloudflared-eh-preview`).
-2. Bei Änderungswünschen: im Worktree `/home/ubuntu/dev/eh-premium-redesign` nacharbeiten (Build: `npx next build --webpack` — Turbopack panic't am private-Symlink!), erneut vorlegen.
+1. `bash deploy/update-on-oci.sh` (aus /home/ubuntu/dev/einfach-hausen, deployt /srv/einfach-hausen auf main) → Smoke (deploy/README.md, 17/17) → `sin-gpt-web-state complete T-0210 --evidence ...` → render+validate → Handover-Blöcke. Danach Preview abschalten (`sudo systemctl disable --now einfach-hausen-preview cloudflared-eh-preview`).
+2. Sicherung: Branch `website-original` (7962d6d = main vor dem Redesign-Merge, lokal+GitHub). Rückweg: `git reset --hard website-original` oder Revert des Merge-Commits 9356305.
+3. Merge-Ergebnis verifiziert: Build (webpack) grün, `npm run test:e2e` ok:true (15 Checks), Newsletter-App-Promo = Premium-Version (GSAP-Timeline, shadcn Badge).
 
 ## Kontext
 - **Welle 1 (Website) komplett:** Homepage mit allen 9 Spec-Sections (Hero+Intake, Services-Mosaik mit Operator-3D-Visuals v4, Story, Hausakte, Vertrauen, Betriebe, Preise, FAQ als shadcn Accordion, Security-Kapitel), dunkler Premium-Footer, App-Promo-Sektion mit Scroll-Motion über dem CTA-Band. Alle 11 Unterseiten mit Premium-Photo-Heroes (Audit bestätigt).
