@@ -1,11 +1,20 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { MessageCircle, ShieldCheck, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, FeatureGrid, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
+import { Reveal } from '@/components/marketing/motion';
 import { HeroChoices } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
+import premium from '@/components/marketing/premium.module.css';
 
 export const metadata: Metadata = { title: "So funktioniert's", description: 'So wird aus einem Anliegen ein klarer nächster Schritt – ohne automatische Beauftragung.' };
+
+const story = [
+  { img:'/images/premium/story-beschreiben.jpg', kicker:'Schritt 1 · Beschreiben', title:'Sag einfach, was ansteht.', text:'Schreib, sprich oder zeig per Foto, was an deinem Haus los ist. Die fachliche Einordnung übernehmen wir – ohne Kategorienwand und ohne Fachchinesisch.' },
+  { img:'/images/premium/story-ansprechpartner.jpg', kicker:'Schritt 2 · Der passende Mensch', title:'Ein konkreter Ansprechpartner.', text:'Geprüfte Vertragspartner aus deiner Region statt anonymer Marktplatz-Anfragen. Du entscheidest, ob du erst sprichst oder direkt beauftragst.' },
+];
+
 
 export default function Page(){return <MarketingShell>
   <PageHero eyebrow="So funktioniert's" title="Du beschreibst das Problem. Du entscheidest den nächsten Schritt." text="Einfach Hausen beginnt nicht mit einer Kategorienwand. Du sagst in normalen Worten, was an deinem Haus los ist – und entscheidest erst nach der Einordnung, was daraus werden soll." aside={<HeroChoices />} actions={<><LinkButton href="/register?role=homeowner">Anliegen starten</LinkButton><LinkButton href="/leistungen" secondary>Leistungen ansehen</LinkButton></>} />
@@ -25,6 +34,22 @@ export default function Page(){return <MarketingShell>
     )}</div>
   </Section>
   <Statement kicker="Das Prinzip" tone="soft">Eine Frage ist noch kein Auftrag.</Statement>
+  <Section eyebrow="In echt" title="So sieht das im Alltag aus." text="Keine Formularstrecke, keine Warteschleife. Zwei Momente, wie sie auf deinem Handy aussehen.">
+    <div className={premium.storyCol}>
+      {story.map((s,i)=>(
+        <Reveal key={s.kicker}>
+          <article className={`${premium.storyRow} ${i%2 ? premium.storyFlip : ''}`}>
+            <span className={premium.storyImg}><Image src={s.img} alt="" fill sizes="460px"/></span>
+            <span className={premium.storyBody}>
+              <span className={premium.storyKicker}>{s.kicker}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </span>
+          </article>
+        </Reveal>
+      ))}
+    </div>
+  </Section>
   <Section eyebrow="Drei Wege" title="Drei bewusste Wege statt einer Formularstrecke." text="Beratung, persönlicher Kontakt und Beauftragung sind getrennte Entscheidungen – du gehst jeden Weg nur, wenn du es willst." tone="soft">
     <FeatureGrid items={[
       {icon:<MessageCircle size={20}/>,title:'Frage klären',text:'Zuerst verstehen, was wahrscheinlich sinnvoll ist. Dabei entsteht noch kein Auftrag.'},
