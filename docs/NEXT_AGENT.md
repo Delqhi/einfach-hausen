@@ -7,7 +7,7 @@
 **T-0210 Premium Consumer Redesign V1 dem Operator zur visuellen Freigabe vorlegen und nach Freigabe mergen.**
 
 Konkret:
-1. Operator die Screenshots zeigen (`/tmp/premium-desktop-scrolled.png`, `/tmp/premium-mobile-scrolled.png`) oder live: Branch `design/premium-consumer-v1` (0482052) in Worktree `/home/ubuntu/dev/eh-premium-redesign`, `npm start` dort.
+1. Operator die Screenshots zeigen (`/tmp/premium-desktop-scrolled.png`, `/tmp/premium-mobile-scrolled.png`, `/tmp/premium-sofunct.png`) oder live: Branch `design/premium-consumer-v1` (56d42d1) in Worktree `/home/ubuntu/dev/eh-premium-redesign`, `npm start` dort.
 2. Bei Freigabe: fast-forward merge nach main, `bash deploy/update-on-oci.sh`, Smoke 17/17, `sin-gpt-web-state complete T-0210`, render+validate, Handover-Blöcke.
 3. Bei Änderungswünschen: im Worktree nacharbeiten (Spec §9 bleibt Vertrag), neue Gates, erneut vorlegen.
 
