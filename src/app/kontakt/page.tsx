@@ -3,7 +3,7 @@ import { Building2, CircleAlert, HelpCircle, LogIn, MessageCircle, ShieldCheck }
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Statement } from '@/components/marketing/ui';
 import { CtaBand, FeatureGrid, InfoPanel, LegalNotice, LinkButton, PageHero, Section } from '@/components/marketing/ui';
-import { HeroContact } from '@/components/marketing/hero-visuals';
+import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function Page() {
         eyebrow="Kontakt"
         title="Der richtige Kontaktweg hängt von deinem Anliegen ab."
         text="Hausanliegen, bestehende Vorgänge und Partnerfragen bleiben dort, wo ihr Kontext bereits vorhanden ist. Öffentliche Betreiber- und Rechtskontaktdaten werden erst nach dokumentierter Freigabe veröffentlicht."
-        aside={<HeroContact />}
+        aside={<HeroEditorialPhoto src="/images/premium/story-ansprechpartner.jpg" label="Persönlicher Kontakt, wenn du ihn brauchst" detail="Kein Auftrag ohne deine Entscheidung." />}
       />
 
       <Section eyebrow="Eigentümer" title="Hausanliegen direkt im passenden Kontext starten.">
