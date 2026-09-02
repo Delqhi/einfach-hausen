@@ -535,7 +535,9 @@ html, body {
 :root { --bg:#f4f7f7; --ink:#1c2129; --green:#105258; --green-soft:#eaf4ee; --muted:#5b6d73; --card:#ffffff; --line:#e6eeeb; --danger:#d0452e; --radius:18px; }
 * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
 html, body { height:100%; background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Avenir Next",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; overscroll-behavior:none; }
-a { color:var(--green); }
+/* Legacy anchor color must sit in @layer base: un-layered, it would override
+   Tailwind utilities (e.g. text-white on dark CTAs) and break axe contrast. */
+@layer base { a { color:var(--green); } }
 button { -webkit-appearance:none; }
 .page { min-height:100dvh; padding-bottom:110px; }
 .center-page { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:32px; gap:10px; min-height:100dvh; }
