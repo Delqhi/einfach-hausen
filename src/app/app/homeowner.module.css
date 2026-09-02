@@ -1799,3 +1799,64 @@
   .ownerScope :global(.house-cover-card) { padding: 18px; border-radius: 18px; }
   .ownerScope :global(.house-cover-art) { width: 50px; height: 50px; border-radius: 14px; }
 }
+
+/* T-0210 premium app convergence: same structure, richer surface hierarchy. */
+.ownerScope :global(.app-shell-v3 .screen-v3:has(.own-dash)) {
+  background:
+    radial-gradient(circle at 84% 6%, rgba(214, 235, 225, 0.5), transparent 28%),
+    var(--owner-bg);
+}
+.ownerScope :global(.own-dash .qa-card) {
+  border: 1px solid rgba(14, 61, 51, 0.08);
+  box-shadow: 0 16px 42px rgba(14, 61, 51, 0.08);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.ownerScope :global(.own-dash .qa-card:first-child) {
+  border-color: rgba(14, 61, 51, 0.16);
+  box-shadow: 0 20px 48px rgba(14, 61, 51, 0.11);
+}
+.ownerScope :global(.own-dash .ki-card) {
+  border: 1px solid #d3e6dd;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(255, 255, 255, 0.86), transparent 34%),
+    linear-gradient(135deg, #e7f1ec 0%, #edf4f0 100%);
+  box-shadow: 0 22px 56px rgba(14, 61, 51, 0.09);
+}
+.ownerScope :global(.own-dash .ov-card) {
+  border: 1px solid rgba(14, 61, 51, 0.08);
+  box-shadow: 0 12px 34px rgba(14, 61, 51, 0.07);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.ownerScope :global(.own-dash .own-section-title) {
+  letter-spacing: -0.025em;
+}
+@media (hover: hover) {
+  .ownerScope :global(.own-dash .qa-card:hover),
+  .ownerScope :global(.own-dash .ov-card:hover) {
+    border-color: rgba(16, 82, 88, 0.24);
+    box-shadow: 0 24px 54px rgba(14, 61, 51, 0.12);
+    transform: translateY(-3px);
+  }
+}
+@media (max-width: 720px) {
+  .ownerScope :global(.app-shell-v3 .screen-v3:has(.own-dash)) {
+    background:
+      linear-gradient(180deg, rgba(237, 245, 241, 0.72) 0, transparent 190px),
+      var(--owner-bg);
+  }
+  .ownerScope :global(.own-dash .qa-card) {
+    box-shadow: 0 10px 26px rgba(14, 61, 51, 0.07);
+  }
+  .ownerScope :global(.own-dash .ki-card) {
+    box-shadow: 0 16px 38px rgba(14, 61, 51, 0.08);
+  }
+  .ownerScope :global(.own-dash .ov-card) {
+    box-shadow: 0 8px 24px rgba(14, 61, 51, 0.06);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ownerScope :global(.own-dash .qa-card),
+  .ownerScope :global(.own-dash .ov-card) {
+    transition: none;
+  }
+}
