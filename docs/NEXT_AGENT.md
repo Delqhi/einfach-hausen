@@ -1,14 +1,14 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-02 ~22:35 UTC · main = 357fb5c (MERGE von design/premium-consumer-v1 durch, E2E grün) · Backup: website-original · Produktion-Deploy + T-0210-Abschluss offen**
+**Status 2026-09-02 ~23:20 UTC · main = bda08b4 = Produktion (einfachhausen.de, Smoke 17/17) · T-0210 + T-0211 abgeschlossen · Premium-Redesign ist LIVE**
 
 ## GENAU EINE nächste Aktion
 
-**Merge ist durch (Operator-Anweisung 2026-09-02): main enthält das Premium-Redesign. Genau eine nächste Aktion: Welle-1-Abschluss fahren.**
+**Welle 1 (Website-Redesign) ist Produktion + kanonisch abgeschlossen. Genau eine nächste Aktion: höchste priorisierte, eligible Aufgabe aus dem Taskplan übernehmen (`sin-gpt-web-state list` / TASKPLAN.md).**
 
-1. `bash deploy/update-on-oci.sh` (aus /home/ubuntu/dev/einfach-hausen, deployt /srv/einfach-hausen auf main) → Smoke (deploy/README.md, 17/17) → `sin-gpt-web-state complete T-0210 --evidence ...` → render+validate → Handover-Blöcke. Danach Preview abschalten (`sudo systemctl disable --now einfach-hausen-preview cloudflared-eh-preview`).
-2. Sicherung: Branch `website-original` (7962d6d = main vor dem Redesign-Merge, lokal+GitHub). Rückweg: `git reset --hard website-original` oder Revert des Merge-Commits 9356305.
-3. Merge-Ergebnis verifiziert: Build (webpack) grün, `npm run test:e2e` ok:true (15 Checks), Newsletter-App-Promo = Premium-Version (GSAP-Timeline, shadcn Badge).
+1. Abgeschlossen: T-0210 (Premium-Redesign) + T-0211 (App-Promo) — Merge 9356305, Gate-Fixes (intakeGhost-Kontrast, un-layered a{color}-Regeln → @layer base, Commits 893fb3f/363068e/bda08b4), Release-Gate 11/11, Deploy, Smoke 17/17, Preview abgeschaltet (einfach-hausen-preview + cloudflared-eh-preview sind disabled; Tunnel-Domain liefert 502, das ist gewollt).
+2. Rollback-Pfade: Branch `website-original` (7962d6d = main vor Redesign) lokal+GitHub; Archive-Tags `archive/*` für alte WIP-Branches; Revert von 9356305 möglich.
+3. Build-Hinweis bleibt: `npx next build --webpack` (Turbopack panic't am private-Symlink); E2E braucht Build mit /etc/einfach-hausen-build.env (siehe scripts/e2e.mjs T-0200-Hinweis).
 
 ## Kontext
 - **Welle 1 (Website) komplett:** Homepage mit allen 9 Spec-Sections (Hero+Intake, Services-Mosaik mit Operator-3D-Visuals v4, Story, Hausakte, Vertrauen, Betriebe, Preise, FAQ als shadcn Accordion, Security-Kapitel), dunkler Premium-Footer, App-Promo-Sektion mit Scroll-Motion über dem CTA-Band. Alle 11 Unterseiten mit Premium-Photo-Heroes (Audit bestätigt).
@@ -414,4 +414,18 @@ task: T-0119
 updated: 2026-09-01T22:13:44+00:00
 actor: local-agent
 evidence-sha256: 0acd76be267c23dd81333e674d9c0eee29d42c3f07154718697fae9f793a26b6
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0210
+updated: 2026-09-02T23:18:15+00:00
+actor: local-agent
+evidence-sha256: 80f9aad504a029dbe80faed7a0cf4c152de5bf88a4b1880edf60f754211dea51
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0211
+updated: 2026-09-02T23:18:41+00:00
+actor: local-agent
+evidence-sha256: 60f232b4e4d8bb71c603011e8a96ba47b0b2b4f04b45106ed5ab759dbc9d69a0
 -->
