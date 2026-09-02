@@ -1,26 +1,24 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-02 ~01:10 UTC · main = 99182f0 · T-0210 in_progress auf Design-Branch, Preview-LIVE**
+**Status 2026-09-02 ~04:50 UTC · main = e8c70ed · Design-Branch = 8ecf9f9 · Alle Agents konsolidiert**
 
 ## GENAU EINE nächste Aktion
 
-**Auf Operator-Freigabe warten; Vergleich: https://einfach-hausen-preview.delqhi.com (neu, kanonische Preview-Infra: einfach-hausen-preview.service Port 3011 + Tunnel eh-preview) vs https://einfachhausen.de (alt).**
+**T-0210 Abschluss-Kette: Website-QA auf dem Design-Branch (8ecf9f9) fahren, dann Operator-Freigabe einholen, dann mergen.**
 
 Konkret:
-1. Bei Freigabe: fast-forward merge `design/premium-consumer-v1` nach main, `bash deploy/update-on-oci.sh`, Smoke 17/17, `sin-gpt-web-state complete T-0210`, render+validate, Handover-Blöcke, Preview-Instanz abschalten (`sudo systemctl disable --now einfach-hausen-preview cloudflared-eh-preview`).
-2. Bei Änderungswünschen: im Worktree `/home/ubuntu/dev/eh-premium-redesign` nacharbeiten (Spec §9 bleibt Vertrag), `npm run build`, Preview-Service neu starten, erneut vorlegen.
+1. Webpack-Build nutzen (`npx next build --webpack`) — Turbopack panic't am `private`-Symlink (bekannt, nicht fixen, nicht am Symlink drehen).
+2. Preview-Instanz aktualisieren: `sudo systemctl restart einfach-hausen-preview` (läuft auf Port 3011 aus dem Worktree, öffentlich via https://einfach-hausen-preview.delqhi.com). Hinweis: Design-Worktree wird nicht mehr von anderen Sessions parallel bearbeitet — dieser Agent (dove) ist jetzt allein zuständig.
+3. Operator hat die ChatGPT-Web-Spezifikation (Architektur: Consumer-Brand statt SaaS, visuelle Anker pro Sektion, Wellen 1-6) bereits freigegeben; Website-Redesign läuft auf dem Design-Branch. Nach Freigabe: FF-Merge nach main, `bash deploy/update-on-oci.sh`, Smoke 17/17, `sin-gpt-web-state complete T-0210`, render+validate, Handover-Blöcke, Preview-Instanz abschalten (`sudo systemctl disable --now einfach-hausen-preview cloudflared-eh-preview`).
+4. T-0211 (App-Promo-Sektion) ist VORGEBAUT auf main (e8c70ed): Komponente + Scroll-Motion + echter App-Screenshot; chatgpt-web muss nur noch in page.tsx einbauen nach T-0210-Merge.
 
 ## Kontext
-- **NEU T-0211 (owner=chatgpt-web, backlog, high):** App-Promo/Newsletter-Sektion als LETZTE Sektion direkt ueber dem Footer auf der Startseite. KOMPONENTE IST BEREITS VORGEBAUT (fc8ed40): `src/components/marketing/newsletter-app-promo.tsx` + `.module.css` (34px-Card, Store-Buttons mit Apple/Google-SVGs, Phone-Mockup, responsive, Gates gruen, Screenshots verifiziert). Restaufgabe fuer chatgpt-web: NUR noch `<NewsletterAppPromo />` in `src/app/page.tsx` als letzte Sektion vor dem Footer importieren+einhaengen (NACH T-0210-Merge, niemals im eh-premium-redesign-Worktree). Deutsche Default-Copy ist gesetzt; Store-Hrefs sind `#` und sollten auf echte Store-Links gelegt werden.
-- **Preview-LIVE:** Design-Branch läuft als zweite Instanz parallel zur Produktion: `einfach-hausen-preview.service`, Port 3011, eigene SQLite-DB (`/var/lib/einfach-hausen-preview/`), eigene Env (`/etc/einfach-hausen-preview.env`), öffentlich via dediziertem Cloudflare-Tunnel `eh-preview` (`cloudflared-eh-preview.service`) unter `https://einfach-hausen-preview.delqhi.com`. Produktion einfachhausen.de unangetastet (200).
-- **Wichtig:** sin-kestra-Tunnel ist remote-managed (aktuell Config v5) — lokale `/etc/cloudflared/sin-kestra.yml`-Edits sind wirkungslos. Neue Hostnames: eigenen Tunnel anlegen, nicht sin-kestra editieren. Duplikat-Setup (CNAME neu.einfachhausen.de + sin-kestra-Ingress 3457 + npm-Server 3457) wurde bereinigt; einzig kanonische Preview ist einfach-hausen-preview.delqhi.com. Irrläufer-CNAME preview.einfachhausen.de.delqhi.com (Zone delqhi.com) ist harmlos/loeschbar.
-- Redesign V1 implementiert auf `design/premium-consumer-v1`: Assets (FLUX.2-klein-4b via OmniRoute Route `vag/bfl/flux-2-klein-4b` — free, 429-Retry), Homepage nach Spec §9, `premium.module.css` Namespace, Subpage-Heroes §10.2, e2e-Assertions an neue Copy, dedizierte Story-Assets. Aktuellster Stand: siehe Branch-HEAD (andere Session arbeitet parallel im selben Worktree).
-- **Achtung zweite Session:** Der Worktree eh-premium-redesign wird von einer zweiten Agent-Session aktiv weiterentwickelt (neuere Commits als 943ad7e, NEXT_AGENT-Updates). Bei Änderungen dort: Preview-Service rebuilt neu starten (`sudo systemctl restart einfach-hausen-preview` nach `npm run build`).
-- Redesign V1 KOMPLETT implementiert auf `design/premium-consumer-v1` (56d42d1): Assets e7a5be9 (FLUX.2-klein-4b via OmniRoute Route `vag/bfl/flux-2-klein-4b` — free, 429-Rate-Limits via Retry, 6 Bilder q78), Homepage nach Spec §9, `premium.module.css` Namespace, e2e-Assertions an neue Copy angepasst (0482052).
-- Gates im Worktree: lint 0 errors, build OK, fullflow e2e **ok:true**, Screenshots Desktop 1440 + Mobile 390 verifiziert.
-- **main ist unangetastet** (2eb24a7) — Rollback-Vertrag aktiv bis Operator-Freigabe.
-- Worktree-Setup: `node_modules` ist echte Kopie (Turbopack lehnt Root-Symlinks ab).
-- T-0120 (Security-Suiten) bleibt geparkt hinter T-0210.
+- **Rollback-Vertrag aktiv:** main unangetastet bis Operator-Freigabe; Design-Branch = design/premium-consumer-v1 @ 8ecf9f9 (8 Commits über 56d42d1 hinaus).
+- **Konsole für Build:** Turbopack-Panic durch private-Symlink in globals.css-Verarbeitung ist known issue; `--webpack` funktioniert.
+- **T-0172-Komponenten** (Agent 2): CardVisual/FeatureVisualCard/FeatureVisualGrid + Registry + Manifest + Contract-Test sind im Branch 1fa757d.
+- **App-Polish-Verträge:** scripts/premium-app-polish-contract.mjs (nav/structure locked) und scripts/premium-app-visual-contract.mjs sind GREEN und müssen nach jedem App-CSS-Change grün bleiben.
+- **Preview-Infrastruktur:** einfach-hausen-preview.service (Port 3011, /var/lib/einfach-hausen-preview, eigene SQLite) + cloudflared-eh-preview.service (Tunnel d81a6644, Hostnames: einfach-hausen-preview.delqhi.com, napp.delqhi.com -> 3012 Test-Server, napp-shots.delqhi.com -> 3013 Statik-Server). sin-kestra-Tunnel ist remote-managed (lokalEdits wirkungslos).
+- **Session-Readback:** Agent-1-Spezifikation aus ChatGPT-Web-Sitzung via OCI-Chromium-CDP (sin-gpt-web-browser.service, Port 9223) extrahiert; vollständige Architektur-/Designprinzipien in /tmp/chatgpt-session.txt (ungeprüft transitorisch).
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0169
