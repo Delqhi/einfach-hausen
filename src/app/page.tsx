@@ -9,6 +9,7 @@ import { IntakeForm } from '@/components/home/intake-form';
 import { HomeServicesGrid } from '@/components/marketing/home-services-grid';
 import { TrustSection } from '@/components/marketing/trust-section';
 import { SecuritySection } from '@/components/marketing/security-section';
+import NewsletterAppPromo from '@/components/marketing/newsletter-app-promo';
 import {
   Accordion,
   AccordionContent,
@@ -123,6 +124,7 @@ export default async function HomePage() {
 
     <Statement kicker="Einfach Hausen" tone="green">Dein Haus <mark>vergisst nichts.</mark> Wir auch nicht.</Statement>
     <SecuritySection />
+    <NewsletterAppPromo />
     <CtaBand title="Beim nächsten Thema nicht wieder von vorne anfangen." text="Lege dein Hauskonto kostenlos an und beschreibe einfach, was bei deinem Eigenheim ansteht." />
   </MarketingShell>;
 }
