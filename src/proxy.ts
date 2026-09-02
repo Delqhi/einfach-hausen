@@ -5,7 +5,7 @@ import type { NextRequest } from "next/server";
 // upstream proxies can join traces; otherwise one is generated. The id flows
 // to the app via the x-correlation-id request header and back to the client
 // on the response for support lookups.
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const correlationId = req.headers.get("x-correlation-id") ?? crypto.randomUUID();
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-correlation-id", correlationId);

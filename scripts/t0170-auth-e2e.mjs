@@ -59,7 +59,7 @@ async function freePort() {
 async function startNext(mode, extraEnv = {}) {
   const port = await freePort();
   const args = mode === 'dev'
-    ? [nextBin, 'dev', '-H', '127.0.0.1', '-p', String(port)]
+    ? [nextBin, 'dev', '--webpack', '-H', '127.0.0.1', '-p', String(port)]
     : [nextBin, 'start', '-H', '127.0.0.1', '-p', String(port)];
   const env = {
     ...process.env,
