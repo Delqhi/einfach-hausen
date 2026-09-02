@@ -114,7 +114,7 @@ function WorkflowSteps({
   scene: WorkflowScene;
 }) {
   return (
-    <div className="grid min-h-[444px] grid-rows-3 gap-4 bg-[#f7fafa] p-6">
+    <div className="grid min-h-[444px] grid-rows-3 gap-4 bg-[#f7fafa] px-4 py-6 sm:px-8">
       {steps.map((step, index) => {
         const active = scene.step === index;
         const progress = active ? scene.progress * 100 : scene.step > index ? 100 : 0;
@@ -124,8 +124,8 @@ function WorkflowSteps({
             key={step.title}
             className={`relative flex flex-col justify-center rounded-2xl px-6 py-6 transition-all duration-500 ${
                 active
-                  ? "border border-emerald-600/25 bg-white shadow-[0_16px_40px_-18px_rgba(16,82,88,0.28)]"
-                  : "border border-black/[0.06] bg-white/70"
+                  ? "bg-[#eef7f4] shadow-[0_10px_30px_-14px_rgba(16,82,88,0.25)]"
+                  : "bg-transparent"
               }`}
           >
             <div
@@ -254,7 +254,7 @@ function AgentCard({
     <motion.div
       layout
       transition={{ layout: { duration: 0.52, ease: [0.22, 1, 0.36, 1] } }}
-      className="relative w-[min(340px,calc(100vw-80px))] overflow-hidden rounded-[14px] border border-black/[0.08] bg-white"
+      className="relative w-[min(400px,calc(100vw-80px))] overflow-hidden rounded-[16px] border border-black/[0.08] bg-white shadow-[0_18px_44px_-18px_rgba(10,53,57,0.28)]"
     >
       <AnimatePresence initial={false} mode="popLayout">
         {(isConnecting || isSuccess) && (
@@ -372,15 +372,15 @@ export function WorkflowDemoBlock({
 
   return (
     <section
-      className={`overflow-hidden border-y border-black/[0.07] bg-white ${className}`}
+      className={`overflow-hidden bg-[#f0f6f4] py-14 ${className}`}
       aria-label="Animated workflow demo"
     >
-      <div className="mx-auto grid w-full max-w-[1180px] lg:grid-cols-[1fr_1fr]">
-        <div className="border-black/[0.07] lg:border-r">
+      <div className="mx-auto grid w-full max-w-[1180px] overflow-hidden rounded-[28px] border border-black/[0.06] bg-white shadow-[0_36px_90px_-36px_rgba(10,53,57,0.3)] lg:grid-cols-[1fr_1fr]">
+        <div className="border-black/[0.06] lg:border-r">
           <WorkflowSteps steps={normalizedSteps} scene={scene} />
         </div>
 
-        <div className="relative grid place-items-center overflow-hidden bg-[#f0f6f4] px-6 py-16 lg:min-h-[444px]">
+        <div className="relative grid place-items-center overflow-hidden bg-white px-6 py-14 lg:min-h-[444px]">
           <div
             aria-hidden="true"
             className="absolute left-1/2 top-6 z-10 -translate-x-1/2"
@@ -394,13 +394,18 @@ export function WorkflowDemoBlock({
             </span>
           </div>
 
-          <div className="relative z-10 rounded-[24px] border border-black/[0.07] bg-white/95 p-4 shadow-[0_30px_70px_-28px_rgba(10,53,57,0.4)] backdrop-blur">
+          <div className="relative z-10 grid gap-4 justify-items-center">
+            <div className="rounded-[20px] border border-black/[0.08] bg-white p-2 shadow-[0_20px_50px_-22px_rgba(10,53,57,0.35)]">
             <AgentCard
               scene={scene}
               prompt={prompt}
               modelLabel={modelLabel}
               processingItems={processingItems}
             />
+            </div>
+            <p className="text-[13px] font-medium text-neutral-500">
+              So funktioniert einfach-hausen — live simuliert
+            </p>
           </div>
         </div>
       </div>
