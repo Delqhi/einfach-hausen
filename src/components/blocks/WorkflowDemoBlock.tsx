@@ -379,6 +379,18 @@ export function WorkflowDemoBlock({
         <div className="relative grid min-h-[390px] place-items-center overflow-hidden px-6 py-14 lg:min-h-[444px]">
           <div
             aria-hidden="true"
+            className="absolute left-1/2 top-6 z-10 -translate-x-1/2"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-white/90 px-3 py-1 text-[11px] font-medium text-neutral-600 shadow-sm backdrop-blur">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              </span>
+              Live-Demo
+            </span>
+          </div>
+          <div
+            aria-hidden="true"
             className="pointer-events-none absolute inset-0"
             style={{
               backgroundImage:
