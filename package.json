@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:e2e": "node scripts/e2e.mjs",
-    "test:security": "node scripts/security-regression.mjs && node scripts/t0003-security-regression.mjs",
+    "test:security": "node scripts/security-regression.mjs && node scripts/t0003-security-regression.mjs && node scripts/t0120-security-fuzz.mjs",
     "graph:update": "graphify update .",
     "graph:check": "graphify check-update .",
     "graph:install": "graphify hook install && graphify update .",
