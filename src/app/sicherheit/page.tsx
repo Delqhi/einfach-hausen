@@ -3,7 +3,7 @@ import { BadgeCheck, Eye, FileCheck2, LockKeyhole, ShieldCheck, UserCheck } from
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Statement } from '@/components/marketing/ui';
 import { CtaBand, FeatureGrid, InfoPanel, LinkButton, PageHero, Section } from '@/components/marketing/ui';
-import { HeroShield } from '@/components/marketing/hero-visuals';
+import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function Page() {
         eyebrow="Sicherheit"
         title="Kontrollierte Zugriffe statt Vertrauensversprechen ohne Beleg."
         text="Einfach Hausen trennt private Daten, bewusste Freigaben und technische Sicherheitsgrenzen. Diese Seite beschreibt überprüfbare Produktprinzipien und vorhandene Schutzmechanismen – keine externe Zertifizierung, kein Audit-Siegel und keine Garantie."
-        aside={<HeroShield />}
+        aside={<HeroEditorialPhoto src="/images/premium/hausakte.jpg" label="Kontrolle bleibt bei dir" detail="Freigaben und Aufträge brauchen deine bewusste Entscheidung." />}
         actions={<><LinkButton href="/register?role=homeowner">Kostenlos starten</LinkButton><LinkButton href="/datenschutz" secondary>Datenschutz</LinkButton></>}
       />
 

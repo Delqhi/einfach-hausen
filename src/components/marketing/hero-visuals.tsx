@@ -57,6 +57,24 @@ export function HeroHausaktePhoto() {
 }
 
 /**
+ * Shared editorial hero for public marketing routes that need a strong
+ * consumer/lifestyle anchor without inventing a new page-specific visual
+ * system. The image is decorative because the adjacent hero copy carries the
+ * page meaning; the overlay provides a short, truthful product proof.
+ */
+export function HeroEditorialPhoto({ src, label, detail }: { src: string; label: string; detail: string }) {
+  return (
+    <div className={premium.editorialHeroPhoto} aria-hidden="true">
+      <Image className={premium.editorialHeroPhotoImg} src={src} alt="" fill sizes="(max-width: 980px) 520px, 460px" priority />
+      <span className={premium.editorialHeroProof}>
+        <CircleCheck size={17} aria-hidden="true" />
+        <span><strong>{label}</strong><small>{detail}</small></span>
+      </span>
+    </div>
+  );
+}
+
+/**
  * Clickable hero mockup: the whole card links into the product funnel
  * (register/login). Structure: Link > stage (positioning context) >
  * card (clipped) + floating badges + hover hint pill.
