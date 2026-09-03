@@ -192,3 +192,7 @@ Der Cloudflare-Fehler 1033 bedeutet: die Cloudflare-Edge findet keinen verbunden
 - **Preview/Test-Hosts** (`einfach-hausen-preview.delqhi.com`, `napp.delqhi.com`): Tunnel `d81a6644` (`cloudflared-eh-preview.service`), seit 2026-09-02 absichtlich deaktiviert (T-0210-Abschluss). Diese Hostnames liefern dauerhaft 1033/530, bis der Tunnel wieder aktiviert wird — kein Incident.
 
 Einzelner 1033 im Log bei sonst 200-Antworten ist ein transienter Edge-Event (z. B. Connector-Rotation während eines Deploys) und kein Handlungsanlass; andauernde 1033 auf der Produktionsdomain erst.
+
+## Disaster Recovery (T-0137)
+
+Reproduzierbare Wiederherstellungsabläufe für DB-Verlust, korrupte Releases und fehlerhafte Migrationen: **docs/DISASTER_RECOVERY_RUNBOOK.md**. Verifiziert gegen T-0136/T-0124 (gleicher Restore-Kern: Checksummen → integrity_check → Stage). Recovery-Ziele (Betriebsnachweis): RPO = Backup-Alter (stündliche Backups), RTO < 15 min produktiv (Drill misst 5s für Verify+Stage).
