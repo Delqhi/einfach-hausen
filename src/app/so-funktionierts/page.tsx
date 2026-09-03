@@ -58,11 +58,10 @@ export default function Page() {
         </div>
       </Section>
 
-      <Section tone="soft" eyebrow="Drei Wege" title="Rat, Kontakt oder Auftrag. Getrennte Entscheidungen." text="Du gehst jeden Weg nur, wenn du es willst. Nichts passiert automatisch." tight>
-        <span />
-      </Section>
-
       <Clauses
+        eyebrow="Drei Wege"
+        title="Rat, Kontakt oder Auftrag. Getrennte Entscheidungen."
+        text="Du gehst jeden Weg nur, wenn du es willst. Nichts passiert automatisch, und keiner der drei Wege führt ungefragt in den nächsten."
         items={[
           {
             title: 'Nur eine Frage klären',

@@ -32,6 +32,9 @@ export default function Page() {
 
       <Clauses
         id="regeln"
+        eyebrow="Vier Regeln"
+        title="Woran du uns messen kannst."
+        text="Keine Absichtserklärung, sondern vier Sätze, an denen du uns festhalten kannst."
         items={PRINCIPLES.map((principle) => ({
           title: principle.title,
           body: <p>{principle.text}</p>,
