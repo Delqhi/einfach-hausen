@@ -86,6 +86,23 @@ Notification-Dispatcher: `einfach-hausen-dispatch.timer` (alle 5 Min) liefert f�
 
 Environment-Dateien (T-0200/T-0201): `/etc/einfach-hausen.env` enthält zusätzlich `AUTH_MODE`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SMTP_*`, `MAIL_FROM`. Build-Zeit-Variablen (`NEXT_PUBLIC_*`) liegen in `/etc/einfach-hausen-build.env` (ubuntu-lesbar) und werden von `deploy/update-on-oci.sh` vor `npm run build` gesourcet - ohne sie verliert der Client-Bundle die Supabase-Gateway-Origin und die CSP bricht den Login.
 
+## KI-Ad-Credits (T-0207, gehärtet 2026-09-03)
+
+`POST /api/ai/credits` und `PUT /api/ki` vergeben Bonus-KI-Aktionen nur noch
+gegen signierten Werbenachweis (`src/lib/ad-receipt.ts`): Body
+`{ receipt, signature }`, wobei `receipt` JSON `{ provider, nonce, ts }` ist
+und `signature` HMAC-SHA256 darüber (hex, optional `sha256=`-Präfix).
+Secret: `AD_RECEIPT_SECRET` (Fallback `WEBHOOK_SECRET`), 10-Minuten-Skew,
+Single-Use via `grantAdCreditsOnce()` (exakte `rewarded-ad:<provider>:<nonce>`-
+Quelle, Replay → 409). Ohne konfiguriertes Secret: Production fail-closed
+(503), außerhalb Production Dev-Bypass (`ALLOW_UNSIGNED_AD_CREDITS=1` oder
+Nicht-Production). Bis ein Rewarded-Ad-SDK verdrahtet ist, sendet die
+Einstellungs-UI nur `{}` — der Server lehnt in Produktion ehrlich ab.
+
+Legacy-Supabase-Hooks `POST /api/hooks/neue-anfrage` und
+`POST /api/hooks/neues-angebot` sind stillgelegt (410, Details in
+`docs/JOBS_VS_ANFRAGEN.md`); falsches `x-webhook-secret` antwortet weiter 401.
+
 ## Non-destructive restore proof (HA)
 
 Nie Prod-DB direkt ersetzen. Dry-run gegen Staging-DB:

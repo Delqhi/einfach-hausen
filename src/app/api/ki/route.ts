@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser, supabaseConfig } from "@/lib/auth";
 import { applyRateLimitLockout, checkRateLimit, consumeRateLimitAttempt } from "@/lib/security/rate-limit";
-import { aiQuotaSnapshot, byokEnabled, byokKeyEnc, byokGateway, consumeCloudAction, FREEMIUM_MONTHLY, grantAdCredits, AD_CREDIT_GRANT } from "@/lib/ai-engine";
+import { aiQuotaSnapshot, byokEnabled, byokKeyEnc, byokGateway, consumeCloudAction, FREEMIUM_MONTHLY, grantAdCreditsOnce, AD_CREDIT_GRANT } from "@/lib/ai-engine";
+import { verifyAdReceipt } from "@/lib/ad-receipt";
 import { decryptSecret } from "@/lib/security/secret-box";
 
 const SYSTEM = `Du bist der freundliche Assistent von "einfachhausen", einer App für Hauseigentümer.
@@ -107,13 +108,19 @@ export async function GET() {
 }
 
 // Grant +10 actions after a rewarded ad (the ad SDK callback hits this).
+// The SDK receipt is verified server-side before granting (see
+// docs/OPERATIONS.md "KI-Ad-Credits"); replays grant exactly once (409).
 export async function PUT(req: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const gate = checkRateLimit("account_mutation", `u:${user.id}`);
   if (!gate.allowed) return NextResponse.json({ error: "Zu viele Versuche." }, { status: 429 });
   consumeRateLimitAttempt("account_mutation", `u:${user.id}`);
-  // Production: verify the ad-SDK signature here before granting.
-  grantAdCredits(user.id, AD_CREDIT_GRANT);
+  let body: unknown = null;
+  try { body = await req.json(); } catch { body = null; }
+  const verdict = verifyAdReceipt(body);
+  if (!verdict.ok) return NextResponse.json({ error: verdict.reason }, { status: verdict.status });
+  const creditId = grantAdCreditsOnce(user.id, AD_CREDIT_GRANT, `rewarded-ad:${verdict.provider}:${verdict.nonce}`);
+  if (creditId === null) return NextResponse.json({ error: "Dieser Werbenachweis wurde bereits eingelöst." }, { status: 409 });
   return NextResponse.json({ ok: true, quota: aiQuotaSnapshot(user.id) });
 }

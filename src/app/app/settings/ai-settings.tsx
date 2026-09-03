@@ -60,9 +60,11 @@ export function AiSettings() {
   async function watchAd() {
     setError(""); setMessage(""); setBusy(true);
     try {
-      // Production: trigger the rewarded-ad SDK here and grant after the
-      // verified completion callback (server-side receipt check).
-      const res = await fetch("/api/ai/credits", { method: "POST" });
+      // Until a rewarded-ad SDK is wired, no signed receipt exists: the
+      // server verifies receipts fail-closed (production) and only accepts
+      // unsigned grants outside production. Wire the SDK completion callback
+      // to POST { receipt, signature } here (contract: docs/OPERATIONS.md).
+      const res = await fetch("/api/ai/credits", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Fehler.");
       uiToast(`+${data.granted} KI-Aktionen erhalten.`, { kind: "success" });

@@ -8,7 +8,7 @@ import Stripe from 'stripe';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
-import { createSession, destroySession, requireUser, supabaseAdmin, establishSupabaseSession } from '@/lib/auth';
+import { authMode, createSession, destroySession, requireUser, supabaseAdmin, establishSupabaseSession } from '@/lib/auth';
 import { adminPasswordMatches, createAdminSession, destroyAdminSession, requireAdmin } from '@/lib/admin-auth';
 import { createNotification } from '@/lib/notifications';
 import { geocodePostcode } from '@/lib/geocode';
@@ -223,7 +223,20 @@ export async function loginAction(fd: FormData) {
   recordRateLimitSuccess('login', email);
   recordRateLimitSuccess('login', `ip:${ip}`);
   logSecurityEvent('auth_login_ok', email, `ip=${ip}`);
-  await createSession(row.id); redirect(row.role==='provider'?'/pro':'/app');
+  await createSession(row.id);
+  // Supabase mode: the mh_session cookie alone does not authenticate
+  // getCurrentUser() — it ignores the local cookie. Establish the real
+  // Supabase SSR session like registerAction and the browser login path
+  // (signInWithPassword) do; fail closed so the user does not land on
+  // /app only to bounce back to /login.
+  if (authMode() !== 'local') {
+    const supabaseSession = await establishSupabaseSession(email, password);
+    if (!supabaseSession) {
+      logSecurityEvent('auth_login_fail', email, 'supabase_session_failed');
+      redirect('/login?error=Anmeldung%20fehlgeschlagen.%20Bitte%20erneut%20versuchen');
+    }
+  }
+  redirect(row.role==='provider'?'/pro':'/app');
 }
 export async function logoutAction(){ await destroySession(); redirect('/'); }
 
