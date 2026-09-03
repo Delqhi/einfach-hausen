@@ -1,5 +1,6 @@
 import { db } from './db';
 import { sendMail } from './mailer';
+import { structuredLog, newCorrelationId } from './observability';
 
 export function createNotification(userId: number, title: string, body: string, href: string, kind = 'info') {
   return db
@@ -130,6 +131,7 @@ export function deliveryReceipts(notificationId: number): Array<{ channel: strin
 // Async so channel adapters (e.g. SMTP email) can await real delivery results;
 // the outbox transactionality lives in the database, not in this loop.
 export async function dispatchDueNotifications(nowMs: number = Date.now()): Promise<{ sent: number; retried: number; dead: number }> {
+  const correlationId = newCorrelationId();
   const due = db
     .prepare("SELECT id,user_id,kind,title,body,href,channel,retry_count FROM notifications WHERE status='pending' AND (next_retry_at IS NULL OR next_retry_at<=?) ORDER BY priority ASC, created_at ASC LIMIT 200")
     .all(new Date(nowMs).toISOString()) as Array<{ id: number; user_id: number; kind: string; title: string; body: string; href: string; channel: string; retry_count: number }>;
@@ -142,6 +144,7 @@ export async function dispatchDueNotifications(nowMs: number = Date.now()): Prom
     if (outcome === 'sent') {
       db.prepare("UPDATE notifications SET status='sent' WHERE id=? AND status='pending'").run(row.id);
       recordReceipt(row.id, row.channel, 'sent', 'delivered');
+      structuredLog.info('internal', 'outbox delivered', { correlation_id: correlationId, event_id: row.id });
       sent++;
       continue;
     }
@@ -149,12 +152,14 @@ export async function dispatchDueNotifications(nowMs: number = Date.now()): Prom
     if (attempts >= MAX_NOTIFICATION_RETRIES) {
       db.prepare("UPDATE notifications SET status='dead',retry_count=?,next_retry_at=NULL WHERE id=?").run(attempts, row.id);
       recordReceipt(row.id, row.channel, 'dead', `no adapter for channel after ${attempts} attempts`);
+      structuredLog.error('internal', 'outbox dead-lettered', { correlation_id: correlationId, event_id: row.id });
       dead++;
     } else {
       const backoffSeconds = NOTIFICATION_RETRY_BASE_SECONDS * 2 ** (attempts - 1);
       const nextRetry = new Date(nowMs + backoffSeconds * 1000).toISOString();
       db.prepare("UPDATE notifications SET retry_count=?,next_retry_at=? WHERE id=? AND status='pending'").run(attempts, nextRetry, row.id);
       recordReceipt(row.id, row.channel, 'failed', adapter ? 'adapter reported failure' : 'no adapter registered');
+      structuredLog.warn('internal', 'outbox retry scheduled', { correlation_id: correlationId, event_id: row.id });
       retried++;
     }
   }

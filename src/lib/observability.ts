@@ -18,7 +18,7 @@ export interface LogContext {
   correlation_id?: string;
   user_id?: number;
   job_id?: number;
-  event_id?: number;
+  event_id?: string | number;
   [key: string]: string | number | boolean | undefined;
 }
 

@@ -89,5 +89,6 @@
   },
   "overrides": {
     "uuid": "npm:uuid@11.1.1"
-  }
+  },
+  "test:observability": "node scripts/observability-regression.mjs"
 }

@@ -13,6 +13,7 @@ function localAssistantReply(intent:IntentResult,body:string,context:string):str
   return `${urgency} ${category} ${mode}`.trim();
 }
 import { geocodePostcode, distanceKm, regionalPostcodeGeo } from './geocode';
+import { structuredLog } from './observability';
 import { berlinRequestTimestamp, classifyAvailabilityFreshness, emergencyAvailableAt, emergencyResponseScore, explainMatchScore, preferredRequestWindow, type MatchReason } from './matching';
 import { resolveDispatchService, type DispatchService } from './dispatch-config';
 import { providerSupportsService } from './provider-directory';
@@ -109,6 +110,7 @@ async function dispatchJob(jobId:number,homeownerId:number,service:ServiceRow,jo
       for(const managerId of getProviderManagerIds(m.p.user_id))createNotification(managerId,title,body,`/pro/jobs/${jobId}`,'dispatch');
     }
   }
+  structuredLog.info('internal','job dispatch completed',{job_id:jobId,dispatched:created,request_kind:requestKind});
   return created;
 }
 

@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { markPaymentFailed, markPaymentPaid, stripePaymentsConfigured } from '@/lib/payments';
+import { structuredLog } from '@/lib/observability';
 import { createNotification } from '@/lib/notifications';
 import { activatePackageOrder } from '@/lib/packages';
 import { claimWebhookEvent,completeWebhookEvent,releaseWebhookEvent } from '@/lib/security/webhooks';
@@ -114,6 +115,7 @@ export async function POST(req:NextRequest){
   catch{return new NextResponse('Invalid signature',{status:400});}
 
   if(!claimWebhookEvent('stripe',event.id))return NextResponse.json({received:true,duplicate:true});
+  structuredLog.info('external_service','stripe webhook accepted',{correlation_id:req.headers.get('x-correlation-id')??undefined,event_id:event.id});
 
   try{
     if(event.type==='checkout.session.completed'||event.type==='checkout.session.async_payment_succeeded'){
@@ -126,11 +128,13 @@ export async function POST(req:NextRequest){
       // Payment attempts (including invoice_payment) reconcile independently of
       // metadata kind. Non-payment Checkout sessions simply have no matching row.
       if(session.payment_status==='paid')markPaymentPaid(session.id);
+      structuredLog.info('payment','stripe payment reconciled',{event_id:event.id});
     }
 
     if(event.type==='checkout.session.async_payment_failed'||event.type==='checkout.session.expired'){
       const session=event.data.object as Stripe.Checkout.Session;
       markPaymentFailed(session.id);
+      structuredLog.warn('payment','stripe payment failed/expired',{event_id:event.id});
     }
 
     if(event.type==='customer.subscription.updated'||event.type==='customer.subscription.deleted'){
