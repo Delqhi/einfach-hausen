@@ -127,6 +127,18 @@ export function deliveryReceipts(notificationId: number): Array<{ channel: strin
   return db.prepare('SELECT channel,state,detail,created_at FROM notification_receipts WHERE notification_id=? ORDER BY created_at ASC, id ASC').all(notificationId) as any;
 }
 
+export function requeueDeadNotification(notificationId: number, actor: string): boolean {
+  // Safe retry (T-0126): a dead notification re-enters the normal pending
+  // lifecycle (retry_count reset so it gets fresh attempts). Caller must be
+  // admin; every requeue is auditable via the receipt trail.
+  const info = db.prepare("UPDATE notifications SET status='pending',retry_count=0,next_retry_at=NULL WHERE id=? AND status='dead'").run(notificationId);
+  if (info.changes) {
+    recordReceipt(notificationId, 'ops', 'sent', `requeued by ${actor.slice(0, 80)}`);
+    return true;
+  }
+  return false;
+}
+
 // Deliver every due pending notification through its channel adapter.
 // Async so channel adapters (e.g. SMTP email) can await real delivery results;
 // the outbox transactionality lives in the database, not in this loop.

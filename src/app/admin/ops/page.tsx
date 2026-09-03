@@ -1,6 +1,5 @@
-import { Star, Search } from 'lucide-react';
 import { isFeatureEnabled } from '@/lib/feature-flags';
-import { toggleFeatureFlagAction } from '@/app/actions';
+import { toggleFeatureFlagAction, requeueDeadNotificationAction } from '@/app/actions';
 import { requireAdmin } from '@/lib/admin-auth';
 import { db } from '@/lib/db';
 
@@ -37,7 +36,7 @@ export default async function AdminOps({searchParams}:{searchParams:Promise<Reco
     </section>
     <section className="admin-panel"><h2>Zustellstatus (Outbox)</h2>
       <div className="stack">{outbox.map(o=><div className="admin-card" key={o.status}><strong>{o.status}</strong><span> {o.c}</span></div>)}</div>
-      {dead.length>0&&<><h3>Tote Briefe (letzte 10)</h3><div className="stack">{dead.map(d=><article className="admin-card" key={d.id}><small>{d.kind} · {new Date(d.created_at).toLocaleString('de-DE')}</small></article>)}</div></>}
+      {dead.length>0&&<><h3>Tote Briefe (letzte 10)</h3><div className="stack">{dead.map(d=><article className="admin-card" key={d.id}><small>{d.kind} · {new Date(d.created_at).toLocaleString('de-DE')}</small><form action={requeueDeadNotificationAction.bind(null, d.id)}><button className="btn ghost">Erneut zustellen</button></form></article>)}</div></>}
     </section>
     <section className="admin-panel"><h2>Matching-Trace</h2>
       <div className="stack">{trace.map((t,i)=><article className="admin-card" key={i}><small>{new Date(t.created_at).toLocaleString('de-DE')} · Job {t.job_id} · {t.business_name||t.reason_key}</small><strong>{t.decision}</strong><p>{t.detail}</p></article>)}</div>

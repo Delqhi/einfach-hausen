@@ -567,6 +567,14 @@ export async function reportReviewAction(reviewId:number, fd:FormData){
   redirect(`/app/partners?message=Danke.%20Die%20Bewertung%20wurde%20gemeldet%20und%20wird%20geprueft.`);
 }
 
+export async function requeueDeadNotificationAction(notificationId:number){
+  await requireAdmin();
+  const { requeueDeadNotification } = await import('@/lib/notifications');
+  const ok = requeueDeadNotification(notificationId, 'admin-ops');
+  logAdminAudit('requeue-notification', ok ? 'requeued' : 'not-dead', `notification=${notificationId}`);
+  revalidatePath('/admin/ops');
+}
+
 export async function moderateReviewAction(reviewId:number, fd:FormData){
   await requireAdmin();
   const decision=String(fd.get('decision')??'');
