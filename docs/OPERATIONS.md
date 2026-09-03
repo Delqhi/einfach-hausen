@@ -183,3 +183,12 @@ Alert path without a new platform: `deploy/kestra/einfach-hausen-slo*.yml` sched
 `scripts/t0124-backup-drill.sh` (`npm run test:backup-drill`, wöchentlich via `deploy/einfach-hausen-drill.{service,timer}`, So 03:00) führt die nicht-destruktive Übung aus: neuestes Backup unter `/var/backups/einfach-hausen` wählen, RPO (Backup-Alter) berechnen, `restore-einfach-hausen.sh BACKUP --stage TMPDIR` (Checksums, SQLite-Integrität, Archive), `PRAGMA integrity_check` auf der wiederhergestellten DB, Nachweis der `private/`-Wiederherstellung, RTO messen. Eine JSON-Evidence-Zeile je Lauf geht an `/var/lib/einfach-hausen/drill-evidence.jsonl`. Fehlende Archive/DB, SQLite-Korruption oder fehlgeschlagene Verifikation brechen laut mit Exit 1.
 
 Einrichtung (einmalig): `sudo cp deploy/einfach-hausen-drill.{service,timer} /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now einfach-hausen-drill.timer`. Der Service ruft das Skript per sudo auf (Backups sind root:0700 aus Datenschutzgründen); dafür ist eine sudoers-Regel nötig: `ubuntu ALL=(root) NOPASSWD: /srv/einfach-hausen/scripts/t0124-backup-drill.sh` in `/etc/sudoers.d/eh-backup-drill`. Solange die Regel fehlt, läuft der Drill manuell per `sudo npm run test:backup-drill`.
+
+### Cloudflare 1033 (Tunnel offline) — Diagnose
+
+Der Cloudflare-Fehler 1033 bedeutet: die Cloudflare-Edge findet keinen verbundenen Tunnel-Connector für den Hostnamen. Auf dieser Host zwei getrennte Tunnel beachten:
+
+- **Produktion** (`einfachhausen.de`): Tunnel `sin-kestra` (`cloudflared-sin-kestra.service`). Probe: `curl -s -o /dev/null -w '%{http_code}' https://einfachhausen.de/api/health` → 200 heißt gesund. Bei 1033: `systemctl status cloudflared-sin-kestra` + `cloudflared tunnel info sin-kestra`.
+- **Preview/Test-Hosts** (`einfach-hausen-preview.delqhi.com`, `napp.delqhi.com`): Tunnel `d81a6644` (`cloudflared-eh-preview.service`), seit 2026-09-02 absichtlich deaktiviert (T-0210-Abschluss). Diese Hostnames liefern dauerhaft 1033/530, bis der Tunnel wieder aktiviert wird — kein Incident.
+
+Einzelner 1033 im Log bei sonst 200-Antworten ist ein transienter Edge-Event (z. B. Connector-Rotation während eines Deploys) und kein Handlungsanlass; andauernde 1033 auf der Produktionsdomain erst.
