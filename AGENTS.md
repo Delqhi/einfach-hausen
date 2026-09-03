@@ -119,7 +119,7 @@ evidence-sha256: 2e7357efbd529ac1f58e185753fb74a4020585d1823d89156e4b2506b6f36dc
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0103
-updated: 2026-08-31T20:52:51+00:00
+updated: 2026-08-31T20:52:52+00:00
 actor: local-agent
 evidence-sha256: 9f513f7079d3261f78b90b6bd9147004c81eee2c312db6be84f3df048cbcd64a
 -->
@@ -335,14 +335,14 @@ evidence-sha256: 8cc3663b0397c2fbcef390d333845930ad753ab448184830a67735e6b2b43ac
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0004
-updated: 2026-08-29T05:56:51+00:00
+updated: 2026-08-22T16:24:18+00:00
 actor: local-agent
 evidence-sha256: 4aaa04f685e833bd81528668f15ce9ca3bd1e3e37227af5d8e2fb1df720a513a
 -->
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0005
-updated: 2026-08-29T08:50:05+00:00
+updated: 2026-08-22T17:06:16+00:00
 actor: local-agent
 evidence-sha256: fa183425e21f31b54cdc90edc511fb1218cf517590a404b9fb51fd05e56fb6da
 -->
@@ -540,7 +540,7 @@ evidence-sha256: 32b178026b6612aa0bc5ea8813b094a8e7b84293e8c9f8a5706a02435767ed0
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0136
-updated: 2026-09-01T18:06:51+00:00
+updated: 2026-09-01T18:06:52+00:00
 actor: local-agent
 evidence-sha256: 766040d87c6e2dbae195442af395ea3b2fddc2c114f4fbe4a7963f3a4d6463ea
 -->
@@ -561,7 +561,7 @@ evidence-sha256: c55fee22cf93a7578d26053014ef8e42b4a7534775e5e1a5d1fd60053eb1d40
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0119
-updated: 2026-09-01T22:13:44+00:00
+updated: 2026-09-01T22:14:14+00:00
 actor: local-agent
 evidence-sha256: 0acd76be267c23dd81333e674d9c0eee29d42c3f07154718697fae9f793a26b6
 -->
@@ -613,4 +613,53 @@ task: T-0123
 updated: 2026-09-03T00:23:19+00:00
 actor: local-agent
 evidence-sha256: d05fdcb413b5af3832a99bb11e2726eab2c7c3682e25b7c74203edb5e4bd3544
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0124
+updated: 
+actor: local-agent
+evidence-sha256: 7b56927949e37e438aa734d75f4b3eed9bd85a667118aa51838decfaccecfcb7
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0129
+updated: 
+actor: local-agent
+evidence-sha256: a2028224c451c9d493976891e8e4061d8fbe7cbe6e5155f21be5f251a13b16be
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0130
+updated: 
+actor: local-agent
+evidence-sha256: db4bfd0327fb8cd3dcc011d26631b8b064c1a6b0952880d4fbb8d34877b61b84
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0125
+updated: 
+actor: local-agent
+evidence-sha256: 24ead3c1a5c517e9724996338b7426ad3e8e2c18cd519e08d1f683f72f4d788b
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0126
+updated: 
+actor: local-agent
+evidence-sha256: 1acbbc8c9d9ec3b87035c8d0521fa2c3622fa697e6d719310f61795b15fda6e8
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0127
+updated: 
+actor: local-agent
+evidence-sha256: 0640af1175d4cd871685513652419379eec835cf543aed5dfc69b0bfcadc4a29
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0128
+updated: 
+actor: local-agent
+evidence-sha256: 52a6748748dfe2d958322ba6584bcd9e8cd8284ed731054bf7f3d48948bf4d4a
 -->

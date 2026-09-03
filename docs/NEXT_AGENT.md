@@ -55,7 +55,7 @@ evidence-sha256: 9e54c89cf783fdec3bfac2b296c5cf87812231375dc96e2f9f25c4b4aa62721
 -->
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0005
-updated: 2026-08-29T08:50:05+00:00
+updated: 2026-08-22T17:06:16+00:00
 actor: local-agent
 evidence-sha256: fa183425e21f31b54cdc90edc511fb1218cf517590a404b9fb51fd05e56fb6da
 -->
@@ -73,7 +73,7 @@ evidence-sha256: 3301600a2ffff136c37ca355c7a51268296d9f2959e02ab5de8480a77935685
 -->
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0004
-updated: 2026-08-29T05:56:51+00:00
+updated: 2026-08-22T16:24:18+00:00
 actor: local-agent
 evidence-sha256: 4aaa04f685e833bd81528668f15ce9ca3bd1e3e37227af5d8e2fb1df720a513a
 -->
@@ -163,7 +163,7 @@ evidence-sha256: 2e7357efbd529ac1f58e185753fb74a4020585d1823d89156e4b2506b6f36dc
 -->
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0103
-updated: 2026-08-31T20:52:51+00:00
+updated: 2026-08-31T20:52:52+00:00
 actor: local-agent
 evidence-sha256: 9f513f7079d3261f78b90b6bd9147004c81eee2c312db6be84f3df048cbcd64a
 -->
@@ -421,7 +421,7 @@ evidence-sha256: 32b178026b6612aa0bc5ea8813b094a8e7b84293e8c9f8a5706a02435767ed0
 -->
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0136
-updated: 2026-09-01T18:06:51+00:00
+updated: 2026-09-01T18:06:52+00:00
 actor: local-agent
 evidence-sha256: 766040d87c6e2dbae195442af395ea3b2fddc2c114f4fbe4a7963f3a4d6463ea
 -->
@@ -439,7 +439,7 @@ evidence-sha256: c55fee22cf93a7578d26053014ef8e42b4a7534775e5e1a5d1fd60053eb1d40
 -->
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0119
-updated: 2026-09-01T22:13:44+00:00
+updated: 2026-09-01T22:14:14+00:00
 actor: local-agent
 evidence-sha256: 0acd76be267c23dd81333e674d9c0eee29d42c3f07154718697fae9f793a26b6
 -->
@@ -526,4 +526,18 @@ task: T-0131
 updated: 2026-09-03T12:19:04+00:00
 actor: local-agent
 evidence-sha256: 95b14cf53c5f2030d04c08f2b5dd9dfbb343623139fc5ce9e720d09533c6be38
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0129
+updated: 
+actor: local-agent
+evidence-sha256: a2028224c451c9d493976891e8e4061d8fbe7cbe6e5155f21be5f251a13b16be
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0130
+updated: 
+actor: local-agent
+evidence-sha256: db4bfd0327fb8cd3dcc011d26631b8b064c1a6b0952880d4fbb8d34877b61b84
 -->
