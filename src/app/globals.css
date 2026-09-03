@@ -770,6 +770,10 @@ html,body { background:#f4f7f7; color:#1c2129; }
   --eh-text: #1c2129;
   --eh-text-secondary: #57686b;
   --eh-border-strong: #cfdad9;
+  --eh-warn-border: #ecd9ac;
+  --eh-warn-bg: #fff8e8;
+  --eh-warn-text: #674b14;
+  --eh-success-border: #b8d9c5;
 }
 
 /* 404 im Brand-Layout (Inter/Teal, wash + dot grid) */

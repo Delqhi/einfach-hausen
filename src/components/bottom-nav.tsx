@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { CalendarDays,ClipboardList,Home,Menu,MessageSquare,UsersRound,UserRound } from 'lucide-react';
 
 export const ownerNav = [
-  ['/app', Home, 'Home'],
+  ['/app', Home, 'Zuhause'],
   ['/app/jobs', ClipboardList, 'Aufträge'],
   ['/app/calendar', CalendarDays, 'Termine'],
   ['/app/messages', UsersRound, 'Ansprechpartner'],

@@ -1,16 +1,16 @@
 .providerScope {
-  --provider-green-900: #0e3d33;
-  --provider-green-700: #105258;
-  --provider-green-600: #1b8569;
-  --provider-green-100: #eaf5ee;
-  --provider-green-50: #f4faf6;
-  --provider-canvas: #f7f8f7;
-  --provider-surface: #ffffff;
-  --provider-subtle: #f2f4f2;
-  --provider-text: #171a18;
-  --provider-muted: #66706a;
-  --provider-border: #e4e8e5;
-  --provider-border-strong: #d5dcd7;
+  --provider-green-900: var(--eh-green-900, #0e3d33);
+  --provider-green-700: var(--eh-green-700, #105258);
+  --provider-green-600: var(--eh-green-600, #1b8569);
+  --provider-green-100: var(--eh-green-100, #eaf5ee);
+  --provider-green-50: var(--eh-green-50, #f4faf6);
+  --provider-canvas: var(--eh-bg, #f7f8f7);
+  --provider-surface: var(--eh-surface, #ffffff);
+  --provider-subtle: var(--eh-surface-subtle, #f2f4f2);
+  --provider-text: var(--eh-text, #171a18);
+  --provider-muted: var(--eh-text-secondary, #66706a);
+  --provider-border: var(--eh-border, #e4e8e5);
+  --provider-border-strong: var(--eh-border-strong, #d5dcd7);
   min-height: 100vh;
   background: var(--provider-canvas);
 }

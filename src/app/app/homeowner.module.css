@@ -1,17 +1,17 @@
 .ownerScope {
-  --owner-green-900: #0e3d33;
-  --owner-green-700: #105258;
-  --owner-green-600: #1b8569;
-  --owner-green-100: #eaf5ee;
-  --owner-green-50: #f4faf6;
-  --owner-bg: #f7f8f7;
-  --owner-surface: #ffffff;
-  --owner-surface-subtle: #f2f4f2;
-  --owner-text: #171a18;
-  --owner-muted: #66706a;
-  --owner-border: #e4e8e5;
-  --owner-border-strong: #d5dcd7;
-  --owner-focus: #105258;
+  --owner-green-900: var(--eh-green-900, #0e3d33);
+  --owner-green-700: var(--eh-green-700, #105258);
+  --owner-green-600: var(--eh-green-600, #1b8569);
+  --owner-green-100: var(--eh-green-100, #eaf5ee);
+  --owner-green-50: var(--eh-green-50, #f4faf6);
+  --owner-bg: var(--eh-bg, #f7f8f7);
+  --owner-surface: var(--eh-surface, #ffffff);
+  --owner-surface-subtle: var(--eh-surface-subtle, #f2f4f2);
+  --owner-text: var(--eh-text, #171a18);
+  --owner-muted: var(--eh-text-secondary, #66706a);
+  --owner-border: var(--eh-border, #e4e8e5);
+  --owner-border-strong: var(--eh-border-strong, #d5dcd7);
+  --owner-focus: var(--eh-green-700, #105258);
   min-height: 100vh;
   background: var(--owner-bg);
   color: var(--owner-text);
@@ -173,9 +173,9 @@
   gap: 10px;
   min-height: 48px;
   padding: 10px 18px;
-  border-bottom: 1px solid #ecd9ac;
-  background: #fff8e8;
-  color: #674b14;
+  border-bottom: 1px solid var(--eh-warn-border, #ecd9ac);
+  background: var(--eh-warn-bg, #fff8e8);
+  color: var(--eh-warn-text, #674b14);
   font-size: 13px;
   line-height: 1.4;
 }
@@ -921,7 +921,7 @@
 
 .ownerScope :global(.quote.accepted) {
   padding-inline: 16px;
-  border: 1px solid #b8d9c5;
+  border: 1px solid var(--eh-success-border, #b8d9c5);
   border-radius: 16px;
   background: var(--owner-green-50);
   box-shadow: none;
@@ -1750,7 +1750,7 @@
   transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 .ownerScope :global(.mobile-job-card:hover) {
-  border-color: #b8d9c5;
+  border-color: var(--eh-success-border, #b8d9c5);
   box-shadow: 0 12px 30px rgba(18, 60, 42, 0.08);
   transform: translateY(-1px);
 }
@@ -1798,6 +1798,16 @@
 @media (max-width: 520px) {
   .ownerScope :global(.house-cover-card) { padding: 18px; border-radius: 18px; }
   .ownerScope :global(.house-cover-art) { width: 50px; height: 50px; border-radius: 14px; }
+}
+
+/* Dashboard-Begrüßung (DESIGN.md §6): aligning mit qa-row-Raster. */
+.ownerScope :global(.own-dash .owner-dashboard-intro) {
+  padding: 22px 18px 0;
+}
+@media (max-width: 390px) {
+  .ownerScope :global(.own-dash .owner-dashboard-intro) {
+    padding: 18px 14px 0;
+  }
 }
 
 /* T-0210 premium app convergence: same structure, richer surface hierarchy. */
