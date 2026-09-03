@@ -99,6 +99,12 @@ function reconcileSubscriptionState(event:Stripe.Event){
     .run(partnerStatus,periodEnd,subscription.trial_end?new Date(subscription.trial_end*1000).toISOString():null,subscription.id);
 }
 
+function reconcileRefund(charge:Stripe.Charge){
+  const paymentIntentId=typeof charge.payment_intent==='string'?charge.payment_intent:charge.payment_intent?.id;
+  if(!paymentIntentId)return;
+  db.prepare(`UPDATE payments SET status='refunded',updated_at=CURRENT_TIMESTAMP WHERE stripe_session_id=? OR id IN (SELECT id FROM payments WHERE stripe_session_id LIKE ?)`).run(paymentIntentId,`%${paymentIntentId}%`);
+}
+
 export async function POST(req:NextRequest){
   if(!stripePaymentsConfigured())return new NextResponse('Stripe webhook not configured',{status:503});
   const secretKey=process.env.STRIPE_SECRET_KEY;
@@ -139,6 +145,12 @@ export async function POST(req:NextRequest){
 
     if(event.type==='customer.subscription.updated'||event.type==='customer.subscription.deleted'){
       reconcileSubscriptionState(event);
+    }
+
+    if(event.type==='charge.refunded'){
+      const charge=event.data.object as Stripe.Charge;
+      reconcileRefund(charge);
+      structuredLog.info('payment','stripe charge refund reconciled',{event_id:event.id});
     }
 
     if(event.type==='account.updated'){
