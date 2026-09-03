@@ -23,7 +23,7 @@ export default function Page() {
         eyebrow="Leistungen"
         title="Du musst nicht wissen, welches Gewerk. Du musst nur sagen, was ist."
         text="Einfach Hausen deckt alles ab, was ein Haus so braucht: von der tropfenden Armatur bis zur Sanierung, vom Heckenschnitt bis zur Wärmepumpe. Die Einordnung übernehmen wir. Umfang und Verfügbarkeit hängen vom regional aktiven Partnernetz ab."
-        actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/so-funktionierts" secondary>So funktioniert's</LinkButton></>}
+        actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/so-funktionierts" secondary>So funktioniert&apos;s</LinkButton></>}
         aside={<AppFrame label="Erinnerungsansicht der App mit Heizungswartung, Dachrinnen und Rauchmelder"><ReminderScreen /></AppFrame>}
       />
 
