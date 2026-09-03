@@ -41,10 +41,13 @@ export default async function Dashboard() {
     <AppShell role="homeowner" active="/app" title="Mein Zuhause" subtitle="Dein Haus-Copilot">
       <div className="own-dash ehn-dash">
         <h1 className="owner-visually-hidden">Mein Zuhause</h1>
+        
+        {/* Begrüßung */}
         <section className="owner-dashboard-intro" aria-label="Begrüßung">
           <h1>Hallo {user.first_name}.</h1>
           <p>{houseContext ? `${houseContext}` : 'Dein Zuhause im Überblick.'}</p>
         </section>
+
         {onboardingPending && (
           <section className="owner-onboarding-banner ehn-onboard-banner" aria-label="Einrichtung unvollständig">
             <p>Du hast die Ersteinrichtung noch nicht abgeschlossen.</p>
@@ -52,66 +55,47 @@ export default async function Dashboard() {
           </section>
         )}
 
-        <section className="qa-row" aria-label="Schnellaktionen">
-          <a className="qa-card" href="#dashboard-composer">
-            <div className="qa-icon qa-dark"><ChatRoundIcon variant="dark" /></div>
-            <strong>Auftrag</strong>
-            <span>Handwerker beauftragen und Angebote erhalten.</span>
-            <div className="qa-arrow"><ArrowRightThin /></div>
-          </a>
-          <Link className="qa-card" href="/app/consultation">
-            <div className="qa-icon"><ChatRoundIcon variant="light" /></div>
-            <strong>Beratung</strong>
-            <span>Fachliche Hilfe und Empfehlungen.</span>
-            <div className="qa-arrow"><ArrowRightThin /></div>
-          </Link>
-          <Link className="qa-card qa-alert" href="/app/emergency">
-            <div className="qa-icon"><NotfallSirenIcon /></div>
-            <strong>Notfall</strong>
-            <span>Schnelle Hilfe in dringenden Fällen.</span>
-            <div className="qa-arrow"><ArrowRightThin /></div>
-          </Link>
-        </section>
-
+        {/* 1. Primärer Fokus: Hausmeister-Composer ganz oben */}
         <section className="ki-card" aria-labelledby="owner-copilot-title">
           <div className="ki-head">
             <div className="ki-robot"><RobotIcon /></div>
             <div className="ki-title-row">
               <h2 id="owner-copilot-title">Frag einfachhausen</h2>
-              <span className="ki-badge">KI</span>
+              <span className="ki-badge">KI-Hausmeister</span>
             </div>
             <Link className="ki-more" href="/app/hausmeister" aria-label="Hausmeister-Assistent öffnen"><ArrowRightThin /></Link>
           </div>
-          <p className="ki-text">Schilder uns dein Problem. Wir bringen dich mit dem richtigen Ansprechpartner in Kontakt oder willst du direkt Angebote vergleichen?</p>
+          <p className="ki-text">Schildere dein Anliegen oder Projekt. Wir finden den passenden Fachbetrieb oder organisieren sofortige Unterstützung.</p>
           <div id="dashboard-composer" className="ki-input-row ehn-composer">
-            <HomeownerHausmeisterComposer starterHint="Was ist los bei dir?" />
+            <HomeownerHausmeisterComposer starterHint="Was gibt es an deinem Haus zu tun?" />
           </div>
         </section>
 
+        {/* 2. Als Nächstes (Aufgaben, Termine, Entscheidungen) */}
         <h3 className="own-section-title">Als Nächstes</h3>
         {nextSteps.length === 0 ? (
           <div className="empty compact" role="status">
-            <p>Gerade steht nichts an. Beschreib oben dein Anliegen oder plane eine Wartung über <Link href="/app/year">Mein Jahr</Link>.</p>
+            <p>Aktuell steht kein Termin an. Plane Wartungen über <Link href="/app/year">Mein Jahr</Link> oder starte oben eine Anfrage.</p>
           </div>
         ) : (
           <>
             {(nextAppointment || openDecision) && (
-            <div className="overview-grid">
-              {nextAppointment && (
-                <Link className="ov-card" href={`/app/jobs/${nextAppointment.job_id}`}>
-                  <div className="ov-icon"><CalendarCheckThinIcon /></div>
-                  <div className="ov-text"><strong>Nächster Termin</strong><span>{nextAppointment.title} · {nextAppointment.business_name} · {dateLabel(nextAppointment.start_at)}</span></div>
-                  <ArrowRightThin />
-                </Link>
-              )}
-              {openDecision && (
-                <Link className="ov-card" href={`/app/jobs/${openDecision.id}`}>
-                  <div className="ov-icon"><PersonSmallIcon /></div>
-                  <div className="ov-text"><strong>Offene Entscheidung</strong><span>{openDecision.title}{openDecisionQuotes > 0 ? ` · ${openDecisionQuotes} ${openDecisionQuotes === 1 ? 'Angebot' : 'Angebote'} prüfen` : ''}</span></div>
-                  <ArrowRightThin />
-                </Link>
-              )}
-            </div>
+              <div className="overview-grid">
+                {nextAppointment && (
+                  <Link className="ov-card" href={`/app/jobs/${nextAppointment.job_id}`}>
+                    <div className="ov-icon"><CalendarCheckThinIcon /></div>
+                    <div className="ov-text"><strong>Nächster Termin</strong><span>{nextAppointment.title} · {nextAppointment.business_name} · {dateLabel(nextAppointment.start_at)}</span></div>
+                    <ArrowRightThin />
+                  </Link>
+                )}
+                {openDecision && (
+                  <Link className="ov-card" href={`/app/jobs/${openDecision.id}`}>
+                    <div className="ov-icon"><PersonSmallIcon /></div>
+                    <div className="ov-text"><strong>Offenes Angebot</strong><span>{openDecision.title}{openDecisionQuotes > 0 ? ` · ${openDecisionQuotes} ${openDecisionQuotes === 1 ? 'Angebot' : 'Angebote'} prüfen` : ''}</span></div>
+                    <ArrowRightThin />
+                  </Link>
+                )}
+              </div>
             )}
             {dueMaintenance && (
               <Link className="ov-card ov-wide" href="/app/year">
@@ -123,9 +107,28 @@ export default async function Dashboard() {
           </>
         )}
 
-        <Link className="fab-plus" href="/app/hausmeister" aria-label="Neue Anfrage starten">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" /></svg>
-        </Link>
+        {/* 3. Schnellzugriff / Weitere Services: dezent untergeordnet */}
+        <section className="qa-row" aria-label="Weitere Services">
+          <Link className="qa-card" href="/app/consultation">
+            <div className="qa-icon"><ChatRoundIcon variant="light" /></div>
+            <strong>Beratung</strong>
+            <span>Fachliche Unterstützung &amp; Modernisierung.</span>
+            <div className="qa-arrow"><ArrowRightThin /></div>
+          </Link>
+          <Link className="qa-card qa-alert" href="/app/emergency">
+            <div className="qa-icon"><NotfallSirenIcon /></div>
+            <strong>Notfall</strong>
+            <span>Soforthilfe bei Rohrbruch, Heizausfall &amp; Co.</span>
+            <div className="qa-arrow"><ArrowRightThin /></div>
+          </Link>
+          <Link className="qa-card" href="/app/documents">
+            <div className="qa-icon"><BookThinIcon /></div>
+            <strong>Dokumente</strong>
+            <span>Pläne, Rechnungen &amp; Hausakte einsehen.</span>
+            <div className="qa-arrow"><ArrowRightThin /></div>
+          </Link>
+        </section>
+
         <div className="home-indicator" aria-hidden="true" />
       </div>
     </AppShell>
