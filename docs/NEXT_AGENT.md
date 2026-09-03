@@ -520,3 +520,10 @@ updated: 2026-09-03T00:54:04+00:00
 actor: local-agent
 evidence-sha256: 52a6748748dfe2d958322ba6584bcd9e8cd8284ed731054bf7f3d48948bf4d4a
 -->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0131
+updated: 2026-09-03T12:19:04+00:00
+actor: local-agent
+evidence-sha256: 95b14cf53c5f2030d04c08f2b5dd9dfbb343623139fc5ce9e720d09533c6be38
+-->
