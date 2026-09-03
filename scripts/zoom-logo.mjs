@@ -1,0 +1,12 @@
+import { chromium } from 'playwright-core';
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 3 });
+const page = await ctx.newPage();
+const reqs = [];
+page.on('response', r => { if (r.url().includes('logo')) reqs.push(r.status() + ' ' + r.url()); });
+await page.goto('http://localhost:3110/', { waitUntil: 'networkidle' });
+await page.waitForTimeout(800);
+const el = await page.$('a[class*="logoLink"]');
+await el.screenshot({ path: '/tmp/eh-zoom/logo-el.png' });
+console.log(reqs.join('\n'));
+await browser.close();

@@ -1,0 +1,14 @@
+import { chromium } from 'playwright-core';
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+const page = await ctx.newPage();
+await page.goto('https://einfachhausen.de/', { waitUntil: 'networkidle' });
+await page.evaluate(async () => { const h = document.body.scrollHeight; for (let y = 0; y <= h; y += 800) { window.scrollTo(0, y); await new Promise(r => setTimeout(r, 40)); } });
+await page.waitForTimeout(800);
+const dark = page.locator('section').filter({ hasText: 'Gute Kundenbeziehungen' }).first();
+await dark.scrollIntoViewIfNeeded();
+await page.waitForTimeout(500);
+const bg = await dark.evaluate(el => getComputedStyle(el).backgroundColor);
+console.log('LIVE tone_dark bg:', bg);
+await page.screenshot({ path: '/tmp/v20/dark-live.png' });
+await browser.close();

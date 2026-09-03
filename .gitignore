@@ -1,0 +1,79 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+/artifacts/
+
+# runtime data and user uploads
+/data/*.db
+/data/*.db-*
+/data/private/
+/private-data/
+/public/uploads/
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (keep the documented template)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# generated architecture graph (regenerated via `npm run graph:update`)
+/graphify-out/
+
+# local agent/browser evidence and issue-reference downloads
+/.sin-gpt-web/
+/.sin-after-work/
+/.issue9-logo.png
+
+# linked worktrees are local execution state, never repository content
+/.worktrees/
+
+# presentation build/runtime dependencies and local benchmark state
+/presentation/node_modules/
+/presentation/bakeoff/presenton/app_data/
+/presentation/_benchmark/tools/
+/presentation/bakeoff/pptx-gen/repo/
+/src/app/pro/.t0018-final-start.log
+# local generated agent/code-intelligence state + Python bytecode
+/.gitnexus/
+/.sin-gpt-teamwork/
+__pycache__/
+*.py[cod]
+
+# nested full app repo (lives in its own GitHub repo, stays out of this landing-page repo)
+/einfach-hausen/
+# generated index / cache
+/next-env.d.ts
+*.tsbuildinfo

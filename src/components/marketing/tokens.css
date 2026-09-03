@@ -1,0 +1,84 @@
+/*
+ * Einfach Hausen – public website design tokens.
+ * Scoped to `.mkt` (MarketingShell root) so the accepted owner/partner app
+ * surfaces (globals.css tokens, .phone-shell, .agent-*) stay untouched.
+ * Reference: DESIGN.md §"Public Website – erweiterte Palette".
+ */
+.mkt {
+  /* Brand teal scale (logo teal = 700) */
+  --mkt-teal-900: #0b3a3f;
+  --mkt-teal-800: #0d474d;
+  --mkt-teal-700: #105258;
+  --mkt-teal-500: #1f7a80;
+  --mkt-teal-300: #7fb7ba;
+  --mkt-teal-100: #dcebec;
+  --mkt-teal-050: #eef5f5;
+
+  /* Warm canvas + sand */
+  --mkt-canvas: #faf8f4;
+  --mkt-surface: #ffffff;
+  --mkt-sand-100: #f4ebdd;
+  --mkt-sand-200: #ecdfc9;
+  --mkt-sand-400: #d9b98a;
+
+  /* Single warm signal accent (sparingly) */
+  --mkt-terra: #c8623a;
+  --mkt-terra-deep: #a84d29;
+  --mkt-terra-soft: #f7e4da;
+
+  /* Ink */
+  --mkt-ink: #10222a;
+  --mkt-ink-soft: #4b5b60;
+  --mkt-ink-mute: #7a878b;
+  --mkt-line: #e4e2dc;
+  --mkt-line-strong: #cfcbc2;
+
+  /* On-dark */
+  --mkt-on-dark: #f3f6f5;
+  --mkt-on-dark-soft: rgba(243, 246, 245, 0.72);
+  --mkt-on-dark-line: rgba(243, 246, 245, 0.16);
+
+  /* Shape + depth */
+  --mkt-r-card: 24px;
+  --mkt-r-card-lg: 28px;
+  --mkt-r-btn: 12px;
+  --mkt-r-pill: 999px;
+  --mkt-shadow-sm: 0 1px 2px rgba(16, 34, 42, 0.05), 0 6px 18px -8px rgba(16, 34, 42, 0.12);
+  --mkt-shadow-md: 0 2px 4px rgba(16, 34, 42, 0.05), 0 18px 40px -16px rgba(16, 34, 42, 0.22);
+  --mkt-shadow-lg: 0 4px 10px rgba(16, 34, 42, 0.06), 0 40px 80px -30px rgba(11, 58, 63, 0.35);
+
+  /* Layout */
+  --mkt-container: 1180px;
+  --mkt-gutter: clamp(20px, 4vw, 32px);
+  --mkt-section-y: clamp(64px, 9vw, 120px);
+  --mkt-section-y-tight: clamp(48px, 6vw, 80px);
+
+  /* Type scale */
+  --mkt-font: var(--font-marketing, ui-sans-serif, system-ui, sans-serif);
+  --mkt-display: clamp(40px, 5.2vw, 68px);
+  --mkt-h1: clamp(36px, 4.4vw, 56px);
+  --mkt-h2: clamp(30px, 3.4vw, 44px);
+  --mkt-h3: 22px;
+  --mkt-lead: clamp(17px, 1.4vw, 20px);
+  --mkt-body: 17px;
+  --mkt-small: 14px;
+
+  color: var(--mkt-ink);
+  background: var(--mkt-canvas);
+  font-family: var(--mkt-font);
+  font-size: var(--mkt-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11', 'ss01', 'calt';
+}
+
+.mkt ::selection {
+  background: var(--mkt-teal-100);
+  color: var(--mkt-teal-900);
+}
+
+.mkt :focus-visible {
+  outline: 3px solid var(--mkt-teal-500);
+  outline-offset: 3px;
+  border-radius: 6px;
+}

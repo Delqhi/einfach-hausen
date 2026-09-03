@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the backup/restore drill weekly
+
+[Timer]
+OnBootSec=10min
+OnCalendar=Sun *-*-* 03:00:00
+Persistent=true
+Unit=einfach-hausen-drill.service
+
+[Install]
+WantedBy=timers.target

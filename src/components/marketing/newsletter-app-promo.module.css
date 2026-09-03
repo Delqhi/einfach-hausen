@@ -1,0 +1,790 @@
+/*
+ * NewsletterAppPromo — CSS-Module Port der ChatGPT-Web-Referenz (NewsletterAppPromo.css).
+ * Kein globaler Reset; box-sizing lokal pro Klasse. Klassen-1:1 zur Komponente.
+ */
+
+.newsletterSection {
+  box-sizing: border-box;
+  --page-bg: #f5f5f5;
+  --card-bg: #ffffff;
+  --text-primary: #090909;
+  --text-secondary: #767676;
+  width: 100%;
+  background: var(--page-bg);
+  padding: clamp(48px, 5vw, 82px) clamp(24px, 3vw, 50px);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  CARD                                      */
+/* -------------------------------------------------------------------------- */
+
+.newsletterCard {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  max-width: 1655px;
+  min-height: 694px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 34px;
+  box-shadow:
+    0 2px 3px rgba(0, 0, 0, 0.05),
+    0 10px 22px rgba(0, 0, 0, 0.04);
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(440px, 0.82fr);
+  overflow: hidden;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               LEFT CONTENT                                 */
+/* -------------------------------------------------------------------------- */
+
+.newsletterContent {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 109px 40px 92px 109px;
+}
+
+.newsletterEyebrow {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 4px 16px;
+  border-color: rgba(20, 82, 88, 0.22) !important;
+  border-radius: 999px;
+  background: #fff;
+  color: #0f4c50 !important;
+  font-size: 15px;
+  font-weight: 640;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  margin-bottom: 23px;
+  box-shadow: 0 3px 14px rgba(16, 60, 64, 0.06);
+}
+
+.newsletterTitle {
+  box-sizing: border-box;
+  max-width: 680px;
+  margin: 0;
+  color: var(--text-primary);
+  font-size: clamp(42px, 3.1vw, 54px);
+  font-weight: 700;
+  line-height: 0.99;
+  letter-spacing: -0.035em;
+}
+
+.newsletterDescription {
+  box-sizing: border-box;
+  max-width: 690px;
+  margin: 28px 0 0;
+  color: var(--text-secondary);
+  font-size: clamp(23px, 1.7vw, 29px);
+  font-weight: 400;
+  line-height: 1.36;
+  letter-spacing: -0.015em;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              STORE BUTTONS                                 */
+/* -------------------------------------------------------------------------- */
+
+.newsletterStoreButtons {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 43px;
+}
+
+.storeButton {
+  box-sizing: border-box;
+  width: 273px;
+  height: 75px;
+  padding: 0 27px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #050505;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  transition:
+    transform 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.storeButton:hover {
+  transform: translateY(-2px);
+  background: #111;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.storeButton:active {
+  transform: translateY(0);
+}
+
+.storeButtonText {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1;
+}
+
+.storeButtonSmall {
+  box-sizing: border-box;
+  margin-bottom: 7px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.storeButtonLarge {
+  box-sizing: border-box;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.appleLogo {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: 43px;
+  height: 50px;
+  color: #fff;
+}
+
+.googlePlayLogo {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: 42px;
+  height: 48px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               PHONE SIDE                                   */
+/* -------------------------------------------------------------------------- */
+
+.newsletterPhoneArea {
+  box-sizing: border-box;
+  position: relative;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 108px;
+  overflow: hidden;
+}
+
+.phoneWrap {
+  box-sizing: border-box;
+  position: relative;
+  width: 410px;
+  display: flex;
+  justify-content: center;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   PHONE                                    */
+/* -------------------------------------------------------------------------- */
+
+.phone {
+  box-sizing: border-box;
+  position: relative;
+  width: 394px;
+  height: 795px;
+  padding: 8px;
+  border-radius: 64px;
+  background: linear-gradient(
+    110deg,
+    #5e5e60 0%,
+    #151515 9%,
+    #747477 16%,
+    #080808 25%,
+    #111 70%,
+    #828285 86%,
+    #191919 95%
+  );
+  box-shadow:
+    0 0 0 2px rgba(25, 25, 25, 0.95),
+    0 0 0 5px rgba(160, 160, 165, 0.55),
+    -7px 18px 28px rgba(0, 0, 0, 0.14);
+}
+
+.phoneInner {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 56px;
+  background: #fff;
+  overflow: hidden;
+  border: 2px solid #050505;
+}
+
+/* notch */
+.phoneNotch {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 167px;
+  height: 36px;
+  background: #000;
+  border-radius: 0 0 22px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+}
+
+.phoneSpeaker {
+  box-sizing: border-box;
+  width: 43px;
+  height: 5px;
+  border-radius: 999px;
+  background: #191919;
+}
+
+.phoneCamera {
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #17325c, #060a14 60%, #000);
+  box-shadow: 0 0 0 2px #0d0d0d;
+}
+
+/* side buttons */
+.phoneSideButton {
+  box-sizing: border-box;
+  position: absolute;
+  width: 5px;
+  background: linear-gradient(90deg, #656565, #1d1d1d);
+  border-radius: 3px 0 0 3px;
+  left: -8px;
+}
+
+.phoneSideButton1 {
+  height: 31px;
+  top: 131px;
+}
+
+.phoneSideButton2 {
+  height: 63px;
+  top: 185px;
+}
+
+.phoneSideButton3 {
+  height: 63px;
+  top: 263px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                        REAL SCREENSHOT OPTION                              */
+/* -------------------------------------------------------------------------- */
+
+.phoneScreenshot {
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                          MOCK APP SCREEN                                   */
+/* -------------------------------------------------------------------------- */
+
+.appPreview {
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f7f7f7;
+}
+
+.statusBar {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 6;
+  top: 17px;
+  left: 30px;
+  right: 20px;
+  height: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.statusIcons {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.signalBars {
+  box-sizing: border-box;
+  height: 14px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.signalBars i {
+  box-sizing: border-box;
+  display: block;
+  width: 3px;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.signalBars i:nth-child(1) {
+  height: 5px;
+}
+
+.signalBars i:nth-child(2) {
+  height: 8px;
+}
+
+.signalBars i:nth-child(3) {
+  height: 11px;
+}
+
+.signalBars i:nth-child(4) {
+  height: 14px;
+}
+
+.wifiIcon {
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+}
+
+.battery {
+  box-sizing: border-box;
+  position: relative;
+  width: 22px;
+  height: 11px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+  padding: 1px;
+}
+
+.battery::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 3px;
+  width: 2px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 0 2px 2px 0;
+}
+
+.battery span {
+  box-sizing: border-box;
+  display: block;
+  width: 85%;
+  height: 100%;
+  border-radius: 1px;
+  background: #fff;
+}
+
+/* dark header */
+.appDarkHeader {
+  box-sizing: border-box;
+  height: 315px;
+  padding: 67px 23px 30px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 17% 4%, rgba(52, 54, 86, 0.85), transparent 38%),
+    radial-gradient(circle at 90% 60%, rgba(13, 21, 47, 0.8), transparent 42%),
+    linear-gradient(135deg, #15172c, #141627 55%, #101525);
+}
+
+.appUserRow {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.appUser {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.avatar {
+  box-sizing: border-box;
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #a8816a, #4c3328);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  font-size: 15px;
+}
+
+.settingsButton {
+  box-sizing: border-box;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 13px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.balanceArea {
+  box-sizing: border-box;
+  margin-top: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.balanceBadge {
+  box-sizing: border-box;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: #63c976;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.balanceValue {
+  box-sizing: border-box;
+  margin-top: 13px;
+  font-size: 35px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* white content */
+.appMain {
+  box-sizing: border-box;
+  position: relative;
+  flex: 1;
+  padding: 64px 22px 30px;
+  margin-top: -1px;
+  background: #fff;
+  border-radius: 25px 25px 0 0;
+}
+
+.goalCard {
+  box-sizing: border-box;
+  position: absolute;
+  top: -34px;
+  left: 22px;
+  right: 22px;
+  min-height: 71px;
+  padding: 14px 14px 15px;
+  background: #fff;
+  border-radius: 17px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.goalTop {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #262626;
+  margin-bottom: 11px;
+}
+
+.goalTop strong {
+  color: #e2a838;
+}
+
+.progressTrack {
+  box-sizing: border-box;
+  height: 12px;
+  background: #f0f1f3;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressValue {
+  box-sizing: border-box;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f9a700, #ffb000);
+}
+
+.budgetTitleRow {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.budgetTitleRow h3 {
+  box-sizing: border-box;
+  margin: 0;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.filterIcon {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filterIcon span {
+  box-sizing: border-box;
+  position: relative;
+  width: 20px;
+  height: 2px;
+  background: #191919;
+}
+
+.filterIcon span:first-child::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border: 2px solid #191919;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.filterIcon span:last-child::after {
+  content: '';
+  position: absolute;
+  right: 4px;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border: 2px solid #191919;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.budgetGrid {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.budgetCard {
+  box-sizing: border-box;
+  min-height: 132px;
+  padding: 15px;
+  border-radius: 17px;
+  background: #f1f2f4;
+}
+
+.budgetCardTop {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.budgetCardTop strong {
+  font-size: 15px;
+}
+
+.budgetIcon {
+  box-sizing: border-box;
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  font-size: 17px;
+  color: white;
+}
+
+.budgetIconOrange {
+  background: #ffa42f;
+}
+
+.budgetIconBlue {
+  background: #356ceb;
+}
+
+.budgetIconGreen {
+  background: #20bf5c;
+}
+
+.budgetIconRed {
+  background: #ea4d4d;
+}
+
+.budgetCardBottom {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 17px;
+}
+
+.budgetCardTitle {
+  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2a2a2a;
+}
+
+.budgetCardAmount {
+  box-sizing: border-box;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #727272;
+}
+
+.budgetArrow {
+  box-sizing: border-box;
+  width: 21px;
+  height: 21px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #bcbec1;
+  color: white;
+  font-size: 19px;
+  line-height: 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                RESPONSIVE                                  */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+  .newsletterCard {
+    grid-template-columns: minmax(0, 1fr) 430px;
+  }
+
+  .newsletterContent {
+    padding-left: 70px;
+  }
+
+  .newsletterTitle {
+    font-size: 46px;
+  }
+
+  .newsletterDescription {
+    font-size: 24px;
+  }
+
+  .newsletterStoreButtons {
+    gap: 16px;
+  }
+
+  .storeButton {
+    width: 245px;
+  }
+}
+
+@media (max-width: 980px) {
+  .newsletterCard {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .newsletterContent {
+    padding: 64px 48px 45px;
+  }
+
+  .newsletterPhoneArea {
+    height: 520px;
+    padding-top: 20px;
+    align-items: flex-start;
+  }
+
+  .phone {
+    transform: scale(0.82);
+    transform-origin: top center;
+  }
+}
+
+@media (max-width: 640px) {
+  .newsletterSection {
+    padding: 20px 14px;
+  }
+
+  .newsletterCard {
+    border-radius: 24px;
+  }
+
+  .newsletterContent {
+    padding: 38px 25px 32px;
+  }
+
+  .newsletterEyebrow {
+    font-size: 15px;
+    min-height: 30px;
+    margin-bottom: 18px;
+  }
+
+  .newsletterTitle {
+    font-size: 38px;
+    line-height: 1;
+  }
+
+  .newsletterDescription {
+    margin-top: 22px;
+    font-size: 19px;
+  }
+
+  .newsletterStoreButtons {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  .storeButton {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .newsletterPhoneArea {
+    height: 455px;
+  }
+
+  .phone {
+    transform: scale(0.7);
+  }
+}

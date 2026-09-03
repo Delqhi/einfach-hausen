@@ -1,0 +1,95 @@
+import { NextRequest,NextResponse } from 'next/server';
+import { db } from '@/lib/db';
+import { answerHausmeisterQuestion,createHausmeisterRequest,type HausmeisterIntent } from '@/lib/orchestrator';
+import { claimWebhookEvent,completeWebhookEvent,releaseWebhookEvent,verifyMetaSignature } from '@/lib/security/webhooks';
+import { downloadWhatsAppMedia,whatsappMediaType } from '@/lib/whatsapp-media';
+
+function normalizePhone(v:string){return v.replace(/\D/g,'').replace(/^00/,'');}
+type WhatsAppUser={id:number;role:string;phone:string};
+function resolveWhatsAppUser(users:WhatsAppUser[],rawPhone:string):WhatsAppUser|null{
+  const phone=normalizePhone(rawPhone);
+  if(phone.length<8)return null;
+  const normalized=users.map(user=>({user,phone:normalizePhone(user.phone||'')})).filter(item=>item.phone.length>=8);
+  const exact=normalized.filter(item=>item.phone===phone);
+  if(exact.length===1)return exact[0].user;
+  if(exact.length>1||phone.length<10)return null;
+  const suffix=phone.slice(-10);
+  const suffixMatches=normalized.filter(item=>item.phone.length>=10&&item.phone.slice(-10)===suffix);
+  return suffixMatches.length===1?suffixMatches[0].user:null;
+}
+function explicitIntent(text:string):HausmeisterIntent|null{
+  const value=text.trim().toLowerCase();
+  if(/^(ansprechpartner|kontakt|mensch|fachperson)$/.test(value))return 'contact';
+  if(/^(auftrag|beauftragen|auftrag organisieren)$/.test(value))return 'service';
+  if(/ansprechpartner|fach(?:mann|frau|person).*(?:sprech|kontakt)|jemanden.*sprech|nur.*(?:fragen|sprechen)/i.test(text))return 'contact';
+  if(/beauftrag|erledigen lassen|machen lassen|auftrag.*organis|direkt.*buchen/i.test(text))return 'service';
+  return null;
+}
+async function sendWhatsApp(to:string,body:string){
+  const token=process.env.WHATSAPP_ACCESS_TOKEN; const phoneId=process.env.WHATSAPP_PHONE_NUMBER_ID; if(!token||!phoneId)return false;
+  const version=process.env.WHATSAPP_GRAPH_VERSION||'v23.0';
+  try{
+    const response=await fetch(`https://graph.facebook.com/${version}/${phoneId}/messages`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({messaging_product:'whatsapp',to,type:'text',text:{body:body.slice(0,4000)}})});
+    return response.ok;
+  }catch{return false;}
+}
+
+export async function GET(req:NextRequest){
+  const mode=req.nextUrl.searchParams.get('hub.mode'); const token=req.nextUrl.searchParams.get('hub.verify_token'); const challenge=req.nextUrl.searchParams.get('hub.challenge');
+  if(mode==='subscribe'&&token&&token===process.env.WHATSAPP_VERIFY_TOKEN)return new NextResponse(challenge||'',{status:200});
+  return new NextResponse('Forbidden',{status:403});
+}
+
+export async function POST(req:NextRequest){
+  const rawBody=await req.text();
+  if(!verifyMetaSignature(rawBody,req.headers.get('x-hub-signature-256'),process.env.META_APP_SECRET))return new NextResponse('Invalid signature',{status:401});
+  let payload:any;
+  try{payload=JSON.parse(rawBody);}catch{return new NextResponse('Invalid payload',{status:400});}
+  const entries=payload?.entry||[];
+  for(const entry of entries)for(const change of entry.changes||[])for(const msg of change.value?.messages||[]){
+    if(!msg.from||!msg.id)continue;
+    if(!claimWebhookEvent('whatsapp',String(msg.id)))continue;
+    try{
+      const users=db.prepare("SELECT id,role,phone FROM users WHERE phone IS NOT NULL AND phone!=''").all() as WhatsAppUser[];
+      const user=resolveWhatsAppUser(users,String(msg.from));
+      if(!user){await sendWhatsApp(msg.from,'Diese Nummer ist noch keinem Einfach-Hausen-Konto zugeordnet. Hinterlege sie bitte einmal in deinem App-Profil.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
+      if(user.role!=='homeowner'){await sendWhatsApp(msg.from,'Partneranfragen und Aufträge werden in der Einfach-Hausen-Partner-App bearbeitet.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
+      let body=''; let mediaPath:string|null=null;
+      if(msg.type==='text')body=String(msg.text?.body||'').trim();
+      else if(whatsappMediaType(msg.type)){
+        const media=await downloadWhatsAppMedia(msg);
+        if(!media){await sendWhatsApp(msg.from,'Ich konnte diese Datei nicht sicher übernehmen. Bitte sende ein Foto oder eine Sprachnachricht noch einmal oder nutze die Einfach-Hausen-App.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
+        body=media.body; mediaPath=media.path;
+      }else{
+        await sendWhatsApp(msg.from,'Ich kann hier Text, Fotos und Sprachnachrichten sicher übernehmen. Für andere Dateien nutze bitte die Einfach-Hausen-App.');completeWebhookEvent('whatsapp',String(msg.id));continue;
+      }
+      if(!body){await sendWhatsApp(msg.from,'Schreib mir bitte kurz, worum es geht, oder sende ein Foto bzw. eine Sprachnachricht.');completeWebhookEvent('whatsapp',String(msg.id));continue;}
+      const thread=db.prepare(`SELECT id FROM assistant_threads WHERE user_id=? AND channel='whatsapp' ORDER BY updated_at DESC LIMIT 1`).get(user.id) as {id:number}|undefined;
+      const intent=explicitIntent(body);
+      const commandOnly=Boolean(intent&&/^(ansprechpartner|kontakt|mensch|fachperson|auftrag|beauftragen|auftrag organisieren)$/i.test(body));
+      const draft=thread?db.prepare('SELECT intent FROM assistant_drafts WHERE thread_id=?').get(thread.id) as {intent:HausmeisterIntent}|undefined:undefined;
+      if(draft){
+        const nextIntent=intent||draft.intent;
+        if(intent&&intent!==draft.intent&&thread)db.prepare('UPDATE assistant_drafts SET intent=?,updated_at=CURRENT_TIMESTAMP WHERE thread_id=?').run(intent,thread.id);
+        const result=await createHausmeisterRequest(user.id,body,'whatsapp',mediaPath,nextIntent,!commandOnly,thread?.id);
+        await sendWhatsApp(msg.from,result.reply); completeWebhookEvent('whatsapp',String(msg.id)); continue;
+      }
+      if(intent){
+        let topic=body; let topicPhoto:string|null=mediaPath;
+        if(commandOnly&&thread){
+          const latest=db.prepare(`SELECT body,metadata_json FROM assistant_messages WHERE thread_id=? AND role='user' ORDER BY created_at DESC,id DESC LIMIT 1`).get(thread.id) as {body:string;metadata_json:string}|undefined;
+          if(latest){topic=latest.body;try{const meta=JSON.parse(latest.metadata_json||'{}');if(typeof meta.photo==='string')topicPhoto=meta.photo;}catch{}}
+        }
+        const result=await createHausmeisterRequest(user.id,topic,'whatsapp',topicPhoto,intent,!commandOnly,thread?.id);
+        await sendWhatsApp(msg.from,result.reply); completeWebhookEvent('whatsapp',String(msg.id)); continue;
+      }
+      const answer=await answerHausmeisterQuestion(user.id,body,'whatsapp',mediaPath);
+      await sendWhatsApp(msg.from,`${answer.reply}\n\nWenn du einen passenden Menschen sprechen möchtest, antworte ANSPRECHPARTNER. Wenn ich einen echten Auftrag organisieren soll, antworte AUFTRAG.`);
+      completeWebhookEvent('whatsapp',String(msg.id));
+    }catch{
+      releaseWebhookEvent('whatsapp',String(msg.id));
+      await sendWhatsApp(msg.from,'Ich konnte das gerade nicht vollständig verarbeiten. Öffne bitte die Einfach-Hausen-App; dein Hausmeisterservice und deine Hausakte bleiben dort verfügbar.');
+    }
+  }
+  return NextResponse.json({received:true});
+}

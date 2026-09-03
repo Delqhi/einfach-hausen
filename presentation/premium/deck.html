@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280,height=720,initial-scale=1">
+<!-- Brand source: brand.config.json; values below are contract-tested by test-brand-config.mjs. -->
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#171A18;--deep:#123C2A;--deeper:#0D2F21;--brand:#176B45;
+  --mint:#EAF5EE;--mint2:#F4FAF6;--bg:#F7F8F7;--gold:#F4D27A;
+  --muted:#66706A;--line:#E4E8E5;--white:#fff;--warn:#FFF3CC;--warnInk:#6E5206;
+  --brand-logo-src:url("./assets/branding/einfachhausen-mark.svg");--brand-logo-size:28px;--brand-logo-opacity:1;
+  --phone-frame-padding:3px;--phone-radius:34px;--phone-screen-radius:30px;--phone-notch-width:60px;--phone-notch-height:14px;--phone-notch-top:9px;--phone-shadow:0 22px 48px -28px rgba(18,60,42,.42);
+}
+html,body{width:1280px;background:#111}
+body{font-family:-apple-system,"SF Pro Display","Helvetica Neue",Arial,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+.slide{width:1280px;height:720px;position:relative;overflow:hidden;background:var(--bg)}
+.slide.dark{background:linear-gradient(135deg,var(--deep),var(--deeper));color:#fff}
+.kicker{font-size:14px;font-weight:800;letter-spacing:.19em;text-transform:uppercase;color:var(--brand)}
+.dark .kicker{color:var(--gold)}
+h1{font-size:78px;line-height:1.01;letter-spacing:-.035em;font-weight:820}
+h2{font-size:48px;line-height:1.05;letter-spacing:-.028em;font-weight:790}
+h3{font-size:24px;line-height:1.15;letter-spacing:-.015em;font-weight:760}
+.body{font-size:19px;line-height:1.48;color:var(--muted)}
+.dark .body{color:#D3E2DA}
+.lead{font-size:22px;line-height:1.42;color:var(--muted)}
+.dark .lead{color:#D8E7DF}
+.content{position:absolute;z-index:2}
+.visual{position:absolute;z-index:1}
+.footer{position:absolute;z-index:20;left:72px;right:72px;bottom:22px;height:38px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(23,34,27,.12);padding-top:10px;font-size:12px;color:#7D8D84;letter-spacing:.045em}
+.dark .footer{border-top-color:rgba(255,255,255,.13);color:#A9BCB1}
+.footer-brand{display:flex;align-items:center;gap:10px;min-width:190px;letter-spacing:-.005em}
+.brand-logo-slot{width:var(--brand-logo-size);height:var(--brand-logo-size);display:block;flex:none;background-image:var(--brand-logo-src);background-repeat:no-repeat;background-position:center;background-size:contain;opacity:var(--brand-logo-opacity)}
+.brand-logo-copy{display:flex;flex-direction:column;line-height:1;min-width:0}.brand-logo-copy strong{font-size:14px;line-height:1;letter-spacing:-.045em;font-weight:790;white-space:nowrap;text-transform:lowercase;color:var(--ink)}.brand-logo-copy small{margin-top:4px;font-size:8.5px;line-height:1.15;color:var(--muted);white-space:nowrap;font-weight:520}.brand-logo-copy small b{color:var(--brand);font-weight:720}.dark .brand-logo-copy strong{color:#fff}.dark .brand-logo-copy small{color:rgba(255,255,255,.72)}.dark .brand-logo-copy small b{color:#B6DE8E}
+.checklist{display:flex;flex-direction:column;gap:17px}
+.checkrow{display:grid;grid-template-columns:27px 1fr;gap:13px;align-items:start;font-size:18px;line-height:1.35}
+.check{width:27px;height:27px;border-radius:8px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 55px -34px rgba(7,27,19,.28)}
+.soft-card{background:rgba(255,255,255,.74);border:1px solid var(--line);border-radius:18px}
+.browser{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 35px 80px -42px rgba(7,27,19,.42)}
+.browser-bar{height:34px;display:flex;align-items:center;gap:6px;padding:0 12px;background:#EEF2EF;border-bottom:1px solid var(--line)}
+.browser-dot{width:9px;height:9px;border-radius:50%;background:#CBD5CD}
+.browser-url{margin-left:8px;height:19px;min-width:180px;border:1px solid var(--line);border-radius:6px;background:#fff;display:flex;align-items:center;padding:0 9px;color:#73837A;font-size:11px}
+.shot{overflow:hidden;background:#fff}
+.shot img{width:100%;height:100%;display:block;object-fit:cover;object-position:top}
+.phone{background:#0B100D;border-radius:var(--phone-radius);padding:var(--phone-frame-padding);box-shadow:var(--phone-shadow);position:relative}
+.phone-screen{width:100%;height:100%;border-radius:var(--phone-screen-radius);overflow:hidden;background:#fff}
+.phone-screen img{width:100%;height:100%;display:block;object-fit:cover;object-position:top}
+.notch{position:absolute;top:var(--phone-notch-top);left:50%;transform:translateX(-50%);width:var(--phone-notch-width);height:var(--phone-notch-height);border-radius:10px;background:#0B100D;z-index:5}
+.callout{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:0 22px 48px -34px rgba(7,27,19,.28)}
+.callout strong{display:block;font-size:18px;margin-bottom:5px}
+.callout span{font-size:16px;line-height:1.4;color:var(--muted)}
+.stage{background:linear-gradient(155deg,var(--mint2),var(--mint));border-radius:24px;border:1px solid var(--line)}
+.tag{display:inline-flex;align-items:center;border-radius:999px;padding:9px 14px;font-size:15px;font-weight:750;background:#fff;border:1px solid var(--line);color:var(--brand)}
+.dark .tag{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:#F1F7F3}
+.flow-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.17);border-radius:20px;padding:26px}
+.metric{border-top:3px solid var(--gold);padding-top:18px}
+.metric-label{font-size:15px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#9EB3A7}
+.metric-value{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-top:10px}
+.metric-detail{font-size:16px;line-height:1.38;color:#D0DED6;margin-top:8px}
+.crop-card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 26px 58px -38px rgba(7,27,19,.3)}
+.crop-title{font-size:17px;font-weight:780;margin-top:12px}
+.crop-copy{font-size:15px;line-height:1.35;color:var(--muted);margin-top:5px}
+.accent{color:var(--brand)}
+.dark .accent{color:var(--gold)}
+.light-evidence{background:linear-gradient(145deg,#fff,var(--mint2));color:var(--ink)}
+.light-evidence .body{color:var(--muted)}.light-evidence .metric{border-top-color:var(--brand)}.light-evidence .metric-label{color:var(--brand)}.light-evidence .metric-value{color:var(--ink)}.light-evidence .metric-detail{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- 01 -->
+<section class="slide dark" data-slide="01">
+  <div class="content" data-zone="content" style="left:72px;top:118px;width:540px;height:478px">
+    <div class="kicker">Team-Präsentation · Produkt-Snapshot 26.08.2026</div>
+    <h1 style="margin-top:24px">Dein Zuhause.<br>Wir kümmern uns<span class="accent">.</span></h1>
+    <p class="lead" style="margin-top:26px;max-width:500px">Eine Plattform verbindet Website, Eigentümer-App und Partnerbetrieb zu einem durchgängigen Service.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:34px">
+      <span class="tag">Snapshot 3a8aa93</span><span class="tag">Health: ok</span><span class="tag">DB: ready</span>
+    </div>
+  </div>
+  <div class="visual" data-zone="visual" style="right:58px;top:94px;width:560px;height:520px">
+    <div class="browser" style="position:absolute;left:0;top:34px;width:470px;height:320px;transform:rotate(-2deg)">
+      <div class="browser-bar"><i class="browser-dot"></i><i class="browser-dot"></i><i class="browser-dot"></i><span class="browser-url">einfachhausen.de</span></div>
+      <div class="shot" style="height:286px"><img src="../professional-assets/web_hero.png"></div>
+    </div>
+    <div class="phone" style="position:absolute;right:12px;top:188px;width:184px;height:410px;transform:rotate(4deg)"><div class="notch"></div><div class="phone-screen"><img src="../professional-assets/owner_home_top_phone.png"></div></div>
+    <div class="phone" style="position:absolute;left:238px;top:220px;width:170px;height:380px;transform:rotate(-3deg)"><div class="notch"></div><div class="phone-screen"><img src="../professional-assets/pro_start_phone.png"></div></div>
+  </div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Produkt-Snapshot · Laufzeitstatus separat geprüft</span><span>01 / 15</span></div>
+</section>
+
+<!-- 02 -->
+<section class="slide" data-slide="02">
+  <div class="content" data-zone="content" style="left:72px;right:72px;top:70px;height:155px;display:flex;justify-content:space-between;align-items:end">
+    <div><div class="kicker">Überblick</div><h2 style="margin-top:16px">Eine Plattform. Drei klare Rollen<span class="accent">.</span></h2></div>
+    <p class="body" style="width:360px;text-align:right">Jede Oberfläche löst einen eigenen Teil der Servicekette — ohne Bruch im System.</p>
+  </div>
+  <div class="visual" data-zone="visual" style="left:72px;right:72px;top:265px;height:360px;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:24px">
+    <div class="card" style="padding:18px"><div class="browser" style="height:205px"><div class="browser-bar"><i class="browser-dot"></i><i class="browser-dot"></i><i class="browser-dot"></i><span class="browser-url">Website</span></div><div class="shot" style="height:171px"><img src="../professional-assets/web_hero.png"></div></div><h3 style="margin-top:18px">1 · Website</h3><p class="body" style="font-size:16px;margin-top:7px">Vertrauen schaffen und aus einem Problem eine konkrete Anfrage machen.</p></div>
+    <div class="card" style="padding:18px;display:grid;grid-template-columns:135px 1fr;gap:18px;align-items:center"><div class="phone" style="width:135px;height:258px"><div class="notch" style="width:54px;height:13px;top:11px"></div><div class="phone-screen"><img src="../professional-assets/owner_home_top_phone.png"></div></div><div><h3>2 · Eigentümer</h3><p class="body" style="font-size:16px;margin-top:9px">Anliegen, Hausakte und Freigaben an einem Ort.</p></div></div>
+    <div class="card" style="padding:18px;display:grid;grid-template-columns:135px 1fr;gap:18px;align-items:center"><div class="phone" style="width:135px;height:258px"><div class="notch" style="width:54px;height:13px;top:11px"></div><div class="phone-screen"><img src="../professional-assets/pro_start_phone.png"></div></div><div><h3>3 · Partner</h3><p class="body" style="font-size:16px;margin-top:9px">Geprüfte Betriebe steuern Aufträge, Team und Profil.</p></div></div>
+  </div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Überblick</span><span>02 / 15</span></div>
+</section>
+
+<!-- 03 -->
+<section class="slide" data-slide="03">
+  <div class="content" data-zone="content" style="left:72px;top:92px;width:420px;height:500px">
+    <div class="kicker">Website</div><h2 style="margin-top:18px">Der erste Eindruck sitzt<span class="accent">.</span></h2>
+    <p class="body" style="margin-top:24px">Positionierung, häufigste Servicefälle und der Weg zur Anfrage sind sofort sichtbar.</p>
+    <div class="checklist" style="margin-top:30px"><div class="checkrow"><div class="check">✓</div><div><b>Klare Positionierung</b><br><span style="color:var(--muted)">„Dein Zuhause. Wir kümmern uns.“</span></div></div><div class="checkrow"><div class="check">✓</div><div><b>Drei konkrete Einstiege</b><br><span style="color:var(--muted)">statt abstrakter Feature-Navigation</span></div></div><div class="checkrow"><div class="check">✓</div><div><b>Ruhige Bildsprache</b><br><span style="color:var(--muted)">Vertrauen vor Werbedruck</span></div></div></div>
+  </div>
+  <div class="visual" data-zone="visual" style="left:548px;top:82px;width:660px;height:536px"><div class="browser" style="width:100%;height:100%"><div class="browser-bar"><i class="browser-dot"></i><i class="browser-dot"></i><i class="browser-dot"></i><span class="browser-url">einfachhausen.de</span></div><div class="shot" style="height:502px"><img src="../professional-assets/web_hero.png"></div></div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Website · Start</span><span>03 / 15</span></div>
+</section>
+
+<!-- 04 -->
+<section class="slide" data-slide="04">
+  <div class="content" data-zone="content" style="left:72px;right:72px;top:68px;height:130px"><div class="kicker">Website</div><h2 style="margin-top:16px">Vom Angebot zum sicheren Ablauf<span class="accent">.</span></h2></div>
+  <div class="visual" data-zone="visual" style="left:72px;right:72px;top:225px;height:390px;display:grid;grid-template-columns:1fr 1fr;gap:28px">
+    <div class="card" style="padding:18px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div><div class="kicker" style="font-size:12px">Schritt 1</div><h3 style="margin-top:6px">Leistung auswählen</h3></div><span class="tag">Problem → Kategorie</span></div><div class="browser" style="height:255px"><div class="browser-bar"><i class="browser-dot"></i><i class="browser-dot"></i><i class="browser-dot"></i><span class="browser-url">/leistungen</span></div><div class="shot" style="height:221px"><img src="../professional-assets/web_services_cards.png"></div></div></div>
+    <div class="card" style="padding:18px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div><div class="kicker" style="font-size:12px">Schritt 2</div><h3 style="margin-top:6px">Ablauf verstehen</h3></div><span class="tag">Anfrage → Lösung</span></div><div class="browser" style="height:255px"><div class="browser-bar"><i class="browser-dot"></i><i class="browser-dot"></i><i class="browser-dot"></i><span class="browser-url">/so-funktionierts</span></div><div class="shot" style="height:221px"><img src="../professional-assets/web_how_steps.png"></div></div></div>
+  </div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Website · Leistungen & Ablauf</span><span>04 / 15</span></div>
+</section>
+
+<!-- 05 -->
+<section class="slide" data-slide="05">
+  <div class="content" data-zone="content" style="left:72px;top:92px;width:500px;height:510px"><div class="kicker">Eigentümer-App</div><h2 style="margin-top:18px">Anliegen erfassen, ohne Formularchaos<span class="accent">.</span></h2><p class="body" style="margin-top:24px">Die Anfrage beginnt dort, wo das Problem entsteht: per Text, Foto oder Sprache.</p><div class="checklist" style="margin-top:30px"><div class="checkrow"><div class="check">✓</div><div><b>Eingabe in Alltagssprache</b><br><span style="color:var(--muted)">kein Gewerk-Wissen nötig</span></div></div><div class="checkrow"><div class="check">✓</div><div><b>Passender Betrieb</b><br><span style="color:var(--muted)">Vorschlag nach Leistung und Region</span></div></div><div class="checkrow"><div class="check">✓</div><div><b>Freigabe vor Auftrag</b><br><span style="color:var(--muted)">Kontrolle bleibt beim Eigentümer</span></div></div></div></div>
+  <div class="visual stage" data-zone="visual" style="right:56px;top:72px;width:560px;height:548px"><div class="phone" style="position:absolute;left:74px;top:32px;width:250px;height:512px"><div class="notch"></div><div class="phone-screen"><img src="../professional-assets/owner_hausmeister_phone.png"></div></div><div style="position:absolute;right:36px;top:86px;width:185px;display:flex;flex-direction:column;gap:14px"><div class="callout"><strong>1. Anliegen</strong><span>Text, Foto oder Sprache.</span></div><div class="callout"><strong>2. Vorschlag</strong><span>Passender regionaler Betrieb.</span></div><div class="callout"><strong>3. Freigabe</strong><span>Erst danach wird beauftragt.</span></div></div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Eigentümer-App · Anliegen</span><span>05 / 15</span></div>
+</section>
+
+<!-- 06 -->
+<section class="slide" data-slide="06">
+  <div class="visual stage" data-zone="visual" style="left:56px;top:72px;width:500px;height:548px"><div class="phone" style="position:absolute;left:118px;top:22px;width:250px;height:512px"><div class="notch"></div><div class="phone-screen"><img src="../professional-assets/owner_house_top_phone.png"></div></div></div>
+  <div class="content" data-zone="content" style="left:620px;top:96px;width:565px;height:492px"><div class="kicker">Eigentümer-App</div><h2 style="margin-top:18px">Das Zuhause als digitale Hausakte<span class="accent">.</span></h2><p class="body" style="margin-top:24px">Objekt, offene Anliegen, Dokumente und Verlauf werden zu einem gemeinsamen Arbeitsstand — nicht zu verstreuten Tickets.</p><div class="checklist" style="margin-top:30px"><div class="checkrow"><div class="check">✓</div><div><b>Objektwissen bleibt erhalten</b><br><span style="color:var(--muted)">Technik, Dokumente und Historie</span></div></div><div class="checkrow"><div class="check">✓</div><div><b>Nächste Schritte sind sichtbar</b><br><span style="color:var(--muted)">kein Suchen in alten Nachrichten</span></div></div><div class="checkrow"><div class="check">✓</div><div><b>Ein klarer Ansprechpartner</b><br><span style="color:var(--muted)">Zuständigkeit statt Ticket-Pingpong</span></div></div></div><div class="tag" style="margin-top:26px">Mein Haus · alles an einem Ort</div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Eigentümer-App · Hausakte</span><span>06 / 15</span></div>
+</section>
+
+<!-- 07 -->
+<section class="slide" data-slide="07">
+  <div class="content" data-zone="content" style="left:72px;top:92px;width:530px;height:500px"><div class="kicker">Eigentümer-App</div><h2 style="margin-top:18px">Tarife machen Betreuung greifbar<span class="accent">.</span></h2><p class="body" style="margin-top:24px">Aus Einzelaufträgen wird ein klarer Leistungsrahmen: verständlich für Eigentümer und kalkulierbar für den Betrieb.</p><div class="soft-card" style="margin-top:30px;padding:24px"><div class="kicker" style="font-size:12px">Warum das trägt</div><p class="body" style="font-size:17px;margin-top:10px;color:var(--ink)">Laufende Betreuung verkauft sich nicht über Kleinstpreise, sondern über Verlässlichkeit, Umfang und transparente Erwartungen.</p></div></div>
+  <div class="visual stage" data-zone="visual" style="right:56px;top:72px;width:520px;height:548px"><div class="phone" style="position:absolute;left:135px;top:22px;width:250px;height:512px"><div class="notch"></div><div class="phone-screen"><img src="../professional-assets/owner_tariffs_top_phone.png"></div></div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Eigentümer-App · Tarife</span><span>07 / 15</span></div>
+</section>
+
+<!-- 08 -->
+<section class="slide" data-slide="08">
+  <div class="content" data-zone="content" style="left:72px;top:86px;width:575px;height:510px"><div class="kicker">Handwerker-App</div><h2 style="margin-top:18px">Zugang erst nach Prüfung<span class="accent">.</span></h2><p class="body" style="margin-top:24px">Regionale Partner werden vor Marktplatz-Zugang anhand von Unternehmensdaten, Vertrag und Leistungsprofil geprüft.</p><div class="soft-card" style="margin-top:30px;padding:24px;background:#FFF8E2;border-color:#EEDFAE"><div class="kicker" style="font-size:12px;color:var(--warnInk)">Klare Botschaft</div><p style="font-family:Georgia,serif;font-size:19px;line-height:1.48;font-style:italic;margin-top:10px;color:#54420D">„Der Marktplatz öffnet erst, wenn Unternehmen, Vertrag und Leistungsprofil geprüft sind.“</p></div><div class="tag" style="margin-top:24px;background:var(--warn);border-color:#E8D598;color:var(--warnInk)">Aktueller Screenshot-Status: Prüfung ausstehend</div></div>
+  <div class="visual stage" data-zone="visual" style="right:56px;top:72px;width:500px;height:548px"><div class="phone" style="position:absolute;left:125px;top:22px;width:250px;height:512px"><div class="notch"></div><div class="phone-screen"><img src="../professional-assets/pro_start_phone.png"></div></div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Handwerker-App · Zugang</span><span>08 / 15</span></div>
+</section>
+
+<!-- 09 -->
+<section class="slide" data-slide="09">
+  <div class="visual stage" data-zone="visual" style="left:56px;top:72px;width:500px;height:548px"><div class="phone" style="position:absolute;left:118px;top:22px;width:250px;height:512px"><div class="notch"></div><div class="phone-screen"><img src="../professional-assets/pro_jobs_phone.png"></div></div></div>
+  <div class="content" data-zone="content" style="left:620px;top:88px;width:565px;height:510px"><div class="kicker">Handwerker-App</div><h2 style="margin-top:18px">Die operative Oberfläche<span class="accent">.</span></h2><p class="body" style="margin-top:24px">Nicht nur Benachrichtigungen: Die App ist das Arbeitsmittel für Auftrag, Team und Kommunikation.</p><div style="margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:14px"><div class="callout"><strong>Aufträge</strong><span>Status, Details und Verlauf.</span></div><div class="callout"><strong>Team</strong><span>Zuweisung und Auslastung.</span></div><div class="callout"><strong>Nachrichten</strong><span>Direkt im Auftragskontext.</span></div><div class="callout"><strong>Profil</strong><span>Leistungen und Prüfstatus.</span></div></div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Handwerker-App · Betrieb</span><span>09 / 15</span></div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-slide="10">
+  <div class="content" data-zone="content" style="left:72px;top:92px;width:540px;height:500px"><div class="kicker">Handwerker-App</div><h2 style="margin-top:18px">Das Profil macht Qualität sichtbar<span class="accent">.</span></h2><p class="body" style="margin-top:24px">Vor der Beauftragung sehen Kundinnen und Kunden die entscheidenden Qualitätsinformationen — transparent und nachvollziehbar.</p><div class="checklist" style="margin-top:30px"><div class="checkrow"><div class="check">✓</div><div><b>Unternehmensdaten</b><br><span style="color:var(--muted)">gegen Registerinformationen geprüft</span></div></div><div class="checkrow"><div class="check">✓</div><div><b>Leistungsprofil</b><br><span style="color:var(--muted)">Basis für passende Zuordnung</span></div></div><div class="checkrow"><div class="check">✓</div><div><b>Prüfstatus</b><br><span style="color:var(--muted)">sichtbar statt verborgen</span></div></div></div></div>
+  <div class="visual stage" data-zone="visual" style="right:56px;top:72px;width:500px;height:548px"><div class="phone" style="position:absolute;left:125px;top:22px;width:250px;height:512px"><div class="notch"></div><div class="phone-screen"><img src="../professional-assets/pro_profile_top_phone.png"></div></div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Handwerker-App · Profil</span><span>10 / 15</span></div>
+</section>
+
+<!-- 11 -->
+<section class="slide dark" data-slide="11">
+  <div class="content" data-zone="content" style="left:72px;right:72px;top:78px;height:132px"><div class="kicker">Zusammenspiel</div><h2 style="margin-top:16px">Ein durchgängiger Weg<span class="accent">.</span></h2></div>
+  <div class="visual" data-zone="visual" style="left:72px;right:72px;top:260px;height:290px;display:grid;grid-template-columns:1fr 62px 1fr 62px 1fr;align-items:center"><div class="flow-card"><div class="kicker" style="font-size:12px">Schritt 1</div><h3 style="font-size:27px;margin-top:10px">Website</h3><p class="body" style="font-size:17px;margin-top:10px">Vertrauen schaffen und Anfrage konkretisieren.</p></div><div style="font-size:36px;text-align:center;color:var(--gold)">→</div><div class="flow-card"><div class="kicker" style="font-size:12px">Schritt 2</div><h3 style="font-size:27px;margin-top:10px">Eigentümer-App</h3><p class="body" style="font-size:17px;margin-top:10px">Anliegen erfassen und Auftrag freigeben.</p></div><div style="font-size:36px;text-align:center;color:var(--gold)">→</div><div class="flow-card"><div class="kicker" style="font-size:12px">Schritt 3</div><h3 style="font-size:27px;margin-top:10px">Partnerbetrieb</h3><p class="body" style="font-size:17px;margin-top:10px">Geprüfter Betrieb führt transparent aus.</p></div></div>
+  <div style="position:absolute;left:72px;right:72px;bottom:104px;text-align:center;font-size:18px;color:#DCE9E2">Ein System, ein Status, eine Sprache — vom ersten Bedarf bis zur erledigten Leistung.</div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Zusammenspiel</span><span>11 / 15</span></div>
+</section>
+
+<!-- 12 -->
+<section class="slide light-evidence" data-slide="12">
+  <div class="content" data-zone="content" style="left:72px;right:72px;top:74px;height:150px"><div class="kicker">Nachweis</div><h2 style="margin-top:16px">Was wir tatsächlich belegen können<span class="accent">.</span></h2><p class="body" style="margin-top:16px;max-width:920px">Produkt-Snapshot, Live-Health und Datenbankstatus sind getrennte Evidenzen. Ohne Deployment-SHA wird keine Git↔Produktion-Identität behauptet.</p></div>
+  <div class="visual" data-zone="visual" style="left:72px;right:72px;top:300px;height:260px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px"><div class="metric"><div class="metric-label">Produkt-Snapshot</div><div class="metric-value">3a8aa93</div><div class="metric-detail">Commit der gezeigten Produktoberflächen.</div></div><div class="metric"><div class="metric-label">Live-Health</div><div class="metric-value">ok = true</div><div class="metric-detail">Öffentlicher Health-Endpunkt antwortet erfolgreich.</div></div><div class="metric"><div class="metric-label">Datenbank</div><div class="metric-value">ready</div><div class="metric-detail">DB-Readiness am Health-Endpunkt gemeldet.</div></div><div class="metric"><div class="metric-label">Screenshot-Capture</div><div class="metric-value">26.08.2026</div><div class="metric-detail">Aufnahmedatum der im Deck verwendeten Screens.</div></div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Evidenz · bewusst getrennt</span><span>12 / 15</span></div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-slide="13">
+  <div class="content" data-zone="content" style="left:72px;right:72px;top:60px;height:108px;display:flex;justify-content:space-between;align-items:end"><div><div class="kicker">Anhang A · Website</div><h2 style="font-size:38px;margin-top:10px">Drei Momente, klar lesbar<span class="accent">.</span></h2></div><p class="body" style="font-size:15px;text-align:right;width:350px">Kuratierte Ausschnitte statt drei unlesbarer Vollseiten-Miniaturen.</p></div>
+  <div class="visual" data-zone="visual" style="left:72px;right:72px;top:205px;height:410px;display:grid;grid-template-columns:1.35fr .85fr;gap:24px"><div class="crop-card" style="padding:16px"><div class="browser" style="height:330px"><div class="browser-bar"><i class="browser-dot"></i><i class="browser-dot"></i><i class="browser-dot"></i><span class="browser-url">01 · Startseite</span></div><div class="shot" style="height:296px"><img src="../professional-assets/web_hero.png"></div></div><div class="crop-title">Start: Positionierung + konkrete Anfrage</div></div><div style="display:grid;grid-template-rows:1fr 1fr;gap:18px"><div class="crop-card" style="padding:14px;display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:center"><div class="browser" style="height:150px"><div class="browser-bar" style="height:26px"><i class="browser-dot"></i><i class="browser-dot"></i><span class="browser-url" style="min-width:110px">02 · Leistungen</span></div><div class="shot" style="height:124px"><img src="../professional-assets/web_services_cards.png"></div></div><div><div class="crop-title" style="margin-top:0">Leistungen</div><div class="crop-copy">Problem verständlich einordnen.</div></div></div><div class="crop-card" style="padding:14px;display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:center"><div class="browser" style="height:150px"><div class="browser-bar" style="height:26px"><i class="browser-dot"></i><i class="browser-dot"></i><span class="browser-url" style="min-width:110px">03 · Ablauf</span></div><div class="shot" style="height:124px"><img src="../professional-assets/web_how_steps.png"></div></div><div><div class="crop-title" style="margin-top:0">Ablauf</div><div class="crop-copy">Vom Bedarf zur Lösung navigieren.</div></div></div></div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Anhang · Website</span><span>13 / 15</span></div>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-slide="14">
+  <div class="content" data-zone="content" style="left:72px;right:72px;top:60px;height:110px;display:flex;justify-content:space-between;align-items:end"><div><div class="kicker">Anhang B · Apps</div><h2 style="font-size:38px;margin-top:10px">Zwei Rollen. Zwei klare Arbeitswelten<span class="accent">.</span></h2></div><p class="body" style="font-size:15px;text-align:right;width:350px">Je Rolle ein großer repräsentativer Screen — keine Miniaturwand.</p></div>
+  <div class="visual" data-zone="visual" style="left:100px;right:100px;top:205px;height:410px;display:grid;grid-template-columns:1fr 1fr;gap:70px"><div class="card" style="padding:20px 26px;display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:center"><div class="phone" style="width:180px;height:369px"><div class="notch" style="width:66px;height:15px;top:12px"></div><div class="phone-screen"><img src="../professional-assets/owner_home_top_phone.png"></div></div><div><div class="kicker" style="font-size:12px">Eigentümer</div><h3 style="font-size:28px;margin-top:9px">Zuhause im Blick</h3><p class="body" style="font-size:17px;margin-top:12px">Hausstatus, nächste Schritte und Anliegen in einer persönlichen Oberfläche.</p></div></div><div class="card" style="padding:20px 26px;display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:center"><div class="phone" style="width:180px;height:369px"><div class="notch" style="width:66px;height:15px;top:12px"></div><div class="phone-screen"><img src="../professional-assets/pro_jobs_phone.png"></div></div><div><div class="kicker" style="font-size:12px">Partnerbetrieb</div><h3 style="font-size:28px;margin-top:9px">Arbeit im Blick</h3><p class="body" style="font-size:17px;margin-top:12px">Aufträge, Status und operative Details in einer Arbeitsoberfläche.</p></div></div></div>
+  <div class="footer" data-zone="footer"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span><span>Anhang · Apps</span><span>14 / 15</span></div>
+</section>
+
+<!-- 15 -->
+<section class="slide dark" data-slide="15">
+  <div class="content" data-zone="content" style="left:130px;right:130px;top:150px;height:360px;text-align:center"><div class="kicker">Einfachhausen</div><h1 style="font-size:72px;margin-top:24px">Ein Zuhause.<br>Ein Ansprechpartner<span class="accent">.</span></h1><p class="lead" style="margin:28px auto 0;max-width:760px">Website, Eigentümer-App und Partnerbetrieb greifen als ein Service zusammen.</p></div>
+  <div class="visual" data-zone="visual" style="left:320px;right:320px;top:530px;height:48px;display:flex;align-items:center;justify-content:center;gap:14px"><span class="tag">Website</span><span style="color:var(--gold);font-size:22px">→</span><span class="tag">Eigentümer</span><span style="color:var(--gold);font-size:22px">→</span><span class="tag">Partnerbetrieb</span></div>
+  <div class="footer" data-zone="footer" style="justify-content:center"><span class="footer-brand" aria-label="einfachhausen – Dein Zuhause. Wir kümmern uns."><span class="brand-logo-slot" data-brand-logo aria-hidden="true"></span><span class="brand-logo-copy"><strong>einfachhausen</strong><small>Dein Zuhause. <b>Wir kümmern uns.</b></small></span></span></div>
+</section>
+
+</body>
+</html>

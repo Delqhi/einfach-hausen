@@ -1,0 +1,21 @@
+id: einfach_hausen_slo
+namespace: einfach.hausen
+
+description: >
+  T-0123 SLO probes for the Einfach Hausen app: health, homepage, auth
+  authority, dispatch freshness and backup freshness. Runs the probe script on
+  the OCI host via the existing taskRunner (local shell) and fails the
+  execution when any SLO breaches, so the existing Kestra UI/API alerting and
+  execution history surface the failing component without a new platform.
+
+tasks:
+  - id: slo_probes
+    type: io.kestra.plugin.core.flow.Subflow
+    namespace: einfach.hausen
+    flowId: einfach_hausen_slo_exec
+
+triggers:
+  - id: every_fifteen_minutes
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "*/15 * * * *"
+    allowConcurrent: false

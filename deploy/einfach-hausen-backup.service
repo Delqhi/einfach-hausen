@@ -1,0 +1,20 @@
+[Unit]
+Description=Backup Einfach Hausen SQLite database to local Supabase Storage
+After=einfach-hausen.service docker.service
+
+[Service]
+Type=oneshot
+User=root
+Environment=DATABASE_PATH=/var/lib/einfach-hausen/einfach-hausen.db
+Environment=PRIVATE_ROOT=/var/lib/einfach-hausen/private
+Environment=UPLOAD_ROOT=/var/lib/einfach-hausen/uploads
+Environment=LOCAL_BACKUP_DIR=/var/backups/einfach-hausen
+ExecStart=/srv/einfach-hausen/deploy/backup-to-supabase.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/var/backups/einfach-hausen
+ReadOnlyPaths=/var/lib/einfach-hausen /opt/sin-supabase /srv/einfach-hausen

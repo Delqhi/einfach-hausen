@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Partner- & Auftrags-Lifecycle",
+    "subtitle": "Ein Firmenkonto, klare AN/AUS-Berechtigung und ein nachvollziehbarer Auftragsweg"
+  },
+  "lanes": [
+    {
+      "id": "main",
+      "label": "Auftragsphasen"
+    },
+    {
+      "id": "waiting",
+      "label": "Warten / Entscheidung"
+    },
+    {
+      "id": "terminal",
+      "label": "Abschluss"
+    }
+  ],
+  "states": [
+    {
+      "id": "request",
+      "type": "start",
+      "label": "Anfrage",
+      "sublabel": "passender Betrieb",
+      "lane": "main",
+      "col": 0,
+      "step": "01"
+    },
+    {
+      "id": "quote",
+      "type": "active",
+      "label": "Angebot",
+      "sublabel": "Umfang + Preis + Termin",
+      "lane": "main",
+      "col": 1,
+      "step": "02"
+    },
+    {
+      "id": "booked",
+      "type": "active",
+      "label": "Gebucht",
+      "sublabel": "bewusste Kundenwahl",
+      "lane": "main",
+      "col": 2,
+      "step": "03"
+    },
+    {
+      "id": "assigned",
+      "type": "active",
+      "label": "Zugewiesen",
+      "sublabel": "konkreter Ansprechpartner",
+      "lane": "main",
+      "col": 3,
+      "step": "04"
+    },
+    {
+      "id": "invoice",
+      "type": "active",
+      "label": "Rechnung",
+      "sublabel": "nach Leistung",
+      "lane": "main",
+      "col": 4,
+      "step": "05"
+    },
+    {
+      "id": "awaiting",
+      "type": "waiting",
+      "label": "Rückfrage / Termin",
+      "sublabel": "direkter Kontakt",
+      "lane": "waiting",
+      "col": 1
+    },
+    {
+      "id": "done",
+      "type": "success",
+      "label": "Erledigt",
+      "sublabel": "Historie + Ansprechpartner",
+      "lane": "terminal",
+      "col": 2,
+      "tag": "terminal"
+    },
+    {
+      "id": "cancelled",
+      "type": "failure",
+      "label": "Abgelehnt / storniert",
+      "sublabel": "kein versteckter Abschluss",
+      "lane": "terminal",
+      "col": 0,
+      "tag": "terminal",
+      "width": 144
+    }
+  ],
+  "transitions": [
+    {
+      "from": "request",
+      "to": "quote",
+      "variant": "emphasis"
+    },
+    {
+      "from": "quote",
+      "to": "booked",
+      "variant": "emphasis"
+    },
+    {
+      "from": "booked",
+      "to": "assigned",
+      "variant": "emphasis"
+    },
+    {
+      "from": "assigned",
+      "to": "invoice",
+      "variant": "emphasis"
+    },
+    {
+      "from": "invoice",
+      "to": "done",
+      "label": "Leistung abgeschlossen",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "straight",
+      "labelAt": [
+        710,
+        202
+      ]
+    },
+    {
+      "from": "quote",
+      "to": "awaiting",
+      "variant": "default",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "drop"
+    },
+    {
+      "from": "request",
+      "to": "cancelled",
+      "variant": "security",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "route": "drop"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Berechtigung",
+      "items": [
+        "AN: Anfragen, Angebote und Zuweisung verwalten",
+        "AUS: nur eigene zugewiesene Aufträge",
+        "Keine ERP-Rollenmatrix"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Hausgedächtnis",
+      "items": [
+        "Abgeschlossene Arbeit bleibt in der Haus-Historie",
+        "Rechnung, Kontakt und relevante Nachweise bleiben auffindbar"
+      ]
+    }
+  ]
+}

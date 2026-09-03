@@ -1,0 +1,20 @@
+id: einfach_hausen_slo_exec
+namespace: einfach.hausen
+
+description: >
+  Executable half of the T-0123 SLO flow: runs the probe script on the OCI
+  host and logs the failing probes with their correlation ids. Kept separate
+  from the scheduled wrapper so the schedule stays valid even when the exec
+  flow is manually retried.
+
+tasks:
+  - id: run_probes
+    type: io.kestra.plugin.scripts.shell.Commands
+    taskRunner:
+      type: io.kestra.plugin.core.runner.Process
+    commands:
+      - /home/ubuntu/.nvm/versions/node/v22.23.0/bin/node /srv/einfach-hausen/scripts/t0123-slo-probes.mjs
+
+  - id: alert_marker
+    type: io.kestra.plugin.core.log.Log
+    message: "Einfach Hausen SLO probes succeeded at {{ execution.startDate }}; any failed probe carries its correlation_id in the run_probes output for journald/Kestra join."

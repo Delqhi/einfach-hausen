@@ -1,0 +1,11 @@
+[Unit]
+Description=Proxy Kestra health checks to the loopback-only Einfach Hausen app
+Requires=einfach-hausen-kestra-proxy.socket
+After=einfach-hausen.service
+
+[Service]
+ExecStart=/lib/systemd/systemd-socket-proxyd 127.0.0.1:3010
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
