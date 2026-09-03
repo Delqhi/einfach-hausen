@@ -43,6 +43,15 @@ export async function GET() {
     house_transfers_initiated: all("SELECT property_id,status,created_at FROM house_transfers WHERE homeowner_id=?"),
     claims: allBoth(`SELECT c.id,c.kind,c.description,c.status,c.created_at FROM claims c WHERE c.homeowner_id=? OR c.provider_id=?`),
     notifications: all("SELECT kind,title,body,href,created_at FROM notifications WHERE user_id=?"),
+    // T-0143: partner role completeness - team memberships where the user is a
+    // member or the owning provider, plus house transfer receive history.
+    provider_memberships: all(`SELECT pm.provider_id,pm.job_title,pm.can_manage_jobs,pm.active,pm.created_at,
+        p.business_name
+      FROM provider_members pm LEFT JOIN provider_profiles p ON p.user_id=pm.provider_id
+      WHERE pm.user_id=?`),
+    provider_teams_owned: all(`SELECT pm.user_id AS member_user_id,pm.job_title,pm.can_manage_jobs,pm.active,pm.created_at
+      FROM provider_members pm WHERE pm.provider_id=?`),
+    house_transfers_received: all(`SELECT property_id,status,created_at,accepted_at FROM house_transfers WHERE accepted_by_user_id=?`),
   };
   // T-0127: private-file manifest lists media the user owns (job media, house
   // history documents) so the export is self-describing; the archive is a
@@ -65,9 +74,18 @@ export async function GET() {
     },
   };
 
+  // T-0143 idempotency: identical repeated requests inside the dedupe window
+  // return the same logical export (ledger marks them duplicate, response is
+  // still fully generated and identical in scope). The ledger keeps every
+  // request row so the user has a transparent request history.
+  const dedupeWindow = new Date(Date.now() - 60_000).toISOString();
+  const duplicate = db.prepare(
+    "SELECT id FROM data_requests WHERE user_id=? AND kind='export' AND status='completed' AND created_at>=?",
+  ).get(id, dedupeWindow) as { id: number } | undefined;
+
   db.prepare("INSERT INTO data_requests(user_id,kind,status,detail,completed_at) VALUES(?, 'export', 'completed', ?, CURRENT_TIMESTAMP)")
-    .run(id, `scope=${Object.keys(payload).length} sectionen; format=json; private_manifest=${privateFiles.length}`);
-  logSecurityEvent("account_export", `user:${id}`);
+    .run(id, `scope=${Object.keys(payload).length} sectionen; format=json; private_manifest=${privateFiles.length}${duplicate ? ' (duplicate within 60s window)' : ''}`);
+  logSecurityEvent("account_export", `user:${id}${duplicate ? ' duplicate' : ''}`);
   return new NextResponse(JSON.stringify(exportPayload, null, 2), {
     status: 200,
     headers: {
