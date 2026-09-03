@@ -1,9 +1,22 @@
 #!/usr/bin/env node
 // T-0152/T-0153 visual regression for the authenticated app surfaces
-// (homeowner /app/* and partner /pro/*) on mobile 390 + desktop 1320.
+// (homeowner /app/*, partner /pro/*, admin /admin*) on mobile 390 + desktop 1320.
 // Deterministic fixture DB (scripts/e2e-fixtures.mjs), real Supabase identity
 // per run (created + deleted), reduced motion, settled DOM.
 // Baselines: tests/visual-baselines/app/. Update: --update-baselines
+//
+// T-0130 policy:
+// - Determinism: seeded fixture DB, reducedMotion, deviceScaleFactor 1,
+//   settled load + fixed settle wait. No clock/time-dependent capture.
+// - Masking: none needed today - all captured surfaces are free of true
+//   nondeterminism (no third-party embeds, no animations after settle). If a
+//   surface becomes nondeterministic, prefer masking via clip/locator-specific
+//   capture over pixel-budget increases.
+// - Threshold: GATE_PIXEL_BUDGET (default 0.08) per capture; threshold 0.1 in
+//   pixelmatch (antialiasing tolerance). Never raise the budget to absorb real
+//   regressions - regenerate baselines deliberately via --update-baselines.
+// - Diff artifacts: on failure the actual capture AND the pixel diff are kept
+//   under .sin-gpt-web/evidence/release-gate/app-visual-actual/ for forensics.
 import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 import net from 'node:net';
@@ -132,9 +145,10 @@ try {
   fs.mkdirSync(actualDir, { recursive: true });
   browser = await chromium.launch({ headless: true, executablePath: browserExecutable() });
 
-  async function capture(role, identity, routes) {
+  async function capture(role, identity, routes, adminCookie = null) {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, reducedMotion: 'reduce' });
     await context.addCookies(identity.cookies.map(({ name, value }) => ({ name, value, url: base })));
+    if (adminCookie) await context.addCookies([adminCookie]);
     const page = await context.newPage();
     const landing = role === 'owner' ? '/app' : '/pro';
     await page.goto(`${base}${landing}`, { waitUntil: 'load', timeout: 60000 });
@@ -167,7 +181,11 @@ try {
         const diff = new PNG({ width: baseline.width, height: baseline.height });
         const changed = pixelmatch(baseline.data, actual.data, diff.data, baseline.width, baseline.height, { threshold: 0.1 });
         const ratio = changed / (baseline.width * baseline.height);
-        if (ratio > budget) failures.push(`${name}: ${(ratio * 100).toFixed(2)}% (budget ${budget * 100}%)`);
+        if (ratio > budget) {
+          // Durable forensics: keep the diff and the actual capture.
+          fs.writeFileSync(path.join(actualDir, `${name}__diff.png`), PNG.sync.write(diff));
+          failures.push(`${name}: ${(ratio * 100).toFixed(2)}% (budget ${budget * 100}%) diff=${path.join(actualDir, `${name}__diff.png`)}`);
+        }
       }
     }
     await context.close();
@@ -176,6 +194,22 @@ try {
 
   await capture('owner', ownerIdentity, ownerRoutes);
   await capture('provider', providerIdentity, providerRoutes);
+
+  // T-0130: admin surface baselines. The admin session is seeded directly via
+  // issueAdminSessionToken on the fixture DB (deterministic, no password in
+  // evidence) and the cookie name matches the server's SESSION_COOKIE_NAME.
+  // admin-auth.ts uses an extensionless './db' import; load a rewritten copy
+  // the same way feature-flags-regression.mjs handles TS-at-runtime.
+  const adminAuthPath = new URL('../src/lib/admin-auth.ts', import.meta.url).pathname;
+  const adminAuthSource = fs.readFileSync(adminAuthPath, 'utf8');
+  fs.writeFileSync(adminAuthPath, adminAuthSource.replace(/(from\s*['"])(\.\.?\/[^'"]+)(['"])/g, (_m, a, s, b) => `${a}${s}.ts${b}`));
+  let adminAuth;
+  try { adminAuth = await import('../src/lib/admin-auth.ts'); }
+  finally { fs.writeFileSync(adminAuthPath, adminAuthSource); }
+  const adminToken = adminAuth.issueAdminSessionToken();
+  // admin-auth appends an _admin suffix to the SESSION_COOKIE_NAME override.
+  const adminCookieName = `${process.env.SESSION_COOKIE_NAME}_admin`;
+  await capture('admin', ownerIdentity, ['/admin', '/admin/ops'], { name: adminCookieName, value: adminToken.token, url: base });
 } finally {
   if (browser) await browser.close().catch(() => {});
   server.kill('SIGTERM');
