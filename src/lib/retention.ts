@@ -43,9 +43,16 @@ export async function runRetentionSweep(now: Date = new Date()): Promise<Retenti
       })();
       finalized += 1;
       ids.push(id);
+      // T-0144: audit trail so the retention process is provable per account.
+      db.prepare("INSERT INTO admin_audit_log(actor,action,target,detail) VALUES('retention-sweep','retention_finalize',?,?)")
+        .run(`user=${id}`, `checked=${candidates.length}`);
     } catch {
       // keep going; failed rows are retried on the next sweep
     }
+  }
+  if (finalized > 0) {
+    db.prepare("INSERT INTO security_events(kind,identifier,detail) VALUES('retention_sweep',?,?)")
+      .run('batch', `checked=${candidates.length} finalized=${finalized} ids=${ids.join(',')}`.slice(0, 300));
   }
   return { checked: candidates.length, finalized, user_ids: ids };
 }

@@ -95,5 +95,6 @@
   "test:backup-drill": "bash scripts/t0124-backup-drill.sh",
   "test:error-tracking": "node scripts/t0132-error-tracking-regression.mjs",
   "test:health-regression": "node scripts/t0134-health-regression.mjs",
-  "test:export-regression": "node scripts/t0143-export-regression.mjs"
+  "test:export-regression": "node scripts/t0143-export-regression.mjs",
+  "test:deletion-regression": "node scripts/t0144-deletion-regression.mjs"
 }
