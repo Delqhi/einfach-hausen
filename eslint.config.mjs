@@ -23,6 +23,10 @@ const eslintConfig = defineConfig([
     ".gitnexus/**",
     // nested full app repo (own GitHub history); must not gate this repo's lint
     "einfach-hausen/**",
+    // stale agent worktrees/drops with repo copies: never lint-gate this repo
+    "main-2/**",
+    ".orca/**",
+    "runtime-client.js",
   ]),
 ]);
 
