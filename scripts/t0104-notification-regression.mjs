@@ -10,7 +10,7 @@ const dbDir = fs.mkdtempSync(path.join(os.tmpdir(), 'eh-t0104-db-'));
 process.env.DATABASE_PATH = path.join(dbDir, 'regression.db');
 process.chdir(dbDir);
 fs.symlinkSync(path.join(root, 'node_modules'), path.join(scratch, 'node_modules'), 'dir');
-for (const rel of ['src/lib/db.ts', 'src/lib/mailer.ts', 'src/lib/notifications.ts']) {
+for (const rel of ['src/lib/db.ts', 'src/lib/observability.ts', 'src/lib/mailer.ts', 'src/lib/notifications.ts']) {
   const src = fs.readFileSync(path.join(root, rel), 'utf8');
   const stripped = stripTypeScriptTypes(src).replace(/(from\s*['"])(\.\.?\/[^'"]+)(['"])/g, (_m, a, s, b) => `${a}${s}.mjs${b}`);
   const dest = path.join(scratch, rel.replace(/\.ts$/, '.mjs'));
