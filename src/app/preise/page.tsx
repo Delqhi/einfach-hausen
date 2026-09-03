@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { Faq, LinkButton, mkt as styles } from '@/components/marketing/ui';
+import { Faq, LinkButton } from '@/components/marketing/ui';
 import { FaqFrame, LedgerHero, QuietClose, ZeroBand, arch } from '@/components/marketing/archetypes';
 import { PriceLedger } from './price-ledger';
 import type { LedgerView } from './price-ledger';
@@ -104,8 +104,6 @@ export default function Page() {
         text="Das FREE-Hauskonto kostet 0 € pro Monat und enthält die digitale Hausakte. Alles Weitere ist optional und monatlich kündbar."
         actions={<><LinkButton href="/register?role=homeowner">Hauskonto anlegen</LinkButton><LinkButton href="/hausakte" secondary>Hausakte ansehen</LinkButton></>}
       />
-
-      <span className={styles.srOnly} />
     </MarketingShell>
   );
 }
