@@ -1,6 +1,6 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-03 ~15:21 UTC · main = e414cec (Produktion = 3fbe3c9, Deploy-Rückstand: T-0143-Export + DR-Runbook-Doku) · T-0120..T-0134, T-0137, T-0143 abgeschlossen**
+**Status 2026-09-03 ~19:00 UTC · main = 3e99532 (Gates: lint 0 err, build ok, visual 66/66, e2e ok) · Wellen A-E fertig: Website-Gaps, SEO-P0, App-Fixes, Backend-Gaps, Blog/Lexikon-Pilot · T-0120..T-0134, T-0137, T-0143 abgeschlossen**
 
 ## Wichtigste Betriebsänderungen dieser Welle (2026-09-03)
 - **Neues Repo-Layout:** GitHub `Delqhi/einfach-hausen` main zeigt jetzt auf die Website-Codebasis (`/Users/jeremyschulze/dev/einfachhausen-landing-page`). Der bisherige App-Stand lebt als Branch `website-old` (6d2f97c) weiter. Der Ordner `einfach-hausen/` im Repo-Root ist das alte App-Repo mit eigener Git-Historie und ist via `.gitignore` + eslint-Ignore ausgeschlossen.
@@ -12,7 +12,7 @@
 
 ## GENAU EINE nächste Aktion
 
-**T-0131 final convergence v2 starten** (kanonischer Taskplan, OCI `/home/ubuntu/dev/einfach-hausen`): `sin-gpt-web-state claim T-0131 --owner local-agent`, dann die untenstehenden offenen Punkte klassifizieren und die Gate-Suite (lint → build → test:visual → test:e2e → release-gate) als Konvergenz-Nachweis fahren. T-0129/T-0130 sind done; T-0131 ist damit entblockt.
+**Deploy + Smoke, dann T-0131 als done melden** — alle Gates lokal grün auf main=3e99532 (lint 0 err, build ok, visual 66/66, e2e ok inkl. Supabase-Login). Nächste Schritte: `deploy/update-on-oci.sh` fahren, `npm run test:smoke` mit `BASE_URL=https://einfachhausen.de`, GitHub-Billing-Sperre beim Operator klären. (Ursprünglich: **T-0131 final convergence v2 starten** (kanonischer Taskplan, OCI `/home/ubuntu/dev/einfach-hausen`): `sin-gpt-web-state claim T-0131 --owner local-agent`, dann die untenstehenden offenen Punkte klassifizieren und die Gate-Suite (lint → build → test:visual → test:e2e → release-gate) als Konvergenz-Nachweis fahren. T-0129/T-0130 sind done; T-0131 ist damit entblockt.
 
 ### Offene Punkte für T-0131 (in dieser Welle geprüft)
 1. `npm run test:e2e` vollablauf mit Supabase-Build-Env: öffentliche Routen + 404 + Register/Owner-Flows PASS; nur der Tech-Persona-Client-Login (`/login` → `/pro`) bricht noch, wenn `NEXT_PUBLIC_SUPABASE_ANON_KEY` beim Build fehlte — mit korrektem Build-Umgebungsupersatz verifizieren (lokal mit `source .e2e-keys.env` reproduzierbar).
