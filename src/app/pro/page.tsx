@@ -1,18 +1,18 @@
 import Link from 'next/link';
-import { ArrowRight, BadgeCheck, CalendarDays, ClipboardList, FileText, Flame, Leaf, MapPin, MessageSquare, Sprout, UserRound } from 'lucide-react';
+import { ArrowRight, BadgeCheck, ClipboardList, FileText, Flame, Leaf, MapPin, Sprout } from 'lucide-react';
 import { AppShell } from '@/components/shell';
-import { CountUp } from '@/components/count-up';
 import { ProviderAccessBoundary, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel, euro } from '@/lib/format';
 import { getProviderContext } from '@/lib/provider';
+import focus from './provider-focus.module.css';
 
-// T-0206 B2: provider home matches the Notion reference
-// (Homesceen.dienstleister.png): greeting block with company + region +
-// avatar, four icon stat cards, request cards with type badges/time/place/
-// price chip, quote CTA, next appointments, Start tab set. All data comes
-// from the same tables as before; only presentation changed.
+// UI-Convergence Welle 1: Der Partnerbereich ist eine ruhige Arbeitsliste,
+// kein Mini-ERP. Die vier KPI-Karten sind zu einer leisen
+// Zusammenfassungszeile geworden, darueber steht genau ein naechster
+// Arbeitsschritt. Danach folgen Anfragezeilen und Termine.
+// Alle Datenzugriffe sind unveraendert, nur die Darstellung.
 
 const TYPE_BADGES = [
   { kind: 'emergency', label: 'Notfallservice', icon: Flame, className: 'pdx-badge emergency' },
@@ -23,6 +23,10 @@ const TYPE_BADGES = [
 function requestBadge(job: any) {
   const kind = job.request_kind === 'contact' ? 'consultation' : job.emergency_type ? 'emergency' : 'service';
   return TYPE_BADGES.find((entry) => entry.kind === kind) ?? TYPE_BADGES[2];
+}
+
+function cleanTitle(title: string) {
+  return (title || '').replace(/^Ansprechpartner:\s*/, '');
 }
 
 function timeAgo(iso: string | null | undefined) {
@@ -48,11 +52,11 @@ export default async function Pro() {
 
   if (!ctx) {
     return (
-      <AppShell role="provider" active="/pro" title="Partnerbereich" subtitle="Zugang prüfen">
+      <AppShell role="provider" active="/pro" title="Partnerbereich" subtitle="Zugang pruefen">
         <ProviderState
           icon={<BadgeCheck size={21} />}
           title="Keinem Unternehmen zugeordnet"
-          description="Dein App-Zugang ist aktuell keinem aktiven Partnerunternehmen zugeordnet. Bitte lass die Unternehmenszuordnung prüfen."
+          description="Dein App-Zugang ist aktuell keinem aktiven Partnerunternehmen zugeordnet. Bitte lass die Unternehmenszuordnung pruefen."
           tone="unavailable"
         />
       </AppShell>
@@ -66,8 +70,8 @@ export default async function Pro() {
       <AppShell role="provider" active="/pro" title="Partnerbereich" subtitle={ctx.businessName}>
         <ProviderState
           icon={<BadgeCheck size={21} />}
-          title={!p?.verified ? 'Unternehmensprüfung ausstehend' : 'Partnervertrag noch nicht aktiv'}
-          description="Einfach Hausen arbeitet nur mit geprüften, vertraglich gebundenen regionalen Unternehmen. Der Firmeninhaber sieht den aktuellen Prüf- und Vertragsstatus im Profil."
+          title={!p?.verified ? 'Unternehmenspruefung ausstehend' : 'Partnervertrag noch nicht aktiv'}
+          description="Einfach Hausen arbeitet nur mit geprueften, vertraglich gebundenen regionalen Unternehmen. Der Firmeninhaber sieht den aktuellen Pruef- und Vertragsstatus im Profil."
           action={{ href: '/pro/profile', label: 'Partnerstatus ansehen' }}
           tone="unavailable"
         />
@@ -84,20 +88,47 @@ export default async function Pro() {
   const messages = (db.prepare(`SELECT COUNT(*) c FROM messages WHERE recipient_id=? AND read_at IS NULL`).get(u.id) as any).c
     + (db.prepare(`SELECT COUNT(*) c FROM contact_messages WHERE provider_id=? AND sender_id!=? AND read_at IS NULL`).get(ctx.providerId, u.id) as any).c;
   const upcoming = db.prepare(`SELECT a.start_at,j.title,j.postcode,j.id FROM appointments a JOIN jobs j ON j.id=a.job_id WHERE a.contact_user_id=? AND a.status='confirmed' AND datetime(a.start_at)>=datetime('now','localtime') ORDER BY a.start_at ASC LIMIT 2`).all(u.id) as any[];
+
+  const quoteTarget = requests.find((job) => !job.my_quote && job.request_kind !== 'contact');
   const quoteCandidates = requests.filter((job) => !job.my_quote && job.request_kind !== 'contact').length;
 
-  const stats = [
-    { icon: Sprout, value: requests.filter((job) => job.dispatch_status === 'sent').length, label: 'Neue Anfragen' },
-    { icon: ClipboardList, value: companyOpen, label: 'Aktive Aufträge' },
-    { icon: CalendarDays, value: upcoming.length, label: 'Nächste Termine' },
-    { icon: MessageSquare, value: messages, label: 'Offene Nachrichten' },
+  // Genau ein naechster Arbeitsschritt, nach Dringlichkeit gewaehlt.
+  const nextStep = ctx.canManageJobs && quoteTarget
+    ? {
+        href: `/pro/jobs/${quoteTarget.id}`,
+        title: 'Kostenvoranschlag senden',
+        meta: quoteCandidates > 1
+          ? `${cleanTitle(quoteTarget.title)} und ${quoteCandidates - 1} weitere mit vollstaendigen Angaben`
+          : cleanTitle(quoteTarget.title),
+        action: 'Jetzt erstellen',
+      }
+    : requests[0]
+      ? {
+          href: `/pro/jobs/${requests[0].id}`,
+          title: 'Neue Anfrage pruefen',
+          meta: `${cleanTitle(requests[0].title)}${requests[0].postcode ? ` \u00b7 ${requests[0].postcode}` : ''}`,
+          action: 'Oeffnen',
+        }
+      : upcoming[0]
+        ? {
+            href: `/pro/jobs/${upcoming[0].id}`,
+            title: 'Naechsten Termin vorbereiten',
+            meta: `${cleanTitle(upcoming[0].title)} \u00b7 ${dateLabel(upcoming[0].start_at.slice(0, 10))}`,
+            action: 'Oeffnen',
+          }
+        : null;
+
+  const summary = [
+    { value: requests.filter((job) => job.dispatch_status === 'sent').length, one: 'neue Anfrage', many: 'neue Anfragen', href: '/pro/orders' },
+    { value: companyOpen, one: 'aktiver Auftrag', many: 'aktive Auftraege', href: '/pro/orders' },
+    { value: upcoming.length, one: 'Termin', many: 'Termine', href: '/pro/calendar' },
+    { value: messages, one: 'offene Nachricht', many: 'offene Nachrichten', href: '/pro/messages' },
   ];
 
   return (
-    <AppShell role="provider" active="/pro" title="Arbeitsbereich" subtitle={`${ctx.businessName} · ${ctx.jobTitle || 'Ansprechpartner'}`}>
+    <AppShell role="provider" active="/pro" title="Arbeitsbereich" subtitle={`${ctx.businessName} \u00b7 ${ctx.jobTitle || 'Ansprechpartner'}`}>
       <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
-      {/* Greeting block: name, company, region + avatar with trust ring */}
       <section className="pdx-hero">
         <div className="pdx-hero-copy">
           <h1>{greeting()}, {u.first_name}!</h1>
@@ -106,76 +137,77 @@ export default async function Pro() {
         </div>
         <div className="pdx-avatar" aria-hidden="true">
           <span className="pdx-avatar-circle">{`${u.first_name?.[0] || ''}${u.last_name?.[0] || ''}`.toUpperCase()}</span>
-          {p?.verified && <span className="pdx-avatar-dot" title="Geprüfter Betrieb" />}
+          {p?.verified && <span className="pdx-avatar-dot" title="Gepruefter Betrieb" />}
         </div>
       </section>
 
-      {/* Four icon stat cards (Notion row) */}
-      <section className="pdx-stats" aria-label="Arbeitsüberblick">
-        {stats.map(({ icon: Icon, value, label }) => (
-          <div className="pdx-stat" key={label}>
-            <span className="pdx-stat-icon"><Icon size={19} /></span>
-            <strong><CountUp value={value} /></strong>
-            <small>{label}</small>
-          </div>
-        ))}
-      </section>
+      {/* Statt vier KPI-Karten: eine Zeile, die nur Zahlen zeigt die es gibt. */}
+      <p className={focus.summary} aria-label="Arbeitsueberblick">
+        {summary.map((entry) => (entry.value > 0 ? (
+          <Link className={focus.summaryItem} href={entry.href} key={entry.one}>
+            <b>{entry.value}</b> {entry.value === 1 ? entry.one : entry.many}
+          </Link>
+        ) : (
+          <span className={`${focus.summaryItem} ${focus.summaryQuiet}`} key={entry.one}>
+            <b>0</b> {entry.many}
+          </span>
+        )))}
+      </p>
 
-      <>
-          <div className="pdx-section-head">
-            <h2>Anfragen in deiner Nähe</h2>
-            <Link href="/pro/orders">Alle anzeigen <ArrowRight size={13} /></Link>
-          </div>
+      {/* Genau ein naechster Arbeitsschritt. */}
+      {nextStep && (
+        <Link href={nextStep.href} className={focus.nextStep}>
+          <span className={focus.nextStepIcon} aria-hidden="true"><FileText size={19} /></span>
+          <span className={focus.nextStepBody}>
+            <span className={focus.nextStepLabel}>Naechster Arbeitsschritt</span>
+            <span className={focus.nextStepTitle}>{nextStep.title}</span>
+            <span className={focus.nextStepMeta}>{nextStep.meta}</span>
+          </span>
+          <span className={focus.nextStepAction}>{nextStep.action} <ArrowRight size={15} /></span>
+        </Link>
+      )}
 
-          <div className="pdx-requests">
-            {requests.slice(0, 4).map((job) => {
-              const badge = requestBadge(job);
-              const BadgeIcon = badge.icon;
-              const price = job.my_quote ? euro(job.my_quote) : job.budget_min && job.budget_max ? `ca. ${euro((job.budget_min + job.budget_max) / 2)}` : job.budget_max ? `ca. ${euro(job.budget_max)}` : null;
-              return (
-                <Link href={`/pro/jobs/${job.id}`} className="pdx-request pro-request" key={job.dispatch_id}>
-                  <span className={`pdx-request-icon ${badge.kind}`}><BadgeIcon size={18} /></span>
-                  <div className="pdx-request-main">
-                    <div className="pdx-request-title">
-                      <span className={badge.className}>{badge.label}</span>
-                      <strong>{job.title.replace(/^Ansprechpartner:\s*/, '')}</strong>
-                      <small>{timeAgo(job.sent_at)}</small>
-                    </div>
-                    <p>{job.description.length > 88 ? `${job.description.slice(0, 88)}…` : job.description}</p>
-                    <div className="pdx-request-meta">
-                      <span><MapPin size={12} /> {job.postcode || 'Region'}{job.distance_km ? ` · ${Math.round(job.distance_km)} km` : ''}</span>
-                      {price && <span className="pdx-price-chip">{price}</span>}
-                    </div>
-                  </div>
-                  <ArrowRight size={16} className="pdx-chevron" />
-                </Link>
-              );
-            })}
-            {requests.length === 0 && (
-              <ProviderState
-                icon={<ClipboardList size={21} />}
-                title="Keine neue passende Anfrage"
-                description="Neue Anfragen erscheinen hier nur, wenn Gewerk, Region, Kapazität und Qualitätsstandard passen. Bezahlte Tarife kaufen keine bessere Ranking-Position."
-              />
-            )}
-          </div>
-          {requests.length > 4 && <Link className="pdx-show-all" href="/pro/orders">Alle Anfragen anzeigen <ArrowRight size={14} /></Link>}
+      <div className="pdx-section-head">
+        <h2>Anfragen in deiner Naehe</h2>
+        <Link href="/pro/orders">Alle anzeigen <ArrowRight size={13} /></Link>
+      </div>
 
-          {ctx.canManageJobs && quoteCandidates > 0 && (
-            <Link href={`/pro/jobs/${requests.find((job) => !job.my_quote && job.request_kind !== 'contact')?.id}`} className="pdx-quote-cta">
-              <span className="pdx-quote-icon"><FileText size={20} /></span>
-              <div className="grow">
-                <strong>Kostenvoranschlag senden</strong>
-                <small>Bei {quoteCandidates} Anfragen sind bereits genug Angaben vorhanden.</small>
+      <div className="pdx-requests">
+        {requests.slice(0, 5).map((job) => {
+          const badge = requestBadge(job);
+          const BadgeIcon = badge.icon;
+          const price = job.my_quote ? euro(job.my_quote) : job.budget_min && job.budget_max ? `ca. ${euro((job.budget_min + job.budget_max) / 2)}` : job.budget_max ? `ca. ${euro(job.budget_max)}` : null;
+          return (
+            <Link href={`/pro/jobs/${job.id}`} className="pdx-request pro-request" key={job.dispatch_id}>
+              <span className={`pdx-request-icon ${badge.kind}`}><BadgeIcon size={18} /></span>
+              <div className="pdx-request-main">
+                <div className="pdx-request-title">
+                  <span className={badge.className}>{badge.label}</span>
+                  <strong>{cleanTitle(job.title)}</strong>
+                  <small>{timeAgo(job.sent_at)}</small>
+                </div>
+                <p>{job.description.length > 88 ? `${job.description.slice(0, 88)}\u2026` : job.description}</p>
+                <div className="pdx-request-meta">
+                  <span><MapPin size={12} /> {job.postcode || 'Region'}{job.distance_km ? ` \u00b7 ${Math.round(job.distance_km)} km` : ''}</span>
+                  {price && <span className="pdx-price-chip">{price}</span>}
+                </div>
               </div>
-              <span className="pdx-quote-button">Jetzt erstellen</span>
+              <ArrowRight size={16} className="pdx-chevron" />
             </Link>
-          )}
-        </>
+          );
+        })}
+        {requests.length === 0 && (
+          <ProviderState
+            icon={<ClipboardList size={21} />}
+            title="Keine neue passende Anfrage"
+            description="Neue Anfragen erscheinen hier nur, wenn Gewerk, Region, Kapazitaet und Qualitaetsstandard passen. Bezahlte Tarife kaufen keine bessere Ranking-Position."
+          />
+        )}
+      </div>
+      {requests.length > 5 && <Link className="pdx-show-all" href="/pro/orders">Alle Anfragen anzeigen <ArrowRight size={14} /></Link>}
 
-      {/* Next appointments (Notion: date tile + time) */}
       <div className="pdx-section-head pdx-section-head-tight">
-        <h2>Nächste Termine</h2>
+        <h2>Naechste Termine</h2>
         <Link href="/pro/calendar">Alle anzeigen <ArrowRight size={13} /></Link>
       </div>
       <div className="pdx-appointments">
@@ -189,7 +221,7 @@ export default async function Pro() {
                 <small>{start.toLocaleDateString('de-DE', { month: 'short' }).replace('.', '')}</small>
               </span>
               <div className="grow">
-                <strong>{appointment.title.replace(/^Ansprechpartner:\s*/, '')}</strong>
+                <strong>{cleanTitle(appointment.title)}</strong>
                 <small>{appointment.postcode || 'Termin'}</small>
               </div>
               <span className="pdx-appointment-time">
@@ -199,7 +231,7 @@ export default async function Pro() {
             </Link>
           );
         })}
-        {upcoming.length === 0 && <p className="pdx-empty-line">Keine anstehenden Termine — neue Buchungen erscheinen hier automatisch.</p>}
+        {upcoming.length === 0 && <p className="pdx-empty-line">Keine anstehenden Termine. Neue Buchungen erscheinen hier automatisch.</p>}
       </div>
     </AppShell>
   );

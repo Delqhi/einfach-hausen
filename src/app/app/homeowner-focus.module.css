@@ -1,0 +1,156 @@
+/*
+ * UI-Convergence Welle 1 - Eigentuemer-Startseite.
+ *
+ * Bewusst selbsttragend: keine Abhaengigkeit von den Alt-Ebenen in
+ * homeowner.module.css, damit die neue Priorisierung nicht gegen alte
+ * Overrides kaempft. Alle Farben mit var()-Fallback, damit die Datei auch
+ * ohne geladene --eh-* Tokens korrekt aussieht.
+ */
+
+.composer {
+  margin: 2px 0 var(--eh-space-5, 34px);
+  scroll-margin-top: 88px;
+}
+
+.more {
+  margin: var(--eh-space-5, 34px) 0 var(--eh-space-3, 14px);
+}
+
+.moreHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 2px 10px;
+}
+
+.moreHead h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: 0.005em;
+  color: var(--eh-ink, oklch(0.27 0.028 205));
+}
+
+.moreHead a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 550;
+  text-decoration: none;
+  color: var(--eh-teal-700, oklch(0.45 0.07 195));
+}
+
+.moreHead a svg {
+  width: 13px;
+  height: 13px;
+}
+
+.moreList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--eh-line, oklch(0.925 0.008 200));
+  border-radius: 18px;
+  background: var(--eh-surface, oklch(0.995 0.003 200));
+}
+
+.moreList li + li {
+  border-top: 1px solid var(--eh-line, oklch(0.93 0.007 200));
+}
+
+.moreRow {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 16px;
+  color: inherit;
+  text-decoration: none;
+  transition: background var(--eh-dur, 240ms) var(--eh-ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.moreRow:hover,
+.moreRow:focus-visible {
+  background: oklch(0.972 0.012 195);
+}
+
+.moreIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: oklch(0.955 0.018 195);
+  color: var(--eh-teal-700, oklch(0.45 0.07 195));
+}
+
+.moreIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.moreText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.moreText strong {
+  font-size: 14.5px;
+  font-weight: 620;
+  letter-spacing: -0.006em;
+}
+
+.moreText span {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--eh-ink-soft, oklch(0.55 0.02 205));
+}
+
+.moreChevron {
+  display: grid;
+  place-items: center;
+  color: oklch(0.7 0.015 200);
+}
+
+.moreChevron svg {
+  width: 15px;
+  height: 15px;
+}
+
+.alert .moreIcon {
+  background: oklch(0.94 0.038 42);
+  color: oklch(0.5 0.13 42);
+}
+
+.alert:hover,
+.alert:focus-visible {
+  background: oklch(0.975 0.014 42);
+}
+
+@media (min-width: 720px) {
+  .moreList {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .moreList li + li {
+    border-top: 0;
+    border-left: 1px solid var(--eh-line, oklch(0.93 0.007 200));
+  }
+
+  .moreRow {
+    grid-template-columns: 34px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    padding: 18px 18px 20px;
+  }
+
+  .moreChevron {
+    display: none;
+  }
+}

@@ -1,8 +1,14 @@
 /*
- * Einfach Hausen – public website design tokens.
- * Scoped to `.mkt` (MarketingShell root) so the accepted owner/partner app
- * surfaces (globals.css tokens, .phone-shell, .agent-*) stay untouched.
- * Reference: DESIGN.md §3 (kanonische --eh-* Namen als Aliase) + §"Public Website – erweiterte Palette".
+ * Einfach Hausen - oeffentliche Website Design-Tokens.
+ * Scoped auf `.mkt` (MarketingShell root), damit die akzeptierten
+ * Owner-/Partner-Flaechen (globals.css, .phone-shell, .agent-*) unberuehrt
+ * bleiben. Referenz: DESIGN.md Paragraph 3 (kanonische --eh-* Namen als
+ * Aliase) plus "Public Website - erweiterte Palette".
+ *
+ * UI-Convergence Welle 1: Radien, Schatten und vertikaler Rhythmus liegen
+ * jetzt auf je einer Skala. Mehrere CSS-Generationen (marketing, mkt,
+ * premium, conversion) sollen ausschliesslich diese Variablen nutzen statt
+ * eigener Werte. Farbnamen bleiben unveraendert, damit nichts bricht.
  */
 .mkt {
   /* Brand teal scale (logo teal = 700) */
@@ -16,14 +22,13 @@
 
   /* Warm canvas + sand */
   --eh-canvas: #faf8f4;
-  --eh-surface: #ffffff;
   --eh-sand-100: #f4ebdd;
   --eh-sand-200: #ecdfc9;
   --eh-sand-400: #d9b98a;
 
   /* Single warm signal accent (sparingly) */
   --eh-terra: #a84d29;
-  --eh-terra-deep: #a84d29;
+  --eh-terra-deep: #833a1e;
   --eh-terra-soft: #f7e4da;
 
   /* Ink */
@@ -38,22 +43,54 @@
   --eh-on-dark-soft: rgba(243, 246, 245, 0.72);
   --eh-on-dark-line: rgba(243, 246, 245, 0.16);
 
-  /* Shape + depth */
-  --eh-r-card: 24px;
-  --eh-r-card-lg: 28px;
+  /*
+   * Shape: eine Skala, funf Stufen. Neue Aliase (chip, input, media)
+   * ersetzen die verstreuten Einzelwerte in den Alt-Layern.
+   */
+  --eh-r-xs: 8px;
+  --eh-r-chip: 10px;
   --eh-r-btn: 12px;
+  --eh-r-input: 12px;
+  --eh-r-card: 22px;
+  --eh-r-card-lg: 28px;
+  --eh-r-media: 28px;
   --eh-r-pill: 999px;
+
+  /*
+   * Depth: drei Stufen, alle auf derselben Ink-Hue. Kein viertes
+   * Schatten-Rezept mehr pro Modul.
+   */
   --eh-shadow-sm: 0 1px 2px rgba(16, 34, 42, 0.05), 0 6px 18px -8px rgba(16, 34, 42, 0.12);
-  --eh-shadow-md: 0 2px 4px rgba(16, 34, 42, 0.05), 0 18px 40px -16px rgba(16, 34, 42, 0.22);
-  --eh-shadow-lg: 0 4px 10px rgba(16, 34, 42, 0.06), 0 40px 80px -30px rgba(11, 58, 63, 0.35);
+  --eh-shadow-md: 0 2px 4px rgba(16, 34, 42, 0.05), 0 18px 40px -16px rgba(16, 34, 42, 0.2);
+  --eh-shadow-lg: 0 4px 10px rgba(16, 34, 42, 0.06), 0 40px 80px -30px rgba(11, 58, 63, 0.32);
+  --eh-ring: 0 0 0 1px var(--eh-line);
 
   /* Layout */
   --eh-container: 1180px;
+  --eh-container-narrow: 760px;
   --eh-gutter: clamp(20px, 4vw, 32px);
   --eh-section-y: clamp(64px, 9vw, 120px);
   --eh-section-y-tight: clamp(48px, 6vw, 80px);
 
-  /* DESIGN.md §3 Kanon-Aliase (gleiche Werte, Vertragsname) */
+  /*
+   * Vertikaler Rhythmus innerhalb einer Section. Bewusst ungleichmaessig,
+   * damit Bloecke atmen statt ueberall gleich zu sitzen.
+   */
+  --eh-space-1: 4px;
+  --eh-space-2: 8px;
+  --eh-space-3: 14px;
+  --eh-space-4: 22px;
+  --eh-space-5: 34px;
+  --eh-space-6: 52px;
+  --eh-space-7: 76px;
+
+  /* Motion: eine Kurve, drei Dauern. Kein bounce, kein elastic. */
+  --eh-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --eh-dur-fast: 140ms;
+  --eh-dur: 240ms;
+  --eh-dur-slow: 420ms;
+
+  /* DESIGN.md Paragraph 3: Kanon-Aliase (gleiche Werte, Vertragsname) */
   --eh-green-900: #0a3539;
   --eh-green-700: #105258;
   --eh-green-600: #147078;
@@ -66,7 +103,6 @@
   --eh-text-secondary: #4b5b60;
   --eh-border: #e4e2dc;
   --eh-border-strong: #cfcbc2;
-  --eh-on-dark: #f3f6f5;
 
   /* Type scale */
   --eh-font: var(--font-marketing, ui-sans-serif, system-ui, sans-serif);
@@ -77,6 +113,7 @@
   --eh-lead: clamp(17px, 1.4vw, 20px);
   --eh-body: 17px;
   --eh-small: 14px;
+  --eh-micro: 12.5px;
 
   color: var(--eh-ink);
   background: var(--eh-canvas);
@@ -95,5 +132,13 @@
 .mkt :focus-visible {
   outline: 3px solid var(--eh-teal-500);
   outline-offset: 3px;
-  border-radius: 6px;
+  border-radius: var(--eh-r-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mkt {
+    --eh-dur-fast: 1ms;
+    --eh-dur: 1ms;
+    --eh-dur-slow: 1ms;
+  }
 }
