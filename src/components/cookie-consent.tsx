@@ -1,21 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 
-export function CookieConsent() {
-  const [visible, setVisible] = useState(false);
+function initiallyVisible(): boolean {
+  try {
+    return localStorage.getItem('eh_consent_status') === null;
+  } catch {
+    // Fallback für Umgebungen ohne localStorage-Zugriff
+    return false;
+  }
+}
 
-  useEffect(() => {
-    try {
-      const consent = localStorage.getItem('eh_consent_status');
-      if (!consent) {
-        setVisible(true);
-      }
-    } catch {
-      // Fallback für Umgebungen ohne localStorage-Zugriff
-    }
-  }, []);
+export function CookieConsent() {
+  const [visible, setVisible] = useState(initiallyVisible);
 
   const handleDecision = (decision: 'necessary' | 'all') => {
     try {
