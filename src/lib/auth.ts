@@ -2,6 +2,23 @@ import { randomBytes } from 'node:crypto';
 import { db } from './db';
 import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
+import { DEMO_LOGIN_ENABLED, DEMO_USERS, isDemoEmail } from './demo-accounts';
+
+/**
+ * Demo-Phase: legt die App-Zeile fuer eine verifizierte Demo-Identitaet an
+ * (feste Rolle pro Demo-User). Idempotent; fasst bestehende Zeilen nie an —
+ * ein E-Mail-/Rollenkonflikt bleibt bestehen und faellt fail-closed.
+ */
+export function ensureDemoAppRow(email: string, authSubject: string): void {
+  const demo = (Object.values(DEMO_USERS) as Array<{ email: string; role: string; firstName: string; lastName: string }>).find(
+    (u) => u.email === email.trim().toLowerCase(),
+  );
+  if (!demo) return;
+  db.prepare(
+    `INSERT INTO users(email,password_hash,role,first_name,last_name,phone,auth_subject)
+     SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM users WHERE lower(email)=lower(?))`,
+  ).run(demo.email, 'demo-supabase-only', demo.role, demo.firstName, demo.lastName, null, authSubject, demo.email);
+}
 
 // Resolved once per call: the Supabase gateway is the production identity
 // authority. Anonymous URL/key are public-by-design and safe to expose to the
@@ -195,6 +212,13 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   // Roles are application authority, never mutable Supabase user_metadata.
   // A verified subject must map to an existing server-controlled application row.
   let row = db.prepare('SELECT id,email,role,first_name,last_name,phone FROM users WHERE auth_subject=?').get(identity.id) as CurrentUser | undefined;
+  // Demo-Phase: Demo-Identitaeten bekommen ihre App-Zeile beim ersten Login
+  // automatisch (feste Rollen, keine freien Registrierungen). Danach laeuft
+  // die normale Bindung; Rollenkonflikte fallen weiterhin fail-closed.
+  if (!row && DEMO_LOGIN_ENABLED && isDemoEmail(identity.email || '')) {
+    ensureDemoAppRow(identity.email || '', identity.id);
+    row = db.prepare('SELECT id,email,role,first_name,last_name,phone FROM users WHERE auth_subject=?').get(identity.id) as CurrentUser | undefined;
+  }
   if (!row) console.error('[auth-debug] no app row for subject:', identity.id, '| email-match fallback next');
   // One-time, explicit migration bridge: email is only used to bind an existing
   // application account to the verified Supabase subject. Future requests require auth_subject.

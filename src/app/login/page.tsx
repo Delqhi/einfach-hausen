@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CircleCheck, Home } from "lucide-react";
 import { getSupabase } from "@/lib/supabase";
+import { DEMO_PASSWORD, DEMO_USERS, demoEmailFor } from "@/lib/demo-accounts";
 import { BackIcon } from "@/components/icons";
 import logoMark from "@/components/marketing/assets/logo-mark.png";
 import authStyles from "@/components/marketing/auth.module.css";
@@ -17,11 +18,13 @@ export default function LoginPage() {
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
 
-  async function login() {
+  async function login(preset?: { email: string; password: string }) {
+    const loginEmail = preset?.email ?? demoEmailFor(email);
+    const loginPw = preset?.password ?? pw;
     setErr("");
     setBusy(true);
     const supabase = await getSupabase();
-    const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+    const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPw });
     setBusy(false);
     if (error) { setErr(error.message === "Invalid login credentials" ? "E-Mail oder Passwort falsch." : error.message); return; }
     // Never route from client-editable Supabase metadata. /app resolves the
@@ -59,8 +62,8 @@ export default function LoginPage() {
             {err && <div className={authStyles.authError} role="alert">{err}</div>}
             <form className={authStyles.authForm} onSubmit={(e) => { e.preventDefault(); login(); }}>
               <label className={authStyles.authField}>
-                <span>E-Mail</span>
-                <input type="email" inputMode="email" autoCapitalize="none" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="du@example.de" />
+                <span>E-Mail oder Benutzername</span>
+                <input type="text" inputMode="email" autoCapitalize="none" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="kunde oder du@example.de" />
               </label>
               <label className={authStyles.authField}>
                 <span>Passwort</span>
@@ -68,6 +71,18 @@ export default function LoginPage() {
               </label>
               <button type="submit" className={authStyles.authSubmit} disabled={!email || !pw || busy}>{busy ? "Anmelden …" : "Anmelden"}<ArrowRight size={17} aria-hidden="true" /></button>
             </form>
+            <div className={authStyles.authDemo} data-testid="demo-login-box">
+              <p><strong>Demo testen?</strong> Ein Klick genügt — kein Konto nötig.</p>
+              <div className={authStyles.authDemoButtons}>
+                <button type="button" disabled={busy} onClick={() => login({ email: DEMO_USERS.kunde.email, password: DEMO_PASSWORD })}>
+                  Als Kunde testen
+                </button>
+                <button type="button" disabled={busy} onClick={() => login({ email: DEMO_USERS.handwerker.email, password: DEMO_PASSWORD })}>
+                  Als Handwerker testen
+                </button>
+              </div>
+              <p className={authStyles.authDemoCreds}>Kunde: <code>kunde</code> · Handwerker: <code>handwerker</code> · Passwort jeweils <code>admin</code></p>
+            </div>
             <p className={authStyles.authSwitch}>Noch kein Konto? <Link href="/role">Jetzt registrieren</Link></p>
             <p className={authStyles.authLegal}>Mit der Anmeldung akzeptierst du unsere <Link href="/agb">AGB</Link> und <Link href="/datenschutz">Datenschutzerklärung</Link>.</p>
           </div>
