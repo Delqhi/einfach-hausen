@@ -22,6 +22,8 @@ export default function AnfrageDetailPage() {
       supabase.from("angebote").select("*").eq("anfrage_id", id as string).then(({ data }: any) => setAngebote((data as any) ?? []));
     }).catch(() => {
       // No Supabase client (preview without env vars) — detail stays empty.
+      // Supabase-Tabellenluecke: DDL + RLS siehe db/supabase-tables.sql
+      // (docs/SUPABASE_TABLES.md).
     });
   }, [id]);
 

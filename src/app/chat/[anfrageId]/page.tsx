@@ -54,6 +54,10 @@ export default function ChatPage() {
       };
     }).catch(() => {
       // No Supabase client (preview without env vars) — chat stays empty.
+      // Supabase-Tabellenluecke: DDL + RLS siehe db/supabase-tables.sql
+      // (docs/SUPABASE_TABLES.md). Hinweis: public.messages ist die
+      // Agent-Infra-Tabelle — der App-Chat braucht public.anfrage_messages
+      // (separater Code-Task zum Umpointen, keine Logikaenderung hier).
     });
     return () => { cleanup?.(); };
   }, [user, anfrageId]);
