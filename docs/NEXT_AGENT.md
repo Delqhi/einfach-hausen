@@ -1,6 +1,6 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-03 ~13:49 UTC · main = ec52135 (Produktion = 3fbe3c9, Gate 11/11, Smoke 17/17, a11y:matrix PASS) · T-0120..T-0132 abgeschlossen**
+**Status 2026-09-03 ~13:56 UTC · Produktion = main = fa7a7b0 (Gate 11/11, Smoke 17/17, /api/errors-Sink live verifiziert) · T-0120..T-0132 abgeschlossen und DEPLOYED**
 
 ## Wichtigste Betriebsänderungen dieser Welle (2026-09-03)
 - **Neues Repo-Layout:** GitHub `Delqhi/einfach-hausen` main zeigt jetzt auf die Website-Codebasis (`/Users/jeremyschulze/dev/einfachhausen-landing-page`). Der bisherige App-Stand lebt als Branch `website-old` (6d2f97c) weiter. Der Ordner `einfach-hausen/` im Repo-Root ist das alte App-Repo mit eigener Git-Historie und ist via `.gitignore` + eslint-Ignore ausgeschlossen.
