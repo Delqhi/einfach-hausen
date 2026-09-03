@@ -44,10 +44,31 @@ export async function GET() {
     claims: allBoth(`SELECT c.id,c.kind,c.description,c.status,c.created_at FROM claims c WHERE c.homeowner_id=? OR c.provider_id=?`),
     notifications: all("SELECT kind,title,body,href,created_at FROM notifications WHERE user_id=?"),
   };
+  // T-0127: private-file manifest lists media the user owns (job media, house
+  // history documents) so the export is self-describing; the archive is a
+  // single JSON document (reproducible: same DB state -> same bytes modulo the
+  // exported_at timestamp), bounded by the rate limit above.
+  const privateFiles = all(
+    `SELECT jp.id, jp.path, jp.created_at, 'job_media' AS kind FROM job_photos jp
+       JOIN jobs j ON j.id = jp.job_id WHERE j.homeowner_id = ?
+     UNION ALL
+     SELECT hhd.id, hhd.path, hhd.created_at, 'house_history_document' AS kind FROM house_history_documents hhd
+       JOIN house_history_entries hhe ON hhe.id = hhd.entry_id WHERE hhe.homeowner_id = ?`,
+  ) as Array<{ id: number; path: string; created_at: string; kind: string }>;
+
+  const exportPayload = {
+    ...payload,
+    private_files_manifest: {
+      count: privateFiles.length,
+      note: "Pfade sind serverintern (data/private/...); Dateiinhalte werden aus Datenschutzgruenden nicht in den Export kopiert.",
+      files: privateFiles,
+    },
+  };
+
   db.prepare("INSERT INTO data_requests(user_id,kind,status,detail,completed_at) VALUES(?, 'export', 'completed', ?, CURRENT_TIMESTAMP)")
-    .run(id, `scope=${Object.keys(payload).length} sectionen; format=json`);
+    .run(id, `scope=${Object.keys(payload).length} sectionen; format=json; private_manifest=${privateFiles.length}`);
   logSecurityEvent("account_export", `user:${id}`);
-  return new NextResponse(JSON.stringify(payload, null, 2), {
+  return new NextResponse(JSON.stringify(exportPayload, null, 2), {
     status: 200,
     headers: {
       "content-type": "application/json; charset=utf-8",
