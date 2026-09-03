@@ -24,14 +24,14 @@
 }
 .status { display: flex; justify-content: space-between; padding: 14px 22px 0; font-size: 11px; font-weight: 600; color: #4b5b60; }
 .bar { display: flex; flex-direction: column; gap: 2px; padding: 22px 18px 12px; }
-.bar small { font-size: 11px; color: #7a878b; font-weight: 500; }
+.bar small { font-size: 11px; color: #566369; font-weight: 500; }
 .bar strong { font-size: 19px; letter-spacing: -0.02em; font-weight: 700; color: #0b3a3f; }
 .body { display: flex; flex-direction: column; gap: 10px; padding: 0 14px 14px; flex: 1 1 auto; overflow: hidden; }
 .tile { background: #fff; border-radius: 16px; padding: 12px 13px; display: flex; flex-direction: column; gap: 6px; border: 1px solid #e8e9e7; }
 .tileRow { display: flex; align-items: center; gap: 10px; }
 .tileRow > div { display: flex; flex-direction: column; gap: 1px; flex: 1 1 auto; min-width: 0; }
 .tileRow strong { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tileRow span { font-size: 11.5px; color: #7a878b; }
+.tileRow span { font-size: 11.5px; color: #566369; }
 .icon { width: 34px; height: 34px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; flex: none; background: #eef5f5; color: #105258; }
 .iconWarm { composes: icon; background: #f7e4da; color: #a84d29; }
 .iconSand { composes: icon; background: #f4ebdd; color: #7a5a2a; }
@@ -41,7 +41,7 @@
 .pillSand { composes: pill; background: #f4ebdd; color: #7a5a2a; }
 .pillGreen { composes: pill; background: #e3f1e6; color: #1f6b3a; }
 .cta { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 6px; background: #105258; color: #f3f6f5; border-radius: 12px; padding: 11px; font-weight: 600; font-size: 13px; }
-.section { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #7a878b; padding: 4px 2px 0; }
+.section { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #566369; padding: 4px 2px 0; }
 
 /* timeline inside screen */
 .tl { display: flex; flex-direction: column; gap: 0; }
@@ -51,7 +51,7 @@
 .tlLine { width: 2px; flex: 1 1 auto; background: #e4e2dc; margin: 3px 0; }
 .tlRow:last-child .tlLine { display: none; }
 .tlBody { display: flex; flex-direction: column; gap: 1px; padding-bottom: 12px; min-width: 0; }
-.tlBody small { font-size: 10.5px; color: #7a878b; }
+.tlBody small { font-size: 10.5px; color: #566369; }
 .tlBody strong { font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* contact card */

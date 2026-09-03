@@ -21,6 +21,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     ".gitnexus/**",
+    // nested full app repo (own GitHub history); must not gate this repo's lint
+    "einfach-hausen/**",
   ]),
 ]);
 

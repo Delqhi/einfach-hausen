@@ -10,7 +10,10 @@
   display: flex;
   flex-direction: column;
 }
-.site a { color: inherit; text-decoration: none; }
+/* Button anchors define their own colors via .btn* rules; the :not(.btn) form
+   stops this (0,1,1) inherit rule from overriding their color declarations. */
+.site a:not(.btn) { color: inherit; text-decoration: none; }
+.site a.btn { text-decoration: none; }
 .site h1, .site h2, .site h3, .site p { margin: 0; }
 .site h1, .site h2, .site h3 { text-wrap: balance; }
 .site p { text-wrap: pretty; }
@@ -528,7 +531,7 @@
 .tlLine { flex: 1 1 auto; width: 2px; background: var(--mkt-line); margin-top: 6px; }
 .tlItem:last-child .tlLine { display: none; }
 .tlBody { display: flex; flex-direction: column; gap: 4px; }
-.tlWhen { font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--mkt-terra); }
+.tlWhen { font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--mkt-terra-deep); }
 .tlBody h3 { font-size: 18px; font-weight: 700; color: var(--mkt-teal-900); }
 .tlBody p { color: var(--mkt-ink-soft); font-size: 16px; }
 

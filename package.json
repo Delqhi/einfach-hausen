@@ -15,7 +15,7 @@
     "graph:install": "graphify hook install && graphify update .",
     "crm:import": "python3 scripts/import-business-research.py",
     "test:crm": "node scripts/crm-e2e.mjs",
-    "test:fixtures": "rm -f /tmp/einfach-hausen-fixtures.db /tmp/einfach-hausen-fixtures.db-* && DATABASE_PATH=/tmp/einfach-hausen-fixtures.db node --experimental-strip-types scripts/test-fixtures.mjs",
+    "test:fixtures": "setopt NULL_GLOB; rm -f /tmp/einfach-hausen-fixtures.db /tmp/einfach-hausen-fixtures.db-*; unsetopt NULL_GLOB; DATABASE_PATH=/tmp/einfach-hausen-fixtures.db node --experimental-strip-types scripts/test-fixtures.mjs",
     "test:smoke": "node scripts/production-smoke.mjs",
     "test:e2e:architecture": "node scripts/e2e-architecture.mjs",
     "test:intake": "node scripts/t0004-intake-regression.mjs",

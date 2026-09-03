@@ -90,11 +90,10 @@ export function IntakeForm({ variant = "hero", id }: { variant?: Variant; id?: s
         </div>
         <button type="submit">Anliegen starten <ArrowRight size={17} aria-hidden="true" /></button>
       </div>
-      <div id={examplesId} className={styles.chipRow} role="list" aria-label="Beispiel-Anliegen">
+      <div id={examplesId} className={styles.chipRow} aria-label="Beispiel-Anliegen">
         {EXAMPLES.slice(0, 4).map((example) => (
           <button
             type="button"
-            role="listitem"
             key={example}
             className={styles.chip}
             onClick={() => {
