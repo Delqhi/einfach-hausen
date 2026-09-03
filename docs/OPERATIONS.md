@@ -154,8 +154,6 @@ sudo journalctl -u einfach-hausen.service -n 120 --no-pager
 
 Do not delete SQLite, WAL/SHM files, private media, or uploads as a troubleshooting step. Do not remove the old public fallback until the canonical domain/tunnel/Stripe/mail acceptance in `PRODUCTION_HANDOVER.md` is complete.
 
-Do not delete SQLite, WAL/SHM files, private media, or uploads as a troubleshooting step. Do not remove the old public fallback until the canonical domain/tunnel/Stripe/mail acceptance in `PRODUCTION_HANDOVER.md` is complete.
-
 ## Post-convergence production live check (2026-08-25, task T-0003)
 
 Verified live state after repository convergence to `f0198ee`:
@@ -213,3 +211,20 @@ Einzelner 1033 im Log bei sonst 200-Antworten ist ein transienter Edge-Event (z.
 ## Disaster Recovery (T-0137)
 
 Reproduzierbare Wiederherstellungsabläufe für DB-Verlust, korrupte Releases und fehlerhafte Migrationen: **docs/DISASTER_RECOVERY_RUNBOOK.md**. Verifiziert gegen T-0136/T-0124 (gleicher Restore-Kern: Checksummen → integrity_check → Stage). Recovery-Ziele (Betriebsnachweis): RPO = Backup-Alter (stündliche Backups), RTO < 15 min produktiv (Drill misst 5s für Verify+Stage).
+
+## Infrastruktur-Kostenbasis & Forecast (2026-09)
+
+Einfache, transparente monatliche Kostenbasis ohne FinOps-Overhead (Stand: September 2026, Anforderung aus Issue #10):
+
+| Dienst / Komponente | Typ | Kosten / Monat | Anmerkung |
+|---|---|---|---|
+| **Oracle Cloud (OCI)** | VM (Always Free / Ampere A1) | 0,00 € | 4 OCPU, 24 GB RAM, persistent block storage |
+| **Cloudflare** | DNS & Argo Tunnel Ingress | 0,00 € | Free Tier / Standard Tunnel ausreichend |
+| **STRATO** | Domain & Mail-Routing (MX/SPF/DKIM) | ~4,00 € | Jährliche Abrechnung umgelegt |
+| **Stripe** | Zahlungsabwicklung / Connect | Variabel (~1,5 % + 0,25 €) | Nur bei Transaktionen; 0 % Plattformprovision |
+| **Gesamte Fixkosten** | | **~4,00 € / Monat** | Extrem schlanke, wartungsarme Kostenstruktur |
+
+**Forecast & Skalierungspfad:**
+- Bis 1.000 aktive Nutzer/Monat verbleiben die Infrastrukturkosten stabil unter 10,00 €/Monat.
+- Bei Überschreiten der OCI Free-Tier-Grenzen (z. B. Backup-Speicher > 100 GB) skaliert Block-Storage mit ~0,025 €/GB/Monat.
+- Transaktionskosten tragen sich über die gebuchten Partner-Tarife und Mitgliedschaften selbst.
