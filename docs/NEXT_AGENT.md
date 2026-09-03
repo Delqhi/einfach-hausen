@@ -1,6 +1,6 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-03 (Wave 2) · Produktion = main = `51667f0` auf OCI deployed und live (https://einfachhausen.de, Release-Gate 11/11, Health green) · T-0129 + T-0130 VERIFIZIERT und im kanonischen Taskplan (OCI `/home/ubuntu/dev/einfach-hausen/.sin-gpt-web/taskplan.sqlite3`) auf done gesetzt · Repo-Umzug: dieses Repo ist jetzt die Landing-Page/Website-Codebasis (alter App-Stand = Branch `website-old` + lokal `einfach-hausen/`-Submodule-Ordner, nicht Teil dieses Repos)**
+**Status 2026-09-03 ~11:08 UTC · main = 5ec1e46 · T-0129/T-0130 done (anderer Agent) + Admin-Visual-Baselines & Diff-Artefakte ergänzt (dieser Agent) · T-0120..T-0130 abgeschlossen**
 
 ## Wichtigste Betriebsänderungen dieser Welle (2026-09-03)
 - **Neues Repo-Layout:** GitHub `Delqhi/einfach-hausen` main zeigt jetzt auf die Website-Codebasis (`/Users/jeremyschulze/dev/einfachhausen-landing-page`). Der bisherige App-Stand lebt als Branch `website-old` (6d2f97c) weiter. Der Ordner `einfach-hausen/` im Repo-Root ist das alte App-Repo mit eigener Git-Historie und ist via `.gitignore` + eslint-Ignore ausgeschlossen.
