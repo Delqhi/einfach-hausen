@@ -37,7 +37,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
   const now = new Date();
   return [...pages, ...cluster].map(({ path, changeFrequency, priority }) => ({
-    url: path === '/' ? `${SITE_URL}/` : `${SITE_URL}${path}`,
+    // Prozent-kodiert: Slugs duerfen Umlaute enthalten (/lexikon/lueftungsanlage).
+    url: path === '/' ? `${SITE_URL}/` : `${SITE_URL}${encodeURI(path)}`,
     lastModified: now,
     changeFrequency,
     priority,
