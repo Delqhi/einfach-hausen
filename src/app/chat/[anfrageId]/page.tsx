@@ -44,20 +44,17 @@ export default function ChatPage() {
           }
           setPartnerId(otherId);
         });
-      supabase.from("messages").select("*").eq("anfrage_id", anfrageId as string).order("created_at").then(({ data }: any) => setMsgs((data as any) ?? []));
+      supabase.from("anfrage_messages").select("*").eq("anfrage_id", anfrageId as string).order("created_at").then(({ data }: any) => setMsgs((data as any) ?? []));
       const channel = supabase
         .channel(`chat-${anfrageId}`)
-        .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages", filter: `anfrage_id=eq.${anfrageId}` }, (payload: any) => setMsgs((m) => [...m, payload.new as Msg]))
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "anfrage_messages", filter: `anfrage_id=eq.${anfrageId}` }, (payload: any) => setMsgs((m) => [...m, payload.new as Msg]))
         .subscribe();
       cleanup = () => {
         supabase.removeChannel(channel);
       };
     }).catch(() => {
       // No Supabase client (preview without env vars) — chat stays empty.
-      // Supabase-Tabellenluecke: DDL + RLS siehe db/supabase-tables.sql
-      // (docs/SUPABASE_TABLES.md). Hinweis: public.messages ist die
-      // Agent-Infra-Tabelle — der App-Chat braucht public.anfrage_messages
-      // (separater Code-Task zum Umpointen, keine Logikaenderung hier).
+      // Tabellen + RLS: db/supabase-tables.sql (docs/SUPABASE_TABLES.md).
     });
     return () => { cleanup?.(); };
   }, [user, anfrageId]);
@@ -71,7 +68,7 @@ export default function ChatPage() {
     if (!text || !partnerId || !user) return;
     setInput("");
     const supabase = await getSupabase();
-    await supabase.from("messages").insert({ anfrage_id: anfrageId as string, sender_id: user.id, empfaenger_id: partnerId, text } as any);
+    await supabase.from("anfrage_messages").insert({ anfrage_id: anfrageId as string, sender_id: user.id, empfaenger_id: partnerId, text } as any);
   }
 
   return (
