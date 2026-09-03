@@ -1,5 +1,5 @@
 const base = (process.env.SMOKE_BASE_URL || 'https://einfachhausen.de').replace(/\/$/, '');
-const routes = ['/', '/so-funktionierts', '/eigenheimbesitzer', '/leistungen', '/hausakte', '/partner', '/preise', '/hilfe', '/kontakt', '/sicherheit', '/impressum', '/datenschutz', '/agb', '/barrierefreiheit', '/login', '/register', '/api/health'];
+const routes = ['/', '/so-funktionierts', '/eigenheimbesitzer', '/leistungen', '/hausakte', '/partner', '/preise', '/hilfe', '/kontakt', '/sicherheit', '/impressum', '/datenschutz', '/agb', '/barrierefreiheit', '/login', '/register', '/api/live', '/api/health'];
 let failed = 0;
 for (const route of routes) {
   try {

@@ -55,10 +55,29 @@ export async function GET() {
     const smtpConfigured = Boolean(process.env.SMTP_HOST) && Boolean((process.env.MAIL_FROM || process.env.SMTP_USER || '').includes('@'));
     const ready = databaseReady && auth === 'reachable' && storage.status === 'ready';
 
+    // T-0134: degradierte Komponenten sind diagnostizierbar ohne sensible
+    // Details - jede Abhängigkeit bekommt einen Status-Wort-Eintrag und eine
+    // state-Klassifikation (ready/degraded/unavailable), plus Prozess-Metadaten.
+    const dependencies: Record<string, 'ready' | 'degraded' | 'unavailable' | 'unconfigured'> = {
+      database: databaseReady ? 'ready' : 'unavailable',
+      auth_authority: auth === 'reachable' ? 'ready' : auth === 'unconfigured' ? 'unconfigured' : 'unavailable',
+      smtp: smtpConfigured ? 'ready' : 'unconfigured',
+      storage: storage.status === 'ready' ? 'ready' : 'unavailable',
+    };
+    const degraded = Object.entries(dependencies).filter(([, v]) => v === 'degraded' || v === 'unavailable').map(([k]) => k);
+    const unconfigured = Object.entries(dependencies).filter(([, v]) => v === 'unconfigured').map(([k]) => k);
+    const state = ready ? 'ready' : degraded.length ? 'degraded' : 'unconfigured';
+
     return NextResponse.json(
       {
         ok: ready,
         service: 'einfach-hausen',
+        state,
+        state_detail: {
+          degraded,
+          unconfigured,
+          note: 'unconfigured = optionale Abhängigkeit ohne Konfiguration; degraded/unavailable = Pflichtabhängigkeit gestört',
+        },
         checks: {
           database: databaseReady ? 'ready' : 'unavailable',
           auth_authority: auth,
@@ -66,6 +85,7 @@ export async function GET() {
           storage: storage.status,
           ...(storage.freeDiskPercent !== undefined ? { free_disk_percent: storage.freeDiskPercent } : {}),
         },
+        process: { uptime_seconds: Math.round(process.uptime()), node: process.version },
         time: new Date().toISOString(),
       },
       { status: ready ? 200 : 503, headers },
