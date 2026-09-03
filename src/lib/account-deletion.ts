@@ -72,6 +72,11 @@ export async function deleteAccountData(userId: number): Promise<{ authSubject: 
   const user = db.prepare('SELECT id,auth_subject FROM users WHERE id=?').get(userId) as { id: number; auth_subject: string | null } | undefined;
   if (!user) throw new Error('user not found');
   const files = storedPaths(userId);
+  // T-0128: transparent request state in data_requests ('requested' at entry,
+  // 'completed' after the transaction succeeds). Identity is confirmed by the
+  // session (konto-loeschen route) - never by a client-supplied id.
+  db.prepare("INSERT INTO data_requests(user_id,kind,status,detail) VALUES(?, 'deletion', 'requested', 'self-service closure; technical deletion with anonymization hooks')")
+    .run(userId);
 
   db.transaction(() => {
     // Personal conversations and contact graph.
@@ -139,6 +144,7 @@ export async function deleteAccountData(userId: number): Promise<{ authSubject: 
     } catch { /* logged below via security event detail */ }
   }
   for (const stored of files) await unlinkStored(stored);
+  db.prepare("UPDATE data_requests SET status='completed',completed_at=CURRENT_TIMESTAMP WHERE id=(SELECT id FROM data_requests WHERE user_id=? AND kind='deletion' ORDER BY id DESC LIMIT 1)").run(userId);
   logSecurityEvent('account_delete', `user:${userId}`, `files=${files.length}`);
   return { authSubject: user.auth_subject, files: files.length };
 }
