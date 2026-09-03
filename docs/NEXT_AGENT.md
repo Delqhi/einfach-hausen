@@ -1,10 +1,10 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-03 ~00:41 UTC · main = eed0cbc (Produktion = bda08b4, Smoke 17/17) · T-0210/T-0211/T-0120..T-0125 abgeschlossen · Premium-Redesign ist LIVE**
+**Status 2026-09-03 ~00:46 UTC · main = a08c428 (Produktion = bda08b4, Smoke 17/17) · T-0210/T-0211/T-0120..T-0126 abgeschlossen · Premium-Redesign ist LIVE**
 
 ## GENAU EINE nächste Aktion
 
-**T-0120..T-0125 abgeschlossen: Security-Fuzz, Supply-Chain-Gate, Observability, SLO-Probes, Backup-Drill und typed Feature-Flags (FLAG_DEFAULTS + Rollout-Targeting + Audit) sind permanente Gates. Genau eine nächste Aktion: T-0126 Admin-Operations-Console (High, blocked war auf T-0125) übernehmen - /admin/ops existiert bereits, Akzeptanz prüfen und Lücken schließen.**
+**T-0120..T-0126 abgeschlossen: Security-Fuzz, Supply-Chain-Gate, Observability, SLO-Probes, Backup-Drill, typed Feature-Flags und Admin-Ops-Console (inkl. auditiertem Dead-Letter-Retry) sind live. Genau eine nächste Aktion: nächste priorisierte, eligible Aufgabe aus dem Taskplan übernehmen (T-0127 Privacy-Datenexport ist High-Nachfolger; prüfe via sin-gpt-web-state list).**
 
 1. Abgeschlossen: T-0210 (Premium-Redesign) + T-0211 (App-Promo) — Merge 9356305, Gate-Fixes (intakeGhost-Kontrast, un-layered a{color}-Regeln → @layer base, Commits 893fb3f/363068e/bda08b4), Release-Gate 11/11, Deploy, Smoke 17/17, Preview abgeschaltet (einfach-hausen-preview + cloudflared-eh-preview sind disabled; Tunnel-Domain liefert 502, das ist gewollt).
 2. Rollback-Pfade: Branch `website-original` (7962d6d = main vor Redesign) lokal+GitHub; Archive-Tags `archive/*` für alte WIP-Branches; Revert von 9356305 möglich.
@@ -470,4 +470,11 @@ task: T-0125
 updated: 2026-09-03T00:40:53+00:00
 actor: local-agent
 evidence-sha256: 24ead3c1a5c517e9724996338b7426ad3e8e2c18cd519e08d1f683f72f4d788b
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0126
+updated: 2026-09-03T00:45:23+00:00
+actor: local-agent
+evidence-sha256: 1acbbc8c9d9ec3b87035c8d0521fa2c3622fa697e6d719310f61795b15fda6e8
 -->
