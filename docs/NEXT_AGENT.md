@@ -1,16 +1,28 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-03 · Produktion = main = 256d032 (Gate 11/11, Smoke 17/17, SLO 5/5) · T-0129 + T-0130 IMPLEMENTIERT, NICHT VERIFIZIERT (v0-Sandbox ohne Supabase-Build-Env, Operator hat Verifikation explizit zurückgestellt)**
+**Status 2026-09-03 (Wave 2) · Produktion = main = `51667f0` auf OCI deployed und live (https://einfachhausen.de, Release-Gate 11/11, Health green) · T-0129 + T-0130 VERIFIZIERT und im kanonischen Taskplan (OCI `/home/ubuntu/dev/einfach-hausen/.sin-gpt-web/taskplan.sqlite3`) auf done gesetzt · Repo-Umzug: dieses Repo ist jetzt die Landing-Page/Website-Codebasis (alter App-Stand = Branch `website-old` + lokal `einfach-hausen/`-Submodule-Ordner, nicht Teil dieses Repos)**
+
+## Wichtigste Betriebsänderungen dieser Welle (2026-09-03)
+- **Neues Repo-Layout:** GitHub `Delqhi/einfach-hausen` main zeigt jetzt auf die Website-Codebasis (`/Users/jeremyschulze/dev/einfachhausen-landing-page`). Der bisherige App-Stand lebt als Branch `website-old` (6d2f97c) weiter. Der Ordner `einfach-hausen/` im Repo-Root ist das alte App-Repo mit eigener Git-Historie und ist via `.gitignore` + eslint-Ignore ausgeschlossen.
+- **Build-Env-Vertrag (wichtig!):** `NEXT_PUBLIC_SUPABASE_URL`/`NEXT_PUBLIC_SUPABASE_ANON_KEY` müssen zur Build-Zeit gesetzt sein, sonst ist der Client-Bundle-Login tot ( Schweigen, kein Crash — E2E-Login schlägt dann mit leerem Alert fehl). Lokal: Keys aus dem SIN Supabase (Kong-Container `supabase-kong`, env `SUPABASE_ANON_KEY`/`SUPABASE_SERVICE_KEY`) holen und `source .e2e-keys.env` vor Build/E2E (`.e2e-keys.env` ist gitignored). Auf OCI macht das `/etc/einfach-hausen-build.env`.
+- **Lokale zsh-Falle:** `~/.zshenv` setzt PATH hart; npm script-shell (zsh) findet deshalb `next`/`tsc`/`eslint` nicht. Gelöst durch PATH-Append-Block in `~/.zshenv` (nur wenn repo `node_modules/.bin` existiert). Auf OCI nicht relevant.
+- **A11y-Kontrast-Fixes (51667f0):** Legacy `h1/h2/p`-Reset auf `.page`/`.center-page` gescoped; `.site a:not(.btn)` statt `.site a`; `--mkt-ink-mute`/app-frames-Mute auf `#5f6e75`/`#566369`; `.tlWhen` nutzt `--mkt-terra-deep`; Chip-`role="listitem"` entfernt. axe-Layer jetzt PASS.
+- **T-0130 Visual Canonicals aktiv:** `scripts/lib/visual-canonicals.mjs` ist die gemeinsame Matrix für `test:visual` und Release-Gate Layer 3. Baselines (57 shots, 3 Viewports) liegen unter `tests/visual-baselines/` und sind committet. Nach Design-Änderungen: `node scripts/visual-regression.mjs --update-baselines`, sichten, committen.
+
 
 ## GENAU EINE nächste Aktion
 
-**Auf OCI-VM verifizieren, dann T-0131 final convergence.** Reihenfolge:
+**T-0131 final convergence v2 starten** (kanonischer Taskplan, OCI `/home/ubuntu/dev/einfach-hausen`): `sin-gpt-web-state claim T-0131 --owner local-agent`, dann die untenstehenden offenen Punkte klassifizieren und die Gate-Suite (lint → build → test:visual → test:e2e → release-gate) als Konvergenz-Nachweis fahren. T-0129/T-0130 sind done; T-0131 ist damit entblockt.
 
-1. `npx next build --webpack` mit `/etc/einfach-hausen-build.env`.
-2. `npm run test:visual` — erwartet: bestehende 11 Mobile-Baselines PASS; neue Baselines werden **angelegt** (5 neue Mobile-Routen, 404-State, alle `@tablet`/`@desktop`-Shots). Angelegte Baselines sichten (`.sin-gpt-web/evidence/T-0130/visual-actual/`) und committen. Bei Overflow/Brüchen auf 834/1320 ist das ein echter Design-Befund, kein Test-Fehler.
-3. `npm run test:e2e` — neue Assertions in Schritt 0: alle 16 Public-Routes 200 + `<title>` + Skip-Link/Landmark + Footer-Rechtsnavigation; unbekannte Route → HTTP 404 + Not-Found-Heading + Rückweg + Fokus. Danach `E2E_BROWSER=firefox` unter ruhiger Last (OPERATOR_COMMAND_LOG #7).
-4. `npm run release-gate` — Layer 3 heißt jetzt „visual canonicals (N shots, mobile+desktop)"; beim ersten Lauf legt es `@desktop`-Baselines an.
-5. Taskplan: `sin-gpt-web-state` T-0129/T-0130 auf done mit Evidence-Pfaden; T-0131 starten.
+### Offene Punkte für T-0131 (in dieser Welle geprüft)
+1. `npm run test:e2e` vollablauf mit Supabase-Build-Env: öffentliche Routen + 404 + Register/Owner-Flows PASS; nur der Tech-Persona-Client-Login (`/login` → `/pro`) bricht noch, wenn `NEXT_PUBLIC_SUPABASE_ANON_KEY` beim Build fehlte — mit korrektem Build-Umgebungsupersatz verifizieren (lokal mit `source .e2e-keys.env` reproduzierbar).
+2. Smoke gegen Produktion: `npm run test:smoke` mit `BASE_URL=https://einfachhausen.de` (SLO-Probes 5/5 war der letzte Stand; nach dem Deploy erneut fahren).
+3. CI auf GitHub ist rot wegen **Billing-Sperre des Accounts** ("account is locked due to a billing issue") — nicht code-seitig lösbar; Operator muss das Billing in den GitHub-Settings klären, danach läuft `.github/workflows/quality.yml` auf push.
+
+### Verifikation, die diese Welle bereits erbracht hat
+- Release-Gate lokal **11/11** (lint, tsc, security, fixtures, build, axe, visual canonicals 20 shots, CLS, transfer, load, failed-requests) — Commit `51667f0`.
+- OCI-Deploy über `deploy/update-on-oci.sh` mit Release-Gate **11/11** auf dem Host; Service healthy; `https://einfachhausen.de` liefert den neuen Build (CSS `0iazobe9yk98-.css` enthält die A11y-Fixes), `/api/health` green.
+- T-0129/T-0130 im kanonischen Taskplan mit Evidence auf done gesetzt (`sin-gpt-web-state`, DB `/home/ubuntu/dev/einfach-hausen/.sin-gpt-web/taskplan.sqlite3`).
 
 ### Was in dieser Welle geändert wurde (T-0129/T-0130)
 
