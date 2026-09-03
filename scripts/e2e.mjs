@@ -142,7 +142,8 @@ const toleratedFirefox=browserName==='firefox' && (
   || text==='JSHandle@object'
   || /A ServiceWorker intercepted the request and encountered an unexpected error/.test(text)
   || (text==='Error' && /_next\/static\/chunks\//.test(source)));
-if(!/ERR_INTERNET_DISCONNECTED|Failed to load resource.*503/i.test(text) && !toleratedFirefox)runtimeErrors.push(`${label}: console: ${text}${source}`);}});
+const tolerated404Probe = /__e2e-unknown-route__/.test(source||'') && /404/.test(text);
+if(!/ERR_INTERNET_DISCONNECTED|Failed to load resource.*503/i.test(text) && !toleratedFirefox && !tolerated404Probe)runtimeErrors.push(`${label}: console: ${text}${source}`);}});
 }
 async function assertKeyboardFocus(page,label){
   // Headless Chromium on Linux can swallow the very first Tab (no prior user

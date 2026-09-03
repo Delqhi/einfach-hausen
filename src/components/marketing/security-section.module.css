@@ -52,7 +52,7 @@
 }
 
 .points strong {
-  color: #ffffff;
+  color: var(--eh-on-dark);
   font-weight: 660;
 }
 
@@ -63,17 +63,17 @@
 }
 
 .badge {
-  border-color: rgba(217, 240, 237, 0.35);
-  color: #d9f0ed;
-  background: rgba(217, 240, 237, 0.08);
+  border-color: var(--eh-teal-300);
+  color: var(--eh-teal-100);
+  background: rgba(220, 235, 236, 0.08);
   font-weight: 600;
 }
 
 .link {
-  color: #9fe3d9;
+  color: var(--eh-teal-300);
   text-decoration: none;
   font-weight: 700;
-  border-bottom: 1px solid rgba(159, 227, 217, 0.4);
+  border-bottom: 1px solid color-mix(in srgb, var(--eh-teal-300) 40%, transparent);
   padding-bottom: 2px;
   transition: border-color 160ms ease;
 }

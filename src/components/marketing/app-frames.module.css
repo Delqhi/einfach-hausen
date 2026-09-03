@@ -5,7 +5,7 @@
   aspect-ratio: 9 / 18.5;
   border-radius: 40px; padding: 10px;
   background: linear-gradient(160deg, #1f3339, #0b1a1e);
-  box-shadow: var(--mkt-shadow-lg), inset 0 0 0 1px rgba(255,255,255,.08);
+  box-shadow: var(--eh-shadow-lg), inset 0 0 0 1px rgba(255,255,255,.08);
   position: relative; flex: none;
 }
 .frameSm { --w: 240px; border-radius: 32px; padding: 8px; }
@@ -16,7 +16,7 @@
   width: 100%; height: 100%; border-radius: 32px; overflow: hidden;
   background: #f6f7f7; color: #10222a;
   display: flex; flex-direction: column; font-size: 13.5px; line-height: 1.35;
-  font-family: var(--mkt-font);
+  font-family: var(--eh-font);
 }
 .notch {
   position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
@@ -71,4 +71,4 @@
 
 /* Mini card visuals for benefits (no frame) */
 .miniStack { display: flex; flex-direction: column; gap: 10px; width: min(100%, 340px); }
-.miniStack .tile { box-shadow: var(--mkt-shadow-sm); }
+.miniStack .tile { box-shadow: var(--eh-shadow-sm); }

@@ -59,12 +59,12 @@ export default function Page() {
       <Section tone="soft" eyebrow="Ein Thema, drei Entscheidungen" title="Erst verstehen. Dann bewusst entscheiden." text="Einfach Hausen macht aus einer Frage nicht sofort einen Auftrag.">
         <Split>
           <InfoPanel label="Wenn du nur Rat brauchst">
-            <h3 style={{ fontSize: 22, color: 'var(--mkt-teal-900)' }}>Frage klären oder Ansprechpartner finden.</h3>
+            <h3 style={{ fontSize: 22, color: 'var(--eh-teal-900)' }}>Frage klären oder Ansprechpartner finden.</h3>
             <p>Du bekommst eine fachliche Einordnung und kannst auf Wunsch einen passenden Menschen sprechen. Ein Auftrag entsteht dadurch nicht.</p>
             <BulletList items={['Kein Auftrag durch eine normale Frage', 'Persönlicher Kontakt auch ohne Buchung', 'Beauftragen bleibt eine eigene Entscheidung']} />
           </InfoPanel>
           <InfoPanel label="Wenn etwas erledigt werden soll">
-            <h3 style={{ fontSize: 22, color: 'var(--mkt-teal-900)' }}>Organisiert statt selbst koordiniert.</h3>
+            <h3 style={{ fontSize: 22, color: 'var(--eh-teal-900)' }}>Organisiert statt selbst koordiniert.</h3>
             <p>Wir vervollständigen die Auftragsdaten, suchen passende Partner und führen Kostenrahmen, Termin und Dokumente an einem Ort zusammen.</p>
             <BulletList items={['Passende Partner statt offene Firmenliste', 'Kostenrahmen vor dem Termin', 'Konkreter Ansprechpartner beim Betrieb']} />
           </InfoPanel>

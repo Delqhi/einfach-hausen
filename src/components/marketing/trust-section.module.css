@@ -41,9 +41,9 @@
 }
 
 .badge {
-  border-color: rgba(20, 127, 125, 0.28);
-  color: #0f5c58;
-  background: rgba(217, 240, 237, 0.4);
+  border-color: var(--eh-teal-300);
+  color: var(--eh-teal-700);
+  background: var(--eh-teal-100);
   font-weight: 640;
 }
 

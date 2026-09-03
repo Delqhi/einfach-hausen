@@ -21,7 +21,7 @@ export function FaqExplorer({ entries }: { entries: ReadonlyArray<Entry> }) {
             role="tab"
             aria-selected={cat === c}
             className={styles.chip}
-            style={cat === c ? { background: "var(--mkt-teal-700)", color: "var(--mkt-on-dark)", borderColor: "var(--mkt-teal-700)" } : undefined}
+            style={cat === c ? { background: "var(--eh-teal-700)", color: "var(--eh-on-dark)", borderColor: "var(--eh-teal-700)" } : undefined}
             onClick={() => setCat(c)}
           >
             {c}

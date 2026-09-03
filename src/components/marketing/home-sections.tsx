@@ -142,6 +142,7 @@ export function Trust() {
               </div>
             </Reveal>
           ))}
+          <TextLink href="/partner">Für Betriebe: Partner werden</TextLink>
           <TextLink href="/sicherheit">Unsere Sicherheits- und Datenprinzipien</TextLink>
         </div>
       </div>
@@ -174,6 +175,7 @@ export function PilotBand() {
           <p>Wir bauen Einfach Hausen regional auf und starten mit einer begrenzten Zahl an Haushalten. Wer jetzt sein kostenloses Hauskonto anlegt, bekommt den Pilot-Status automatisch. Das FREE-Konto bleibt dabei immer 0 €.</p>
           <div className={styles.pilotActions}>
             <LinkButton href="/register?role=homeowner" variant="terra">Platz sichern, kostenlos</LinkButton>
+            <TextLink href="/preise">Preise ansehen</TextLink>
             <TextLink href="/pilotphase">Bedingungen ansehen</TextLink>
           </div>
         </div>

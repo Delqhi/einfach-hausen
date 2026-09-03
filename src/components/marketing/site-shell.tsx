@@ -60,6 +60,8 @@ const footerGroups = [
     title: 'Für Betriebe',
     links: [
       ['Partner werden', '/partner'],
+      ['Partner-App', '/partner#partner-app'],
+      ['Qualitätsmodell', '/partner#qualitaet'],
       ['Partner-Modelle', '/preise'],
       ['Partner-Login', '/login'],
     ],
@@ -102,6 +104,9 @@ export function MarketingShell({ children, footerIntake = true }: { children: Re
               <summary aria-label="Menü öffnen"><Menu className={styles.menuIcon} size={22} /><X className={styles.closeIcon} size={22} /></summary>
               <nav aria-label="Mobile Navigation">
                 {[...primary, ...mobileMore].map(([label, href]) => <a key={href} href={href}>{label}</a>)}
+                <a href="/impressum">Impressum</a>
+                <a href="/datenschutz">Datenschutz</a>
+                <a href="/agb">AGB</a>
                 <div className={styles.mobileMenuActions}>
                   <a className={styles.btnGhost} href="/login">Anmelden</a>
                   <a className={styles.btnPrimary} href="/register?role=homeowner">Kostenlos starten</a>

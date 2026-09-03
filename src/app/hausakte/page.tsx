@@ -47,11 +47,11 @@ export default function Page() {
       <Section tone="soft" eyebrow="Eigentümerwechsel" title="Die Immobilie bleibt. Private Kommunikation bleibt privat." text="Hausbezogene Historie ist getrennt von deinen persönlichen Daten. Du entscheidest, was ein Käufer sieht.">
         <Split>
           <InfoPanel label="Kann weitergegeben werden">
-            <h3 style={{ fontSize: 22, color: 'var(--mkt-teal-900)' }}>Freigegebene Hausgeschichte</h3>
+            <h3 style={{ fontSize: 22, color: 'var(--eh-teal-900)' }}>Freigegebene Hausgeschichte</h3>
             <BulletList items={['Technik und Anlagen des Hauses', 'Dokumentierte Arbeiten und Wartungen', 'Freigegebene Garantien und Unterlagen', 'Hausbezogene Ansprechpartner, soweit freigegeben']} />
           </InfoPanel>
           <InfoPanel label="Bleibt bei dir">
-            <h3 style={{ fontSize: 22, color: 'var(--mkt-teal-900)' }}>Private Inhalte</h3>
+            <h3 style={{ fontSize: 22, color: 'var(--eh-teal-900)' }}>Private Inhalte</h3>
             <BulletList items={['Nachrichten mit Partnern', 'Zahlungsdaten', 'Nicht freigegebene Unterlagen', 'Deine komplette Kontohistorie']} />
           </InfoPanel>
         </Split>
