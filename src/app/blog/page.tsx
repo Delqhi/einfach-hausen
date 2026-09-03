@@ -17,10 +17,10 @@ export default function Page() {
       <PageHero
         eyebrow="Ratgeber"
         title="Verstehen, einordnen, dann entscheiden."
-        text="Drei Pilot-Ratgeber zu Heizung, Bad und Schimmel. Jeder folgt demselben Aufbau: Problem, Optionen, Kostenrahmen, Entscheidung. Mit Pruefpunkten aus unserer Einordnung."
-        actions={<><LinkButton href="/leistungen/heizung">Pillar: Heizung im Ueberblick</LinkButton><LinkButton href="/lexikon" secondary>Zum Lexikon</LinkButton></>}
+        text="Drei Pilot-Ratgeber zu Heizung, Bad und Schimmel. Jeder folgt demselben Aufbau: Problem, Optionen, Kostenrahmen, Entscheidung. Mit Prüfpunkten aus unserer Einordnung."
+        actions={<><LinkButton href="/leistungen/heizung">Pillar: Heizung im Überblick</LinkButton><LinkButton href="/lexikon" secondary>Zum Lexikon</LinkButton></>}
       />
-      <Section tone="surface" eyebrow="Alle Artikel" title="Drei zum Start. Jeder mit klarem naechsten Schritt.">
+      <Section tone="surface" eyebrow="Alle Artikel" title="Drei zum Start. Jeder mit klarem nächsten Schritt.">
         <CardGrid>
           {BLOG_POSTS.map((p) => (
             <Card key={p.slug} title={p.title} text={p.description}>
@@ -29,7 +29,7 @@ export default function Page() {
           ))}
         </CardGrid>
       </Section>
-      <CtaBand title="Dein Fall ist konkreter als jeder Artikel." text="Beschreib dein Anliegen in eigenen Worten. Du erhaeltst Partner, Kostenrahmen und Ansprechpartner — und entscheidest dann." />
+      <CtaBand title="Dein Fall ist konkreter als jeder Artikel." text="Beschreib dein Anliegen in eigenen Worten. Du erhältst Partner, Kostenrahmen und Ansprechpartner — und entscheidest dann." />
     </MarketingShell>
   );
 }

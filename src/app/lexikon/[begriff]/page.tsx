@@ -41,7 +41,7 @@ export default async function Page({ params }: { params: Promise<{ begriff: stri
   const faqPage = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: term.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    mainEntity: term.faqs.map((f) => ({ '@type': 'Qüstion', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   };
   return (
     <MarketingShell>
@@ -52,19 +52,19 @@ export default async function Page({ params }: { params: Promise<{ begriff: stri
         eyebrow="Lexikon"
         title={term.begriff}
         text={term.definition}
-        actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/leistungen/heizung" secondary>Heizung als Leistung im Ueberblick</LinkButton></>}
+        actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/leistungen/heizung" secondary>Heizung als Leistung im Überblick</LinkButton></>}
       />
       <Section eyebrow="Kostenrahmen" title="Womit du rechnen solltest.">
         <BulletList items={term.kosten} />
-        <InfoPanel label="Einordnung">Kostenrahmen sind Orientierung aus Anfrageverlaeufen, kein Angebot. Verbindlich ist der Rahmen des Partnerbetriebs, bevor du entscheidest.</InfoPanel>
+        <InfoPanel label="Einordnung">Kostenrahmen sind Orientierung aus Anfrageverläufen, kein Angebot. Verbindlich ist der Rahmen des Partnerbetriebs, bevor du entscheidest.</InfoPanel>
       </Section>
       <Section tone="surface" eyebrow="Ablauf" title="In Schritten zum Ergebnis.">
         <Steps items={term.ablauf.map((s) => ({ title: s.title, text: s.text }))} />
       </Section>
-      <Section tone="soft" eyebrow="Pruefpunkte" title="Woran du merkst, dass es dich betrifft.">
-        <BulletList items={term.pruefpunkte} />
+      <Section tone="soft" eyebrow="Prüfpunkte" title="Woran du merkst, dass es dich betrifft.">
+        <BulletList items={term.prüfpunkte} />
       </Section>
-      <Section eyebrow="Haeufige Fragen" title={term.begriff + ' — Fragen und Antworten.'} center>
+      <Section eyebrow="Häufige Fragen" title={term.begriff + ' — Fragen und Antworten.'} center>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Faq items={term.faqs.map((f) => ({ q: f.q, a: f.a }))} />
         </div>
@@ -76,7 +76,7 @@ export default async function Page({ params }: { params: Promise<{ begriff: stri
           ))}
         </ul>
       </Section>
-      <CtaBand title="Vom Begriff zu deinem Fall." text="Beschreib dein Anliegen in eigenen Worten. Du erhaeltst Partner, Kostenrahmen und einen festen Ansprechpartner." />
+      <CtaBand title="Vom Begriff zu deinem Fall." text="Beschreib dein Anliegen in eigenen Worten. Du erhältst Partner, Kostenrahmen und einen festen Ansprechpartner." />
     </MarketingShell>
   );
 }

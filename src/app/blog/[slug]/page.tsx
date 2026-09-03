@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         eyebrow="Ratgeber"
         title={post.title}
         text={post.description}
-        actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/leistungen/heizung" secondary>Heizung als Leistung im Ueberblick</LinkButton></>}
+        actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/leistungen/heizung" secondary>Heizung als Leistung im Überblick</LinkButton></>}
       />
       <Section eyebrow="Problem" title="Worum es geht.">
         {post.problem.map((t) => (<p key={t.slice(0, 24)}>{t}</p>))}
@@ -56,15 +56,15 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       </Section>
       <Section eyebrow="Kostenrahmen" title="Womit du rechnen solltest.">
         <BulletList items={post.kosten} />
-        <InfoPanel label="Einordnung">Kostenrahmen sind Orientierung aus Anfrageverlaeufen, kein Angebot. Verbindlich ist der Rahmen des Partnerbetriebs, bevor du entscheidest.</InfoPanel>
+        <InfoPanel label="Einordnung">Kostenrahmen sind Orientierung aus Anfrageverläufen, kein Angebot. Verbindlich ist der Rahmen des Partnerbetriebs, bevor du entscheidest.</InfoPanel>
       </Section>
-      <Section tone="soft" eyebrow="Pruefpunkte" title="Aus unserer Einordnung: das hilft sofort.">
-        <BulletList items={post.pruefpunkte} />
+      <Section tone="soft" eyebrow="Prüfpunkte" title="Aus unserer Einordnung: das hilft sofort.">
+        <BulletList items={post.prüfpunkte} />
       </Section>
-      <Section eyebrow="Entscheidung" title="Der naechste sinnvolle Schritt.">
+      <Section eyebrow="Entscheidung" title="Der nächste sinnvolle Schritt.">
         <BulletList items={post.entscheidung} />
       </Section>
-      <Section eyebrow="Haeufige Fragen" title="Zum Artikel." center>
+      <Section eyebrow="Häufige Fragen" title="Zum Artikel." center>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Faq items={post.faqs.map((f) => ({ q: f.q, a: f.a }))} />
         </div>
@@ -76,7 +76,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           ))}
         </ul>
       </Section>
-      <CtaBand title="Beschreib deinen Fall in eigenen Worten." text="Du erhaeltst Partner, Kostenrahmen und einen festen Ansprechpartner. Erst dann entscheidest du." />
+      <CtaBand title="Beschreib deinen Fall in eigenen Worten." text="Du erhältst Partner, Kostenrahmen und einen festen Ansprechpartner. Erst dann entscheidest du." />
     </MarketingShell>
   );
 }

@@ -6,7 +6,7 @@ import { Card, CardGrid, CtaBand, LinkButton, PageHero, Section, TextLink } from
 
 export const metadata: Metadata = {
   title: 'Lexikon: Begriffe rund ums Haus',
-  description: 'Kurze Definitionen mit Kostenrahmen, Ablauf und FAQ: hydraulischer Abgleich, Heizungsgesetz, Lueftung, Schimmelklassen.',
+  description: 'Kurze Definitionen mit Kostenrahmen, Ablauf und FAQ: hydraulischer Abgleich, Heizungsgesetz, Lüftung, Schimmelklassen.',
   alternates: { canonical: canonical('/lexikon') },
 };
 
@@ -16,9 +16,9 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Lexikon', path: '/lexikon' }])) }} />
       <PageHero
         eyebrow="Lexikon"
-        title="Fachbegriffe, kurz und belastbar erklaert."
-        text="Vier Begriffe zum Start. Jeder Eintrag: Definition, Kostenrahmen, Ablauf in Schritten, Pruefpunkte und Antworten auf haeufige Fragen."
-        actions={<><LinkButton href="/leistungen/heizung">Pillar: Heizung im Ueberblick</LinkButton><LinkButton href="/blog" secondary>Zum Ratgeber</LinkButton></>}
+        title="Fachbegriffe, kurz und belastbar erklärt."
+        text="Vier Begriffe zum Start. Jeder Eintrag: Definition, Kostenrahmen, Ablauf in Schritten, Prüfpunkte und Antworten auf häufige Fragen."
+        actions={<><LinkButton href="/leistungen/heizung">Pillar: Heizung im Überblick</LinkButton><LinkButton href="/blog" secondary>Zum Ratgeber</LinkButton></>}
       />
       <Section tone="surface" eyebrow="Alle Begriffe" title="Vier zum Start.">
         <CardGrid>

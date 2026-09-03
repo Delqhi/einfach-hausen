@@ -36,12 +36,15 @@ export const VIEWPORTS = Object.freeze({
 });
 
 // DESIGN.md §5.1 target structure: every primary navigation item is an
-// indexable page. All 16 public routes are canonical; none is optional.
+// indexable page. All public routes are canonical; none is optional.
 export const PUBLIC_ROUTES = Object.freeze([
   '/',
   '/so-funktionierts',
   '/eigenheimbesitzer',
   '/leistungen',
+  '/leistungen/heizung',
+  '/blog',
+  '/lexikon',
   '/hausakte',
   '/partner',
   '/preise',
