@@ -8,12 +8,12 @@ import { dateLabel } from '@/lib/format';
 import { primaryProperty } from '@/lib/properties';
 import focus from './homeowner-focus.module.css';
 
-// UI-Convergence Welle 1: Neue Priorisierung der Eigentuemer-Startseite.
+// UI-Convergence Welle 1: Neue Priorisierung der Eigentümer-Startseite.
 // Vorher standen drei gleich laute Schnellaktionen (Auftrag, Beratung,
 // Notfall) vor dem Hausmeister-Composer und konkurrierten mit der
 // Hauptaktion, dazu ein FAB der denselben Weg noch einmal anbot.
-// Jetzt: Composer zuerst, "Als Naechstes" danach, alles Weitere in einer
-// ruhigen "Mehr"-Liste. Datenzugriffe sind unveraendert.
+// Jetzt: Composer zuerst, "Als Nächstes" danach, alles Weitere in einer
+// ruhigen "Mehr"-Liste. Datenzugriffe sind unverändert.
 
 export default async function Dashboard() {
   const user = await requireUser('homeowner');
@@ -49,12 +49,12 @@ export default async function Dashboard() {
     <AppShell role="homeowner" active="/app" title="Mein Zuhause" subtitle="Dein Haus-Copilot">
       <div className="own-dash ehn-dash">
         <h1 className="owner-visually-hidden">Mein Zuhause</h1>
-        <section className="owner-dashboard-intro" aria-label="Begruessung">
+        <section className="owner-dashboard-intro" aria-label="Begrüßung">
           <h1>Hallo {user.first_name}.</h1>
-          <p>{houseContext || 'Dein Zuhause im Ueberblick.'}</p>
+          <p>{houseContext || 'Dein Zuhause im Überblick.'}</p>
         </section>
         {onboardingPending && (
-          <section className="owner-onboarding-banner ehn-onboard-banner" aria-label="Einrichtung unvollstaendig">
+          <section className="owner-onboarding-banner ehn-onboard-banner" aria-label="Einrichtung unvollständig">
             <p>Du hast die Ersteinrichtung noch nicht abgeschlossen.</p>
             <a href="/app/onboarding">Jetzt weiter einrichten</a>
           </section>
@@ -68,7 +68,7 @@ export default async function Dashboard() {
               <h2 id="owner-copilot-title">Frag einfachhausen</h2>
               <span className="ki-badge">KI</span>
             </div>
-            <Link className="ki-more" href="/app/hausmeister" aria-label="Hausmeister-Assistent oeffnen"><ArrowRightThin /></Link>
+            <Link className="ki-more" href="/app/hausmeister" aria-label="Hausmeister-Assistent öffnen"><ArrowRightThin /></Link>
           </div>
           <p className="ki-text">Schilder uns dein Problem. Wir bringen dich mit dem richtigen Ansprechpartner in Kontakt oder du vergleichst direkt Angebote.</p>
           <div id="dashboard-composer" className="ki-input-row ehn-composer">
@@ -77,10 +77,10 @@ export default async function Dashboard() {
         </section>
 
         {/* 2. Was jetzt ansteht. */}
-        <h3 className="own-section-title">Als Naechstes</h3>
+        <h3 className="own-section-title">Als Nächstes</h3>
         {nextSteps.length === 0 ? (
           <div className="empty compact" role="status">
-            <p>Gerade steht nichts an. Beschreib oben dein Anliegen oder plane eine Wartung ueber <Link href="/app/year">Mein Jahr</Link>.</p>
+            <p>Gerade steht nichts an. Beschreib oben dein Anliegen oder plane eine Wartung über <Link href="/app/year">Mein Jahr</Link>.</p>
           </div>
         ) : (
           <>
@@ -89,14 +89,14 @@ export default async function Dashboard() {
               {nextAppointment && (
                 <Link className="ov-card" href={`/app/jobs/${nextAppointment.job_id}`}>
                   <div className="ov-icon"><CalendarCheckThinIcon /></div>
-                  <div className="ov-text"><strong>Naechster Termin</strong><span>{nextAppointment.title} &middot; {nextAppointment.business_name} &middot; {dateLabel(nextAppointment.start_at)}</span></div>
+                  <div className="ov-text"><strong>Nächster Termin</strong><span>{nextAppointment.title} · {nextAppointment.business_name} · {dateLabel(nextAppointment.start_at)}</span></div>
                   <ArrowRightThin />
                 </Link>
               )}
               {openDecision && (
                 <Link className="ov-card" href={`/app/jobs/${openDecision.id}`}>
                   <div className="ov-icon"><PersonSmallIcon /></div>
-                  <div className="ov-text"><strong>Offene Entscheidung</strong><span>{openDecision.title}{openDecisionQuotes > 0 ? ` \u00b7 ${openDecisionQuotes} ${openDecisionQuotes === 1 ? 'Angebot' : 'Angebote'} pruefen` : ''}</span></div>
+                  <div className="ov-text"><strong>Offene Entscheidung</strong><span>{openDecision.title}{openDecisionQuotes > 0 ? ` · ${openDecisionQuotes} ${openDecisionQuotes === 1 ? 'Angebot' : 'Angebote'} prüfen` : ''}</span></div>
                   <ArrowRightThin />
                 </Link>
               )}
@@ -105,7 +105,7 @@ export default async function Dashboard() {
             {dueMaintenance && (
               <Link className="ov-card ov-wide" href="/app/year">
                 <div className="ov-icon ov-icon-lg"><BookThinIcon /></div>
-                <div className="ov-text"><strong>Faellige Wartung</strong><span>{dueMaintenance.title} &middot; {dateLabel(dueMaintenance.due_date)}</span></div>
+                <div className="ov-text"><strong>Fällige Wartung</strong><span>{dueMaintenance.title} · {dateLabel(dueMaintenance.due_date)}</span></div>
                 <ArrowRightThin />
               </Link>
             )}
@@ -124,7 +124,7 @@ export default async function Dashboard() {
                 <span className={focus.moreIcon}><ChatRoundIcon variant="light" /></span>
                 <span className={focus.moreText}>
                   <strong>Beratung</strong>
-                  <span>Fachliche Einschaetzung, ohne gleich einen Auftrag zu starten.</span>
+                  <span>Fachliche Einschätzung, ohne gleich einen Auftrag zu starten.</span>
                 </span>
                 <span className={focus.moreChevron} aria-hidden="true"><ArrowRightThin /></span>
               </Link>
@@ -134,7 +134,7 @@ export default async function Dashboard() {
                 <span className={focus.moreIcon}><BookThinIcon /></span>
                 <span className={focus.moreText}>
                   <strong>Mein Jahr</strong>
-                  <span>Wartungen planen und faellige Arbeiten im Blick behalten.</span>
+                  <span>Wartungen planen und fällige Arbeiten im Blick behalten.</span>
                 </span>
                 <span className={focus.moreChevron} aria-hidden="true"><ArrowRightThin /></span>
               </Link>
@@ -144,7 +144,7 @@ export default async function Dashboard() {
                 <span className={focus.moreIcon}><NotfallSirenIcon /></span>
                 <span className={focus.moreText}>
                   <strong>Notfall</strong>
-                  <span>Wasser, Heizung, Strom: schnelle Hilfe in dringenden Faellen.</span>
+                  <span>Wasser, Heizung, Strom: schnelle Hilfe in dringenden Fällen.</span>
                 </span>
                 <span className={focus.moreChevron} aria-hidden="true"><ArrowRightThin /></span>
               </Link>

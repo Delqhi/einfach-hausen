@@ -10,9 +10,9 @@ import focus from './provider-focus.module.css';
 
 // UI-Convergence Welle 1: Der Partnerbereich ist eine ruhige Arbeitsliste,
 // kein Mini-ERP. Die vier KPI-Karten sind zu einer leisen
-// Zusammenfassungszeile geworden, darueber steht genau ein naechster
+// Zusammenfassungszeile geworden, darüber steht genau ein nächster
 // Arbeitsschritt. Danach folgen Anfragezeilen und Termine.
-// Alle Datenzugriffe sind unveraendert, nur die Darstellung.
+// Alle Datenzugriffe sind unverändert, nur die Darstellung.
 
 const TYPE_BADGES = [
   { kind: 'emergency', label: 'Notfallservice', icon: Flame, className: 'pdx-badge emergency' },
@@ -52,11 +52,11 @@ export default async function Pro() {
 
   if (!ctx) {
     return (
-      <AppShell role="provider" active="/pro" title="Partnerbereich" subtitle="Zugang pruefen">
+      <AppShell role="provider" active="/pro" title="Partnerbereich" subtitle="Zugang prüfen">
         <ProviderState
           icon={<BadgeCheck size={21} />}
           title="Keinem Unternehmen zugeordnet"
-          description="Dein App-Zugang ist aktuell keinem aktiven Partnerunternehmen zugeordnet. Bitte lass die Unternehmenszuordnung pruefen."
+          description="Dein App-Zugang ist aktuell keinem aktiven Partnerunternehmen zugeordnet. Bitte lass die Unternehmenszuordnung prüfen."
           tone="unavailable"
         />
       </AppShell>
@@ -70,8 +70,8 @@ export default async function Pro() {
       <AppShell role="provider" active="/pro" title="Partnerbereich" subtitle={ctx.businessName}>
         <ProviderState
           icon={<BadgeCheck size={21} />}
-          title={!p?.verified ? 'Unternehmenspruefung ausstehend' : 'Partnervertrag noch nicht aktiv'}
-          description="Einfach Hausen arbeitet nur mit geprueften, vertraglich gebundenen regionalen Unternehmen. Der Firmeninhaber sieht den aktuellen Pruef- und Vertragsstatus im Profil."
+          title={!p?.verified ? 'Unternehmensprüfung ausstehend' : 'Partnervertrag noch nicht aktiv'}
+          description="Einfach Hausen arbeitet nur mit geprüften, vertraglich gebundenen regionalen Unternehmen. Der Firmeninhaber sieht den aktuellen Prüf- und Vertragsstatus im Profil."
           action={{ href: '/pro/profile', label: 'Partnerstatus ansehen' }}
           tone="unavailable"
         />
@@ -92,41 +92,41 @@ export default async function Pro() {
   const quoteTarget = requests.find((job) => !job.my_quote && job.request_kind !== 'contact');
   const quoteCandidates = requests.filter((job) => !job.my_quote && job.request_kind !== 'contact').length;
 
-  // Genau ein naechster Arbeitsschritt, nach Dringlichkeit gewaehlt.
+  // Genau ein nächster Arbeitsschritt, nach Dringlichkeit gewählt.
   const nextStep = ctx.canManageJobs && quoteTarget
     ? {
         href: `/pro/jobs/${quoteTarget.id}`,
         title: 'Kostenvoranschlag senden',
         meta: quoteCandidates > 1
-          ? `${cleanTitle(quoteTarget.title)} und ${quoteCandidates - 1} weitere mit vollstaendigen Angaben`
+          ? `${cleanTitle(quoteTarget.title)} und ${quoteCandidates - 1} weitere mit vollständigen Angaben`
           : cleanTitle(quoteTarget.title),
         action: 'Jetzt erstellen',
       }
     : requests[0]
       ? {
           href: `/pro/jobs/${requests[0].id}`,
-          title: 'Neue Anfrage pruefen',
-          meta: `${cleanTitle(requests[0].title)}${requests[0].postcode ? ` \u00b7 ${requests[0].postcode}` : ''}`,
-          action: 'Oeffnen',
+          title: 'Neue Anfrage prüfen',
+          meta: `${cleanTitle(requests[0].title)}${requests[0].postcode ? ` · ${requests[0].postcode}` : ''}`,
+          action: 'Öffnen',
         }
       : upcoming[0]
         ? {
             href: `/pro/jobs/${upcoming[0].id}`,
-            title: 'Naechsten Termin vorbereiten',
-            meta: `${cleanTitle(upcoming[0].title)} \u00b7 ${dateLabel(upcoming[0].start_at.slice(0, 10))}`,
-            action: 'Oeffnen',
+            title: 'Nächsten Termin vorbereiten',
+            meta: `${cleanTitle(upcoming[0].title)} · ${dateLabel(upcoming[0].start_at.slice(0, 10))}`,
+            action: 'Öffnen',
           }
         : null;
 
   const summary = [
     { value: requests.filter((job) => job.dispatch_status === 'sent').length, one: 'neue Anfrage', many: 'neue Anfragen', href: '/pro/orders' },
-    { value: companyOpen, one: 'aktiver Auftrag', many: 'aktive Auftraege', href: '/pro/orders' },
+    { value: companyOpen, one: 'aktiver Auftrag', many: 'aktive Aufträge', href: '/pro/orders' },
     { value: upcoming.length, one: 'Termin', many: 'Termine', href: '/pro/calendar' },
     { value: messages, one: 'offene Nachricht', many: 'offene Nachrichten', href: '/pro/messages' },
   ];
 
   return (
-    <AppShell role="provider" active="/pro" title="Arbeitsbereich" subtitle={`${ctx.businessName} \u00b7 ${ctx.jobTitle || 'Ansprechpartner'}`}>
+    <AppShell role="provider" active="/pro" title="Arbeitsbereich" subtitle={`${ctx.businessName} · ${ctx.jobTitle || 'Ansprechpartner'}`}>
       <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
       <section className="pdx-hero">
@@ -137,12 +137,12 @@ export default async function Pro() {
         </div>
         <div className="pdx-avatar" aria-hidden="true">
           <span className="pdx-avatar-circle">{`${u.first_name?.[0] || ''}${u.last_name?.[0] || ''}`.toUpperCase()}</span>
-          {p?.verified && <span className="pdx-avatar-dot" title="Gepruefter Betrieb" />}
+          {p?.verified && <span className="pdx-avatar-dot" title="Geprüfter Betrieb" />}
         </div>
       </section>
 
       {/* Statt vier KPI-Karten: eine Zeile, die nur Zahlen zeigt die es gibt. */}
-      <p className={focus.summary} aria-label="Arbeitsueberblick">
+      <p className={focus.summary} aria-label="Arbeitsüberblick">
         {summary.map((entry) => (entry.value > 0 ? (
           <Link className={focus.summaryItem} href={entry.href} key={entry.one}>
             <b>{entry.value}</b> {entry.value === 1 ? entry.one : entry.many}
@@ -154,12 +154,12 @@ export default async function Pro() {
         )))}
       </p>
 
-      {/* Genau ein naechster Arbeitsschritt. */}
+      {/* Genau ein nächster Arbeitsschritt. */}
       {nextStep && (
         <Link href={nextStep.href} className={focus.nextStep}>
           <span className={focus.nextStepIcon} aria-hidden="true"><FileText size={19} /></span>
           <span className={focus.nextStepBody}>
-            <span className={focus.nextStepLabel}>Naechster Arbeitsschritt</span>
+            <span className={focus.nextStepLabel}>Nächster Arbeitsschritt</span>
             <span className={focus.nextStepTitle}>{nextStep.title}</span>
             <span className={focus.nextStepMeta}>{nextStep.meta}</span>
           </span>
@@ -168,7 +168,7 @@ export default async function Pro() {
       )}
 
       <div className="pdx-section-head">
-        <h2>Anfragen in deiner Naehe</h2>
+        <h2>Anfragen in deiner Nähe</h2>
         <Link href="/pro/orders">Alle anzeigen <ArrowRight size={13} /></Link>
       </div>
 
@@ -186,9 +186,9 @@ export default async function Pro() {
                   <strong>{cleanTitle(job.title)}</strong>
                   <small>{timeAgo(job.sent_at)}</small>
                 </div>
-                <p>{job.description.length > 88 ? `${job.description.slice(0, 88)}\u2026` : job.description}</p>
+                <p>{job.description.length > 88 ? `${job.description.slice(0, 88)}…` : job.description}</p>
                 <div className="pdx-request-meta">
-                  <span><MapPin size={12} /> {job.postcode || 'Region'}{job.distance_km ? ` \u00b7 ${Math.round(job.distance_km)} km` : ''}</span>
+                  <span><MapPin size={12} /> {job.postcode || 'Region'}{job.distance_km ? ` · ${Math.round(job.distance_km)} km` : ''}</span>
                   {price && <span className="pdx-price-chip">{price}</span>}
                 </div>
               </div>
@@ -200,14 +200,14 @@ export default async function Pro() {
           <ProviderState
             icon={<ClipboardList size={21} />}
             title="Keine neue passende Anfrage"
-            description="Neue Anfragen erscheinen hier nur, wenn Gewerk, Region, Kapazitaet und Qualitaetsstandard passen. Bezahlte Tarife kaufen keine bessere Ranking-Position."
+            description="Neue Anfragen erscheinen hier nur, wenn Gewerk, Region, Kapazität und Qualitätsstandard passen. Bezahlte Tarife kaufen keine bessere Ranking-Position."
           />
         )}
       </div>
       {requests.length > 5 && <Link className="pdx-show-all" href="/pro/orders">Alle Anfragen anzeigen <ArrowRight size={14} /></Link>}
 
       <div className="pdx-section-head pdx-section-head-tight">
-        <h2>Naechste Termine</h2>
+        <h2>Nächste Termine</h2>
         <Link href="/pro/calendar">Alle anzeigen <ArrowRight size={13} /></Link>
       </div>
       <div className="pdx-appointments">

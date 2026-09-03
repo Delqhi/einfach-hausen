@@ -1,9 +1,9 @@
 /*
- * P0 UI-Convergence: Der oeffentliche Ladezustand rendert keinen
- * vollflaechigen "Wir bereiten die Inhalte vor"-Block mehr. Der Block
- * erschien ueber bereits geladenem Inhalt und liess fertige Seiten
- * unfertig aussehen. Stattdessen: eine ruhige Fortschrittsleiste an der
- * oberen Kante und eine Statusmeldung nur fuer Screenreader.
+ * P0 UI-Convergence: Der öffentliche Ladezustand rendert keinen
+ * vollflächigen "Wir bereiten die Inhalte vor"-Block mehr. Der Block
+ * erschien über bereits geladenem Inhalt und ließ fertige Seiten unfertig
+ * aussehen. Stattdessen: eine ruhige Fortschrittsleiste an der oberen
+ * Kante und eine Statusmeldung nur für Screenreader.
  */
 
 const css = `

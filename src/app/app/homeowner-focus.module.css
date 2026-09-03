@@ -1,9 +1,9 @@
 /*
- * UI-Convergence Welle 1 - Eigentuemer-Startseite.
+ * UI-Convergence Welle 1 – Eigentümer-Startseite.
  *
- * Bewusst selbsttragend: keine Abhaengigkeit von den Alt-Ebenen in
+ * Bewusst selbsttragend: keine Abhängigkeit von den Alt-Ebenen in
  * homeowner.module.css, damit die neue Priorisierung nicht gegen alte
- * Overrides kaempft. Alle Farben mit var()-Fallback, damit die Datei auch
+ * Overrides kämpft. Alle Farben mit var()-Fallback, damit die Datei auch
  * ohne geladene --eh-* Tokens korrekt aussieht.
  */
 
