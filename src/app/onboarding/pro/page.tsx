@@ -51,7 +51,9 @@ export default function ProOnboardingPage() {
         const meta: any = data.user?.user_metadata;
         if (meta?.company_name) setFirma(meta.company_name);
       })
-    );
+    ).catch(() => {
+      // No Supabase client (preview without env vars) — form stays empty.
+    });
   }, []);
 
   const subsOfSelected = useMemo(() => categories.filter((c) => selectedCats.includes(c.id)), [selectedCats]);

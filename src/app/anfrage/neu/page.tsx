@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 import { categories } from "@/lib/categories";
@@ -21,13 +21,19 @@ export default function NeueAnfragePage() {
   const [budget, setBudget] = useState("");
   const [dringend, setDringend] = useState(false);
   const [sent, setSent] = useState(false);
+  // Redirect timer must not outlive this page: if the component unmounts
+  // (Fast Refresh, user navigates back) before it fires, the late
+  // router.replace starts a transition that React immediately aborts with
+  // "AbortError: Transition was skipped" (unhandled rejection in dev).
+  const redirectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (redirectTimer.current) clearTimeout(redirectTimer.current); }, []);
   const selCat = categories.find((c) => c.id === cat);
   async function submit() {
     const supabase = await getSupabase();
     const { data } = await supabase.auth.getUser();
     await supabase.from("anfragen").insert({ user_id: (data as any).user?.id, kategorie: cat, unterkategorie: sub, titel, beschreibung, fotos, plz, ort, wunschtermin: termin || null, budget: budget || null, dringend, status: "offen" } as any);
     setSent(true);
-    setTimeout(() => router.replace("/app/jobs"), 1400);
+    redirectTimer.current = setTimeout(() => router.replace("/app/jobs"), 1400);
   }
   if (sent) {
     return (

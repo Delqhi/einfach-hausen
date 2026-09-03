@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 import Stepper from "@/components/Stepper";
@@ -13,12 +13,18 @@ export default function GebietPage() {
   const [plzListe, setPlzListe] = useState<string[]>([]);
   const [plzInput, setPlzInput] = useState("");
   const [done, setDone] = useState(false);
+  // Redirect timer must not outlive this page: if the component unmounts
+  // (Fast Refresh, user navigates back) before it fires, the late
+  // router.replace starts a transition that React immediately aborts with
+  // "AbortError: Transition was skipped" (unhandled rejection in dev).
+  const redirectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (redirectTimer.current) clearTimeout(redirectTimer.current); }, []);
 
   async function finish() {
     const supabase = await getSupabase();
     await supabase.auth.updateUser({ data: { area_mode: mode, area_center: plzZentrum, area_radius_km: mode === "radius" ? radius : null, area_plz: mode === "plz" ? plzListe : null, onboarding_complete: true } as any });
     setDone(true);
-    setTimeout(() => router.replace("/pro"), 1200);
+    redirectTimer.current = setTimeout(() => router.replace("/pro"), 1200);
   }
 
   if (done) {

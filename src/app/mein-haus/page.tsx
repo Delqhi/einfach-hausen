@@ -12,7 +12,7 @@ export default function MeinHausPage() {
   const [haeuser, setHaeuser] = useState<any[]>([]);
   const [addOpen, setAddOpen] = useState(false);
   const [form, setForm] = useState({ name: "", adresse: "", plz: "", ort: "", baujahr: "" });
-  useEffect(() => { if (!user) return; getSupabase().then((supabase) => supabase.from("haeuser").select("*").order("created_at").then(({ data }: any) => setHaeuser(data ?? []))); }, [user]);
+  useEffect(() => { if (!user) return; getSupabase().then((supabase) => supabase.from("haeuser").select("*").order("created_at").then(({ data }: any) => setHaeuser(data ?? []))).catch(() => { /* no Supabase client (preview) — list stays empty */ }); }, [user]);
   async function save() {
     const supabase = await getSupabase();
     await supabase.from("haeuser").insert({ user_id: (user as any).id, name: form.name || "Mein Zuhause", adresse: form.adresse, plz: form.plz, ort: form.ort, baujahr: form.baujahr ? parseInt(form.baujahr) : null } as any);

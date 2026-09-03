@@ -1,10 +1,26 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-03 ~00:59 UTC · Produktion = main = 256d032 (Gate 11/11, Smoke 17/17, SLO 5/5) · T-0210/T-0211/T-0120..T-0128 abgeschlossen und DEPLOYED**
+**Status 2026-09-03 · Produktion = main = 256d032 (Gate 11/11, Smoke 17/17, SLO 5/5) · T-0129 + T-0130 IMPLEMENTIERT, NICHT VERIFIZIERT (v0-Sandbox ohne Supabase-Build-Env, Operator hat Verifikation explizit zurückgestellt)**
 
 ## GENAU EINE nächste Aktion
 
-**Alle Security/Obs/Privacy-Commits sind DEPLOYED (Gate 11/11, Smoke 17/17, SLO-Probes 5/5). Genau eine nächste Aktion: T-0129 (Browser-E2E-Suite v2) oder T-0130 (Visual-Canonicals) - beide sind durch T-0126 entblockt; T-0131 final convergence wartet auf beide.**
+**Auf OCI-VM verifizieren, dann T-0131 final convergence.** Reihenfolge:
+
+1. `npx next build --webpack` mit `/etc/einfach-hausen-build.env`.
+2. `npm run test:visual` — erwartet: bestehende 11 Mobile-Baselines PASS; neue Baselines werden **angelegt** (5 neue Mobile-Routen, 404-State, alle `@tablet`/`@desktop`-Shots). Angelegte Baselines sichten (`.sin-gpt-web/evidence/T-0130/visual-actual/`) und committen. Bei Overflow/Brüchen auf 834/1320 ist das ein echter Design-Befund, kein Test-Fehler.
+3. `npm run test:e2e` — neue Assertions in Schritt 0: alle 16 Public-Routes 200 + `<title>` + Skip-Link/Landmark + Footer-Rechtsnavigation; unbekannte Route → HTTP 404 + Not-Found-Heading + Rückweg + Fokus. Danach `E2E_BROWSER=firefox` unter ruhiger Last (OPERATOR_COMMAND_LOG #7).
+4. `npm run release-gate` — Layer 3 heißt jetzt „visual canonicals (N shots, mobile+desktop)"; beim ersten Lauf legt es `@desktop`-Baselines an.
+5. Taskplan: `sin-gpt-web-state` T-0129/T-0130 auf done mit Evidence-Pfaden; T-0131 starten.
+
+### Was in dieser Welle geändert wurde (T-0129/T-0130)
+
+- **Neu** `scripts/lib/visual-canonicals.mjs`: einzige Quelle für Route×Viewport-Matrix (16 Public-Routes, `/app`/`/pro`, 404-State; 390/834/1320), Determinismus-Vertrag (reduced-motion + eingefrorene Animationen, DPR 1, de-DE, Europe/Berlin, `fonts.ready`, `data-visual-volatile`-Opt-out), Vergleich mit Diff-PNG-Ausgabe. Legacy-Mobile-Namen (`home.png` …) bleiben gültig; andere Viewports bekommen `@tablet`/`@desktop`.
+- **Umgestellt** `scripts/visual-regression.mjs` (volle Matrix, `--viewports=mobile,…`, Evidence-JSON unter `.sin-gpt-web/evidence/T-0130/`) und `scripts/release-gate.mjs` Layer 3 (Gate-Routen × mobile+desktop über das Modul; keine Kopie der Diff-Logik mehr).
+- **Erweitert** `scripts/e2e.mjs` Schritt 0 (importiert `PUBLIC_ROUTES` aus dem Modul, Plattform-Cues + 404-State).
+- **DESIGN.md finalisiert:** §2 dokumentierte Ausnahme dunkler Footer/CTA-Band; §3 Typografie-Duplikat aufgelöst; §4.1 implementierte Komponentenfamilie mit Code-Referenzen; §10 Website-States (loading/error/404) inkl. ehrlicher Nachweis-Lücke für loading/error; §14.1 Nachweis-Kommandos und Baseline-Regeln.
+- **Nicht getan:** kein Build, kein Testlauf, keine Baselines erzeugt, kein Taskplan-Update (DB liegt nur auf OCI). `loading.tsx`/`error.tsx` haben weiterhin keinen automatischen Browser-Nachweis (bewusst: Test-Trigger-Route wäre Produktcode).
+
+## Vorherige Welle (Referenz)
 
 1. Abgeschlossen: T-0210 (Premium-Redesign) + T-0211 (App-Promo) — Merge 9356305, Gate-Fixes (intakeGhost-Kontrast, un-layered a{color}-Regeln → @layer base, Commits 893fb3f/363068e/bda08b4), Release-Gate 11/11, Deploy, Smoke 17/17, Preview abgeschaltet (einfach-hausen-preview + cloudflared-eh-preview sind disabled; Tunnel-Domain liefert 502, das ist gewollt).
 2. Rollback-Pfade: Branch `website-original` (7962d6d = main vor Redesign) lokal+GitHub; Archive-Tags `archive/*` für alte WIP-Branches; Revert von 9356305 möglich.

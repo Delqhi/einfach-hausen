@@ -52,6 +52,8 @@ export default function ChatPage() {
       cleanup = () => {
         supabase.removeChannel(channel);
       };
+    }).catch(() => {
+      // No Supabase client (preview without env vars) — chat stays empty.
     });
     return () => { cleanup?.(); };
   }, [user, anfrageId]);

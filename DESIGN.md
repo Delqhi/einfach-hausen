@@ -38,7 +38,7 @@ Die gewünschte visuelle Richtung verbindet:
 
 ## 2. Kernprinzipien
 
-1. **Hell und ruhig.** Weiß, warmes Off-White und sehr helle neutrale Flächen dominieren. Kein dunkles Partner-Dashboard.
+1. **Hell und ruhig.** Weiß, warmes Off-White und sehr helle neutrale Flächen dominieren. Kein dunkles Partner-Dashboard. Dokumentierte Ausnahmen seit dem Premium-Redesign (T-0210, `docs/design/PREMIUM_CONSUMER_REDESIGN_SPEC.md`): der dunkle Website-Footer und das CTA-Band in `--eh-green-900`. Beides sind Kapitel-Abschlüsse, keine Arbeitsflächen; in den Apps gibt es keine dunklen Flächen.
 2. **Teal als Marke, nicht als Tapete.** Das Logo-Petrol (#105258) markiert Hauptaktionen, aktive Zustände, Vertrauen und Erfolg; große Flächen bleiben überwiegend neutral.
 3. **Eine starke Aktion pro Kontext.** Keine fünf gleich wichtigen Buttons nebeneinander.
 4. **Weniger Karten.** Flächen, Listen, Tabellen und klare Abschnitte statt SaaS-Kachelwüste.
@@ -73,17 +73,18 @@ Die gewünschte visuelle Richtung verbindet:
 - `--eh-border-strong: #CFDAD9`
 - Fehler/Warnung/Info nur semantisch und zurückhaltend.
 
-### Typografie
+### Typografie — Schrift und Rendering
 
 - Inter Variable, self-hosted (`src/fonts/InterVariable.woff2`), Display 700, UI 550–650, Body 400; globales Tracking −0.011em, Display −0.03em bis −0.035em.
+- Genau eine Schriftfamilie. Self-Hosting ist Teil des Determinismus-Vertrags der Visual-Canonicals (§14): kein FOUT-Frame darf als Baseline landen.
 
 ### App-Palette (konvergiert seit 2026-08-30)
 
 Die Eigentümer-App nutzt die gleiche Logo-Teal-Palette wie die Website (#105258). Die Notion-Grün-Referenz (#14735c) wurde vom Operator ausgemustert und ist nicht mehr die Farb-Autorität. Die App-Layouts bleiben strukturell an die Notion-Referenzen angelehnt, die Farben sind vollständig auf die Logo-Palette konvergiert.
 
-### Typografie
+### Typografie — Hierarchie und Größen
 
-- System-/Inter-nahe Sans-Serif, keine verspielte Display-Schrift.
+- Inter (siehe oben); keine zweite oder verspielte Display-Schrift.
 - Headlines: kompakt, ruhig, hohe Lesbarkeit; kein Marketing-ALL-CAPS außer kleinen Eyebrows.
 - Body Desktop 16–18 px, Mobile mindestens 16 px.
 - Kleine Meta-Texte nicht unter 12 px; wichtige Meta eher 13–14 px.
@@ -138,6 +139,26 @@ Alle drei Oberflächen verwenden dieselbe mentale Komponentenfamilie:
 - Footer / legal navigation nur Website
 
 Icons: Lucide, konsistente Strichstärke, sparsam. Kein Icon-Zoo.
+
+### 4.1 Implementierte Website-Komponentenfamilie (verbindlich)
+
+Neue öffentliche Seiten werden aus dieser Familie komponiert; keine Seite baut eigene Hero-, Karten- oder CTA-Varianten.
+
+| Rolle aus §4 | Implementierung | Ort |
+| --- | --- | --- |
+| Top Navigation, Footer, Skip-Link, `<main id="main-content">` | `MarketingShell` | `src/components/marketing/site-shell.tsx` |
+| Section Header, Page Hero | `PageHero`, `Section`, `Eyebrow`, `Container` | `src/components/marketing/ui.tsx` |
+| Flächen statt Kachelwüste | `FeatureGrid`, `Card`, `CardGrid`, `Split`, `Statement`, `InfoPanel` | `ui.tsx` |
+| Prozess / Timeline | `Steps`, `Numbered`, `Timeline` | `ui.tsx` |
+| Trust ohne erfundene Claims | `ProofRow`, `Facts`, `Testimonials` (nur belegte Inhalte) | `ui.tsx` |
+| Primary CTA / Tertiary | `LinkButton`, `TextLink`, `CtaBand` | `ui.tsx` |
+| FAQ | `Faq` (shadcn `Accordion`) | `ui.tsx`, `src/components/ui/accordion.tsx` |
+| Rechtstexte | `LegalNotice`, `Prose` | `ui.tsx` |
+| Loading / recoverable Error (Root-Boundaries) | `PublicState` | `src/components/marketing/public-state.tsx`, genutzt von `src/app/loading.tsx`, `src/app/error.tsx` |
+| 404 | `src/app/not-found.tsx` (Hausmarken-Illustration, `nf-*` in `globals.css`) | — |
+| Tokens | `src/components/marketing/tokens.css` (`--eh-*`), Layout-Klassen in `mkt.module.css` | — |
+
+shadcn/ui ist als Primitive-Schicht eingebunden (`button`, `card`, `badge`, `separator`, `accordion`, `tabs`, `tooltip`, `hover-card`, `avatar`; `radix/nova/tailwind-v4`). Es liefert Verhalten und Accessibility, nicht das Aussehen: Farben, Radien und Typografie kommen ausschließlich aus den `--eh-*`-Tokens. Kein zweites Theme über shadcn-Defaults.
 
 ## 5. Öffentliche Website — etablierte Plattform statt One-Pager
 
@@ -349,6 +370,14 @@ Jeder kritische Screen braucht bewusst gestaltete Zustände:
 
 Fehler sagen: **was passiert ist + was der Nutzer jetzt tun kann**.
 
+### Website-States (implementiert)
+
+- **Loading:** `src/app/loading.tsx` → `PublicState` mit `aria-busy`/`aria-live="polite"` und Skeleton; kein Spinner-Only.
+- **Recoverable Error:** `src/app/error.tsx` → `PublicState` mit `role="alert"`, genau zwei Aktionen: `Erneut versuchen` (primär) und `Zur Startseite` (sekundär).
+- **404:** `src/app/not-found.tsx` mit Weg zurück (`/`) und Hilfe-Einstieg (`/hilfe`); antwortet mit echtem HTTP 404.
+- Alle drei nutzen dieselben `--eh-*`-Tokens wie die Website, damit ein Fehlerbild nie wie ein fremdes Framework aussieht.
+- Nachweis: 404 ist Teil der Visual-Canonicals und der Browser-E2E (§14). Loading/Error lassen sich von außen nicht deterministisch auslösen und haben daher **keinen automatischen Browser-Nachweis**; wer `loading.tsx`, `error.tsx` oder `PublicState` ändert, liefert reale Screenshots (Mobile + Desktop) als Evidence mit.
+
 ## 11. Accessibility
 
 - sichtbarer Keyboard-Fokus
@@ -398,3 +427,23 @@ Eine Oberfläche ist visuell nicht fertig, nur weil sie „schön“ aussieht. F
 - Design passt zu dieser Datei
 - Production Build und relevante Tests grün
 - reale Browser-Screenshots für Mobile und Desktop geprüft
+
+### 14.1 Nachweis-Kommandos (Release Proof, T-0129/T-0130)
+
+„Fertig" ist erst, wenn diese Läufe grün sind. Sie sind die einzige Quelle für visuelle und Verhaltens-Akzeptanz; keine Seite gilt als abgenommen, weil sie in einem Chat-Screenshot gut aussah.
+
+| Nachweis | Kommando | Was es beweist |
+| --- | --- | --- |
+| Visual-Canonicals Website | `npm run test:visual` | 16 öffentliche Routen + `/app`/`/pro`-Einstieg + 404 auf 390 / 834 / 1320 px pixelgenau gegen `tests/visual-baselines` (Budget 8 %). Diff-PNGs unter `.sin-gpt-web/evidence/T-0130/visual-diff/`. |
+| Visual-Canonicals Apps | `npm run test:visual:apps` | Eigentümer-/Partner-App auf 390 + 1320 px mit Fixture-Daten. |
+| Browser-E2E v2 | `npm run test:e2e` (`E2E_BROWSER=firefox|webkit` für die Engine-Matrix) | Echter Produktions-Auth-Pfad, alle 16 öffentlichen Routen mit Skip-Link, Landmark, rechtlicher Footer-Navigation und `<title>`; 404-State mit Rückweg; Rollen-, Onboarding-, Auftrags- und Übergabe-Flows. |
+| Responsive-Matrix | `npm run test:responsive` | Kein horizontaler Overflow, Navigation bedienbar, Kerntexte vorhanden. |
+| Accessibility | `npm run test:a11y`, `npm run test:a11y:apps` | axe-core ohne `critical`/`serious`. |
+| Release-Gate | `npm run release-gate` | Lint, Typen, Security, Build, a11y, Visual-Canonicals (Mobile + Desktop), Performance-Budgets in einem Lauf. |
+
+Regeln für Baselines:
+
+- Baselines (`tests/visual-baselines/**`) werden nur mit `npm run test:visual:update` bzw. `test:visual:apps:update` erneuert und immer **gemeinsam mit der Design-Änderung** committet, die sie rechtfertigt. Ein Baseline-Update ohne UI-Diff im selben Commit ist ein Fehler.
+- Die Route×Viewport-Matrix lebt genau einmal in `scripts/lib/visual-canonicals.mjs`. Release-Gate, Standalone-Lauf und E2E importieren sie; neue öffentliche Routen werden dort eingetragen, nicht in einem einzelnen Script.
+- Determinismus ist Pflicht: `prefers-reduced-motion`, eingefrorene Animationen/Transitions, DPR 1, `de-DE`, `Europe/Berlin`, `document.fonts.ready`. Komponenten mit zwangsläufig volatilem Inhalt markieren sich mit `data-visual-volatile` statt das Budget zu erhöhen.
+- Build für alle Läufe: `npx next build --webpack` mit `/etc/einfach-hausen-build.env` (siehe `docs/NEXT_AGENT.md`).

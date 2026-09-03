@@ -6,6 +6,10 @@ import { randomBytes } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { chromium, firefox, webkit } from 'playwright-core';
+// T-0129 Browser-E2E v2: the public-platform matrix is the SAME list the
+// visual canonicals (T-0130) are built from, so behavioral and visual proof
+// can never cover different route sets.
+import { PUBLIC_ROUTES } from './lib/visual-canonicals.mjs';
 
 const repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const browserName=process.env.E2E_BROWSER||'chromium';
@@ -210,8 +214,31 @@ await waitText(publicPage,'Hauskonto kostenlos'); await waitText(publicPage,'kei
 if(!(await publicPage.locator('form[action="/register"] input[name="request"]').count()))throw new Error('Landing intake composer missing');
 if(/KI-Hausmeister/i.test(await publicPage.locator('body').innerText()))throw new Error('Landing page still foregrounds AI instead of customer benefit');
 await assertNoOverflow(publicPage,'Mobile landing');
-// Primary navigation must lead to real, indexable platform pages.
-for(const route of ['/so-funktionierts','/eigenheimbesitzer','/leistungen','/hausakte','/partner','/preise','/ueber-uns','/hilfe','/kontakt','/sicherheit']){const r=await publicPage.request.get(base+route);if(!r.ok())throw new Error(`Marketing route ${route} failed`);}
+// T-0129 v2: every canonical public route (DESIGN.md §5.1, 16 routes incl.
+// the legal pages) must be a real, indexable page (200) AND carry the
+// platform cues of DESIGN.md §5.4/§5.5/§11: a skip link + main landmark, the
+// complete legal footer navigation (Impressum/Datenschutz/AGB) and a
+// canonical <title>. Auth routes (/login, /welcome) render their own shell
+// and are only held to the 200 + <title> contract here.
+const authShellRoutes=new Set(['/login','/welcome']);
+for(const route of PUBLIC_ROUTES){
+  const r=await publicPage.request.get(base+route);if(!r.ok())throw new Error(`Public route ${route} failed (${r.status()})`);
+  const html=await r.text();
+  if(!/<title>[^<]{3,}<\/title>/.test(html))throw new Error(`Public route ${route} has no <title>`);
+  if(authShellRoutes.has(route))continue;
+  if(!html.includes('href="#main-content"')||!html.includes('id="main-content"'))throw new Error(`Public route ${route} lacks skip link / main landmark`);
+  for(const legal of ['/impressum','/datenschutz','/agb'])if(!html.includes(`href="${legal}"`))throw new Error(`Public route ${route} footer lacks legal link ${legal}`);
+}
+// State screens are part of the platform surface (DESIGN.md §5.4/§10): an
+// unknown path must answer 404 with the designed not-found page and a way
+// back, not a blank framework page.
+const notFoundResponse=await publicPage.request.get(base+'/__e2e-unknown-route__');
+if(notFoundResponse.status()!==404)throw new Error(`Unknown route answered ${notFoundResponse.status()} instead of 404`);
+await nav(publicPage, base+'/__e2e-unknown-route__');
+await publicPage.getByRole('heading',{name:'Das gibt es hier nicht.'}).waitFor();
+if(!(await publicPage.locator('a[href="/"]').count()))throw new Error('404 page has no way back to the start page');
+await assertNoOverflow(publicPage,'Mobile 404 state');
+await assertKeyboardFocus(publicPage,'Mobile 404 state');
 // App entry stays canonical at /welcome: login/account cards and role selection for app users.
 await nav(publicPage, base+'/welcome')
 await publicPage.getByRole('heading',{name:/Willkommen bei einfachhausen/i}).waitFor();

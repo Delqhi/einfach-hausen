@@ -20,6 +20,8 @@ export default function AnfrageDetailPage() {
     getSupabase().then((supabase) => {
       supabase.from("anfragen").select("*").eq("id", id as string).single().then(({ data }: any) => setAnfrage(data));
       supabase.from("angebote").select("*").eq("anfrage_id", id as string).then(({ data }: any) => setAngebote((data as any) ?? []));
+    }).catch(() => {
+      // No Supabase client (preview without env vars) — detail stays empty.
     });
   }, [id]);
 

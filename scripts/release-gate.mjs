@@ -176,44 +176,33 @@ async function liveGates() {
     }
     if (ctx) await ctx.close();
 
-    // ---- Layer 3: visual baseline regression ----
-    if (runVisual) log('\n== Layer 3: visual regression ==');
-    const baselineDir = path.join(root, 'tests', 'visual-baselines');
-    const actualDir = path.join(root, '.sin-gpt-web', 'evidence', 'release-gate', 'visual-actual');
-    fs.mkdirSync(baselineDir, { recursive: true });
-    fs.mkdirSync(actualDir, { recursive: true });
-    const { default: pixelmatch } = await import('pixelmatch');
-    const { PNG } = await import('pngjs');
-    const pixelBudget = Number(process.env.GATE_PIXEL_BUDGET || 0.08);
-    let visualFailures = [];
-    const shotCtx = runVisual ? await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, reducedMotion: 'reduce' }) : null;
-    const shotPage = shotCtx ? await shotCtx.newPage() : null;
-    for (const route of (runVisual ? publicRoutes : [])) {
-      await shotPage.goto(`${base}${route}`, { waitUntil: 'networkidle', timeout: 60000 });
-      await shotPage.waitForTimeout(600);
-      const name = route === '/' ? 'home' : route.replaceAll('/', '_').replace(/^_/, '');
-      const actualPath = path.join(actualDir, `${name}.png`);
-      await shotPage.screenshot({ path: actualPath, fullPage: false });
-      const baselinePath = path.join(baselineDir, `${name}.png`);
-      if (!fs.existsSync(baselinePath) || process.env.GATE_UPDATE_BASELINES === '1') {
-        fs.copyFileSync(actualPath, baselinePath);
-        log(`  baseline ${fs.existsSync(baselinePath) ? 'updated' : 'created'}: ${name}.png`);
-        continue;
-      }
-      const baseline = PNG.sync.read(fs.readFileSync(baselinePath));
-      const actual = PNG.sync.read(fs.readFileSync(actualPath));
-      if (baseline.width !== actual.width || baseline.height !== actual.height) {
-        visualFailures.push(`${name}: size ${baseline.width}x${baseline.height} -> ${actual.width}x${actual.height}`);
-        continue;
-      }
-      const diff = new PNG({ width: baseline.width, height: baseline.height });
-      const changed = pixelmatch(baseline.data, actual.data, diff.data, baseline.width, baseline.height, { threshold: 0.1 });
-      const ratio = changed / (baseline.width * baseline.height);
-      if (ratio > pixelBudget) visualFailures.push(`${name}: ${(ratio * 100).toFixed(2)}% pixels changed (budget ${pixelBudget * 100}%)`);
+    // ---- Layer 3: visual canonicals (T-0130) ----
+    // Shared matrix + determinism contract with scripts/visual-regression.mjs
+    // (scripts/lib/visual-canonicals.mjs). The gate runs the historical 9 core
+    // routes plus the 404 state on mobile AND desktop (DESIGN.md §14: 390 and
+    // 1320 must be release-proven); the standalone run covers tablet and all
+    // 16 public routes. Missing baselines are created, never failed.
+    if (runVisual) {
+      log('\n== Layer 3: visual canonicals ==');
+      const { GATE_ROUTES, STATE_ROUTES, DEFAULT_PIXEL_BUDGET, runVisualCanonicals } = await import('./lib/visual-canonicals.mjs');
+      const baselineDir = path.join(root, 'tests', 'visual-baselines');
+      const evidenceDir = path.join(root, '.sin-gpt-web', 'evidence', 'release-gate');
+      const visual = await runVisualCanonicals({
+        browser,
+        base,
+        routes: GATE_ROUTES,
+        states: STATE_ROUTES,
+        viewports: ['mobile', 'desktop'],
+        baselineDir,
+        actualDir: path.join(evidenceDir, 'visual-actual'),
+        diffDir: path.join(evidenceDir, 'visual-diff'),
+        budget: Number(process.env.GATE_PIXEL_BUDGET || DEFAULT_PIXEL_BUDGET),
+        update: process.env.GATE_UPDATE_BASELINES === '1',
+        log,
+      });
+      record(`visual canonicals (${visual.results.length} shots, mobile+desktop, pixel budget)`, visual.failures.length === 0,
+        visual.failures.length === 0 ? 'all canonicals within budget or baselined' : visual.failures.slice(0, 6).join('; '));
     }
-    if (shotCtx) await shotCtx.close();
-    if (runVisual) record('visual regression (pixel budget)', visualFailures.length === 0,
-      visualFailures.length === 0 ? 'all routes within budget or baselined' : visualFailures.slice(0, 6).join('; '));
 
     // ---- Layer 4: performance budgets ----
     if (runPerf) log('\n== Layer 4: performance budgets ==');

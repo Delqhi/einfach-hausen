@@ -38,6 +38,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     // T-0118: the browser Supabase client is lazy (async chunk) — await it.
+    // Without Supabase env vars (local preview) the promise rejects; the app
+    // degrades to logged-out instead of crashing with an unhandled rejection.
     getSupabase().then((supabase) => {
       if (cancelled) return;
       supabase.auth.getSession().then(({ data }: any) => {
@@ -50,6 +52,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(s);
       });
       if (cancelled) sub.subscription.unsubscribe();
+    }).catch(() => {
+      if (cancelled) return;
+      setSession(null);
+      setLoading(false);
     });
     return () => { cancelled = true; };
   }, []);
@@ -69,8 +75,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [session, loading, pathname, router]);
 
   async function signOut() {
-    const supabase = await getSupabase();
-    await supabase.auth.signOut();
+    try {
+      const supabase = await getSupabase();
+      await supabase.auth.signOut();
+    } catch {
+      // No Supabase client available (e.g. preview without env vars) — still
+      // clear the local session so the UI leaves the logged-in state.
+    }
     setSession(null);
   }
 
