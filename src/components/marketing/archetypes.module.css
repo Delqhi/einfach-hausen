@@ -1,0 +1,1116 @@
+/*
+ * Einfach Hausen – Seiten-Archetypen (UI-Convergence Welle 2).
+ *
+ * Vier Archetypen, damit die oeffentlichen Unterseiten nicht alle demselben
+ * Ablauf aus Hero, Mockup, Karten, Statement, FAQ und CTA folgen:
+ *
+ *   A  Index   → /leistungen   typografischer Index, keine Karten
+ *   B  Ledger  → /preise       Vergleichstabelle, keine Preiskarten
+ *   C  Dossier → /hausakte     Aktenlayout mit Rail und Jahresmarken
+ *   D  Terms   → /partner      Vertragsblatt mit Paragraphen
+ *
+ * Selbsttragend: nutzt nur die --eh-* Tokens aus tokens.css, kaempft nicht
+ * gegen mkt.module.css, marketing.module.css oder design-system.css.
+ * Jede Farbe hat einen OKLCH-Fallback, damit die Datei auch ohne geladene
+ * Tokens stimmt.
+ */
+
+/* ---------------------------------------------------------------- Basis */
+
+.wrap {
+  max-width: var(--eh-container, 1180px);
+  margin-inline: auto;
+  padding-inline: var(--eh-gutter, clamp(20px, 4vw, 32px));
+}
+
+.narrow {
+  max-width: 68ch;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.kicker {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 680;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--eh-teal-500, oklch(0.53 0.068 195));
+}
+
+.kickerTerra {
+  composes: kicker;
+  color: var(--eh-terra, oklch(0.51 0.115 42));
+}
+
+/* ------------------------------------------------- A  Index /leistungen */
+
+/*
+ * Kein Hero mit Mockup. Die Ueberschrift ist das Bild: eine grosse Zeile,
+ * die absichtlich ueber die Textspalte hinausragt, darunter eine schmale
+ * Lead-Spalte und eine Meta-Zeile auf einer Haarlinie.
+ */
+.indexHero {
+  padding: clamp(48px, 7vw, 92px) 0 clamp(32px, 4vw, 52px);
+}
+
+.indexHeroTitle {
+  max-width: 20ch;
+  margin: 14px 0 0;
+  font-size: clamp(38px, 6.4vw, 78px);
+  font-weight: 620;
+  line-height: 0.98;
+  letter-spacing: -0.032em;
+  text-wrap: balance;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.indexHeroTitle em {
+  font-style: normal;
+  color: var(--eh-terra, oklch(0.51 0.115 42));
+}
+
+.indexHeroLead {
+  max-width: 56ch;
+  margin: clamp(20px, 2.5vw, 30px) 0 0;
+  font-size: var(--eh-lead, clamp(17px, 1.4vw, 20px));
+  line-height: 1.58;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.indexHeroFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 26px;
+  margin-top: clamp(28px, 3.5vw, 40px);
+  padding-top: 18px;
+  border-top: 1px solid var(--eh-line, oklch(0.92 0.006 90));
+}
+
+.indexHeroMeta {
+  font-size: 13.5px;
+  color: var(--eh-ink-mute, oklch(0.58 0.014 205));
+}
+
+.indexHeroMeta b {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--eh-ink, oklch(0.29 0.028 205));
+}
+
+/* Der Index selbst: Zeilen auf Haarlinien, zwei Spalten ab Tablet. */
+.indexSection {
+  padding: clamp(40px, 5vw, 72px) 0 clamp(56px, 7vw, 96px);
+  background: var(--eh-surface, oklch(0.995 0.002 200));
+  border-block: 1px solid var(--eh-line, oklch(0.92 0.006 90));
+}
+
+.indexHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 32px;
+  margin-bottom: clamp(24px, 3vw, 38px);
+}
+
+.indexHead h2 {
+  max-width: 26ch;
+  margin: 10px 0 0;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 620;
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.indexHeadNote {
+  max-width: 40ch;
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.indexList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--eh-line, oklch(0.92 0.006 90));
+}
+
+.indexRow {
+  display: grid;
+  grid-template-columns: 3.4ch 22px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0 16px;
+  padding: 17px 4px 18px;
+  border-bottom: 1px solid var(--eh-line, oklch(0.94 0.005 90));
+}
+
+.indexNum {
+  font-size: 12.5px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: oklch(0.72 0.02 200);
+}
+
+.indexIcon {
+  align-self: start;
+  margin-top: 1px;
+  color: var(--eh-teal-500, oklch(0.53 0.068 195));
+}
+
+.indexRow h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 610;
+  letter-spacing: -0.014em;
+  color: var(--eh-ink, oklch(0.29 0.028 205));
+}
+
+.indexRow p {
+  max-width: 46ch;
+  margin: 5px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--eh-ink-soft, oklch(0.53 0.02 205));
+}
+
+@media (min-width: 760px) {
+  .indexList {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(32px, 5vw, 72px);
+  }
+
+  /* Rechte Spalte startet optisch auf derselben Linie wie die linke. */
+  .indexRow:nth-child(odd) {
+    grid-column: 1;
+  }
+
+  .indexRow:nth-child(even) {
+    grid-column: 2;
+  }
+}
+
+/*
+ * Stimmen-Band: die echten Kundensaetze sind hier der Inhalt, nicht ein
+ * Chip-Regal unter einer Karte. Grosse Type, warme Flaeche, anklickbar.
+ */
+.voiceBand {
+  padding: clamp(52px, 7vw, 96px) 0;
+  background: var(--eh-sand-100, oklch(0.945 0.026 82));
+}
+
+.voiceHead {
+  max-width: 46ch;
+  margin-bottom: clamp(26px, 3vw, 40px);
+}
+
+.voiceHead h2 {
+  margin: 10px 0 8px;
+  font-size: clamp(25px, 2.8vw, 34px);
+  font-weight: 620;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.voiceHead p {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: oklch(0.46 0.028 70);
+}
+
+.voiceList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid oklch(0.86 0.028 78);
+}
+
+.voiceItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 20px;
+  padding: 19px 6px 20px;
+  border-bottom: 1px solid oklch(0.88 0.026 78);
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+  font-size: clamp(17px, 2vw, 22px);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.014em;
+  text-decoration: none;
+  transition: color var(--eh-dur, 240ms) var(--eh-ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.voiceItem::before {
+  content: '\201E';
+  position: absolute;
+  opacity: 0;
+}
+
+.voiceItem span {
+  display: grid;
+  place-items: center;
+  color: oklch(0.62 0.05 60);
+  transition: transform var(--eh-dur, 240ms) var(--eh-ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.voiceItem:hover,
+.voiceItem:focus-visible {
+  color: var(--eh-terra, oklch(0.51 0.115 42));
+}
+
+.voiceItem:hover span,
+.voiceItem:focus-visible span {
+  transform: translate3d(4px, 0, 0);
+  color: var(--eh-terra, oklch(0.51 0.115 42));
+}
+
+.voiceFoot {
+  margin: clamp(22px, 3vw, 32px) 0 0;
+  font-size: 14px;
+  color: oklch(0.48 0.028 70);
+}
+
+/* ---------------------------------------------------- B  Ledger /preise */
+
+/*
+ * Preise sind eine Rechnung, kein Schaufenster. Der Hero ist eine einzelne
+ * grosse Aussage ohne Mockup, danach folgt eine echte Tabelle.
+ */
+.ledgerHero {
+  padding: clamp(52px, 7vw, 96px) 0 clamp(34px, 4vw, 54px);
+  text-align: center;
+}
+
+.ledgerHeroTitle {
+  max-width: 22ch;
+  margin: 14px auto 0;
+  font-size: clamp(36px, 5.4vw, 66px);
+  font-weight: 620;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.ledgerHeroLead {
+  max-width: 58ch;
+  margin: 22px auto 0;
+  font-size: var(--eh-lead, clamp(17px, 1.4vw, 20px));
+  line-height: 1.58;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.ledgerHeroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: clamp(26px, 3vw, 36px);
+}
+
+.ledgerSection {
+  padding: clamp(38px, 5vw, 68px) 0 clamp(52px, 6vw, 88px);
+  background: var(--eh-surface, oklch(0.995 0.002 200));
+  border-block: 1px solid var(--eh-line, oklch(0.92 0.006 90));
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 2px;
+  margin-bottom: clamp(22px, 3vw, 32px);
+  padding: 3px;
+  border: 1px solid var(--eh-line, oklch(0.92 0.006 90));
+  border-radius: var(--eh-r-pill, 999px);
+  background: oklch(0.975 0.004 200);
+}
+
+.tab {
+  appearance: none;
+  padding: 9px 18px;
+  border: 0;
+  border-radius: var(--eh-r-pill, 999px);
+  background: transparent;
+  color: var(--eh-ink-soft, oklch(0.5 0.02 205));
+  font: inherit;
+  font-size: 14px;
+  font-weight: 580;
+  cursor: pointer;
+  transition: background var(--eh-dur, 240ms) var(--eh-ease, cubic-bezier(0.22, 1, 0.36, 1)),
+    color var(--eh-dur, 240ms) var(--eh-ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.tab:hover {
+  color: var(--eh-teal-700, oklch(0.44 0.07 195));
+}
+
+.tabActive {
+  composes: tab;
+  background: var(--eh-teal-700, oklch(0.44 0.07 195));
+  color: oklch(0.985 0.003 195);
+}
+
+.tableScroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ledgerTable {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+
+.ledgerTable th,
+.ledgerTable td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--eh-line, oklch(0.94 0.005 90));
+  vertical-align: top;
+}
+
+.ledgerTable thead th {
+  padding-top: 0;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--eh-line-strong, oklch(0.85 0.008 90));
+  font-weight: 600;
+}
+
+.ledgerTable tbody tr:last-child th,
+.ledgerTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.rowLabel {
+  width: 38%;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--eh-ink, oklch(0.3 0.028 205));
+}
+
+.planName {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--eh-teal-500, oklch(0.53 0.068 195));
+}
+
+.planPrice {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(23px, 2.4vw, 30px);
+  font-weight: 620;
+  letter-spacing: -0.026em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.planUnit {
+  margin-left: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--eh-ink-mute, oklch(0.58 0.014 205));
+}
+
+.planNote {
+  display: block;
+  max-width: 24ch;
+  margin-top: 7px;
+  font-size: 12.5px;
+  font-weight: 450;
+  line-height: 1.45;
+  color: var(--eh-ink-soft, oklch(0.53 0.02 205));
+}
+
+/* Hervorhebung per Flaeche, nicht per Karte im Karten-Raster. */
+.colLead {
+  background: oklch(0.975 0.014 195);
+}
+
+.colLead .planName {
+  color: var(--eh-teal-700, oklch(0.44 0.07 195));
+}
+
+.cellYes {
+  color: var(--eh-teal-700, oklch(0.44 0.07 195));
+}
+
+.cellNo {
+  color: oklch(0.74 0.012 200);
+}
+
+.cellText {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.ledgerFoot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  margin-top: clamp(24px, 3vw, 34px);
+}
+
+.ledgerNote {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.ledgerNote strong {
+  color: var(--eh-terra, oklch(0.51 0.115 42));
+}
+
+.ledgerNote a {
+  color: var(--eh-teal-700, oklch(0.44 0.07 195));
+}
+
+/* Nullzeilen: bewusst als Kontoauszug, nicht als vier Kennzahl-Kacheln. */
+.zeroBand {
+  padding: clamp(48px, 6vw, 84px) 0;
+  background: var(--eh-teal-900, oklch(0.32 0.045 197));
+  color: oklch(0.96 0.008 190);
+}
+
+.zeroHead {
+  max-width: 44ch;
+  margin-bottom: clamp(24px, 3vw, 36px);
+}
+
+.zeroHead .kicker {
+  color: oklch(0.78 0.05 190);
+}
+
+.zeroHead h2 {
+  margin: 10px 0 0;
+  font-size: clamp(25px, 2.8vw, 36px);
+  font-weight: 620;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  color: oklch(0.975 0.006 190);
+}
+
+.zeroList {
+  margin: 0;
+  border-top: 1px solid oklch(0.44 0.038 195);
+}
+
+.zeroRow {
+  display: grid;
+  grid-template-columns: 5.5ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 22px;
+  padding: 16px 2px 17px;
+  border-bottom: 1px solid oklch(0.42 0.036 195);
+}
+
+.zeroValue {
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 640;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: oklch(0.985 0.004 190);
+}
+
+.zeroLabel {
+  font-size: 15px;
+  line-height: 1.5;
+  color: oklch(0.83 0.022 190);
+}
+
+/* ------------------------------------------------- C  Dossier /hausakte */
+
+/*
+ * Die Seite sieht aus wie das Produkt: Aktenkopf mit Metazeilen, danach
+ * eine Rail mit Eintraegen. Das Mockup bleibt, sitzt aber versetzt im
+ * Aktenkopf statt neben einem Standard-Hero.
+ */
+.dossierHero {
+  padding: clamp(44px, 6vw, 80px) 0 clamp(40px, 5vw, 68px);
+}
+
+.dossierGrid {
+  display: grid;
+  gap: clamp(32px, 5vw, 64px);
+}
+
+@media (min-width: 940px) {
+  .dossierGrid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: start;
+  }
+}
+
+.dossierTitle {
+  max-width: 19ch;
+  margin: 14px 0 0;
+  font-size: clamp(36px, 5vw, 62px);
+  font-weight: 620;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.dossierLead {
+  max-width: 54ch;
+  margin: 20px 0 0;
+  font-size: var(--eh-lead, clamp(17px, 1.4vw, 20px));
+  line-height: 1.58;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+/* Aktenkopf: Label-Wert-Zeilen wie auf einem echten Deckblatt. */
+.fileMeta {
+  margin: clamp(26px, 3vw, 36px) 0 0;
+  border-top: 1px solid var(--eh-line-strong, oklch(0.86 0.008 90));
+}
+
+.fileMetaRow {
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.42fr) minmax(0, 1fr);
+  gap: 4px 20px;
+  padding: 11px 2px;
+  border-bottom: 1px solid var(--eh-line, oklch(0.94 0.005 90));
+}
+
+.fileMetaKey {
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--eh-ink-mute, oklch(0.6 0.014 205));
+}
+
+.fileMetaValue {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--eh-ink, oklch(0.3 0.028 205));
+}
+
+.dossierActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(24px, 3vw, 32px);
+}
+
+.dossierAside {
+  position: relative;
+}
+
+@media (min-width: 940px) {
+  .dossierAside {
+    margin-top: 34px;
+  }
+}
+
+/* Rail mit Eintraegen. Die Rail ist ein eigenes Element, kein Rahmen. */
+.spineSection {
+  padding: clamp(48px, 6vw, 88px) 0;
+  background: var(--eh-surface, oklch(0.995 0.002 200));
+  border-block: 1px solid var(--eh-line, oklch(0.92 0.006 90));
+}
+
+.spineHead {
+  max-width: 50ch;
+  margin-bottom: clamp(30px, 4vw, 46px);
+}
+
+.spineHead h2 {
+  margin: 10px 0 10px;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 620;
+  line-height: 1.08;
+  letter-spacing: -0.022em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.spineHead p {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.spine {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.record {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 0 20px;
+}
+
+.recordRail {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  grid-template-rows: 22px 1fr;
+}
+
+.recordDot {
+  width: 9px;
+  height: 9px;
+  margin-top: 7px;
+  border-radius: 999px;
+  background: var(--eh-teal-500, oklch(0.53 0.068 195));
+}
+
+.recordLine {
+  width: 1px;
+  height: 100%;
+  background: var(--eh-line-strong, oklch(0.88 0.008 90));
+}
+
+.record:last-child .recordLine {
+  background: linear-gradient(to bottom, var(--eh-line-strong, oklch(0.88 0.008 90)), transparent);
+}
+
+.recordBody {
+  padding-bottom: clamp(26px, 3vw, 38px);
+}
+
+.recordWhen {
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--eh-ink-mute, oklch(0.6 0.014 205));
+}
+
+.recordBody h3 {
+  margin: 6px 0 0;
+  font-size: clamp(18px, 1.9vw, 21px);
+  font-weight: 610;
+  letter-spacing: -0.016em;
+  color: var(--eh-ink, oklch(0.29 0.028 205));
+}
+
+.recordBody p {
+  max-width: 62ch;
+  margin: 7px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.recordTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 13px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recordTag {
+  padding: 4px 10px;
+  border-radius: var(--eh-r-chip, 10px);
+  background: oklch(0.962 0.012 195);
+  font-size: 12px;
+  font-weight: 520;
+  color: var(--eh-teal-700, oklch(0.44 0.07 195));
+}
+
+/* Uebergabe: zwei Spalten, klar getrennt, ohne Kartenoptik. */
+.handoverSection {
+  padding: clamp(48px, 6vw, 84px) 0;
+  background: var(--eh-sand-100, oklch(0.945 0.026 82));
+}
+
+.handoverHead {
+  max-width: 52ch;
+  margin-bottom: clamp(28px, 3.5vw, 42px);
+}
+
+.handoverHead h2 {
+  margin: 10px 0 10px;
+  font-size: clamp(25px, 2.9vw, 36px);
+  font-weight: 620;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.handoverHead p {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: oklch(0.46 0.028 70);
+}
+
+.handover {
+  display: grid;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+@media (min-width: 820px) {
+  .handover {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.handoverCol h3 {
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid oklch(0.84 0.03 78);
+  font-size: 17px;
+  font-weight: 620;
+  letter-spacing: -0.012em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.handoverCol h3 small {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 550;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: oklch(0.52 0.05 62);
+}
+
+.handoverList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.handoverList li {
+  padding: 12px 2px;
+  border-bottom: 1px solid oklch(0.88 0.026 78);
+  font-size: 15px;
+  line-height: 1.45;
+  color: oklch(0.38 0.026 70);
+}
+
+/* --------------------------------------------------- D  Terms /partner */
+
+/*
+ * Ein Vertragsblatt, kein Marketing-Deck. Nuechterner Kopf, danach
+ * numerierte Klauseln in zwei Spalten und eine Pruefliste mit Zustaenden.
+ */
+.termsHero {
+  padding: clamp(44px, 6vw, 78px) 0 clamp(34px, 4vw, 54px);
+  border-bottom: 1px solid var(--eh-line-strong, oklch(0.86 0.008 90));
+}
+
+.termsGrid {
+  display: grid;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+@media (min-width: 900px) {
+  .termsGrid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    align-items: end;
+  }
+}
+
+.termsTitle {
+  max-width: 24ch;
+  margin: 14px 0 0;
+  font-size: clamp(32px, 4.4vw, 54px);
+  font-weight: 620;
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.termsLead {
+  max-width: 56ch;
+  margin: 18px 0 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.termsActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(22px, 3vw, 30px);
+}
+
+.termsFigure {
+  margin: 0;
+}
+
+.termsFigure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--eh-r-media, 28px);
+}
+
+.termsFigure figcaption {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--eh-ink-mute, oklch(0.58 0.014 205));
+}
+
+.clauseSection {
+  padding: clamp(44px, 5.5vw, 80px) 0;
+}
+
+.clauseList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.clause {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px 32px;
+  padding: clamp(24px, 3vw, 34px) 0;
+  border-top: 1px solid var(--eh-line, oklch(0.93 0.006 90));
+}
+
+.clause:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+@media (min-width: 820px) {
+  .clause {
+    grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+  }
+}
+
+.clauseHead {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.clauseNum {
+  font-size: 13px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: oklch(0.7 0.02 200);
+}
+
+.clauseHead h3 {
+  margin: 0;
+  max-width: 22ch;
+  font-size: clamp(19px, 2.1vw, 24px);
+  font-weight: 620;
+  line-height: 1.16;
+  letter-spacing: -0.018em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.clauseBody p {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.clauseBody p + p {
+  margin-top: 12px;
+}
+
+/* Pruefliste mit echten Zustaenden statt einer Haekchen-Wand. */
+.gateSection {
+  padding: clamp(48px, 6vw, 84px) 0;
+  background: var(--eh-teal-900, oklch(0.32 0.045 197));
+  color: oklch(0.96 0.008 190);
+}
+
+.gateHead {
+  max-width: 54ch;
+  margin-bottom: clamp(28px, 3.5vw, 42px);
+}
+
+.gateHead .kicker {
+  color: oklch(0.78 0.05 190);
+}
+
+.gateHead h2 {
+  margin: 10px 0 10px;
+  font-size: clamp(25px, 2.9vw, 36px);
+  font-weight: 620;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  color: oklch(0.975 0.006 190);
+}
+
+.gateHead p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: oklch(0.83 0.022 190);
+}
+
+.gateList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid oklch(0.44 0.038 195);
+}
+
+.gateRow {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 2px 15px;
+  border-bottom: 1px solid oklch(0.42 0.036 195);
+}
+
+.gateIcon {
+  align-self: center;
+  color: oklch(0.82 0.06 180);
+}
+
+.gateLabel {
+  font-size: 15.5px;
+  line-height: 1.45;
+  color: oklch(0.95 0.01 190);
+}
+
+.gateNote {
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: oklch(0.74 0.04 190);
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .gateRow {
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .gateNote {
+    grid-column: 2;
+  }
+}
+
+/* ----------------------------------------------------- Ruhiger Abschluss */
+
+/*
+ * Nicht jede Seite endet mit demselben dunklen CTA-Band. Preise und
+ * Partner schliessen leise: eine Zeile, zwei Wege, eine Haarlinie.
+ */
+.closer {
+  padding: clamp(44px, 5.5vw, 76px) 0;
+  border-top: 1px solid var(--eh-line-strong, oklch(0.86 0.008 90));
+}
+
+.closerInner {
+  display: grid;
+  gap: 22px clamp(32px, 5vw, 64px);
+  align-items: end;
+}
+
+@media (min-width: 820px) {
+  .closerInner {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.closerInner h2 {
+  max-width: 26ch;
+  margin: 0;
+  font-size: clamp(24px, 2.7vw, 34px);
+  font-weight: 620;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.closerInner p {
+  max-width: 54ch;
+  margin: 12px 0 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.closerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* --------------------------------------------------------- FAQ-Rahmen */
+
+/*
+ * Der FAQ-Block selbst bleibt die bestehende Komponente. Nur der Rahmen
+ * unterscheidet sich pro Archetyp: hier links ausgerichtet mit Ankertext
+ * statt zentriert unter einer Ueberschrift.
+ */
+.faqSection {
+  padding: clamp(44px, 5.5vw, 80px) 0;
+}
+
+.faqGrid {
+  display: grid;
+  gap: clamp(24px, 4vw, 52px);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .faqGrid {
+    grid-template-columns: minmax(0, 0.36fr) minmax(0, 0.64fr);
+  }
+}
+
+.faqAside h2 {
+  margin: 10px 0 10px;
+  font-size: clamp(23px, 2.5vw, 30px);
+  font-weight: 620;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--eh-teal-900, oklch(0.32 0.045 197));
+}
+
+.faqAside p {
+  max-width: 34ch;
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--eh-ink-soft, oklch(0.52 0.02 205));
+}
+
+.faqAside a {
+  color: var(--eh-teal-700, oklch(0.44 0.07 195));
+}
