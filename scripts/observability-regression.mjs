@@ -1,6 +1,21 @@
 // T-0122 deterministic regression: taxonomy stability, redaction, correlation ids.
 import assert from 'node:assert/strict';
-const mod = await import('../src/lib/observability.ts');
+import fs from 'node:fs';
+const mod = await (async () => {
+  // observability.ts imports './security/redact' extensionless; provide a .ts
+  // target for the strip-types runtime the same way as the feature-flags test.
+  const redactPath = new URL('../src/lib/security/redact.ts', import.meta.url).pathname;
+  const redactText = fs.readFileSync(redactPath, 'utf8');
+  fs.writeFileSync(redactPath, redactText.replace(/(from\s*['"])(\.\.?\/[^'"]+)(['"])/g, (_m, a, s, b) => `${a}${s}.ts${b}`));
+  const obsPath = new URL('../src/lib/observability.ts', import.meta.url).pathname;
+  const obsText = fs.readFileSync(obsPath, 'utf8');
+  fs.writeFileSync(obsPath, obsText.replace(/(from\s*['"])(\.\.?\/[^'"]+)(['"])/g, (_m, a, s, b) => `${a}${s}.ts${b}`));
+  try { return await import('../src/lib/observability.ts'); }
+  finally {
+    fs.writeFileSync(obsPath, obsText);
+    fs.writeFileSync(redactPath, redactText);
+  }
+})();
 const { structuredLog, newCorrelationId } = mod;
 
 // capture console lines

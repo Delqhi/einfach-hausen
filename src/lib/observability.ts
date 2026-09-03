@@ -22,19 +22,11 @@ export interface LogContext {
   [key: string]: string | number | boolean | undefined;
 }
 
-const REDACTED = '[redacted]';
-const SECRET_PATTERNS: Array<[RegExp, string]> = [
-  [/password[^\s,&]*/gi, `password=${REDACTED}`],
-  [/token[^\s,&]*/gi, `token=${REDACTED}`],
-  [/api[_-]?key[^\s,&]*/gi, `api_key=${REDACTED}`],
-  [/secret[^\s,&]*/gi, `secret=${REDACTED}`],
-  [/authorization:[^\s,]*/gi, 'authorization=[redacted]'],
-];
+import { redactDetail as sharedRedactDetail } from './security/redact';
 
 function redact(detail: string): string {
-  let out = detail;
-  for (const [pattern, replacement] of SECRET_PATTERNS) out = out.replace(pattern, replacement);
-  return out;
+  // Shared pattern set (T-0132) plus the logger-specific authorization shape.
+  return sharedRedactDetail(detail).replace(/authorization:[^\s,]*/gi, 'authorization=[redacted]');
 }
 
 function emit(level: 'info' | 'warn' | 'error', errorClass: ErrorClass, message: string, context: LogContext = {}): void {

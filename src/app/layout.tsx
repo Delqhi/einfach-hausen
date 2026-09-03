@@ -34,6 +34,14 @@ export const metadata: Metadata = {
 
 export const viewport:Viewport={width:'device-width',initialScale:1,viewportFit:'cover',themeColor:'#ffffff'};
 
-export default function RootLayout({children}:{children:React.ReactNode}){
-  return <html lang="de" data-scroll-behavior="smooth" className={interVariable.variable}><body><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(orgWebsiteJsonLd())}} /><NativeInit><AuthProvider><PwaRegister/><CwvTelemetry/>{children}</AuthProvider></NativeInit></body></html>;
+export default async function RootLayout({children}:{children:React.ReactNode}){
+  // T-0132: the proxy-generated correlation id is exposed to the client error
+  // reporter so boundary errors join with server logs. headers() makes this
+  // layout dynamic; the attribute is empty when no id exists.
+  let correlationId = '';
+  try {
+    const { headers } = await import('next/headers');
+    correlationId = (await headers()).get('x-correlation-id') ?? '';
+  } catch { /* static render: no correlation id */ }
+  return <html lang="de" data-scroll-behavior="smooth" data-correlation-id={correlationId} className={interVariable.variable}><body><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(orgWebsiteJsonLd())}} /><NativeInit><AuthProvider><PwaRegister/><CwvTelemetry/>{children}</AuthProvider></NativeInit></body></html>;
 }

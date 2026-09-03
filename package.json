@@ -92,5 +92,6 @@
   },
   "test:observability": "node scripts/observability-regression.mjs",
   "test:slo": "node scripts/t0123-slo-probes.mjs",
-  "test:backup-drill": "bash scripts/t0124-backup-drill.sh"
+  "test:backup-drill": "bash scripts/t0124-backup-drill.sh",
+  "test:error-tracking": "node scripts/t0132-error-tracking-regression.mjs"
 }
