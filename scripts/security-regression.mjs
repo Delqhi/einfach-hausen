@@ -25,6 +25,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SOURCES = [
   'src/lib/db.ts',
   'src/lib/auth.ts',
+  'src/lib/demo-accounts.ts',
   'src/lib/admin-auth.ts',
   'src/lib/security/audit.ts',
   'src/lib/security/rate-limit.ts',
