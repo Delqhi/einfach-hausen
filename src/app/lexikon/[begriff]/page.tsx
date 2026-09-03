@@ -41,7 +41,7 @@ export default async function Page({ params }: { params: Promise<{ begriff: stri
   const faqPage = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: term.faqs.map((f) => ({ '@type': 'Qüstion', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+    mainEntity: term.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   };
   return (
     <MarketingShell>

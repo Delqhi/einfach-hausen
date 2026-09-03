@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { breadcrumbJsonLd, canonical } from '@/lib/seo';
 import { BLOG_POSTS } from '@/lib/seo-cluster';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { Card, CardGrid, CtaBand, LinkButton, PageHero, Section, TextLink } from '@/components/marketing/ui';
+import { CtaBand, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import Link from 'next/link';
+import { ArrowRight, BookOpen, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Ratgeber rund ums Eigenheim',
@@ -17,19 +19,30 @@ export default function Page() {
       <PageHero
         eyebrow="Ratgeber"
         title="Verstehen, einordnen, dann entscheiden."
-        text="Drei Pilot-Ratgeber zu Heizung, Bad und Schimmel. Jeder folgt demselben Aufbau: Problem, Optionen, Kostenrahmen, Entscheidung. Mit Prüfpunkten aus unserer Einordnung."
-        actions={<><LinkButton href="/leistungen/heizung">Pillar: Heizung im Überblick</LinkButton><LinkButton href="/lexikon" secondary>Zum Lexikon</LinkButton></>}
+        text="Praxisnahe Orientierung für Eigentümer: Problem, Optionen, Kostenrahmen und klare Entscheidungswege ohne Fachchinesisch."
+        actions={<><LinkButton href="/leistungen/heizung">Heizung im Überblick</LinkButton><LinkButton href="/lexikon" secondary>Zum Fachlexikon</LinkButton></>}
       />
-      <Section tone="surface" eyebrow="Alle Artikel" title="Drei zum Start. Jeder mit klarem nächsten Schritt.">
-        <CardGrid>
+      <Section tone="surface" eyebrow="Wissenssammlung" title="Aktuelle Ratgeber &amp; Leitfäden">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginTop: '28px' }}>
           {BLOG_POSTS.map((p) => (
-            <Card key={p.slug} title={p.title} text={p.description}>
-              <TextLink href={`/blog/${p.slug}`}>Artikel lesen: {p.title}</TextLink>
-            </Card>
+            <article key={p.slug} style={{ display: 'flex', flexDirection: 'column', padding: '28px', background: '#ffffff', borderRadius: '22px', border: '1px solid #e4e2dc', boxShadow: '0 2px 8px rgba(16,34,42,0.03)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#105258', fontSize: '12px', fontWeight: 700, marginBottom: '14px' }}>
+                <BookOpen size={16} /> Ratgeber-Artikel
+              </div>
+              <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#10222a', margin: '0 0 10px 0', letterSpacing: '-0.02em', lineHeight: 1.3 }}>
+                {p.title}
+              </h3>
+              <p style={{ fontSize: '15px', color: '#5f6e75', lineHeight: 1.6, margin: '0 0 24px 0', flex: 1 }}>
+                {p.description}
+              </p>
+              <Link href={`/blog/${p.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 800, color: '#105258', textDecoration: 'none' }}>
+                Leitfaden lesen <ArrowRight size={16} />
+              </Link>
+            </article>
           ))}
-        </CardGrid>
+        </div>
       </Section>
-      <CtaBand title="Dein Fall ist konkreter als jeder Artikel." text="Beschreib dein Anliegen in eigenen Worten. Du erhältst Partner, Kostenrahmen und Ansprechpartner — und entscheidest dann." />
+      <CtaBand title="Dein Vorhaben ist konkreter als ein Ratgeber?" text="Beschreib dein Anliegen in eigenen Worten. Wir finden passende Meisterbetriebe und ermitteln den genauen Kostenrahmen." />
     </MarketingShell>
   );
 }
