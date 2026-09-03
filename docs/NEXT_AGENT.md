@@ -1,10 +1,10 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-03 ~00:16 UTC · main = 99cf917 (Produktion = bda08b4, Smoke 17/17; main hat 3 Security/Observability-Commits mehr) · T-0210/T-0211/T-0120/T-0121/T-0122 abgeschlossen · Premium-Redesign ist LIVE**
+**Status 2026-09-03 ~00:24 UTC · main = 2b73994 (Produktion = bda08b4, Smoke 17/17) · T-0210/T-0211/T-0120/T-0121/T-0122/T-0123 abgeschlossen · Premium-Redesign ist LIVE**
 
 ## GENAU EINE nächste Aktion
 
-**T-0120/T-0121/T-0122 abgeschlossen: Security-Fuzz + Supply-Chain-Gate (test:supply-chain, SBOM) + Observability (stable Taxonomie, Redaction, Correlation-IDs an Stripe-Webhook/Outbox/Dispatch-Grenzen) sind permanente Gates. Genau eine nächste Aktion: nächste priorisierte, eligible Aufgabe aus dem Taskplan übernehmen (T-0123 SLO-Probes ist High-Priority-Nachfolger hinter T-0122; prüfe zusätzlich unblockte Criticals).**
+**T-0120..T-0123 abgeschlossen: Security-Fuzz, Supply-Chain-Gate (SBOM), Observability-Correlation und SLO-Probes (npm run test:slo, 5/5 grün gegen Produktion; Kestra-Flows in deploy/kestra/ müssen einmal importiert werden) sind permanente Gates. Genau eine nächste Aktion: nächste priorisierte, eligible Aufgabe aus dem Taskplan übernehmen (Kandidaten: T-0125 Feature Flags, T-0126 Admin-Console - prüfe Blocker-Kette über sin-gpt-web-state list).**
 
 1. Abgeschlossen: T-0210 (Premium-Redesign) + T-0211 (App-Promo) — Merge 9356305, Gate-Fixes (intakeGhost-Kontrast, un-layered a{color}-Regeln → @layer base, Commits 893fb3f/363068e/bda08b4), Release-Gate 11/11, Deploy, Smoke 17/17, Preview abgeschaltet (einfach-hausen-preview + cloudflared-eh-preview sind disabled; Tunnel-Domain liefert 502, das ist gewollt).
 2. Rollback-Pfade: Branch `website-original` (7962d6d = main vor Redesign) lokal+GitHub; Archive-Tags `archive/*` für alte WIP-Branches; Revert von 9356305 möglich.
@@ -449,4 +449,11 @@ task: T-0122
 updated: 2026-09-03T00:15:44+00:00
 actor: local-agent
 evidence-sha256: dca081a3188c1676492cf6cfd60f6b5d044444af48a818ae6173c43636c209fb
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0123
+updated: 2026-09-03T00:23:19+00:00
+actor: local-agent
+evidence-sha256: d05fdcb413b5af3832a99bb11e2726eab2c7c3682e25b7c74203edb5e4bd3544
 -->
