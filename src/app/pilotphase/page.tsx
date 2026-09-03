@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import Image from 'next/image';
 import { Check } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
@@ -7,7 +8,7 @@ import { CtaBand, Facts, Faq, LinkButton, Numbered, PageHero, Section, Statement
 
 export const metadata: Metadata = {
   title: 'Pilotphase',
-  description: 'Die ersten 1.000 Haushalte sichern sich 15 % Dauer-Vorteil auf alle Pakete von Einfach Hausen. Kostenlos starten, Vorteil automatisch.',
+  description: 'Die ersten 1.000 Haushalte sichern sich 15 % Dauer-Vorteil auf alle Pakete von Einfach Hausen. Kostenlos starten, Vorteil automatisch.', alternates: { canonical: canonical('/pilotphase') },
 };
 
 export default function PilotphasePage() {

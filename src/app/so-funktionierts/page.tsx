@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import Image from 'next/image';
 import { MessageCircle, Phone, ShieldCheck, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
@@ -6,7 +7,7 @@ import { AppFrame, ContactScreen, OrderStatusScreen, ReminderScreen } from '@/co
 import { Reveal } from '@/components/marketing/motion';
 import { BulletList, CtaBand, Faq, FeatureGrid, LinkButton, PageHero, Section, Statement, Steps, Timeline, mkt as styles } from '@/components/marketing/ui';
 
-export const metadata: Metadata = { title: "So funktioniert's", description: 'Anliegen beschreiben, wir organisieren, ein Mensch aus deiner Region übernimmt. Kein Auftrag ohne deine Entscheidung.' };
+export const metadata: Metadata = { title: "So funktioniert's", description: 'Anliegen beschreiben, wir organisieren, ein Mensch aus deiner Region übernimmt. Kein Auftrag ohne deine Entscheidung.' , alternates: { canonical: canonical('/so-funktionierts') } };
 
 const CASE = [
   { when: 'Montag, 09:12', title: 'Du schreibst: „Die Dachrinne läuft über.“', text: 'Ein Satz und ein Foto vom Handy. Kein Formular, keine Kategorie.' },

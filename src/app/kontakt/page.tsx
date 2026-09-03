@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import { ArrowRight, Building2, CircleAlert, HelpCircle, LogIn, MessageCircle, ShieldCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Reveal } from '@/components/marketing/motion';
@@ -7,7 +8,7 @@ import { MiniContact } from '@/components/marketing/app-frames';
 
 export const metadata: Metadata = {
   title: 'Kontakt',
-  description: 'Der richtige Weg für dein Anliegen: Hausanliegen starten, bestehenden Vorgang öffnen, Partnerfragen, Datenschutz.',
+  description: 'Der richtige Weg für dein Anliegen: Hausanliegen starten, bestehenden Vorgang öffnen, Partnerfragen, Datenschutz.', alternates: { canonical: canonical('/kontakt') },
 };
 
 const ROUTES = [

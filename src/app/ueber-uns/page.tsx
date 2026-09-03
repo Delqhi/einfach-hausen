@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import { BrainCircuit, HeartHandshake, Home, MapPinned, UserRound } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
 import { CtaBand, FeatureGrid, LinkButton, Numbered, PageHero, Section, Statement } from '@/components/marketing/ui';
 
-export const metadata: Metadata = { title: 'Über uns', description: 'Mission und Arbeitsweise hinter Einfach Hausen.' };
+export const metadata: Metadata = { title: 'Über uns', description: 'Mission und Arbeitsweise hinter Einfach Hausen.' , alternates: { canonical: canonical('/ueber-uns') } };
 export default function Page(){return <MarketingShell>
   <PageHero eyebrow="Über uns" title="Einfach Hausen soll die digitale Eingangstür für das Eigenheim werden." text="Nicht noch ein Firmenverzeichnis, nicht noch ein kompliziertes Verwaltungsprogramm: eine ruhige Anlaufstelle, die Probleme versteht, passende Menschen verbindet und Hauswissen langfristig erhält." aside={<HeroEditorialPhoto src="/images/premium/hero-homeowner.jpg" label="Das Haus im Mittelpunkt" detail="Technik organisiert im Hintergrund. Menschen entscheiden vorn." />} actions={<LinkButton href="/register?role=homeowner">Kostenlos starten</LinkButton>} />
   <Section eyebrow="Unsere Produktidee" title="Der Nutzen steht vor der Technologie." text="Die Technik darf im Hintergrund viel organisieren. Vorn soll vor allem klar sein, was für den Eigentümer als Nächstes sinnvoll ist.">

@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import { breadcrumbJsonLd, canonical, leistungenServiceJsonLd } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { AppFrame, ReminderScreen } from '@/components/marketing/app-frames';
 import { Reveal } from '@/components/marketing/motion';
 import { CtaBand, Faq, LinkButton, PageHero, Section, Statement, Steps, mkt as styles } from '@/components/marketing/ui';
 import { CATEGORIES } from '@/components/marketing/content';
 
-export const metadata: Metadata = { title: 'Leistungen', description: 'Alles rund ums Eigenheim: Reparatur, Heizung, Dach, Garten, Sanierung, Wartung. Du beschreibst, wir ordnen zu.' };
+export const metadata: Metadata = { title: 'Leistungen', description: 'Alles rund ums Eigenheim: Reparatur, Heizung, Dach, Garten, Sanierung, Wartung. Du beschreibst, wir ordnen zu.' , alternates: { canonical: canonical('/leistungen') } };
 
 const EXAMPLES = [
   'Die Heizung macht seit gestern klackernde Geräusche.',
@@ -19,6 +20,8 @@ const EXAMPLES = [
 export default function Page() {
   return (
     <MarketingShell>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Leistungen', path: '/leistungen' }])) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(leistungenServiceJsonLd()) }} />
       <PageHero
         eyebrow="Leistungen"
         title="Du musst nicht wissen, welches Gewerk. Du musst nur sagen, was ist."

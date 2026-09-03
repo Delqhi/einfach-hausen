@@ -1,6 +1,9 @@
 import { MarketingShell } from '@/components/marketing/site-shell';
 
-export const metadata = { title: "Datenschutzerklärung - einfachhausen" };
+import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
+
+export const metadata: Metadata = { title: 'Datenschutzerklärung', description: 'Datenschutzerklärung von Einfach Hausen: welche Daten verarbeitet werden, wo sie liegen und welche Rechte du hast.', alternates: { canonical: canonical('/datenschutz') } };
 
 const sections: ReadonlyArray<[string, string]> = [
   ["1. Verantwortlicher", "Dein Name / Firma, Adresse, E-Mail: datenschutz@deine-domain.de"],

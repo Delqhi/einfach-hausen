@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, Facts, Faq, LinkButton, PageHero, Section, Statement, mkt as styles } from '@/components/marketing/ui';
 import { MiniCosts } from '@/components/marketing/app-frames';
 import { PriceToggle } from './price-toggle';
 
-export const metadata: Metadata = { title: 'Preise', description: 'Das Hauskonto ist kostenlos. Keine Provision auf Aufträge. Optionale Pakete und Partnertarife transparent im Überblick.' };
+export const metadata: Metadata = { title: 'Preise', description: 'Das Hauskonto ist kostenlos. Keine Provision auf Aufträge. Optionale Pakete und Partnertarife transparent im Überblick.' , alternates: { canonical: canonical('/preise') } };
 
 const customer = [
   { name: 'FREE', price: '0 €', tag: 'Für immer kostenlos', text: 'Alles, was du brauchst, um dein Haus zu organisieren.', items: ['Anliegen beschreiben, wir organisieren', 'Geprüfte Partner und Kostenrahmen vorab', 'Konkreter Ansprechpartner pro Vorgang', 'Digitale Hausakte ohne Limit'] },

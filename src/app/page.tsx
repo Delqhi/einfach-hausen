@@ -1,4 +1,8 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { canonical } from '@/lib/seo';
+
+export const metadata: Metadata = { alternates: { canonical: canonical('/') } };
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { StickyIntake } from '@/components/marketing/sticky-intake';

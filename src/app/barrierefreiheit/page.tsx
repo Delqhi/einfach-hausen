@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import { Keyboard, MousePointer2, ScanText } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, FeatureGrid, LegalNotice, PageHero, Section } from '@/components/marketing/ui';
 
-export const metadata: Metadata = { title: 'Barrierefreiheit', description: 'Zugänglichkeitsprinzipien der Einfach-Hausen-Oberflächen.' };
+export const metadata: Metadata = { title: 'Barrierefreiheit', description: 'Zugänglichkeitsprinzipien der Einfach-Hausen-Oberflächen.' , alternates: { canonical: canonical('/barrierefreiheit') } };
 export default function Page(){return <MarketingShell>
   <PageHero eyebrow="Zugänglichkeit" title="Einfach soll auch zugänglich bedeuten." text="Die Website wird mit semantischer Struktur, sichtbaren Fokuszuständen, ausreichenden Touch-Zielen und reduzierbarer Bewegung entwickelt. Wir behaupten hier keine noch nicht geprüfte formale Konformitätsstufe." />
   <Section eyebrow="Gestaltungsprinzipien" title="Zugänglichkeit ist Teil des Designs, nicht ein Zusatz.">

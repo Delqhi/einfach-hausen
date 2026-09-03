@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import { BadgeCheck, BriefcaseBusiness, Building2, Handshake, ReceiptText, UsersRound } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Statement } from '@/components/marketing/ui';
@@ -6,7 +7,7 @@ import { BulletList, CtaBand, FeatureGrid, InfoPanel, LinkButton, PageHero, Sect
 import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
-export const metadata: Metadata = { title: 'Für Betriebe', description: 'Partnernetzwerk für regionale Betriebe: passende Anfragen, direkter Kundenkontakt und 0 % Auftragsprovision.' };
+export const metadata: Metadata = { title: 'Für Betriebe', description: 'Partnernetzwerk für regionale Betriebe: passende Anfragen, direkter Kundenkontakt und 0 % Auftragsprovision.' , alternates: { canonical: canonical('/partner') } };
 export default function Page(){return <MarketingShell>
   <PageHero eyebrow="Für Betriebe" title="Passende Anfragen. Persönlicher Kundenkontakt. 0 % Provision." text="Einfach Hausen ist kein offener Lead-Marktplatz. Geprüfte und vertraglich gebundene Unternehmen arbeiten in einem regionalen Qualitätsnetzwerk mit planbaren Monatstarifen." aside={<HeroEditorialPhoto src="/images/premium/story-ansprechpartner.jpg" label="0 % Auftragsprovision" detail="Der ausführende Betrieb bleibt Rechnungssteller." />} actions={<><LinkButton href="/register?role=provider">Als Partner starten</LinkButton><LinkButton href="/preise" secondary>Partnerpreise</LinkButton></>} />
   <Statement kicker="Das Modell" tone="soft">Du bleibst Rechnungssteller. Wir sind deine Organisations-Ebene.</Statement>

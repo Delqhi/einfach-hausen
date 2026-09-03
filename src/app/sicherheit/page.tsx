@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import { BadgeCheck, Eye, FileCheck2, LockKeyhole, ShieldCheck, UserCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { AppFrame, ContactScreen } from '@/components/marketing/app-frames';
@@ -7,7 +8,7 @@ import { PRINCIPLES } from '@/components/marketing/content';
 
 export const metadata: Metadata = {
   title: 'Sicherheit & Daten',
-  description: 'Wie Einfach Hausen deine Daten, Freigaben und Entscheidungen schützt. Überprüfbare Prinzipien statt Siegel ohne Beleg.',
+  description: 'Wie Einfach Hausen deine Daten, Freigaben und Entscheidungen schützt. Überprüfbare Prinzipien statt Siegel ohne Beleg.', alternates: { canonical: canonical('/sicherheit') },
 };
 
 export default function Page() {

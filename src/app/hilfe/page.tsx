@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
 import { MiniContact } from '@/components/marketing/app-frames';
 import { FaqExplorer } from './faq-explorer';
 
-export const metadata: Metadata = { title: 'Hilfe & FAQ', description: 'Antworten zu Ablauf, Kosten, Ansprechpartnern, Hausakte und Partnern. Ehrlich und ohne Kleingedrucktes.' };
+export const metadata: Metadata = { title: 'Hilfe & FAQ', description: 'Antworten zu Ablauf, Kosten, Ansprechpartnern, Hausakte und Partnern. Ehrlich und ohne Kleingedrucktes.' , alternates: { canonical: canonical('/hilfe') } };
 
 const faq = [
   { q: 'Löst eine normale Frage automatisch einen Auftrag aus?', a: 'Nein. Eine Frage bleibt eine Frage. Du entscheidest separat, ob du einen Ansprechpartner sprechen oder einen Auftrag organisieren lassen willst.', cat: 'Ablauf' },

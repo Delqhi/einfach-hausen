@@ -6,6 +6,7 @@ import { PwaRegister } from '@/components/pwa-register';
 import { AuthProvider } from '@/components/AuthContext';
 import NativeInit from '@/components/NativeInit';
 import { CwvTelemetry } from '@/components/telemetry/cwv-telemetry';
+import { SITE_URL, orgWebsiteJsonLd } from '@/lib/seo';
 
 // Brand typography: self-hosted Inter Variable for ALL surfaces (site, funnel, app).
 const interVariable = localFont({
@@ -18,9 +19,13 @@ const interVariable = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase:new URL(SITE_URL),
+  alternates:{canonical:'/'},
   applicationName:'Einfach Hausen',
   title:{default:'Einfach Hausen · Alles rund ums Eigenheim',template:'%s · Einfach Hausen'},
   description:'Ein Ansprechpartner für alles rund ums Eigenheim. Fragen klären, passende Menschen finden, Aufträge organisieren und Hauswissen an einem Ort behalten.',
+  openGraph:{type:'website',locale:'de_DE',siteName:'Einfach Hausen',url:'/'},
+  twitter:{card:'summary_large_image'},
   manifest:'/manifest.webmanifest',
   appleWebApp:{capable:true,statusBarStyle:'black-translucent',title:'Einfach Hausen'},
   formatDetection:{telephone:false},
@@ -30,5 +35,5 @@ export const metadata: Metadata = {
 export const viewport:Viewport={width:'device-width',initialScale:1,viewportFit:'cover',themeColor:'#ffffff'};
 
 export default function RootLayout({children}:{children:React.ReactNode}){
-  return <html lang="de" data-scroll-behavior="smooth" className={interVariable.variable}><body><NativeInit><AuthProvider><PwaRegister/><CwvTelemetry/>{children}</AuthProvider></NativeInit></body></html>;
+  return <html lang="de" data-scroll-behavior="smooth" className={interVariable.variable}><body><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(orgWebsiteJsonLd())}} /><NativeInit><AuthProvider><PwaRegister/><CwvTelemetry/>{children}</AuthProvider></NativeInit></body></html>;
 }

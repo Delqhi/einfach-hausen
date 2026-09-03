@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PwField } from '@/components/pw-field';
@@ -34,6 +35,9 @@ const trust = [
   { icon: <PinIcon />, title: 'Regional verbunden', text: 'Wir arbeiten mit geprüften Dienstleistern in deiner Nähe.' },
   { icon: <HeartIcon />, title: 'Einfach & verständlich', text: 'Intuitive Bedienung für ein sorgenfreies Zuhause.' },
 ];
+
+/** SEO P0: Registrierungs-Flow — nicht indexieren. */
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function Register({searchParams}:{searchParams:Promise<Record<string,string>>}){
   const sp=await searchParams; const provider=sp.role==='provider'; const initialRequest=!provider?String(sp.request||'').trim().slice(0,700):'';

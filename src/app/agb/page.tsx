@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { BulletList, InfoPanel, LegalNotice, LinkButton, PageHero, Section } from '@/components/marketing/ui';
 import styles from '@/components/marketing/marketing.module.css';
 
 export const metadata: Metadata = {
   title: 'AGB',
-  description: 'Vertragsmodell, Verbraucherinformationen und AGB-Veröffentlichungsstatus von Einfach Hausen.',
+  description: 'Vertragsmodell, Verbraucherinformationen und AGB-Veröffentlichungsstatus von Einfach Hausen.', alternates: { canonical: canonical('/agb') },
 };
 
 export default function Page() {

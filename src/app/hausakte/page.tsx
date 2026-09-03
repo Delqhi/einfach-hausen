@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import { FileText, History, Home, LockKeyhole, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { AppFrame, HausakteScreen, MiniHausakte, MiniReminder } from '@/components/marketing/app-frames';
 import { Reveal } from '@/components/marketing/motion';
 import { BulletList, CtaBand, Faq, FeatureGrid, InfoPanel, LinkButton, PageHero, Section, Split, Statement, TextLink, mkt as styles } from '@/components/marketing/ui';
 
-export const metadata: Metadata = { title: 'Digitale Hausakte', description: 'Technik, Arbeiten, Dokumente, Garantien, Wartungen und Ansprechpartner: die Geschichte deines Hauses an einem Ort, automatisch gepflegt.' };
+export const metadata: Metadata = { title: 'Digitale Hausakte', description: 'Technik, Arbeiten, Dokumente, Garantien, Wartungen und Ansprechpartner: die Geschichte deines Hauses an einem Ort, automatisch gepflegt.' , alternates: { canonical: canonical('/hausakte') } };
 
 export default function Page() {
   return (

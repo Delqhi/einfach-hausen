@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
 import Image from 'next/image';
 import { Bell, FileText, Home, MessageCircle, UserRound, Wallet } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
@@ -7,7 +8,7 @@ import { Reveal } from '@/components/marketing/motion';
 import { BulletList, CtaBand, Facts, FeatureGrid, InfoPanel, LinkButton, PageHero, Section, Split, Statement, TextLink, mkt as styles } from '@/components/marketing/ui';
 import { FACTS } from '@/components/marketing/content';
 
-export const metadata: Metadata = { title: 'Für Eigenheimbesitzer', description: 'Weniger im Kopf, mehr im Griff: ein Ort für Anliegen, Ansprechpartner, Erinnerungen und die Geschichte deines Hauses.' };
+export const metadata: Metadata = { title: 'Für Eigenheimbesitzer', description: 'Weniger im Kopf, mehr im Griff: ein Ort für Anliegen, Ansprechpartner, Erinnerungen und die Geschichte deines Hauses.' , alternates: { canonical: canonical('/eigenheimbesitzer') } };
 
 const MIRROR = [
   { tag: 'Sonntagabend', quote: 'Ich müsste mich mal um die Heizung kümmern. Nächste Woche. Bestimmt.' },

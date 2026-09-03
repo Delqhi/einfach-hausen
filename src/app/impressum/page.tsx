@@ -1,6 +1,9 @@
 import { MarketingShell } from '@/components/marketing/site-shell';
 
-export const metadata = { title: "Impressum - einfachhausen" };
+import type { Metadata } from 'next';
+import { canonical } from '@/lib/seo';
+
+export const metadata: Metadata = { title: 'Impressum', description: 'Anbieterkennzeichnung von Einfach Hausen nach § 5 TMG.', alternates: { canonical: canonical('/impressum') } };
 
 export default function ImpressumPage() {
   return (
