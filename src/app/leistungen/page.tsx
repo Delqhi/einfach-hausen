@@ -1,12 +1,17 @@
 import type { Metadata } from 'next';
 import { breadcrumbJsonLd, canonical, leistungenServiceJsonLd } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { AppFrame, ReminderScreen } from '@/components/marketing/app-frames';
-import { Reveal } from '@/components/marketing/motion';
-import { CtaBand, Faq, LinkButton, PageHero, Section, Statement, Steps, mkt as styles } from '@/components/marketing/ui';
+import { CtaBand, Faq, LinkButton, Section, Steps } from '@/components/marketing/ui';
+import { FaqFrame, IndexHero, IndexList, VoiceBand } from '@/components/marketing/archetypes';
 import { CATEGORIES } from '@/components/marketing/content';
 
-export const metadata: Metadata = { title: 'Leistungen', description: 'Alles rund ums Eigenheim: Reparatur, Heizung, Dach, Garten, Sanierung, Wartung. Du beschreibst, wir ordnen zu.' , alternates: { canonical: canonical('/leistungen') } };
+// Archetyp A – Index. Vorher: Hero mit Mockup, danach zwölf gleich große
+// Karten, dann Statement, FAQ, CTA. Genau dieses Muster lag auf jeder
+// Unterseite. Jetzt trägt Typografie die Seite: ein Index mit führenden
+// Nummern auf Haarlinien, und die echten Kundensätze sind ein eigenes Band
+// statt ein Chip-Regal am Rand.
+
+export const metadata: Metadata = { title: 'Leistungen', description: 'Alles rund ums Eigenheim: Reparatur, Heizung, Dach, Garten, Sanierung, Wartung. Du beschreibst, wir ordnen zu.', alternates: { canonical: canonical('/leistungen') } };
 
 const EXAMPLES = [
   'Die Heizung macht seit gestern klackernde Geräusche.',
@@ -22,37 +27,38 @@ export default function Page() {
     <MarketingShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Leistungen', path: '/leistungen' }])) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(leistungenServiceJsonLd()) }} />
-      <PageHero
+
+      <IndexHero
         eyebrow="Leistungen"
-        title="Du musst nicht wissen, welches Gewerk. Du musst nur sagen, was ist."
-        text="Einfach Hausen deckt alles ab, was ein Haus so braucht: von der tropfenden Armatur bis zur Sanierung, vom Heckenschnitt bis zur Wärmepumpe. Die Einordnung übernehmen wir. Umfang und Verfügbarkeit hängen vom regional aktiven Partnernetz ab."
-        actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/so-funktionierts" secondary>So funktioniert&apos;s</LinkButton></>}
-        aside={<AppFrame label="Erinnerungsansicht der App mit Heizungswartung, Dachrinnen und Rauchmelder"><ReminderScreen /></AppFrame>}
+        title={<>Du musst nicht wissen, welches Gewerk. <em>Du musst nur sagen, was ist.</em></>}
+        lead="Einfach Hausen deckt alles ab, was ein Haus so braucht: von der tropfenden Armatur bis zur Sanierung, vom Heckenschnitt bis zur Wärmepumpe. Die Einordnung übernehmen wir. Umfang und Verfügbarkeit hängen vom regional aktiven Partnernetz ab."
+        actions={<LinkButton href="/#anliegen">Anliegen starten</LinkButton>}
+        meta={[
+          { value: '12', label: 'Leistungsbereiche' },
+          { value: '1', label: 'Eingang für alles' },
+          { value: '0 €', label: 'für Beschreiben und Einordnen' },
+        ]}
       />
 
-      <Section tone="surface" eyebrow="Leistungsbereiche" title="Zwölf Bereiche. Ein Eingang." text="Zur Orientierung, nicht zum Aussuchen. Beschreib dein Anliegen einfach so, wie es ist.">
-        <div className={styles.cardGrid} data-cols="3">
-          {CATEGORIES.map(({ icon: Icon, title, text }, i) => (
-            <Reveal key={title} delay={(i % 3) * 0.05}>
-              <article className={styles.card}>
-                <span className={styles.cardIcon}><Icon size={22} aria-hidden="true" /></span>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
+      <IndexList
+        eyebrow="Leistungsbereiche"
+        title="Zwölf Bereiche. Ein Eingang."
+        note="Zur Orientierung, nicht zum Aussuchen. Du musst nichts anklicken und nichts zuordnen: beschreib dein Anliegen einfach so, wie es ist."
+        items={CATEGORIES.map(({ icon: Icon, title, text }) => ({
+          icon: <Icon size={18} aria-hidden="true" />,
+          title,
+          text,
+        }))}
+      />
 
-      <Statement kicker="Beispiele">So klingen echte Anliegen. <mark>Genau so darfst du schreiben.</mark></Statement>
-
-      <Section eyebrow="In deinen Worten" title="Kein Fachchinesisch nötig." text="Jeder dieser Sätze reicht uns, um loszulegen. Tipp einen an, er wird direkt übernommen." tight>
-        <div className={styles.chipRow} style={{ gap: 12 }}>
-          {EXAMPLES.map((e) => (
-            <a key={e} className={styles.chip} href={`/register?role=homeowner&request=${encodeURIComponent(e)}`} style={{ fontSize: 16, padding: '12px 18px' }}>{e}</a>
-          ))}
-        </div>
-      </Section>
+      <VoiceBand
+        eyebrow="In deinen Worten"
+        title="So klingen echte Anliegen."
+        text="Jeder dieser Sätze reicht uns, um loszulegen. Tipp einen an, er wird direkt übernommen."
+        items={EXAMPLES}
+        hrefFor={(sentence) => `/register?role=homeowner&request=${encodeURIComponent(sentence)}`}
+        foot="Kein Fachchinesisch nötig. Wenn wir etwas nicht verstehen, fragen wir kurz nach."
+      />
 
       <Section tone="soft" eyebrow="Was danach passiert" title="Aus deinem Satz wird ein Vorgang.">
         <Steps items={[
@@ -62,16 +68,18 @@ export default function Page() {
         ]} />
       </Section>
 
-      <Section eyebrow="Häufige Fragen" title="Zu den Leistungen." center>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Faq items={[
-            { q: 'Was, wenn mein Anliegen in keine Kategorie passt?', a: 'Dann schreib es trotzdem. Die Kategorien sind unsere interne Ordnung, nicht deine Aufgabe. Wir finden heraus, wer helfen kann, oder sagen dir ehrlich, wenn wir es nicht können.' },
-            { q: 'Macht Einfach Hausen die Arbeiten selbst?', a: 'Nein. Wir organisieren. Ausgeführt wird durch eigenständige, persönlich geprüfte Partnerbetriebe aus deiner Region, mit denen du direkt abrechnest.' },
-            { q: 'Auch Notfälle?', a: 'Bei dringenden Fällen wie Wasserschaden oder Heizungsausfall im Winter kennzeichnest du das beim Beschreiben. Wir priorisieren, können aber keinen 24/7-Notdienst garantieren. Im akuten Gefahrenfall wähle immer den Notruf.' },
-            { q: 'Gibt es Einfach Hausen in meiner Region?', a: 'Wir starten regional und bauen das Partnernetz Schritt für Schritt aus. Leg dein kostenloses Hauskonto an, dann siehst du, was bei dir schon möglich ist.' },
-          ]} />
-        </div>
-      </Section>
+      <FaqFrame
+        eyebrow="Häufige Fragen"
+        title="Zu den Leistungen."
+        text={<>Was hier nicht steht, beantwortet die <a href="/hilfe">Hilfe</a> oder direkt ein Mensch.</>}
+      >
+        <Faq items={[
+          { q: 'Was, wenn mein Anliegen in keine Kategorie passt?', a: 'Dann schreib es trotzdem. Die Kategorien sind unsere interne Ordnung, nicht deine Aufgabe. Wir finden heraus, wer helfen kann, oder sagen dir ehrlich, wenn wir es nicht können.' },
+          { q: 'Macht Einfach Hausen die Arbeiten selbst?', a: 'Nein. Wir organisieren. Ausgeführt wird durch eigenständige, persönlich geprüfte Partnerbetriebe aus deiner Region, mit denen du direkt abrechnest.' },
+          { q: 'Auch Notfälle?', a: 'Bei dringenden Fällen wie Wasserschaden oder Heizungsausfall im Winter kennzeichnest du das beim Beschreiben. Wir priorisieren, können aber keinen 24/7-Notdienst garantieren. Im akuten Gefahrenfall wähle immer den Notruf.' },
+          { q: 'Gibt es Einfach Hausen in meiner Region?', a: 'Wir starten regional und bauen das Partnernetz Schritt für Schritt aus. Leg dein kostenloses Hauskonto an, dann siehst du, was bei dir schon möglich ist.' },
+        ]} />
+      </FaqFrame>
 
       <CtaBand title="Beschreib einfach, was ansteht." text="Kostenlos, unverbindlich, in deinen Worten. Die Zuordnung ist unser Job." />
     </MarketingShell>
