@@ -157,6 +157,7 @@ function addColumnIfMissing(table:string,column:string,definition:string){
   }
 }
 addColumnIfMissing('provider_profiles','stripe_account_id','stripe_account_id TEXT');
+addColumnIfMissing('feature_flags','rollout_percent','rollout_percent INTEGER');
 addColumnIfMissing('reviews','hidden','hidden INTEGER NOT NULL DEFAULT 0');
 addColumnIfMissing('provider_profiles','stripe_onboarded','stripe_onboarded INTEGER NOT NULL DEFAULT 0');
 addColumnIfMissing('homeowner_profiles','lat','lat REAL');
