@@ -411,7 +411,7 @@ await strictRetry(owner,()=>owner.getByRole('button',{name:'Überspringen'}).cli
 await Promise.all([owner.waitForURL('**/app?onboarding=done'),owner.waitForLoadState('load')]);
 if(await owner.locator('.owner-onboarding-banner').count())throw new Error('Onboarding banner shown after completion');
 await assertNoOverflow(owner,'Mobile customer app');
-await nav(owner, base+'/app'); await waitText(owner,'Frag einfachhausen'); await waitText(owner,'Mein Zuhause im Überblick'); await waitText(owner,'Haus-Historie ansehen'); await waitText(owner,'Schnelle Hilfe in dringenden Fällen');
+await nav(owner, base+'/app'); await waitText(owner,'Frag einfachhausen'); await waitText(owner,'Als Nächstes'); await waitText(owner,'Schnelle Hilfe in dringenden Fällen');
 // Owner mobile navigation is the Notion drawer; the bottom tab bar is gone on owner mobile.
 const ownerDrawer=owner.locator('.mobile-menu');
 await ownerDrawer.locator('summary').click();
