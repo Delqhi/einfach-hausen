@@ -177,3 +177,9 @@ Check-Mode periodisch eine Browser-Auth erzwang und Deployments blockierte.
 Exit code is non-zero when any probe breaches. `SLO_BASE_URL` retargets the run (default `http://127.0.0.1:3010`).
 
 Alert path without a new platform: `deploy/kestra/einfach-hausen-slo*.yml` schedules the probes every 15 minutes through the existing Kestra instance; a breach fails the Kestra execution (visible in execution history/API) and the probe JSON lines land in the Kestra task logs with the failing component name and correlation id. On the host, the same evidence is in journald, so `journalctl -u einfach-hausen-dispatch` and probe lines share correlation ids.
+
+## Backup/restore drill (T-0124)
+
+`scripts/t0124-backup-drill.sh` (`npm run test:backup-drill`, wöchentlich via `deploy/einfach-hausen-drill.{service,timer}`, So 03:00) führt die nicht-destruktive Übung aus: neuestes Backup unter `/var/backups/einfach-hausen` wählen, RPO (Backup-Alter) berechnen, `restore-einfach-hausen.sh BACKUP --stage TMPDIR` (Checksums, SQLite-Integrität, Archive), `PRAGMA integrity_check` auf der wiederhergestellten DB, Nachweis der `private/`-Wiederherstellung, RTO messen. Eine JSON-Evidence-Zeile je Lauf geht an `/var/lib/einfach-hausen/drill-evidence.jsonl`. Fehlende Archive/DB, SQLite-Korruption oder fehlgeschlagene Verifikation brechen laut mit Exit 1.
+
+Einrichtung (einmalig): `sudo cp deploy/einfach-hausen-drill.{service,timer} /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now einfach-hausen-drill.timer`. Der Service ruft das Skript per sudo auf (Backups sind root:0700 aus Datenschutzgründen); dafür ist eine sudoers-Regel nötig: `ubuntu ALL=(root) NOPASSWD: /srv/einfach-hausen/scripts/t0124-backup-drill.sh` in `/etc/sudoers.d/eh-backup-drill`. Solange die Regel fehlt, läuft der Drill manuell per `sudo npm run test:backup-drill`.
