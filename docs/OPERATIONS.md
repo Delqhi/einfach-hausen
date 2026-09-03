@@ -161,3 +161,19 @@ Check-Mode periodisch eine Browser-Auth erzwang und Deployments blockierte.
 - Auth: SSH-Key (id_ed25519) - kein Tailscale Browser-Login mehr nötig
 - Wenn Tailscale SSH wieder aktiviert werden soll: `sudo tailscale set --ssh=true`
   (ACHTUNG: nur über Port 2222 verbinden, sonst Session-Abbruch)
+
+## SLO probes and alerting (T-0123)
+
+`scripts/t0123-slo-probes.mjs` (`npm run test:slo`) runs five component-local probes and emits one JSON line per probe plus a summary line, each carrying a `correlation_id` for joining with app logs:
+
+| Probe | Component | Target |
+|---|---|---|
+| `web_health` | App + SQLite | `/api/health` 200 `ok:true` with `database=ready` within 3s |
+| `web_homepage` | Landing render | `/` returns 200 within 5s |
+| `auth_authority` | SIN Supabase OSS | GoTrue answers (<500) within 3s |
+| `dispatch_fresh` | Notification outbox dispatcher | run evidence within 15 min (journald) or timer active |
+| `backup_fresh` | Backup pipeline | newest backup evidence within 48h |
+
+Exit code is non-zero when any probe breaches. `SLO_BASE_URL` retargets the run (default `http://127.0.0.1:3010`).
+
+Alert path without a new platform: `deploy/kestra/einfach-hausen-slo*.yml` schedules the probes every 15 minutes through the existing Kestra instance; a breach fails the Kestra execution (visible in execution history/API) and the probe JSON lines land in the Kestra task logs with the failing component name and correlation id. On the host, the same evidence is in journald, so `journalctl -u einfach-hausen-dispatch` and probe lines share correlation ids.
