@@ -1,42 +1,72 @@
-import { MarketingShell } from '@/components/marketing/site-shell';
-
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
+import { MarketingShell } from '@/components/marketing/site-shell';
+import { PageHero, Section, LegalNotice, LinkButton } from '@/components/marketing/ui';
 
-export const metadata: Metadata = { title: 'Datenschutzerklärung', description: 'Datenschutzerklärung von Einfach Hausen: welche Daten verarbeitet werden, wo sie liegen und welche Rechte du hast.', alternates: { canonical: canonical('/datenschutz') } };
+export const metadata: Metadata = { 
+  title: 'Datenschutzerklärung', 
+  description: 'Datenschutzerklärung von Einfach Hausen: Welche Daten verarbeitet werden, wie sie geschützt sind und deine Rechte.', 
+  alternates: { canonical: canonical('/datenschutz') } 
+};
 
-const sections: ReadonlyArray<[string, string]> = [
-  ["1. Verantwortlicher", "Dein Name / Firma, Adresse, E-Mail: datenschutz@deine-domain.de"],
-  ["2. Datenverarbeitung", "Wir verarbeiten: Name, E-Mail-Adresse, Telefonnummer, PLZ/Ort, Inhalte deiner Anfragen und Nachrichten sowie hochgeladene Fotos. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung)."],
-  ["3. Hosting", "Die App wird auf eigenen Servern (Oracle Cloud Infrastructure, Rechenzentrum EU) betrieben. Daten verlassen die EU nicht."],
-  ["4. KI-Assistent", "Nachrichten an den KI-Assistenten werden zur Beantwortung an OpenAI (USA, EU-Standardvertragsklauseln) übermittelt. Bitte teile dort keine besonders sensiblen personenbezogenen Daten mit."],
-  ["5. Deine Rechte", "Auskunft, Berichtigung, Loeschung, Datenuebertragbarkeit, Widerspruch: datenschutz@deine-domain.de. Beschwerderecht bei der zuständigen Aufsichtsbehörde."],
-  ["6. Speicherdauer", "Daten werden gelöscht, wenn du dein Konto löschst oder gesetzliche Aufbewahrungsfristen (z. B. 10 Jahre fuer Rechnungen) abgelaufen sind."],
+const SECTIONS = [
+  {
+    title: '1. Verantwortliche Stelle',
+    content: 'Verantwortlich für die Datenverarbeitung auf dieser Plattform ist der Betreiber von Einfach Hausen. Anfragen zum Datenschutz richtest du direkt über das Kundenportal oder an datenschutz@einfachhausen.de.'
+  },
+  {
+    title: '2. Zweck und Umfang der Datenverarbeitung',
+    content: 'Wir verarbeiten personenbezogene Daten (z. B. Name, E-Mail-Adresse, Postleitzahl, Objektdaten, Anfragetexte und Schadensfotos) ausschließlich zur Bereitstellung der Plattformfunktionen, der digitalen Hausakte und zur Vermittlung regionaler Fachbetriebe (Art. 6 Abs. 1 lit. b DSGVO).'
+  },
+  {
+    title: '3. Infrastruktur und Serverstandort',
+    content: 'Die gesamte Plattform-Infrastruktur wird auf abgesicherten Servern innerhalb der Europäischen Union betrieben. Personenbezogene Daten verlassen den EU-Rechtsraum nicht ohne ausdrückliche Rechtsgrundlage.'
+  },
+  {
+    title: '4. KI-Hausmeister und Assistenzfunktionen',
+    content: 'Der integrierte Assistent unterstützt bei der präzisen Formulierung von Anfragen und der Gewerke-Zuordnung. Bitte übermittle in Freitextfeldern keine hochsensiblen Daten. Daten werden nicht für Drittanbieter-Trainingszwecke zweckentfremdet.'
+  },
+  {
+    title: '5. Rechte betroffener Personen',
+    content: 'Du hast jederzeit das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung sowie Datenübertragbarkeit deiner gespeicherten Hausdaten (DSGVO Art. 15–21). Die Hausakte kann jederzeit vollständig exportiert werden.'
+  },
+  {
+    title: '6. Speicherdauer und Löschung',
+    content: 'Daten werden gelöscht, sobald sie für den Erhebungszweck nicht mehr erforderlich sind oder du dein Konto löschst – vorbehaltlich gesetzlicher Aufbewahrungspflichten (z. B. für Rechnungsbelege).'
+  }
 ];
 
-export default function DatenschutzPage() {
+export default function Page() {
   return (
     <MarketingShell>
-    <main style={{ maxWidth: 720, margin: "0 auto", padding: "72px 20px 96px" }}>
-      <span style={{ display: "inline-flex", fontSize: 11.5, fontWeight: 750, letterSpacing: ".09em", textTransform: "uppercase", color: "#105258", background: "#edf5f5", borderRadius: 999, padding: "5px 12px" }}>Rechtliches</span>
-      <h1 style={{ fontSize: "clamp(30px,4vw,42px)", fontWeight: 700, letterSpacing: "-.03em", margin: "16px 0 28px", color: "#1c2129" }}>Datenschutzerklärung</h1>
+      <PageHero
+        eyebrow="Datenschutz"
+        title="Deine Hausdaten gehören dir. Punkt."
+        text="Wir behandeln Angaben zu deinem Zuhause, Rechnungen und Dokumenten mit höchster Vertraulichkeit. Keine Weitergabe ohne deine bewusste Freigabe."
+      />
 
-      <div style={{ background: "#fffbe8", border: "1px solid #f0e3b8", borderRadius: 14, padding: "16px 18px", marginBottom: 32 }}>
-        <strong style={{ fontSize: 13, color: "#6b5a1f" }}>Platzhalter - Freigabe ausstehend</strong>
-        <p style={{ margin: "6px 0 0", fontSize: 13.5, lineHeight: 1.6, color: "#6b5a1f" }}>
-          Diese Erklärung ist ein Platzhalter. Die finale, rechtlich freigegebene Datenschutzerklaerung wird nach Verifizierung veröffentlicht (externer Launch-Blocker).
-        </p>
-      </div>
+      <Section eyebrow="Transparenz" title="Datenschutzhinweise nach DSGVO.">
+        <div style={{ display: 'grid', gap: '28px', maxWidth: '800px', margin: '0 auto' }}>
+          {SECTIONS.map((sec) => (
+            <div key={sec.title} style={{ padding: '24px', background: '#ffffff', borderRadius: '20px', border: '1px solid #e4e2dc' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#10222a', margin: '0 0 10px 0', letterSpacing: '-0.02em' }}>
+                {sec.title}
+              </h3>
+              <p style={{ fontSize: '15px', color: '#4b5b60', lineHeight: 1.65, margin: 0 }}>
+                {sec.content}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Section>
 
-      {sections.map(([title, text]) => (
-        <section key={title} style={{ marginBottom: 26 }}>
-          <h2 style={{ fontSize: 17, fontWeight: 700, letterSpacing: "-.02em", marginBottom: 8, color: "#1c2129" }}>{title}</h2>
-          <p style={{ margin: 0, fontSize: 15, lineHeight: 1.75, color: "#33484f" }}>{text}</p>
-        </section>
-      ))}
-
-      <p style={{ marginTop: 32, fontSize: 12.5, color: "#8a9793" }}>Stand: {new Date().toLocaleDateString("de-DE")}</p>
-    </main>
+      <Section tone="soft" eyebrow="Rechtliche Navigation" title="Weitere Angaben">
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          <LinkButton href="/impressum">Impressum</LinkButton>
+          <LinkButton href="/sicherheit" secondary>Sicherheitsstandards</LinkButton>
+          <LinkButton href="/agb" secondary>AGB</LinkButton>
+        </div>
+      </Section>
     </MarketingShell>
   );
 }

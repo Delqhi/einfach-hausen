@@ -1,40 +1,57 @@
-import { MarketingShell } from '@/components/marketing/site-shell';
-
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
+import { MarketingShell } from '@/components/marketing/site-shell';
+import { PageHero, Section, LegalNotice, LinkButton } from '@/components/marketing/ui';
 
-export const metadata: Metadata = { title: 'Impressum', description: 'Anbieterkennzeichnung von Einfach Hausen nach § 5 TMG.', alternates: { canonical: canonical('/impressum') } };
+export const metadata: Metadata = { 
+  title: 'Impressum', 
+  description: 'Anbieterkennzeichnung von Einfach Hausen nach § 5 DDG.', 
+  alternates: { canonical: canonical('/impressum') } 
+};
 
-export default function ImpressumPage() {
+export default function Page() {
   return (
     <MarketingShell>
-    <main style={{ maxWidth: 720, margin: "0 auto", padding: "72px 20px 96px" }}>
-      <span style={{ display: "inline-flex", fontSize: 11.5, fontWeight: 750, letterSpacing: ".09em", textTransform: "uppercase", color: "#105258", background: "#edf5f5", borderRadius: 999, padding: "5px 12px" }}>Rechtliches</span>
-      <h1 style={{ fontSize: "clamp(30px,4vw,42px)", fontWeight: 700, letterSpacing: "-.03em", margin: "16px 0 28px", color: "#1c2129" }}>Impressum</h1>
+      <PageHero
+        eyebrow="Rechtliches"
+        title="Impressum &amp; Anbieterkennzeichnung"
+        text="Angaben gemäß § 5 des Digitale-Dienste-Gesetzes (DDG)."
+      />
 
-      <div style={{ background: "#fffbe8", border: "1px solid #f0e3b8", borderRadius: 14, padding: "16px 18px", marginBottom: 32 }}>
-        <strong style={{ fontSize: 13, color: "#6b5a1f" }}>Platzhalter - Freigabe ausstehend</strong>
-        <p style={{ margin: "6px 0 0", fontSize: 13.5, lineHeight: 1.6, color: "#6b5a1f" }}>
-          Die folgenden Angaben sind Platzhalter. Verbindliche Betreiberdaten werden erst nach rechtlicher Freigabe veröffentlicht (externer Launch-Blocker, siehe docs/EXTERNAL-BLOCKERS.md).
-        </p>
-      </div>
+      <Section eyebrow="Anbieter" title="Verantwortlicher Betreiber der Plattform.">
+        <div style={{ maxWidth: '800px', margin: '0 auto', display: 'grid', gap: '24px' }}>
+          <div style={{ padding: '28px', background: '#ffffff', borderRadius: '20px', border: '1px solid #e4e2dc' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#10222a', margin: '0 0 12px 0' }}>Einfach Hausen</h3>
+            <p style={{ fontSize: '15px', color: '#4b5b60', lineHeight: 1.7, margin: 0 }}>
+              <strong>Betreiber:</strong> Jeremy Schulze / Einfach Hausen<br />
+              <strong>Kontakt:</strong> info@einfachhausen.de<br />
+              <strong>Plattform:</strong> Vermittlungs- und Organisationsportal für Eigenheimbesitzer &amp; regionale Handwerksbetriebe.
+            </p>
+          </div>
 
-      <section style={{ marginBottom: 32 }}>
-        <h2 style={{ fontSize: 19, fontWeight: 700, letterSpacing: "-.02em", marginBottom: 12, color: "#1c2129" }}>Anbieterkennzeichnung nach § 5 TMG</h2>
-        <div style={{ fontSize: 15, lineHeight: 1.75, color: "#33484f" }}>
-          <p style={{ margin: "0 0 12px" }}>Deine Firma / Name<br/>Musterstraße 1<br/>12345 Musterstadt<br/>E-Mail: info@deine-domain.de<br/>Telefon: +49 123 456789</p>
-          <p style={{ margin: "0 0 12px" }}>Vertreten durch: Dein Name, Geschäftsführer</p>
-          <p style={{ margin: 0 }}>Registereintrag: Amtsgericht Musterstadt, HRB 12345<br/>USt-IdNr.: DE123456789</p>
+          <div style={{ padding: '28px', background: '#ffffff', borderRadius: '20px', border: '1px solid #e4e2dc' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#10222a', margin: '0 0 12px 0' }}>Haftung für Inhalte und Links</h3>
+            <p style={{ fontSize: '15px', color: '#4b5b60', lineHeight: 1.7, margin: 0 }}>
+              Als Diensteanbieter sind wir gemäß den allgemeinen Gesetzen für eigene Inhalte auf diesen Seiten verantwortlich. Für externe Links zu Webseiten Dritter übernehmen wir keine Gewähr, da auf deren Inhalte kein Einfluss besteht. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
+            </p>
+          </div>
+
+          <div style={{ padding: '28px', background: '#ffffff', borderRadius: '20px', border: '1px solid #e4e2dc' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#10222a', margin: '0 0 12px 0' }}>Urheberrecht</h3>
+            <p style={{ fontSize: '15px', color: '#4b5b60', lineHeight: 1.7, margin: 0 }}>
+              Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+            </p>
+          </div>
         </div>
-      </section>
+      </Section>
 
-      <section style={{ marginBottom: 24 }}>
-        <h2 style={{ fontSize: 19, fontWeight: 700, letterSpacing: "-.02em", marginBottom: 12, color: "#1c2129" }}>Haftung für externe Links</h2>
-        <p style={{ margin: 0, fontSize: 15, lineHeight: 1.75, color: "#33484f" }}>Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links.</p>
-      </section>
-
-      <p style={{ marginTop: 32, fontSize: 12.5, color: "#8a9793" }}>Stand: {new Date().toLocaleDateString("de-DE")}</p>
-    </main>
+      <Section tone="soft" eyebrow="Rechtliche Navigation" title="Weitere Angaben">
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          <LinkButton href="/datenschutz">Datenschutzerklärung</LinkButton>
+          <LinkButton href="/agb" secondary>AGB</LinkButton>
+          <LinkButton href="/kontakt" secondary>Kontakt &amp; Support</LinkButton>
+        </div>
+      </Section>
     </MarketingShell>
   );
 }
