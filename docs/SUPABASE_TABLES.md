@@ -90,6 +90,11 @@ curl -s -A 'Mozilla/5.0' "$SUPABASE_URL/rest/v1/anfragen?select=*&limit=1" \
 ## 5) Code-Seite
 
 Seiten mit leer-schluckendem `catch` (bleiben still leer) verweisen per Kommentar
-auf `db/supabase-tables.sql`; **keine Logik geaendert**:
+auf `db/supabase-tables.sql`; Chat-Page zusaetzlich auf `anfrage_messages` umgepointet (Commit b127984).
+
+## 6) Backup (Stand 2026-09-03, OCI)
+- Nightly `pg_dump --data-only` (custom): `/home/ubuntu/backup-sin-supabase.sh`, Cron 03:30, Rotation 7 Tage unter `/home/ubuntu/backups/sin-supabase/`.
+- Warum data-only: `pg_dump` mit Schema segfaultet im Container (pg 15.8, rc=139). Schema liegt versioniert vor: `/opt/sin-supabase` Init-Skripte + Repo-`db/supabase-tables.sql`.
+- Restore: Schema aufsetzen, dann `pg_restore --disable-triggers` (zirkulaere FKs anderer SIN-DBs im Cluster beachten).
 `src/app/chat/[anfrageId]/page.tsx`, `src/app/ansprechpartner/page.tsx`,
 `src/app/anfrage/[id]/page.tsx`. `npm run lint` nach den Kommentar-Edits.
