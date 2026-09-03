@@ -477,7 +477,7 @@ for(let attempt=0;attempt<3&&!loggedIn;attempt++){
   let enabled=false;
   try{ await tech.waitForFunction(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('Anmelden'));return b&&!b.disabled;},{timeout:8000}); enabled=true; }catch{}
   if(enabled){
-    await Promise.all([tech.waitForURL('**/pro',{timeout:60000}).catch(e=>{ throw new Error('post-click nav failed: '+tech.url()+' | errbox='+'(see page)'); }),loginButton.click()]);
+    await Promise.all([tech.waitForURL('**/pro',{timeout:60000}).catch(async(e)=>{ await tech.waitForTimeout(1500); const errbox=await tech.locator('[role="alert"]').textContent().catch(()=>'(no alert)'); throw new Error('post-click nav failed: '+tech.url()+' | errbox='+errbox); }),loginButton.click()]);
     loggedIn=true;
     const sbCookies=await techCtx.cookies(base+'/app');
     console.error('E2EDIAG sb cookies after login:',JSON.stringify(sbCookies.map(c=>c.name)));

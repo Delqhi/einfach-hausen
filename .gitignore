@@ -76,4 +76,5 @@ __pycache__/
 /einfach-hausen/
 # generated index / cache
 /next-env.d.ts
+/.e2e-keys.env
 *.tsbuildinfo
