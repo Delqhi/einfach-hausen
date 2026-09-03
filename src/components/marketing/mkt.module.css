@@ -35,13 +35,22 @@
 /* ---------- Header ---------- */
 .header {
   position: sticky; top: 0; z-index: 60;
-  background: color-mix(in srgb, var(--eh-canvas) 88%, transparent);
+  /* rgb()/alpha instead of color-mix(..., transparent): Chromium renders the
+     latter fully transparent, which let dark sections bleed through the nav. */
+  background: rgb(250 248 244 / .88); /* --eh-canvas */
   backdrop-filter: blur(14px) saturate(1.2);
   -webkit-backdrop-filter: blur(14px) saturate(1.2);
   border-bottom: 1px solid transparent;
-  transition: border-color .25s ease, background .25s ease;
+  transition: border-color .25s ease, background .25s ease, box-shadow .25s ease;
 }
-.header[data-scrolled='true'] { border-bottom-color: var(--eh-line); }
+/* Scrolled: near-opaque so dark sections/headlines no longer bleed through the nav. */
+.header[data-scrolled='true'] {
+  /* Solid on scroll: Chromium skips semi-transparent sticky backgrounds above
+     transformed (GSAP) layers, so alpha here would let dark bands bleed through. */
+  background: var(--eh-canvas);
+  border-bottom-color: var(--eh-line);
+  box-shadow: 0 10px 30px -22px rgba(6, 21, 34, .45);
+}
 .headerInner {
   composes: container;
   height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px;
@@ -244,7 +253,7 @@
 .stickyBar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
   padding: 10px var(--eh-gutter) calc(10px + env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--eh-surface) 92%, transparent);
+  background: rgb(255 255 255 / .92); /* --eh-surface; see .header note on color-mix */
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-top: 1px solid var(--eh-line);
   transform: translateY(110%); transition: transform .3s ease;
