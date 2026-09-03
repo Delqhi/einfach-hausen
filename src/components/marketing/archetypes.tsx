@@ -9,7 +9,7 @@ export { styles as arch };
 /**
  * Seiten-Archetypen (UI-Convergence Welle 2).
  *
- * Vorher folgte fast jede oeffentliche Unterseite demselben Ablauf: Hero,
+ * Vorher folgte fast jede öffentliche Unterseite demselben Ablauf: Hero,
  * Mockup, Kartenraster, Statement, FAQ, CTA-Band. Sauber, aber monoton.
  * Diese Datei liefert vier klar unterschiedliche Dramaturgien, die alle aus
  * demselben Token-System kommen:
@@ -25,6 +25,18 @@ export { styles as arch };
 
 export function Kicker({ children, terra = false }: { children: ReactNode; terra?: boolean }) {
   return <span className={terra ? styles.kickerTerra : styles.kicker}>{children}</span>;
+}
+
+/** Gemeinsamer Abschnittskopf: schmale Spalte, links ausgerichtet. */
+function Head({ eyebrow, title, text, terra = false }: { eyebrow?: string; title?: string; text?: ReactNode; terra?: boolean }) {
+  if (!eyebrow && !title && !text) return null;
+  return (
+    <div className={styles.spineHead}>
+      {eyebrow && <Kicker terra={terra}>{eyebrow}</Kicker>}
+      {title && <h2>{title}</h2>}
+      {text && <p>{text}</p>}
+    </div>
+  );
 }
 
 /* ------------------------------------------------------------ A  Index */
@@ -256,11 +268,7 @@ export function Spine({ eyebrow, title, text, records }: {
   return (
     <section className={styles.spineSection}>
       <div className={styles.wrap}>
-        <div className={styles.spineHead}>
-          <Kicker>{eyebrow}</Kicker>
-          <h2>{title}</h2>
-          {text && <p>{text}</p>}
-        </div>
+        <Head eyebrow={eyebrow} title={title} text={text} />
         <ol className={styles.spine}>
           {records.map((record, i) => (
             <li className={styles.record} key={record.title}>
@@ -349,13 +357,17 @@ export function TermsFigure({ src, alt, caption }: { src: string; alt: string; c
   );
 }
 
-export function Clauses({ items, id }: {
+export function Clauses({ items, id, eyebrow, title, text }: {
   id?: string;
+  eyebrow?: string;
+  title?: string;
+  text?: ReactNode;
   items: ReadonlyArray<{ title: string; body: ReactNode }>;
 }) {
   return (
     <section className={styles.clauseSection} id={id}>
       <div className={styles.wrap}>
+        <Head eyebrow={eyebrow} title={title} text={text} />
         <ol className={styles.clauseList}>
           {items.map((item, i) => (
             <li className={styles.clause} key={item.title}>
@@ -401,9 +413,9 @@ export function Gate({ eyebrow, title, text, items, id }: {
   );
 }
 
-/* ------------------------------------------------------ gemeinsam */
+/* ------------------------------------------------------------ gemeinsam */
 
-/** FAQ-Rahmen: links ausgerichtet statt zentriert unter einer Ueberschrift. */
+/** FAQ-Rahmen: links ausgerichtet statt zentriert unter einer Überschrift. */
 export function FaqFrame({ eyebrow, title, text, children }: {
   eyebrow: string;
   title: string;
@@ -424,7 +436,7 @@ export function FaqFrame({ eyebrow, title, text, children }: {
   );
 }
 
-/** Leiser Abschluss fuer Seiten, die nicht noch ein dunkles CTA-Band brauchen. */
+/** Leiser Abschluss für Seiten, die nicht noch ein dunkles CTA-Band brauchen. */
 export function QuietClose({ title, text, actions }: { title: string; text: string; actions: ReactNode }) {
   return (
     <section className={styles.closer}>
