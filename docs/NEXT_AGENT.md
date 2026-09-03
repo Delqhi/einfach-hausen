@@ -1,10 +1,10 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-03 ~00:55 UTC · main = d0cf05a (Produktion = bda08b4, Smoke 17/17) · T-0210/T-0211/T-0120..T-0128 abgeschlossen · Premium-Redesign ist LIVE**
+**Status 2026-09-03 ~00:59 UTC · Produktion = main = 256d032 (Gate 11/11, Smoke 17/17, SLO 5/5) · T-0210/T-0211/T-0120..T-0128 abgeschlossen und DEPLOYED**
 
 ## GENAU EINE nächste Aktion
 
-**T-0120..T-0128 abgeschlossen: Security-Fuzz, Supply-Chain-Gate, Observability, SLO-Probes, Backup-Drill, typed Feature-Flags, Admin-Ops-Console (Dead-Letter-Retry) und Privacy-Export/-Closure-Workflow sind live. Genau eine nächste Aktion: Deploy der angesammelten Security/Obs/Privacy-Commits (bash deploy/update-on-oci.sh → Gate → Smoke), danach nächste eligible Aufgabe laut Taskplan (T-0129/T-0130 blocken auf T-0126, das jetzt done ist).**
+**Alle Security/Obs/Privacy-Commits sind DEPLOYED (Gate 11/11, Smoke 17/17, SLO-Probes 5/5). Genau eine nächste Aktion: T-0129 (Browser-E2E-Suite v2) oder T-0130 (Visual-Canonicals) - beide sind durch T-0126 entblockt; T-0131 final convergence wartet auf beide.**
 
 1. Abgeschlossen: T-0210 (Premium-Redesign) + T-0211 (App-Promo) — Merge 9356305, Gate-Fixes (intakeGhost-Kontrast, un-layered a{color}-Regeln → @layer base, Commits 893fb3f/363068e/bda08b4), Release-Gate 11/11, Deploy, Smoke 17/17, Preview abgeschaltet (einfach-hausen-preview + cloudflared-eh-preview sind disabled; Tunnel-Domain liefert 502, das ist gewollt).
 2. Rollback-Pfade: Branch `website-original` (7962d6d = main vor Redesign) lokal+GitHub; Archive-Tags `archive/*` für alte WIP-Branches; Revert von 9356305 möglich.
