@@ -105,11 +105,13 @@ function spawnConcurrently(count, codeFactory, extraEnv = {}) {
   for (let i = 0; i < count; i++) {
     children.push(new Promise((resolve) => {
       const proc = spawn(process.execPath, ['--input-type=module', '-e', codeFactory(i)], {
-        env: childEnv(extraEnv), stdio: ['ignore', 'ignore', 'pipe'],
+        env: childEnv(extraEnv), stdio: ['ignore', 'pipe', 'pipe'],
       });
+      let stdout = '';
       let stderr = '';
+      proc.stdout.on('data', (d) => { stdout += d; });
       proc.stderr.on('data', (d) => { stderr += d; });
-      proc.on('close', (code) => resolve({ code, stderr }));
+      proc.on('close', (code) => resolve({ code, stdout, stderr }));
     }));
   }
   return Promise.all(children);
@@ -565,7 +567,7 @@ console.log('\n[Migration] Fresh-start reliability under parallel module evaluat
   `, { DATABASE_PATH: freshDbPath });
   const okBootstraps = results.filter(r => r.code === 0).length;
   check('parallel first-boot workers all succeed (no fatal SQLITE_BUSY)', okBootstraps === 6,
-    results.map(r => r.code !== 0 ? r.stderr.split('\n').slice(-3).join('; ') : '').filter(Boolean).join(' | '));
+    results.map(r => r.code !== 0 ? `code=${r.code} out=[${r.stdout.split('\n').slice(-3).join('; ')}] err=[${r.stderr.split('\n').slice(-3).join('; ')}]` : '').filter(Boolean).join(' | '));
 }
 
 console.log(`\n${passed} passed, ${failures.length} failed`);

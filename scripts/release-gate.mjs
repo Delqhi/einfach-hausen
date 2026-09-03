@@ -86,7 +86,9 @@ function staticGates() {
   log('\n== Layer 1: static gates ==');
   const lint = run('npm', ['run', 'lint']);
   record('lint', lint.ok, lint.ok ? '' : (lint.output || '').slice(-400));
-  const types = run('npx', ['tsc', '--noEmit']);
+  // tsc via direct .bin path: bare `npx` depends on the caller's PATH
+  // (macOS zsh hard-PATH has no npx -> ENOENT with empty output, T-0131).
+  const types = run(path.join(root, 'node_modules', '.bin', 'tsc'), ['--noEmit']);
   record('types (tsc --noEmit)', types.ok, types.ok ? '' : (types.output || '').slice(-400));
   const security = run('npm', ['run', 'test:security']);
   record('security regressions', security.ok, security.ok ? '' : (security.output || '').slice(-400));
