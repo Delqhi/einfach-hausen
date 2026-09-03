@@ -16,6 +16,15 @@ import { spawn } from 'node:child_process';
 import { chromium } from 'playwright-core';
 
 const root = process.cwd();
+// Hermetic runtime: every npm-spawned child (shebang #!/usr/bin/env node)
+// must resolve the SAME interpreter as this gate. OCI carries a Node 20
+// /usr/bin/node next to the validated Node 22 dir; without the prepend,
+// children silently run on v20 (e.g. security-regression import crash).
+if (Number(process.versions.node.split('.')[0]) !== 22) {
+  console.error(`release-gate requires Node 22, running on ${process.version} (${process.execPath})`);
+  process.exit(2);
+}
+const RUNTIME_BIN_DIR = path.dirname(process.execPath);
 const fast = process.argv.includes('--fast');
 // Stage selection: --only=static|a11y|visual|perf (comma list). Default: all.
 const onlyArg = (process.argv.find((arg) => arg.startsWith('--only=')) || '').replace('--only=', '');
@@ -32,7 +41,9 @@ function record(name, ok, detail = '') {
 function run(cmd, args, env = {}, label = cmd) {
   log(`  > ${label} ${args.join(' ')}`);
   try {
-    execFileSync(cmd, args, { cwd: root, env: { ...process.env, ...env }, stdio: ['ignore', 'pipe', 'pipe'], timeout: 600000 });
+    const childEnv = { ...process.env, ...env };
+    childEnv.PATH = `${RUNTIME_BIN_DIR}${path.delimiter}${childEnv.PATH || ''}`;
+    execFileSync(cmd, args, { cwd: root, env: childEnv, stdio: ['ignore', 'pipe', 'pipe'], timeout: 600000 });
     return { ok: true };
   } catch (error) {
     return { ok: false, output: String(error.stdout || '') + String(error.stderr || '') };
