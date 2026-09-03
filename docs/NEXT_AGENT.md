@@ -1,10 +1,10 @@
 # NEXT AGENT — Start here
 
-**Status 2026-09-03 ~00:46 UTC · main = a08c428 (Produktion = bda08b4, Smoke 17/17) · T-0210/T-0211/T-0120..T-0126 abgeschlossen · Premium-Redesign ist LIVE**
+**Status 2026-09-03 ~00:55 UTC · main = d0cf05a (Produktion = bda08b4, Smoke 17/17) · T-0210/T-0211/T-0120..T-0128 abgeschlossen · Premium-Redesign ist LIVE**
 
 ## GENAU EINE nächste Aktion
 
-**T-0120..T-0126 abgeschlossen: Security-Fuzz, Supply-Chain-Gate, Observability, SLO-Probes, Backup-Drill, typed Feature-Flags und Admin-Ops-Console (inkl. auditiertem Dead-Letter-Retry) sind live. Genau eine nächste Aktion: nächste priorisierte, eligible Aufgabe aus dem Taskplan übernehmen (T-0127 Privacy-Datenexport ist High-Nachfolger; prüfe via sin-gpt-web-state list).**
+**T-0120..T-0128 abgeschlossen: Security-Fuzz, Supply-Chain-Gate, Observability, SLO-Probes, Backup-Drill, typed Feature-Flags, Admin-Ops-Console (Dead-Letter-Retry) und Privacy-Export/-Closure-Workflow sind live. Genau eine nächste Aktion: Deploy der angesammelten Security/Obs/Privacy-Commits (bash deploy/update-on-oci.sh → Gate → Smoke), danach nächste eligible Aufgabe laut Taskplan (T-0129/T-0130 blocken auf T-0126, das jetzt done ist).**
 
 1. Abgeschlossen: T-0210 (Premium-Redesign) + T-0211 (App-Promo) — Merge 9356305, Gate-Fixes (intakeGhost-Kontrast, un-layered a{color}-Regeln → @layer base, Commits 893fb3f/363068e/bda08b4), Release-Gate 11/11, Deploy, Smoke 17/17, Preview abgeschaltet (einfach-hausen-preview + cloudflared-eh-preview sind disabled; Tunnel-Domain liefert 502, das ist gewollt).
 2. Rollback-Pfade: Branch `website-original` (7962d6d = main vor Redesign) lokal+GitHub; Archive-Tags `archive/*` für alte WIP-Branches; Revert von 9356305 möglich.
@@ -477,4 +477,18 @@ task: T-0126
 updated: 2026-09-03T00:45:23+00:00
 actor: local-agent
 evidence-sha256: 1acbbc8c9d9ec3b87035c8d0521fa2c3622fa697e6d719310f61795b15fda6e8
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0127
+updated: 2026-09-03T00:51:39+00:00
+actor: local-agent
+evidence-sha256: 0640af1175d4cd871685513652419379eec835cf543aed5dfc69b0bfcadc4a29
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0128
+updated: 2026-09-03T00:54:04+00:00
+actor: local-agent
+evidence-sha256: 52a6748748dfe2d958322ba6584bcd9e8cd8284ed731054bf7f3d48948bf4d4a
 -->
