@@ -314,7 +314,7 @@ await clickAndWaitUrl(manager,manager.getByRole('button',{name:'Zur Prüfung ein
 const adminCtx=await newE2EContext({viewport:{width:1180,height:1000}}); const admin=await adminCtx.newPage(); trackPage(admin,'admin');
 await nav(admin, base+'/admin/login'); await admin.getByLabel('Admin-Passwort').fill(adminPassword);
 await Promise.all([admin.waitForURL('**/admin'),admin.getByRole('button',{name:'Admin anmelden'}).click()]);
-await admin.getByRole('heading',{name:'Betriebsübersicht'}).waitFor(); await waitText(admin,'Nutzer'); await waitText(admin,'Anfragen'); await waitText(admin,'Bookings'); await waitText(admin,'Matching'); await waitText(admin,'Benachrichtigungen'); await admin.getByRole('heading',{name:'Bewertungen'}).waitFor();
+await admin.getByRole('heading',{name:'Betriebsübersicht'}).waitFor(); await waitText(admin,'Nutzer'); await waitText(admin,'Anfragen'); await waitText(admin,'Bookings'); await waitText(admin,'MATCHING'); await waitText(admin,'BENACHRICHTIGUNGEN'); await admin.getByRole('heading',{name:'Bewertungen'}).waitFor();
 let companyCard=admin.locator('.admin-card').filter({hasText:'Gartenbau Müller'}).first();
 await clickServerAction(admin,companyCard.getByRole('button',{name:'Unternehmen freigeben'}));
 try { await companyCard.locator('.status.approved').waitFor({timeout:30000}); } catch(e) {

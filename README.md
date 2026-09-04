@@ -14,7 +14,7 @@ Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PROD
 
 Alle Agents arbeiten in diesem Repository **am selben Ziel**. Es gibt keinen zweiten Engineering-Taskplan in README, Issues oder Worker-Reports. Der verbindliche Einstieg ist [`docs/NEXT_AGENT.md`](docs/NEXT_AGENT.md); der transaktionale Taskstatus liegt in `.sin-gpt-web/taskplan.sqlite3` und wird nach `.sin-gpt-web/TASKPLAN.md` gerendert.
 
-Aktueller Endpfad: **T-0171 Final Convergence abgeschlossen (2026-08-29, deployed) → offen: T-0006 e2e Modernisierung**. Bereits erledigte oder abgelöste Wellen werden nicht erneut begonnen. Neue Implementierungsarbeit entsteht nur aus einem reproduzierbaren Acceptance-Fehler und wird als kanonischer Remediation-Task erfasst.
+Aktueller Endpfad: **T-0131 Convergence abgeschlossen (2026-09-03, `3fbe3c9`) → main-HEAD `13496d7 feat(seo): GSC FILE verification token`**. Live verifiziert: UI-Wellen A-E, Supabase-App-Schema + RLS, öffentliche Demo-Logins, GSC-Verifikation sowie Blog/Lexikon-Cluster. Bereits erledigte oder abgelöste Wellen werden nicht erneut begonnen. Neue Implementierungsarbeit entsteht nur aus einem reproduzierbaren Acceptance-Fehler und wird als kanonischer Remediation-Task erfasst.
 
 ## Systemübersicht
 
