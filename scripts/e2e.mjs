@@ -165,7 +165,7 @@ async function clickAndWaitUrl(page,locator,matcher,timeout=30000){await Promise
 async function clickServerAction(page,locator,timeout=90000){let response;try{await Promise.all([page.waitForResponse(r=>r.request().method()==='POST',{timeout}),locator.click()]);}catch(error){throw new Error(`server action click failed: ${error.message.split('\n')[0]}\nserverLog tail:\n${serverLog.slice(-12).join('')}`,{cause:error});} await page.waitForLoadState('load').catch(()=>{}); await page.waitForTimeout(400);}
 // The production hydration window can briefly double-render a freshly navigated
 // document; register fields are filled only after the DOM settles to one input.
-async function fillRegisterField(page,name,value){await page.waitForFunction(n=>document.querySelectorAll(`input[name="${n}"]`).length===1,name,{timeout:20000});await page.locator(`input[name="${name}"]`).fill(value);}
+async function fillRegisterField(page,name,value){const field=page.locator(`input[name="${name}"]:visible`);await field.waitFor({timeout:20000});await field.fill(value);}
 async function sendHousemaster(page,text,matcher=null){const c=page.getByPlaceholder(/Beschreib kurz|Beantworte nur noch|Was soll draußen|Was ist kaputt|Was soll gereinigt|Wobei brauchst du/);await c.click();await c.pressSequentially(text,{delay:1});const button=page.locator('button.send-action:not([disabled])');if(matcher)await clickAndWaitUrl(page,button,matcher);else await clickServerAction(page,button);}
 
 createProjectCopy();
@@ -261,8 +261,13 @@ if(!(await publicPage.getByLabel('Vorname').count()))throw new Error('Owner regi
 if(!(await publicPage.locator('a[href="/login"]').count()))throw new Error('Landing Log in card missing');
 if(!(await publicPage.locator('input[name="password"]').count()))throw new Error('Owner registration missing Passwort field');
 if(!(await publicPage.getByLabel('Telefon').count()))throw new Error('Owner registration missing Telefon field');
-if(!(await publicPage.getByLabel('PLZ').count()))throw new Error('Owner registration missing PLZ field');
-if(!(await publicPage.getByRole('button',{name:'Konto erstellen'}).count()))throw new Error('Owner registration missing Konto erstellen action');
+await publicPage.getByLabel('Vorname').fill('Check'); await publicPage.getByLabel('Nachname').fill('Prüfer'); await publicPage.getByLabel('E-Mail').fill('check@example.de');
+await publicPage.locator('input[name="password"]').fill('CheckPass123');
+await publicPage.getByRole('button',{name:'Weiter'}).click();
+if(!(await publicPage.locator('label:has-text("PLZ"):visible').count()))throw new Error('Owner registration missing PLZ field');
+await publicPage.locator('input[name="postcode"]:visible').fill('46325');
+await publicPage.getByRole('button',{name:'Weiter'}).click();
+if(!(await publicPage.getByRole('button',{name:'Konto erstellen'}).isVisible()))throw new Error('Owner registration missing Konto erstellen action');
 await nav(publicPage, base+'/')
 const manifestResponse=await publicPage.request.get(base+'/manifest.webmanifest'); if(!manifestResponse.ok())throw new Error('PWA manifest unavailable');
 const manifest=await manifestResponse.json(); if(manifest.display!=='standalone'||!Array.isArray(manifest.icons)||manifest.icons.length<3)throw new Error('PWA manifest incomplete');
@@ -291,7 +296,10 @@ manager.on('pageerror',(e)=>pageErrors.push('pageerror: '+e.message));
 await nav(manager, base+'/register?role=provider')
 await fillRegisterField(manager,'firstName','Daniel'); await fillRegisterField(manager,'lastName','Müller');
 await fillRegisterField(manager,'email',providerEmail); await fillRegisterField(manager,'password',password);
-await fillRegisterField(manager,'businessName','Gartenbau Müller'); await fillRegisterField(manager,'trades','Garten, Grünpflege, Heckenschnitt, Hausmeister'); await fillRegisterField(manager,'postcode','46325'); await manager.getByLabel('Sofort buchbare Termine anbieten').check();
+await manager.getByRole('button',{name:'Weiter'}).click();
+await fillRegisterField(manager,'businessName','Gartenbau Müller'); await fillRegisterField(manager,'trades','Garten, Grünpflege, Heckenschnitt, Hausmeister'); await fillRegisterField(manager,'postcode','46325');
+await manager.getByRole('button',{name:'Weiter'}).click();
+await manager.getByLabel('Sofort buchbare Termine anbieten').check();
 await Promise.all([manager.waitForURL('**/pro'),manager.getByRole('button',{name:'Konto erstellen'}).click()]);
 await nav(manager, base+'/pro/profile')
 await manager.waitForLoadState('networkidle').catch(()=>{});
@@ -396,7 +404,7 @@ await thomasCard.getByLabel('Aufträge verwalten').uncheck(); await clickServerA
 // 3) Kunde startet beim Hausmeisterservice und entscheidet danach bewusst: Mensch oder Auftrag.
 const ownerCtx=await newE2EContext({viewport:{width:390,height:844}}); const owner=await ownerCtx.newPage(); trackPage(owner,'homeowner');
 await nav(owner, base+'/register?role=homeowner')
-await fillRegisterField(owner,'firstName','Maria'); await fillRegisterField(owner,'lastName','Test'); await fillRegisterField(owner,'email',ownerEmail); await fillRegisterField(owner,'password',password); await fillRegisterField(owner,'postcode','46325');
+await fillRegisterField(owner,'firstName','Maria'); await fillRegisterField(owner,'lastName','Test'); await fillRegisterField(owner,'email',ownerEmail); await fillRegisterField(owner,'password',password); await owner.getByRole('button',{name:'Weiter'}).click(); await fillRegisterField(owner,'postcode','46325'); await owner.getByRole('button',{name:'Weiter'}).click();
 await Promise.all([owner.waitForURL('**/app/onboarding'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
 await waitText(owner,'Damit Partner in deiner Region arbeiten können');
 // Resume works: leaving mid-onboarding and returning keeps the saved step.
@@ -411,7 +419,7 @@ await strictRetry(owner,()=>owner.getByRole('button',{name:'Überspringen'}).cli
 await Promise.all([owner.waitForURL('**/app?onboarding=done'),owner.waitForLoadState('load')]);
 if(await owner.locator('.owner-onboarding-banner').count())throw new Error('Onboarding banner shown after completion');
 await assertNoOverflow(owner,'Mobile customer app');
-await nav(owner, base+'/app'); await waitText(owner,'Frag einfachhausen'); await waitText(owner,'Als Nächstes'); await waitText(owner,'Schnelle Hilfe in dringenden Fällen');
+await nav(owner, base+'/app'); await waitText(owner,'Frag einfachhausen'); await waitText(owner,'Als Nächstes'); await waitText(owner,'Soforthilfe bei Rohrbruch');
 // Owner mobile navigation is the Notion drawer; the bottom tab bar is gone on owner mobile.
 const ownerDrawer=owner.locator('.mobile-menu');
 await ownerDrawer.locator('summary').click();
@@ -574,7 +582,7 @@ await nav(admin, base+`/admin/crm?q=${encodeURIComponent('Gartenbau Müller')}`)
 
 const buyerCtx=await newE2EContext({viewport:{width:390,height:844}}); const buyer=await buyerCtx.newPage(); trackPage(buyer,'homeowner-buyer');
 // 12a) First-run onboarding: guided steps, skippable optionals, resumable progress.
-await nav(buyer, base+'/register?role=homeowner'); await fillRegisterField(buyer,'firstName','Ben'); await fillRegisterField(buyer,'lastName','Käufer'); await fillRegisterField(buyer,'email',buyerEmail); await fillRegisterField(buyer,'password',password); await fillRegisterField(buyer,'postcode','46325'); await Promise.all([buyer.waitForURL('**/app/onboarding'),buyer.getByRole('button',{name:'Konto erstellen'}).click()]);
+await nav(buyer, base+'/register?role=homeowner'); await fillRegisterField(buyer,'firstName','Ben'); await fillRegisterField(buyer,'lastName','Käufer'); await fillRegisterField(buyer,'email',buyerEmail); await fillRegisterField(buyer,'password',password); await buyer.getByRole('button',{name:'Weiter'}).click(); await fillRegisterField(buyer,'postcode','46325'); await buyer.getByRole('button',{name:'Weiter'}).click(); await Promise.all([buyer.waitForURL('**/app/onboarding'),buyer.getByRole('button',{name:'Konto erstellen'}).click()]);
 await waitText(buyer,'Damit Partner in deiner Region arbeiten können');
 await buyer.getByLabel('Straße und Hausnummer').fill('Kaistraße 7');
 await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Weiter'}),/\/app\/onboarding$/);
