@@ -137,6 +137,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
           <button
             id="btn-header-help"
             type="button"
+            aria-label="Hilfe"
             onClick={() => {
               setShowHelpToast(true);
               setTimeout(() => setShowHelpToast(false), 3500);

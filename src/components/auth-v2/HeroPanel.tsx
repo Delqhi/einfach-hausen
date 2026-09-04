@@ -106,7 +106,7 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
               <span className="text-xs font-bold tracking-widest text-[var(--eh-text,#1c2129)] uppercase">
                 {content.eyebrow}
               </span>
-              <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-stone-500 font-medium">
+              <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-stone-600 font-medium">
                 <Sparkles className="w-3.5 h-3.5 text-[#E69E66]" />
                 <span>Deutschland</span>
               </span>
@@ -212,7 +212,7 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
                 <button
                   type="button"
                   onClick={() => onOpenLegalModal?.(content.link2.modalType)}
-                  className="inline-flex items-center gap-1.5 text-stone-500 hover:text-[var(--eh-text,#1c2129)] transition-colors cursor-pointer text-left text-xs sm:text-[12.5px] group"
+                  className="inline-flex items-center gap-1.5 text-stone-600 hover:text-[var(--eh-text,#1c2129)] transition-colors cursor-pointer text-left text-xs sm:text-[12.5px] group"
                 >
                   <span>{content.link2.text}</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

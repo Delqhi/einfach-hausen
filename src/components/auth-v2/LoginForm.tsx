@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 import { DEMO_PASSWORD, DEMO_USERS, demoEmailFor } from "@/lib/demo-accounts";
@@ -198,7 +199,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
             <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--eh-text,#1c2129)] shrink-0" />
             <span className="text-[11.5px] sm:text-[13px]">Offizielles Meisterportal</span>
           </div>
-          <span className="text-[10.5px] sm:text-xs text-stone-500 font-medium">
+          <span className="text-[10.5px] sm:text-xs text-stone-600 font-medium">
             {role === "kunde" ? "Kostenlos für Eigentümer" : "0 % Vermittlungsprovision"}
           </span>
         </div>
@@ -351,7 +352,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
                 id="btn-forgot-password"
                 type="button"
                 onClick={() => setIsForgotModalOpen(true)}
-                className="text-xs sm:text-sm text-[var(--eh-terra,#c8623a)] hover:text-[var(--eh-terra-deep,#a84d29)] font-semibold hover:underline focus:outline-none cursor-pointer transition-colors"
+                className="text-xs sm:text-sm text-[var(--eh-green-700,#105258)] hover:text-[var(--eh-green-900,#0a3539)] font-semibold hover:underline focus:outline-none cursor-pointer transition-colors"
               >
                 Passwort vergessen?
               </button>
@@ -362,7 +363,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
               id="btn-submit-login"
               type="submit"
               disabled={isLoading}
-              className="group relative w-full py-3 px-4 rounded-xl bg-[var(--eh-terra,#c8623a)] hover:bg-[var(--eh-terra-deep,#a84d29)] active:scale-[0.99] disabled:bg-[var(--eh-terra,#c8623a)]/80 disabled:cursor-not-allowed disabled:transform-none text-white font-bold text-sm sm:text-base shadow-[0_2px_8px_rgba(200,98,58,0.20)] hover:shadow-[0_6px_20px_rgba(200,98,58,0.28)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none"
+              className="group relative w-full py-3 px-4 rounded-xl bg-[var(--eh-terra-deep,#a84d29)] hover:bg-[#8a3f22] active:scale-[0.99] disabled:bg-[var(--eh-terra,#c8623a)]/80 disabled:cursor-not-allowed disabled:transform-none text-white font-bold text-sm sm:text-base shadow-[0_2px_8px_rgba(200,98,58,0.20)] hover:shadow-[0_6px_20px_rgba(200,98,58,0.28)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
@@ -469,7 +470,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
               id="btn-submit-register"
               type="submit"
               disabled={isLoading}
-              className="group relative w-full py-3.5 px-4 rounded-xl bg-[var(--eh-terra,#c8623a)] hover:bg-[var(--eh-terra-deep,#a84d29)] active:scale-[0.99] disabled:bg-[var(--eh-terra,#c8623a)]/80 disabled:cursor-not-allowed disabled:transform-none text-white font-bold text-sm sm:text-base shadow-[0_2px_8px_rgba(200,98,58,0.20)] hover:shadow-[0_6px_20px_rgba(200,98,58,0.28)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer mt-1 select-none"
+              className="group relative w-full py-3.5 px-4 rounded-xl bg-[var(--eh-terra-deep,#a84d29)] hover:bg-[#8a3f22] active:scale-[0.99] disabled:bg-[var(--eh-terra,#c8623a)]/80 disabled:cursor-not-allowed disabled:transform-none text-white font-bold text-sm sm:text-base shadow-[0_2px_8px_rgba(200,98,58,0.20)] hover:shadow-[0_6px_20px_rgba(200,98,58,0.28)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer mt-1 select-none"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
@@ -498,7 +499,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
                   setAuthMode("register");
                   setErrorMessage(null);
                 }}
-                className="font-bold text-[var(--eh-terra,#c8623a)] hover:text-[var(--eh-terra-deep,#a84d29)] hover:underline cursor-pointer transition-colors"
+                className="font-bold text-[var(--eh-green-700,#105258)] hover:text-[var(--eh-green-900,#0a3539)] hover:underline cursor-pointer transition-colors"
               >
                 Kostenlos registrieren
               </button>
@@ -524,9 +525,9 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
         {/* Discreet Demo Quick-Fill */}
         <div
           id="demo-testzugang-bar"
-          className="pt-1 flex items-center justify-center gap-1.5 sm:gap-2 text-xs text-stone-500 select-none flex-wrap"
+          className="pt-1 flex items-center justify-center gap-1.5 sm:gap-2 text-xs text-stone-600 select-none flex-wrap"
         >
-          <span className="inline-flex items-center gap-1 text-stone-400 text-[11px] sm:text-xs">
+          <span className="inline-flex items-center gap-1 text-stone-600 text-[11px] sm:text-xs" aria-hidden="true">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#E69E66]" /> Demo-Login:
           </span>
           <div className="inline-flex items-center gap-1.5">
@@ -559,7 +560,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
         {/* Trust Icons: SSL, DSGVO, Server - crisp and readable on mobile */}
         <div
           id="trust-badges-bar"
-          className="flex items-center justify-center flex-wrap gap-x-2.5 sm:gap-x-3.5 gap-y-1 text-stone-500 text-[11px] sm:text-xs"
+          className="flex items-center justify-center flex-wrap gap-x-2.5 sm:gap-x-3.5 gap-y-1 text-stone-600 text-[11px] sm:text-xs"
         >
           <div className="flex items-center gap-1 whitespace-nowrap" title="256-Bit SSL-Verschlüsselung">
             <Lock className="w-3 h-3 text-stone-400 shrink-0" />
@@ -578,13 +579,13 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
         </div>
 
         {/* Legal Disclaimer */}
-        <p className="text-xs text-stone-500">
+        <p className="text-xs text-stone-600">
           Mit der Anmeldung akzeptierst du unsere{" "}
           <button
             id="link-agb"
             type="button"
             onClick={() => openLegal("agb")}
-            className="text-stone-700 hover:text-[var(--eh-text,#1c2129)] font-semibold underline underline-offset-2 cursor-pointer"
+            className="text-stone-600 hover:text-[var(--eh-text,#1c2129)] font-semibold underline underline-offset-2 cursor-pointer"
           >
             AGB
           </button>{" "}
@@ -593,7 +594,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
             id="link-datenschutz"
             type="button"
             onClick={() => openLegal("datenschutz")}
-            className="text-stone-700 hover:text-[var(--eh-text,#1c2129)] font-semibold underline underline-offset-2 cursor-pointer"
+            className="text-stone-600 hover:text-[var(--eh-text,#1c2129)] font-semibold underline underline-offset-2 cursor-pointer"
           >
             Datenschutz
           </button>
@@ -601,7 +602,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
         </p>
 
         {/* Footer Navigation */}
-        <div className="flex items-center justify-center gap-3 text-xs text-stone-400">
+        <div className="flex items-center justify-center gap-3 text-xs text-stone-600">
           <button
             type="button"
             onClick={() => openLegal("impressum")}
@@ -618,13 +619,12 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
             DSGVO
           </button>
           <span>•</span>
-          <button
-            type="button"
-            onClick={() => showToast("Support: kontakt@einfachhausen.de")}
+          <Link
+            href="/hilfe"
             className="hover:text-stone-700 transition-colors cursor-pointer"
           >
             Hilfe
-          </button>
+          </Link>
         </div>
       </div>
 
