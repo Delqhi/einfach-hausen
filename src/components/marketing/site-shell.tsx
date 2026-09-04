@@ -129,7 +129,7 @@ export function MarketingShell({ children, footerIntake = true }: { children: Re
         <div className={styles.footerInner}>
           <div className={styles.footerBrand}>
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/" aria-label="einfachhausen Startseite"><Image src={logoFull} alt="einfachhausen" width={140} height={97} className={styles.logoImg} style={{ filter: 'brightness(0) invert(1)', opacity: 0.92 }} /></a>
+            <a href="/" aria-label="einfachhausen Startseite"><Image src={logoFull} alt="einfachhausen" width={140} height={97} className={styles.logoImg} /></a>
             <p className={styles.footerClaim}>Regional. Menschlich. Organisiert.</p>
             <p>Dein persönlicher Hausmanager: Anliegen beschreiben, geprüfte Partner aus deiner Region übernehmen, alles bleibt in deiner Hausakte.</p>
             <span>© 2026 Einfach Hausen</span>

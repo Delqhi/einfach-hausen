@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 import Stepper from "@/components/Stepper";
+import styles from "./gebiet.module.css";
 
 export default function GebietPage() {
   const router = useRouter();
@@ -31,8 +32,8 @@ export default function GebietPage() {
     return (
       <div className="page center-page safe-top safe-bottom">
         <div className="success-circle">🎉</div>
-        <h1 style={{ fontSize: 24, fontWeight: 800 }}>Geschafft!</h1>
-        <p style={{ color: "var(--muted)" }}>Dein Dienstleister-Profil ist fertig.</p>
+        <h1 className={styles.doneTitle}>Geschafft!</h1>
+        <p className={styles.muted}>Dein Dienstleister-Profil ist fertig.</p>
         <div className="home-indicator" />
       </div>
     );
@@ -40,12 +41,12 @@ export default function GebietPage() {
 
   return (
     <div className="safe-top safe-bottom page ob-page">
-      <div className="ob-head" style={{ paddingTop: 20 }}>
+      <div className={`ob-head ${styles.headSpaced}`}>
         <h1>3. Arbeitsgebiet</h1>
         <p>Lege fest, wo du Aufträge annehmen möchtest.</p>
       </div>
       <Stepper current={3} />
-      <div className="ob-form" style={{ paddingTop: 24 }}>
+      <div className={`ob-form ${styles.formSpaced}`}>
         <button type="button" className={`mode-card ${mode === "radius" ? "sel" : ""}`} onClick={() => setMode("radius")}><span className="mode-title">Umkreis</span><span className="mode-sub">Alle Aufträge in einem Radius um deine PLZ</span></button>
         <button type="button" className={`mode-card ${mode === "plz" ? "sel" : ""}`} onClick={() => setMode("plz")}><span className="mode-title">PLZ-Gebiete</span><span className="mode-sub">Bestimmte Postleitzahlen auswählen</span></button>
         {mode === "radius" ? (

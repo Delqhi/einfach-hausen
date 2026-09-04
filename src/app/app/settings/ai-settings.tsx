@@ -2,6 +2,7 @@
 
 import { uiToast } from "@/components/ui-toast";
 import { useEffect, useState } from "react";
+import styles from "./account-forms.module.css";
 
 // EH T-0207: AI access settings — BYOK (own OpenAI-compatible key), freemium
 // quota display and rewarded-ad credit grant. The key is stored encrypted
@@ -75,27 +76,27 @@ export function AiSettings() {
   return (
     <div>
       {quota && (
-        <p style={{ fontSize: 14 }}>
+        <p className={styles.note}>
           KI-Kontingent: {quota.freemiumRemaining} von {quota.freemiumAllowed} frei · {quota.credits} Bonus-Aktionen
         </p>
       )}
-      {message && <p style={{ color: "#2f7650", fontSize: 14 }}>{message}</p>}
-      {error && <p style={{ color: "#d64541", fontSize: 14 }}>{error}</p>}
+      {message && <p className={styles.successText}>{message}</p>}
+      {error && <p className={styles.errorText}>{error}</p>}
 
       {byok?.enabled ? (
-        <div style={{ marginBottom: 12 }}>
-          <p style={{ fontSize: 14, margin: "6px 0" }}>Eigener Key aktiv ({byok.masked}) — unbegrenzte KI-Nutzung über dein eigenes Kontingent.</p>
+        <div className={styles.blockGap}>
+          <p className={styles.noteSoft}>Eigener Key aktiv ({byok.masked}) — unbegrenzte KI-Nutzung über dein eigenes Kontingent.</p>
           <button className="btn-ghost" onClick={disableKey} disabled={busy}>BYOK deaktivieren</button>
         </div>
       ) : (
-        <div style={{ display: "grid", gap: 8, marginBottom: 12 }}>
-          <p style={{ fontSize: 14, margin: "6px 0" }}>
+        <div className={styles.formGrid}>
+          <p className={styles.noteSoft}>
             Power-User: hinterlege deinen eigenen API-Key (OpenAI-kompatibel, z. B. Google AI Studio oder OpenRouter).
             Die KI läuft dann über dein Kontingent — für uns kostenlos, für dich unbegrenzt. Der Key wird verschlüsselt gespeichert.
           </p>
-          <input type="password" placeholder="API-Key (sk-…)" value={apiKey} onChange={(e) => setApiKey(e.target.value)} style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #ddd" }} autoComplete="off" />
-          <input placeholder="Basis-URL (optional, z. B. https://openrouter.ai/api/v1)" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #ddd" }} />
-          <input placeholder="Modell (optional, z. B. google/gemini-flash-1.5)" value={model} onChange={(e) => setModel(e.target.value)} style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #ddd" }} />
+          <input type="password" placeholder="API-Key (sk-…)" value={apiKey} onChange={(e) => setApiKey(e.target.value)} className={styles.formInput} autoComplete="off" />
+          <input placeholder="Basis-URL (optional, z. B. https://openrouter.ai/api/v1)" value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} className={styles.formInput} />
+          <input placeholder="Modell (optional, z. B. google/gemini-flash-1.5)" value={model} onChange={(e) => setModel(e.target.value)} className={styles.formInput} />
           <button className="btn-ghost" onClick={saveKey} disabled={busy || apiKey.length < 16}>Key verschlüsselt speichern</button>
         </div>
       )}

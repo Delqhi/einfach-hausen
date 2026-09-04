@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { breadcrumbJsonLd, canonical, SITE_URL } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { BulletList, CtaBand, Faq, InfoPanel, LinkButton, PageHero, Section, Steps, TextLink } from '@/components/marketing/ui';
+import { BulletList, CtaBand, Faq, InfoPanel, LinkButton, PageHero, Section, Steps, TextLink, mkt as styles } from '@/components/marketing/ui';
 
 export const metadata: Metadata = {
   title: 'Heizung: Wartung, Störung, Sanierung im Überblick',
@@ -68,7 +68,7 @@ export default function Page() {
         <InfoPanel label="Einordnung">Kostenrahmen sind Orientierung aus Anfrageverläufen, kein Angebot. Verbindlich ist der Rahmen des Partnerbetriebs, bevor du entscheidest.</InfoPanel>
       </Section>
       <Section eyebrow="Häufige Fragen" title="Zur Heizung als Leistung." center>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={styles.centerRow}>
           <Faq items={[
             { q: 'Macht Einfach Hausen die Arbeiten selbst?', a: 'Nein. Wir organisieren: Einordnung, passender Partnerbetrieb aus der Region, Kostenrahmen vorab. Ausgeführt wird durch den Betrieb, mit dem du direkt abrechnest.' },
             { q: 'Was passiert bei Heizungsausfall im Winter?', a: 'Kennzeichne die Dringlichkeit beim Beschreiben. Wir priorisieren solche Fälle, können aber keinen 24/7-Notdienst garantieren. Bei Gefahr wähle immer den Notruf.' },

@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { PageHero, Section, LegalNotice, LinkButton } from '@/components/marketing/ui';
+import { PageHero, Section, LinkButton, mkt as styles } from '@/components/marketing/ui';
 
-export const metadata: Metadata = { 
-  title: 'Datenschutzerklärung', 
-  description: 'Datenschutzerklärung von Einfach Hausen: Welche Daten verarbeitet werden, wie sie geschützt sind und deine Rechte.', 
-  alternates: { canonical: canonical('/datenschutz') } 
+export const metadata: Metadata = {
+  title: 'Datenschutzerklärung',
+  description: 'Datenschutzerklärung von Einfach Hausen: Welche Daten verarbeitet werden, wie sie geschützt sind und deine Rechte.',
+  alternates: { canonical: canonical('/datenschutz') }
 };
 
 const SECTIONS = [
@@ -46,22 +46,18 @@ export default function Page() {
       />
 
       <Section eyebrow="Transparenz" title="Datenschutzhinweise nach DSGVO.">
-        <div style={{ display: 'grid', gap: '28px', maxWidth: '800px', margin: '0 auto' }}>
+        <div className={styles.stackLg}>
           {SECTIONS.map((sec) => (
-            <div key={sec.title} style={{ padding: '24px', background: '#ffffff', borderRadius: '20px', border: '1px solid #e4e2dc' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#10222a', margin: '0 0 10px 0', letterSpacing: '-0.02em' }}>
-                {sec.title}
-              </h3>
-              <p style={{ fontSize: '15px', color: '#4b5b60', lineHeight: 1.65, margin: 0 }}>
-                {sec.content}
-              </p>
-            </div>
+            <article key={sec.title} className={styles.card}>
+              <h3 className={styles.cardTitle}>{sec.title}</h3>
+              <p className={styles.cardText}>{sec.content}</p>
+            </article>
           ))}
         </div>
       </Section>
 
       <Section tone="soft" eyebrow="Rechtliche Navigation" title="Weitere Angaben">
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <div className={styles.linkRow}>
           <LinkButton href="/impressum">Impressum</LinkButton>
           <LinkButton href="/sicherheit" secondary>Sicherheitsstandards</LinkButton>
           <LinkButton href="/agb" secondary>AGB</LinkButton>

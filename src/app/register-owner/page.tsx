@@ -64,7 +64,7 @@ export default function RegisterOwnerPage() {
         </button>
         <div className="oreg-logo">
           <svg width="44" height="48" viewBox="0 0 72 78" fill="none"><path d="M10 34 L36 12 L62 34 V70 H30" stroke="#105258" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /><rect x="30" y="22" width="3.2" height="3.2" rx="0.8" fill="#105258" /><rect x="36" y="22" width="3.2" height="3.2" rx="0.8" fill="#105258" /></svg>
-          <div style={{ display: "flex", alignItems: "baseline", marginLeft: -6 }}><span className="logo-word green-word" style={{ fontSize: 30 }}>einfach</span><span className="logo-word ink-word" style={{ fontSize: 30 }}>hausen</span></div>
+          <div className={auth.wordRow}><span className={`logo-word green-word ${auth.wordLg}`}>einfach</span><span className={`logo-word ink-word ${auth.wordLg}`}>hausen</span></div>
         </div>
         <p className="oreg-tagline">Dein Zuhause. <span className="green">Alles geregelt.</span></p>
         <div className="oreg-house"><Image src="/images/premium/hero-homeowner.jpg" alt="Person im eigenen Zuhause" width={800} height={600} priority /></div>

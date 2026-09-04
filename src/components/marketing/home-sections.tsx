@@ -89,7 +89,7 @@ export function HowItWorks() {
           { title: 'Ein Mensch übernimmt', text: 'Dein Ansprechpartner hat Namen, Betrieb und Telefonnummer. Er meldet sich, kommt, erledigt. Fertig ist es erst, wenn du zufrieden bist.', visual: <AppFrame size="sm"><ContactScreen /></AppFrame> },
         ]}
       />
-      <div className={`${styles.mt} ${styles.center}`} style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className={`${styles.mt} ${styles.center} ${styles.centerRow}`}>
         <TextLink href="/so-funktionierts">Den ganzen Ablauf ansehen</TextLink>
       </div>
     </Section>
@@ -128,15 +128,15 @@ export function Trust() {
   return (
     <Section tone="soft" eyebrow="Warum du uns vertrauen kannst" title="Keine Marktplatz-Logik. Klare Regeln." text="Wir verdienen nicht daran, deine Anfrage möglichst oft zu verkaufen. Wir verdienen daran, dass dein Haus gut läuft.">
       <Facts items={FACTS} />
-      <div className={`${styles.split} ${styles.mt}`} style={{ alignItems: 'center' }}>
-        <Reveal className={styles.photo} style={{ aspectRatio: '4 / 3' }}>
+      <div className={`${styles.split} ${styles.mt}`}>
+        <Reveal className={styles.photo} data-ratio="4:3">
           <Image src="/images/marketing/partner-doorstep.jpg" alt="Ein Partnerbetrieb im Gespräch mit Hausbesitzern an der Haustür" width={1024} height={1024} sizes="(min-width: 900px) 560px, 100vw" />
           <span className={styles.photoCaption}><ShieldCheck size={18} aria-hidden="true" /> Persönlich geprüfte Partnerbetriebe aus deiner Region</span>
         </Reveal>
         <div className={styles.stack}>
           {PRINCIPLES.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.06}>
-              <div className={styles.numberedRow} style={{ padding: '18px 0' }}>
+              <div className={styles.numberedRow} data-pad="m">
                 <span className={styles.numberedNum}><Check size={16} strokeWidth={3} /></span>
                 <div className={styles.numberedBody}><h3>{p.title}</h3><p>{p.text}</p></div>
               </div>
@@ -193,10 +193,10 @@ export function PilotBand() {
 export function HomeFaq() {
   return (
     <Section eyebrow="Häufige Fragen" title="Was du vorher wissen willst." center>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className={styles.centerRow}>
         <Faq items={HOME_FAQ} />
       </div>
-      <div className={`${styles.mt}`} style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className={`${styles.mt} ${styles.centerRow}`}>
         <TextLink href="/hilfe">Alle Fragen und Antworten</TextLink>
       </div>
     </Section>
@@ -211,7 +211,7 @@ export function FinalCta() {
         <Reveal><Eyebrow>Dein nächster Schritt</Eyebrow></Reveal>
         <Reveal delay={0.06}><h2>Sag uns, was ansteht. Den Rest übernehmen wir.</h2></Reveal>
         <Reveal delay={0.1}><p className={styles.lead}>Unverbindlich, kostenlos und in deinen Worten. Ein Satz reicht.</p></Reveal>
-        <Reveal delay={0.14} className={styles.container} style={{ padding: 0 }}>
+        <Reveal delay={0.14} className={styles.container} data-pad="none">
           <IntakeForm variant="band" />
         </Reveal>
         <Reveal delay={0.18} className={styles.finalCtaSecondary}>

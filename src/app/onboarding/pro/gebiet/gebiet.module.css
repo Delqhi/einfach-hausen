@@ -1,0 +1,5 @@
+/* Scoped styles for the provider onboarding step 3 — DESIGN.md §2: no inline styles. */
+.doneTitle { font-size: 24px; font-weight: 800; }
+.muted { color: var(--muted); }
+.headSpaced { padding-top: 20px; }
+.formSpaced { padding-top: 24px; }

@@ -35,11 +35,10 @@
 /* ---------- Header ---------- */
 .header {
   position: sticky; top: 0; z-index: 60;
-  /* rgb()/alpha instead of color-mix(..., transparent): Chromium renders the
-     latter fully transparent, which let dark sections bleed through the nav. */
-  background: rgb(250 248 244 / .88); /* --eh-canvas */
-  backdrop-filter: blur(14px) saturate(1.2);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  /* Solid canvas, no glass (DESIGN.md §2). Value literal instead of
+     color-mix(...): Chromium renders the latter fully transparent and lets
+     dark sections bleed through the sticky nav. */
+  background: #faf8f4; /* --eh-canvas */
   border-bottom: 1px solid transparent;
   transition: border-color .25s ease, background .25s ease, box-shadow .25s ease;
 }
@@ -253,8 +252,7 @@
 .stickyBar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 55;
   padding: 10px var(--eh-gutter) calc(10px + env(safe-area-inset-bottom));
-  background: rgb(255 255 255 / .92); /* --eh-surface; see .header note on color-mix */
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  background: var(--eh-surface); /* solid, no glass (DESIGN.md §2) */
   border-top: 1px solid var(--eh-line);
   transform: translateY(110%); transition: transform .3s ease;
 }
@@ -294,6 +292,34 @@
 .cardDark { composes: card; background: var(--eh-teal-900); border-color: transparent; color: var(--eh-on-dark); }
 .cardDark h3 { color: var(--eh-on-dark); }
 .cardDark p { color: var(--eh-on-dark-soft); }
+
+/* Content pages (blog, lexikon, kontakt, legal): token-based cards & panels.
+   Added 2026-09-04 — replaces inline styles on those pages (DESIGN.md §2). */
+.stackLg { display: grid; gap: 24px; max-width: 800px; margin: 0 auto; }
+.linkRow { display: flex; gap: 12px; flex-wrap: wrap; }
+.centerRow { display: flex; justify-content: center; }
+.cardKicker { display: flex; align-items: center; gap: 8px; color: var(--eh-teal-700); font-size: 12px; font-weight: 700; }
+.cardFoot { margin-top: auto; }
+.cardFoot .textLink { font-size: 14px; font-weight: 700; }
+.cardTitle { font-size: 18px; font-weight: 700; color: var(--eh-ink); letter-spacing: -0.02em; }
+.cardText { font-size: 15px; line-height: 1.65; color: var(--eh-ink-soft); }
+.onDarkSoft { color: var(--eh-on-dark-soft); }
+
+/* Emergency / warning panels (functional red, matches app danger tones). */
+.panel { display: flex; flex-direction: column; gap: 8px; padding: 22px; border-radius: 18px; border: 1px solid var(--eh-line); background: var(--eh-surface); }
+.panelWarn { composes: panel; border-color: #f1d4cf; background: #fff5f3; }
+.panelTitle { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; color: var(--eh-ink); }
+.panelTitleWarn { composes: panelTitle; color: #a12b25; }
+.panelTitleAccent { composes: panelTitle; color: var(--eh-teal-700); }
+.panelText { font-size: 13px; line-height: 1.5; color: var(--eh-ink-mute); }
+.panelWarn .panelText { color: #7c5a54; }
+
+/* Numbered manifest rows (ueber-uns principles). */
+.principleList { display: grid; gap: 32px; margin-top: 36px; }
+.principleRow { display: grid; grid-template-columns: minmax(52px, 80px) minmax(0, 1fr); gap: 24px; padding-bottom: 32px; border-bottom: 1px solid var(--eh-line); }
+.principleNum { font-size: 20px; font-weight: 700; color: var(--eh-teal-700); font-variant-numeric: tabular-nums; }
+.principleBody h3 { font-size: 20px; font-weight: 700; color: var(--eh-teal-900); letter-spacing: -0.02em; }
+.principleBody p { font-size: 15px; line-height: 1.6; color: var(--eh-ink-soft); max-width: 680px; }
 
 /* Problem mirror quote cards */
 .mirrorCard {
@@ -466,6 +492,7 @@
 .bulletList li { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.5; }
 .bulletList li span { flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--eh-teal-100); color: var(--eh-teal-900); font-size: 12px; font-weight: 700; margin-top: 1px; }
 .infoPanel { display: flex; flex-direction: column; gap: 12px; padding: 26px 28px; border-radius: var(--eh-r-card); background: var(--eh-sand-100); }
+.infoPanel h3 { font-size: 22px; font-weight: 700; color: var(--eh-teal-900); letter-spacing: -0.02em; }
 .panelLabel { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--eh-terra-deep); }
 .infoPanel p { color: var(--eh-ink-soft); }
 .legalNotice { display: flex; flex-direction: column; gap: 10px; padding: 22px 24px; border-radius: 18px; background: var(--eh-surface); border: 1px solid var(--eh-line); font-size: 15px; color: var(--eh-ink-soft); }
@@ -477,11 +504,11 @@
 
 /* Photo */
 .photo { position: relative; border-radius: var(--eh-r-card-lg); overflow: hidden; box-shadow: var(--eh-shadow-lg); }
+.photo[data-ratio='4:3'] { aspect-ratio: 4 / 3; }
 .photo img { width: 100%; height: 100%; object-fit: cover; }
 .photoCaption {
   position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,.92); color: var(--eh-ink); font-size: 14px; font-weight: 500;
-  backdrop-filter: blur(8px);
+  padding: 12px 14px; border-radius: 14px; background: #fff; color: var(--eh-ink); font-size: 14px; font-weight: 500; /* solid, no glass */
 }
 
 /* Contact routing cards */
@@ -579,3 +606,15 @@
 @media (prefers-reduced-motion: reduce) {
   .site *, .site *::before, .site *::after { transition-duration: 0.01ms !important; }
 }
+
+.footer .logoImg { filter: brightness(0) invert(1); opacity: .92; }
+.timeline { list-style: none; margin: 0; padding: 0; }
+.photo[data-ratio='4:5'] { aspect-ratio: 4 / 5; }
+.photo[data-mw='440'] { max-width: 440px; align-self: center; }
+.photo[data-mw='420'] { max-width: 420px; }
+.numberedRow[data-pad='m'] { padding: 18px 0; }
+.container[data-pad='none'] { padding: 0; }
+.chipRow[data-density='airy'] { gap: 12px; }
+.chip[data-size='lg'] { font-size: 16px; padding: 12px 18px; }
+
+.faq[data-wide='true'] { max-width: none; }

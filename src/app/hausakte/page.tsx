@@ -48,18 +48,18 @@ export default function Page() {
       <Section tone="soft" eyebrow="Eigentümerwechsel" title="Die Immobilie bleibt. Private Kommunikation bleibt privat." text="Hausbezogene Historie ist getrennt von deinen persönlichen Daten. Du entscheidest, was ein Käufer sieht.">
         <Split>
           <InfoPanel label="Kann weitergegeben werden">
-            <h3 style={{ fontSize: 22, color: 'var(--eh-teal-900)' }}>Freigegebene Hausgeschichte</h3>
+            <h3>Freigegebene Hausgeschichte</h3>
             <BulletList items={['Technik und Anlagen des Hauses', 'Dokumentierte Arbeiten und Wartungen', 'Freigegebene Garantien und Unterlagen', 'Hausbezogene Ansprechpartner, soweit freigegeben']} />
           </InfoPanel>
           <InfoPanel label="Bleibt bei dir">
-            <h3 style={{ fontSize: 22, color: 'var(--eh-teal-900)' }}>Private Inhalte</h3>
+            <h3>Private Inhalte</h3>
             <BulletList items={['Nachrichten mit Partnern', 'Zahlungsdaten', 'Nicht freigegebene Unterlagen', 'Deine komplette Kontohistorie']} />
           </InfoPanel>
         </Split>
       </Section>
 
       <Section eyebrow="Häufige Fragen" title="Zur Hausakte." center>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+<div className={styles.centerRow}>
           <Faq items={[
             { q: 'Ist die Hausakte kostenlos?', a: 'Ja. Die digitale Hausakte ist Teil des kostenlosen Hauskontos, ohne Limit bei Dokumenten oder Vorgängen. Erweiterte Wartungs- und Servicefunktionen sind optional.' },
             { q: 'Kann ich alte Rechnungen nachtragen?', a: 'Ja. Fotografiere oder lade Dokumente hoch und ordne sie einem Bauteil zu. Ab dann pflegt sich die Akte über Vorgänge selbst weiter.' },

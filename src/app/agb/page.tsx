@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { BulletList, InfoPanel, LegalNotice, LinkButton, PageHero, Section } from '@/components/marketing/ui';
+import { BulletList, InfoPanel, LegalNotice, LinkButton, PageHero, Section, mkt as styles } from '@/components/marketing/ui';
 
 export const metadata: Metadata = {
   title: 'AGB',
@@ -34,7 +34,7 @@ export default function Page() {
           'Das Plattformmodell sieht 0 % Vermittlungsprovision auf das Auftragsvolumen vor.',
           'Ein bezahlter Partnertarif beeinflusst nicht das fachliche Matching für Kunden.',
         ]} />
-        <p style={{ marginTop: '16px', color: '#5f6e75', fontSize: '14px', lineHeight: 1.6 }}>
+        <p className={`${styles.cardText} ${styles.onDarkSoft}`}>
           Diese Produktregeln bilden das Fundament für die finalen Vertragsbedingungen.
         </p>
       </Section>
@@ -64,7 +64,7 @@ export default function Page() {
       </Section>
 
       <Section eyebrow="Rechtliche Navigation" title="Zugehörige Pflichtangaben und Dokumente.">
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '16px' }}>
+<div className={styles.linkRow}>
           <LinkButton href="/impressum">Impressum</LinkButton>
           <LinkButton href="/datenschutz" secondary>Datenschutzerklärung</LinkButton>
           <LinkButton href="/kontakt" secondary>Kontakt &amp; Support</LinkButton>
