@@ -256,18 +256,13 @@ await clickAndWaitUrl(publicPage,publicPage.locator('a[href="/role"]').first(),/
 await waitText(publicPage,'dass du da bist!'); await waitText(publicPage,'Als Eigentümer starten'); await waitText(publicPage,'Ich bin Dienstleister');
 // Owner registration (server action flow) stays the canonical owner onboarding entry.
 await nav(publicPage, base+'/register?role=homeowner')
-await waitText(publicPage,"Los geht's – in wenigen Schritten");
-if(!(await publicPage.getByLabel('Vorname').count()))throw new Error('Owner registration missing Vorname field');
-if(!(await publicPage.locator('a[href="/login"]').count()))throw new Error('Landing Log in card missing');
+await publicPage.getByRole('button',{name:'Kostenlos registrieren'}).first().waitFor();
+await publicPage.getByRole('button',{name:'Kostenlos registrieren'}).first().click();
+if(!(await publicPage.getByLabel('Vollständiger Name').count()))throw new Error('Owner registration missing Name field');
 if(!(await publicPage.locator('input[name="password"]').count()))throw new Error('Owner registration missing Passwort field');
-if(!(await publicPage.getByLabel('Telefon').count()))throw new Error('Owner registration missing Telefon field');
-await publicPage.getByLabel('Vorname').fill('Check'); await publicPage.getByLabel('Nachname').fill('Prüfer'); await publicPage.getByLabel('E-Mail').fill('check@example.de');
-await publicPage.locator('input[name="password"]').fill('CheckPass123');
-await publicPage.getByRole('button',{name:'Weiter'}).click();
-if(!(await publicPage.locator('label:has-text("PLZ"):visible').count()))throw new Error('Owner registration missing PLZ field');
-await publicPage.locator('input[name="postcode"]:visible').fill('46325');
-await publicPage.getByRole('button',{name:'Weiter'}).click();
-if(!(await publicPage.getByRole('button',{name:'Konto erstellen'}).isVisible()))throw new Error('Owner registration missing Konto erstellen action');
+if(!(await publicPage.getByLabel('Postleitzahl').count()))throw new Error('Owner registration missing PLZ field');
+if(!(await publicPage.getByRole('button',{name:'Kostenlos registrieren'}).last().count()))throw new Error('Owner registration missing submit action');
+if(!(await publicPage.locator('#btn-demo-kunde').count()))throw new Error('Owner registration missing demo fill');
 await nav(publicPage, base+'/')
 const manifestResponse=await publicPage.request.get(base+'/manifest.webmanifest'); if(!manifestResponse.ok())throw new Error('PWA manifest unavailable');
 const manifest=await manifestResponse.json(); if(manifest.display!=='standalone'||!Array.isArray(manifest.icons)||manifest.icons.length<3)throw new Error('PWA manifest incomplete');
@@ -294,13 +289,11 @@ const pageErrors=[];
 manager.on('console',(m)=>{if(m.type()==='error')pageErrors.push(m.text());});
 manager.on('pageerror',(e)=>pageErrors.push('pageerror: '+e.message));
 await nav(manager, base+'/register?role=provider')
-await fillRegisterField(manager,'firstName','Daniel'); await fillRegisterField(manager,'lastName','Müller');
+await manager.getByRole('button',{name:'Kostenlos registrieren'}).first().click();
+await fillRegisterField(manager,'fullName','Gartenbau Müller'); await fillRegisterField(manager,'contactName','Daniel Müller');
 await fillRegisterField(manager,'email',providerEmail); await fillRegisterField(manager,'password',password);
-await manager.getByRole('button',{name:'Weiter'}).click();
-await fillRegisterField(manager,'businessName','Gartenbau Müller'); await fillRegisterField(manager,'trades','Garten, Grünpflege, Heckenschnitt, Hausmeister'); await fillRegisterField(manager,'postcode','46325');
-await manager.getByRole('button',{name:'Weiter'}).click();
-await manager.getByLabel('Sofort buchbare Termine anbieten').check();
-await Promise.all([manager.waitForURL('**/pro'),manager.getByRole('button',{name:'Konto erstellen'}).click()]);
+await fillRegisterField(manager,'postcode','46325');
+await Promise.all([manager.waitForURL('**/pro'),manager.getByRole('button',{name:'Kostenlos registrieren'}).last().click()]);
 await nav(manager, base+'/pro/profile')
 await manager.waitForLoadState('networkidle').catch(()=>{});
 await waitForDomStable(manager,'input[name="document"]',1);
@@ -404,8 +397,9 @@ await thomasCard.getByLabel('Aufträge verwalten').uncheck(); await clickServerA
 // 3) Kunde startet beim Hausmeisterservice und entscheidet danach bewusst: Mensch oder Auftrag.
 const ownerCtx=await newE2EContext({viewport:{width:390,height:844}}); const owner=await ownerCtx.newPage(); trackPage(owner,'homeowner');
 await nav(owner, base+'/register?role=homeowner')
-await fillRegisterField(owner,'firstName','Maria'); await fillRegisterField(owner,'lastName','Test'); await fillRegisterField(owner,'email',ownerEmail); await fillRegisterField(owner,'password',password); await owner.getByRole('button',{name:'Weiter'}).click(); await fillRegisterField(owner,'postcode','46325'); await owner.getByRole('button',{name:'Weiter'}).click();
-await Promise.all([owner.waitForURL('**/app/onboarding'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
+await owner.getByRole('button',{name:'Kostenlos registrieren'}).first().click();
+await fillRegisterField(owner,'fullName','Maria Test'); await fillRegisterField(owner,'email',ownerEmail); await fillRegisterField(owner,'password',password); await fillRegisterField(owner,'postcode','46325');
+await Promise.all([owner.waitForURL('**/app/onboarding'),owner.getByRole('button',{name:'Kostenlos registrieren'}).last().click()]);
 await waitText(owner,'Damit Partner in deiner Region arbeiten können');
 // Resume works: leaving mid-onboarding and returning keeps the saved step.
 await nav(owner, base+'/app'); await waitText(owner,'Jetzt weiter einrichten');
@@ -582,7 +576,7 @@ await nav(admin, base+`/admin/crm?q=${encodeURIComponent('Gartenbau Müller')}`)
 
 const buyerCtx=await newE2EContext({viewport:{width:390,height:844}}); const buyer=await buyerCtx.newPage(); trackPage(buyer,'homeowner-buyer');
 // 12a) First-run onboarding: guided steps, skippable optionals, resumable progress.
-await nav(buyer, base+'/register?role=homeowner'); await fillRegisterField(buyer,'firstName','Ben'); await fillRegisterField(buyer,'lastName','Käufer'); await fillRegisterField(buyer,'email',buyerEmail); await fillRegisterField(buyer,'password',password); await buyer.getByRole('button',{name:'Weiter'}).click(); await fillRegisterField(buyer,'postcode','46325'); await buyer.getByRole('button',{name:'Weiter'}).click(); await Promise.all([buyer.waitForURL('**/app/onboarding'),buyer.getByRole('button',{name:'Konto erstellen'}).click()]);
+await nav(buyer, base+'/register?role=homeowner'); await buyer.getByRole('button',{name:'Kostenlos registrieren'}).first().click(); await fillRegisterField(buyer,'fullName','Ben Käufer'); await fillRegisterField(buyer,'email',buyerEmail); await fillRegisterField(buyer,'password',password); await fillRegisterField(buyer,'postcode','46325'); await Promise.all([buyer.waitForURL('**/app/onboarding'),buyer.getByRole('button',{name:'Kostenlos registrieren'}).last().click()]);
 await waitText(buyer,'Damit Partner in deiner Region arbeiten können');
 await buyer.getByLabel('Straße und Hausnummer').fill('Kaistraße 7');
 await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Weiter'}),/\/app\/onboarding$/);
