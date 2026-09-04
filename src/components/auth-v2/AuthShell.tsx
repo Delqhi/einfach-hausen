@@ -7,6 +7,7 @@ import { HeroPanel } from "@/components/auth-v2/HeroPanel";
 import { LoginForm, Role, AuthMode } from "@/components/auth-v2/LoginForm";
 import { Logo } from "@/components/auth-v2/Logo";
 import { LegalModal } from "@/components/auth-v2/LegalModal";
+import "@/components/auth-v2/auth-shell.css";
 import { HelpCircle, Sparkles, Home, Wrench, Award, Users } from "lucide-react";
 
 export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: { initialAuthMode?: AuthMode; initialRole?: Role }) {
@@ -25,11 +26,11 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
   return (
     <div
       id="main-app-container"
-      className="min-h-screen lg:h-dvh lg:max-h-dvh w-full flex flex-col bg-[var(--eh-bg,#faf8f4)] text-[var(--eh-text,#1c2129)] font-sans selection:bg-[var(--eh-green-100,#dcebec)] selection:text-[var(--eh-text,#1c2129)] lg:overflow-hidden"
+      className="eh-auth font-sans"
     >
       <header
         id="top-brand-bar"
-        className="h-14 px-4 sm:px-6 lg:px-8 bg-[var(--eh-bg,#faf8f4)] border-b border-[var(--eh-border,#e4e2dc)] flex items-center justify-between shrink-0 z-20"
+        className="eh-auth-topbar"
       >
         <div className="flex items-center gap-2.5 sm:gap-3">
           <Link href="/" aria-label="Zur Startseite"><Logo variant="dark" size="sm" /></Link>
@@ -197,16 +198,16 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
         </div>
       )}
 
-      <main className="flex-1 w-full overflow-y-auto flex flex-col justify-center">
-        <div className="hidden lg:grid grid-cols-12 w-full max-w-7xl mx-auto px-6 lg:px-8 py-6 xl:py-8 gap-8 xl:gap-12 items-center my-auto">
-          <section className="col-span-7 xl:col-span-7 flex flex-col justify-center py-1">
+      <main className="eh-auth-main">
+        <div className="eh-auth-grid eh-auth-desktop">
+          <section className="eh-auth-hero">
             <HeroPanel
               role={role}
               onSelectRole={handleRoleSelectFromHero}
               onOpenLegalModal={setActiveLegalModal}
             />
           </section>
-          <section className="col-span-5 xl:col-span-5 flex flex-col justify-center items-center py-1">
+          <section className="eh-auth-form">
             <LoginForm
               role={role}
               initialAuthMode={initialAuthMode}
@@ -216,7 +217,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
           </section>
         </div>
 
-        <div className="lg:hidden flex-1 overflow-y-auto px-3 py-3 sm:px-6 sm:py-6 flex flex-col items-center justify-start">
+        <div className="eh-auth-mobile">
           <AnimatePresence mode="wait">
             <motion.div
               key={mobileTab}

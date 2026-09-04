@@ -103,7 +103,7 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
           {/* Header Section strictly in the website design style */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold tracking-widest text-[var(--eh-text,#1c2129)] uppercase">
+              <span className="text-xs font-bold tracking-wide text-[var(--eh-text,#1c2129)] uppercase">
                 {content.eyebrow}
               </span>
               <span className="hidden sm:inline-flex items-center gap-1.5 text-xs text-stone-600 font-medium">
