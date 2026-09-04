@@ -1,7 +1,7 @@
 .authConverged {
   --auth-ink: #172326;
   --auth-petrol: #105258;
-  --auth-petrol-hover: #176b70;
+  --auth-petrol-hover: #0d474d; /* canonical deep-teal hover (cf. globals --eh-teal-deep) */
   --auth-cream: #f4f5f1;
   --auth-mint: #e7efeb;
   --auth-line: rgba(16, 82, 88, 0.14);
@@ -106,9 +106,8 @@
   padding: 34px;
   border: 1px solid rgba(16,82,88,.10);
   border-radius: 30px;
-  background: rgba(255,255,255,.86);
+  background: #fff; /* solid, no glass (DESIGN.md §2) */
   box-shadow: var(--auth-shadow);
-  backdrop-filter: blur(14px);
 }
 
 .registerPage :global(.oreg-trust) {
@@ -313,10 +312,9 @@
   min-height: 0;
   padding: 52px 38px !important;
   border-radius: 32px;
-  background: rgba(255,255,255,.88);
-  border: 1px solid rgba(16,82,88,.10);
+  background: #fff; /* solid, no glass (DESIGN.md §2) */
+  border: 1px solid var(--eh-teal-700);
   box-shadow: var(--auth-shadow);
-  backdrop-filter: blur(14px);
 }
 .checkEmail :global(.success-circle) {
   width: 92px;
@@ -475,3 +473,14 @@
   border-radius: 0;
   color: inherit;
 }
+
+/* Layout helpers replacing inline styles (DESIGN.md §2). */
+.bottomPad { padding-bottom: 40px; }
+.topPad { padding-top: 60px; }
+.leadCenter { max-width: 280px; text-align: center; margin-inline: auto; }
+.btnNarrow { margin-top: 20px; max-width: 320px; }
+.wordRow { display: flex; align-items: baseline; margin-left: -6px; }
+.wordSm { font-size: 22px; }
+.wordMd { font-size: 26px; }
+.wordLg { font-size: 30px; }
+.waveSvg { width: 100%; height: 50px; display: block; }

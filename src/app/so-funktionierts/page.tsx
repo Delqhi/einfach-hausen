@@ -42,9 +42,9 @@ export default function Page() {
       <Statement kicker="Das Prinzip">Eine Frage ist noch kein Auftrag. <mark>Du entscheidest, wann daraus einer wird.</mark></Statement>
 
       <Section eyebrow="Ein echter Vorgang" title="So sieht das in einer Woche aus." text="Vom ersten Satz bis zur Rechnung in der Hausakte. Keine Warteschleife, keine fünf Rückrufe.">
-        <div className={styles.split} style={{ alignItems: 'flex-start' }}>
+        <div className={styles.split}>
           <Timeline items={CASE} />
-          <Reveal delay={0.1} className={styles.photo} style={{ aspectRatio: '4 / 5', maxWidth: 440, alignSelf: 'center' }}>
+          <Reveal delay={0.1} className={styles.photo} data-ratio="4:5" data-mw="440">
             <Image src="/images/marketing/owner-kitchen.jpg" alt="Hausbesitzerin am Küchentisch schaut entspannt auf ihr Handy" width={1024} height={1024} sizes="(min-width: 900px) 440px, 100vw" />
             <span className={styles.photoCaption}><Phone size={18} aria-hidden="true" /> Du musst niemanden hinterhertelefonieren</span>
           </Reveal>
@@ -60,7 +60,7 @@ export default function Page() {
       </Section>
 
       <Section id="ansprechpartner" tone="surface" eyebrow="Dein Ansprechpartner" title="Ein Mensch, kein Ticket." text="Bei Einfach Hausen sprichst du nicht mit einer Hotline. Nach der Vermittlung hast du einen konkreten Menschen mit Namen, Betrieb und Nummer, und der bleibt in deiner Hausakte, auch für das nächste Mal.">
-        <div className={styles.split} style={{ alignItems: 'center' }}>
+        <div className={styles.split}>
           <div className={styles.stack}>
             <BulletList items={[
               'Du siehst vorher, wer kommt: Name, Betrieb, Entfernung, Bewertung',
@@ -70,7 +70,7 @@ export default function Page() {
             ]} />
             <div className={styles.heroActions}><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/sicherheit" secondary>Wie wir Partner prüfen</LinkButton></div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}><AppFrame label="Ansprechpartner-Ansicht in der App mit Name, Betrieb und Chat"><ContactScreen /></AppFrame></div>
+          <div className={styles.centerRow}><AppFrame label="Ansprechpartner-Ansicht in der App mit Name, Betrieb und Chat"><ContactScreen /></AppFrame></div>
         </div>
       </Section>
 
@@ -83,7 +83,7 @@ export default function Page() {
       </Section>
 
       <Section tone="soft" eyebrow="Häufige Fragen" title="Was oft gefragt wird." center>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={styles.centerRow}>
           <Faq items={[
             { q: 'Wie schnell meldet sich jemand?', a: 'In der Pilotphase bekommst du in der Regel innerhalb eines Werktags einen Vorschlag mit Partner und Kostenrahmen. Bei dringenden Fällen kennzeichnest du das beim Beschreiben.' },
             { q: 'Kann ich einen Partner ablehnen?', a: 'Ja, jederzeit und ohne Begründung. Dann schlagen wir einen anderen vor, sofern in deiner Region verfügbar.' },

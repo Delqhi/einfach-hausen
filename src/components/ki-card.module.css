@@ -1,0 +1,3 @@
+/* KiCard: versetzte Reihen der Karte im globalen ki-*-Klassensystem (DESIGN.md §2). */
+.inputRow { margin: 0 14px 10px; }
+.chipRow { padding: 0 14px 14px; margin: 0; }

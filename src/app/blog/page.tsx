@@ -2,9 +2,8 @@ import type { Metadata } from 'next';
 import { breadcrumbJsonLd, canonical } from '@/lib/seo';
 import { BLOG_POSTS } from '@/lib/seo-cluster';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, LinkButton, PageHero, Section } from '@/components/marketing/ui';
-import Link from 'next/link';
-import { ArrowRight, BookOpen, Clock } from 'lucide-react';
+import { CtaBand, LinkButton, PageHero, Section, TextLink, mkt as styles } from '@/components/marketing/ui';
+import { BookOpen } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Ratgeber rund ums Eigenheim',
@@ -23,21 +22,13 @@ export default function Page() {
         actions={<><LinkButton href="/leistungen/heizung">Heizung im Überblick</LinkButton><LinkButton href="/lexikon" secondary>Zum Fachlexikon</LinkButton></>}
       />
       <Section tone="surface" eyebrow="Wissenssammlung" title="Aktuelle Ratgeber &amp; Leitfäden">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginTop: '28px' }}>
+        <div className={styles.cardGrid} data-cols="3">
           {BLOG_POSTS.map((p) => (
-            <article key={p.slug} style={{ display: 'flex', flexDirection: 'column', padding: '28px', background: '#ffffff', borderRadius: '22px', border: '1px solid #e4e2dc', boxShadow: '0 2px 8px rgba(16,34,42,0.03)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#105258', fontSize: '12px', fontWeight: 700, marginBottom: '14px' }}>
-                <BookOpen size={16} /> Ratgeber-Artikel
-              </div>
-              <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#10222a', margin: '0 0 10px 0', letterSpacing: '-0.02em', lineHeight: 1.3 }}>
-                {p.title}
-              </h3>
-              <p style={{ fontSize: '15px', color: '#5f6e75', lineHeight: 1.6, margin: '0 0 24px 0', flex: 1 }}>
-                {p.description}
-              </p>
-              <Link href={`/blog/${p.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 800, color: '#105258', textDecoration: 'none' }}>
-                Leitfaden lesen <ArrowRight size={16} />
-              </Link>
+            <article key={p.slug} className={styles.card}>
+              <span className={styles.cardKicker}><BookOpen size={16} /> Ratgeber-Artikel</span>
+              <h3 className={styles.cardTitle}>{p.title}</h3>
+              <p className={styles.cardText}>{p.description}</p>
+              <span className={styles.cardFoot}><TextLink href={`/blog/${p.slug}`}>Leitfaden lesen</TextLink></span>
             </article>
           ))}
         </div>

@@ -62,7 +62,7 @@ export default function RegisterProPage() {
         </button>
         <div className="pro-logo">
           <svg width="34" height="38" viewBox="0 0 72 78" fill="none"><path d="M10 34 L36 12 L62 34 V70 H30" stroke="#105258" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /><rect x="30" y="22" width="3.2" height="3.2" rx="0.8" fill="#105258" /><rect x="36" y="22" width="3.2" height="3.2" rx="0.8" fill="#105258" /></svg>
-          <div style={{ display: "flex", alignItems: "baseline", marginLeft: -6 }}><span className="logo-word green-word" style={{ fontSize: 26 }}>einfach</span><span className="logo-word ink-word" style={{ fontSize: 26 }}>hausen</span></div>
+          <div className={auth.wordRow}><span className={`logo-word green-word ${auth.wordMd}`}>einfach</span><span className={`logo-word ink-word ${auth.wordMd}`}>hausen</span></div>
         </div>
         <p className="pro-tagline">Dein Zuhause. <span className="green">Alles geregelt.</span></p>
         <div className="pro-headline">
@@ -101,7 +101,7 @@ export default function RegisterProPage() {
           <div className="trust-item" key={t.title}>{t.icon}<strong>{t.title}</strong><span>{t.text}</span></div>
         ))}
       </section>
-      <div className="wave"><svg viewBox="0 0 430 50" preserveAspectRatio="none" style={{ width: "100%", height: 50, display: "block" }}><path d="M0 35 C 120 0, 300 50, 430 15 L430 50 L0 50 Z" fill="#e7efeb" /></svg></div>
+      <div className="wave"><svg viewBox="0 0 430 50" preserveAspectRatio="none" className={auth.waveSvg}><path d="M0 35 C 120 0, 300 50, 430 15 L430 50 L0 50 Z" fill="#e7efeb" /></svg></div>
       <div className="home-indicator" />
     </div>
   );

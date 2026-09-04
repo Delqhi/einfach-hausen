@@ -21,7 +21,7 @@ export default function PilotphasePage() {
         text="Wir starten regional und mit einer begrenzten Zahl an Haushalten. Als Dank für dein Vertrauen bekommst du als früher Nutzer 15 % Dauer-Vorteil auf alle bezahlten Pakete. Dauerhaft, nicht nur im ersten Jahr."
         actions={<><LinkButton href="/register?role=homeowner" variant="terra">Platz sichern, kostenlos</LinkButton><LinkButton href="/preise" secondary>Preise ansehen</LinkButton></>}
         aside={
-          <Reveal className={styles.photo} style={{ aspectRatio: '4 / 5', maxWidth: 420 }}>
+          <Reveal className={styles.photo} data-ratio="4:5" data-mw="420">
             <Image src="/images/marketing/family-home.jpg" alt="Familie vor ihrem Haus" width={1024} height={1024} sizes="(min-width: 900px) 420px, 100vw" priority />
             <span className={styles.photoCaption}><Check size={18} aria-hidden="true" /> 15 % Dauer-Vorteil für Pilot-Haushalte</span>
           </Reveal>
@@ -56,7 +56,7 @@ export default function PilotphasePage() {
       </Section>
 
       <Section tone="soft" eyebrow="Häufige Fragen" title="Zur Pilotphase." center>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={styles.centerRow}>
           <Faq items={[
             { q: 'Muss ich ein bezahltes Paket nehmen?', a: 'Nein. Der Pilot-Status ist kostenlos und verpflichtet zu nichts. Der 15 %-Vorteil greift nur, falls du dich irgendwann für PLUS oder PREMIUM entscheidest.' },
             { q: 'Was, wenn die 1.000 voll sind?', a: 'Dann kannst du Einfach Hausen weiterhin kostenlos nutzen, nur ohne den Dauer-Vorteil. Wir zeigen im Konto an, ob du Pilot bist.' },

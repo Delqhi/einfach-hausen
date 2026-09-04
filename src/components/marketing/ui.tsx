@@ -213,7 +213,7 @@ export function Faq({ items }: { items: ReadonlyArray<{ q: string; a: React.Reac
 
 export function Timeline({ items }: { items: ReadonlyArray<{ when: string; title: string; text: string }> }) {
   return (
-    <ol className={styles.timeline} style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+    <ol className={styles.timeline}>
       {items.map((item) => (
         <li key={item.title} className={styles.tlItem}>
           <div className={styles.tlRail} aria-hidden="true"><span className={styles.tlDot} /><span className={styles.tlLine} /></div>

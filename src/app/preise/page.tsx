@@ -48,7 +48,7 @@ export default function Page() {
       </Section>
 
       <Section eyebrow="Häufige Fragen" title="Zu den Preisen." center>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={styles.centerRow}>
           <Faq items={[
             { q: 'Wie verdient Einfach Hausen dann Geld?', a: 'Über optionale Komfort-Pakete für Eigentümer und planbare Monatstarife für Partnerbetriebe. Nicht über Provisionen und nicht über den Verkauf deiner Anfrage. So bleiben unsere Interessen bei deinem Haus, nicht bei möglichst vielen Aufträgen.' },
             { q: 'Was kostet ein Auftrag?', a: 'Das, was der Partnerbetrieb mit dir vereinbart. Du siehst vorher einen Kostenrahmen und gibst erst dann frei. Die Rechnung kommt direkt vom Betrieb.' },

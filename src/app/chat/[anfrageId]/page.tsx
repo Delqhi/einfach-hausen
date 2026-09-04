@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
 import { getSupabase } from "@/lib/supabase";
 import { BackIcon, ArrowRightWhite } from "@/components/icons";
+import styles from "./chat.module.css";
 
 type Msg = { id: string; sender_id: string; text: string; created_at: string };
 
@@ -77,8 +78,8 @@ export default function ChatPage() {
         <button className="back-btn" onClick={() => router.back()}>
           <BackIcon />
         </button>
-        <strong style={{ fontSize: 18, fontWeight: 800, color: "var(--ink)" }}>{partnerName}</strong>
-        <span style={{ width: 20 }} />
+        <strong className={styles.partnerName}>{partnerName}</strong>
+        <span className={styles.headerSpacer} />
       </header>
       <div className="ki-messages">
         {msgs.map((m) => (

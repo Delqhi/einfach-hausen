@@ -4,6 +4,7 @@ import { uiToast } from "@/components/ui-toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
+import styles from "./account-forms.module.css";
 
 // GDPR self-service (EH T-0203): JSON export of the own account and real
 // deletion. The server derives the identity from the session; no ids travel
@@ -50,14 +51,14 @@ export function AccountActions() {
 
   if (confirmOpen) {
     return (
-      <div role="alertdialog" aria-label="Konto wirklich löschen?" style={{ border: "1px solid #d64541", borderRadius: 14, padding: 16 }}>
+      <div role="alertdialog" aria-label="Konto wirklich löschen?" className={styles.dangerBox}>
         <strong>Konto wirklich löschen?</strong>
-        <p style={{ fontSize: 14, margin: "8px 0" }}>
+        <p className={styles.noteSpaced}>
           Deine persönlichen Inhalte werden dauerhaft gelöscht und dein Login unwiderruflich beendet.
           Belegdaten wie Rechnungen bleiben aus gesetzlichen Gründen erhalten, ohne deine Identität.
         </p>
-        {error && <p style={{ color: "#d64541", fontSize: 14 }}>{error}</p>}
-        <button className="btn-danger" style={{ marginRight: 8 }} disabled={busy !== null} onClick={deleteAccount}>
+        {error && <p className={styles.errorText}>{error}</p>}
+        <button className={`btn-danger ${styles.btnGapRight}`} disabled={busy !== null} onClick={deleteAccount}>
           {busy === "delete" ? "Wird gelöscht…" : "Endgültig löschen"}
         </button>
         <button className="btn-ghost" onClick={() => setConfirmOpen(false)} disabled={busy !== null}>Abbrechen</button>
@@ -67,11 +68,11 @@ export function AccountActions() {
 
   return (
     <div>
-      <p style={{ fontSize: 14 }}>
+      <p className={styles.note}>
         Lade deine gespeicherten Daten als JSON-Datei herunter oder lösche dein Konto und alle persönlichen Inhalte.
       </p>
-      {error && <p style={{ color: "#d64541", fontSize: 14 }}>{error}</p>}
-      <button className="btn-ghost" style={{ marginRight: 8 }} onClick={exportData} disabled={busy !== null}>
+      {error && <p className={styles.errorText}>{error}</p>}
+      <button className={`btn-ghost ${styles.btnGapRight}`} onClick={exportData} disabled={busy !== null}>
         {busy === "export" ? "Wird vorbereitet…" : "Daten exportieren"}
       </button>
       <button className="btn-danger" onClick={() => setConfirmOpen(true)} disabled={busy !== null}>

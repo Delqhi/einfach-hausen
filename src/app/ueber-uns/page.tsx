@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
-import { BrainCircuit, HeartHandshake, Home, MapPinned, UserRound, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { BrainCircuit, HeartHandshake, Home } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
-import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
+import { CtaBand, LinkButton, PageHero, Section, Statement, mkt as styles } from '@/components/marketing/ui';
 
 export const metadata: Metadata = { 
   title: 'Über uns', 
@@ -32,14 +31,11 @@ export default function Page() {
 
       {/* Reduziertes, typografisches Editorial-Manifest statt Standard-Kachelraster */}
       <Section eyebrow="Leitbild" title="Vier Grundsätze, an denen wir jede Zeile Code messen.">
-        <div style={{ display: 'grid', gap: '32px', marginTop: '36px' }}>
+        <div className={styles.principleList}>
           {principles.map(p => (
-            <div key={p.num} style={{ display: 'grid', gridTemplateColumns: 'minmax(60px, 80px) minmax(0, 1fr)', gap: '24px', paddingBottom: '32px', borderBottom: '1px solid #e4e2dc' }}>
-              <span style={{ fontSize: '20px', fontWeight: 800, color: '#105258', fontVariantNumeric: 'tabular-nums' }}>{p.num}</span>
-              <div>
-                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#10222a', margin: '0 0 8px 0', letterSpacing: '-0.02em' }}>{p.title}</h3>
-                <p style={{ fontSize: '15px', color: '#4b5b60', lineHeight: 1.6, margin: 0, maxWidth: '680px' }}>{p.text}</p>
-              </div>
+            <div key={p.num} className={styles.principleRow}>
+              <span className={styles.principleNum}>{p.num}</span>
+              <div className={styles.principleBody}><h3>{p.title}</h3><p>{p.text}</p></div>
             </div>
           ))}
         </div>
@@ -48,22 +44,22 @@ export default function Page() {
       <Statement kicker="Unser Versprechen" tone="green">Ein Ansprechpartner für alles rund ums Eigenheim.</Statement>
 
       <Section eyebrow="Transparenz" title="Echte Menschen, regionale Partner und 0 % Provision." text="Wir verdienen nicht an vermittelten Aufträgen, sondern an stabilen Service-Paketen für Haus und Betrieb.">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginTop: '24px' }}>
-          <div style={{ padding: '24px', background: '#ffffff', borderRadius: '20px', border: '1px solid #e4e2dc' }}>
-            <HeartHandshake size={24} style={{ color: '#105258', marginBottom: '14px' }} />
-            <h4 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 6px 0' }}>Keine Lead-Auktionen</h4>
-            <p style={{ fontSize: '14px', color: '#5f6e75', margin: 0, lineHeight: 1.5 }}>Partner kaufen keine Anfragen im Sekundentakt. Anfragen gehen gezielt an den passenden Betrieb in deiner Nachbarschaft.</p>
-          </div>
-          <div style={{ padding: '24px', background: '#ffffff', borderRadius: '20px', border: '1px solid #e4e2dc' }}>
-            <BrainCircuit size={24} style={{ color: '#105258', marginBottom: '14px' }} />
-            <h4 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 6px 0' }}>Assistenz statt Show</h4>
-            <p style={{ fontSize: '14px', color: '#5f6e75', margin: 0, lineHeight: 1.5 }}>Der Hausmeister-Copilot hilft bei der Problembeschreibung und Terminkoordination, nimmt dir aber niemals eigenmächtig das Ruder aus der Hand.</p>
-          </div>
-          <div style={{ padding: '24px', background: '#ffffff', borderRadius: '20px', border: '1px solid #e4e2dc' }}>
-            <Home size={24} style={{ color: '#105258', marginBottom: '14px' }} />
-            <h4 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 6px 0' }}>Dauerhafter Werterhalt</h4>
-            <p style={{ fontSize: '14px', color: '#5f6e75', margin: 0, lineHeight: 1.5 }}>Jede Rechnung, jede Wartung und jeder Kontakt fließt in die digitale Hausakte deines Eigenheims.</p>
-          </div>
+        <div className={styles.cardGrid} data-cols="3">
+          <article className={styles.card}>
+            <span className={styles.cardKicker}><HeartHandshake size={20} /></span>
+            <h3 className={styles.cardTitle}>Keine Lead-Auktionen</h3>
+            <p className={styles.cardText}>Partner kaufen keine Anfragen im Sekundentakt. Anfragen gehen gezielt an den passenden Betrieb in deiner Nachbarschaft.</p>
+          </article>
+          <article className={styles.card}>
+            <span className={styles.cardKicker}><BrainCircuit size={20} /></span>
+            <h3 className={styles.cardTitle}>Assistenz statt Show</h3>
+            <p className={styles.cardText}>Der Hausmeister-Copilot hilft bei der Problembeschreibung und Terminkoordination, nimmt dir aber niemals eigenmächtig das Ruder aus der Hand.</p>
+          </article>
+          <article className={styles.card}>
+            <span className={styles.cardKicker}><Home size={20} /></span>
+            <h3 className={styles.cardTitle}>Dauerhafter Werterhalt</h3>
+            <p className={styles.cardText}>Jede Rechnung, jede Wartung und jeder Kontakt fließt in die digitale Hausakte deines Eigenheims.</p>
+          </article>
         </div>
       </Section>
 

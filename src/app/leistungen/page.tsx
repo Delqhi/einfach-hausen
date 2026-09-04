@@ -47,9 +47,9 @@ export default function Page() {
       <Statement kicker="Beispiele">So klingen echte Anliegen. <mark>Genau so darfst du schreiben.</mark></Statement>
 
       <Section eyebrow="In deinen Worten" title="Kein Fachchinesisch nötig." text="Jeder dieser Sätze reicht uns, um loszulegen. Tipp einen an, er wird direkt übernommen." tight>
-        <div className={styles.chipRow} style={{ gap: 12 }}>
+        <div className={styles.chipRow} data-density="airy">
           {EXAMPLES.map((e) => (
-            <a key={e} className={styles.chip} href={`/register?role=homeowner&request=${encodeURIComponent(e)}`} style={{ fontSize: 16, padding: '12px 18px' }}>{e}</a>
+            <a key={e} className={styles.chip} data-size="lg" href={`/register?role=homeowner&request=${encodeURIComponent(e)}`}>{e}</a>
           ))}
         </div>
       </Section>
@@ -63,7 +63,7 @@ export default function Page() {
       </Section>
 
       <Section eyebrow="Häufige Fragen" title="Zu den Leistungen." center>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={styles.centerRow}>
           <Faq items={[
             { q: 'Was, wenn mein Anliegen in keine Kategorie passt?', a: 'Dann schreib es trotzdem. Die Kategorien sind unsere interne Ordnung, nicht deine Aufgabe. Wir finden heraus, wer helfen kann, oder sagen dir ehrlich, wenn wir es nicht können.' },
             { q: 'Macht Einfach Hausen die Arbeiten selbst?', a: 'Nein. Wir organisieren. Ausgeführt wird durch eigenständige, persönlich geprüfte Partnerbetriebe aus deiner Region, mit denen du direkt abrechnest.' },

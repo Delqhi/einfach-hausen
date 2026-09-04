@@ -1,0 +1,6 @@
+/* Compact wordmark styles for components/logo.tsx — module-per-contract (DESIGN.md §2). */
+.compactWrap { position: relative; display: inline-block; padding-top: 6px; }
+.compactMark { position: absolute; left: -56px; top: -4px; }
+.wordRow { display: flex; align-items: baseline; gap: 2px; }
+.wordA { font-size: 34px; font-weight: 700; letter-spacing: -1px; color: var(--green); }
+.wordB { font-size: 34px; font-weight: 700; letter-spacing: -1px; color: var(--ink); }

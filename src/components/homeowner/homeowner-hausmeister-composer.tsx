@@ -166,7 +166,7 @@ export function HomeownerHausmeisterComposer({
           <span>{submitting ? 'Wird gesendet…' : continuingIntent ? 'Weiter' : 'Senden'}</span>
         </button>
         {submitError && (
-          <p className="owner-composer-status" role="alert" style={{ color: '#a12b25' }}>{submitError}</p>
+          <p className="owner-composer-status" role="alert" data-tone="error">{submitError}</p>
         )}
       </div>
       {connectionStatus && (
