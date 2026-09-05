@@ -50,10 +50,6 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
             desc: "Deine Anfrage wird nicht versteigert – ein verlässlicher Partner pro Vorgang.",
           },
           {
-            title: "Verbindliche Angebote",
-            desc: "Faire Konditionen und transparente Meisterpreise ohne versteckte Aufschläge.",
-          },
-          {
             title: "Digitale Hausakte",
             desc: "Wartungen, Rechnungen und Garantiebelege zentral und dauerhaft gesichert.",
           },
@@ -70,10 +66,6 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
           {
             title: "Direkte Abrechnung nach deinen Sätzen",
             desc: "Volle Kontrolle über deine Meister-Stundensätze ohne Drosselung.",
-          },
-          {
-            title: "Verlässliche Wartungskunden",
-            desc: "Planbare Jahresauslastung durch wiederkehrende Prüf- und Wartungstermine.",
           },
         ],
     link1: {
@@ -190,7 +182,7 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
                   <button
                     type="button"
                     onClick={onSwitchToLogin}
-                    className="w-full min-h-[44px] py-2.5 px-4 rounded-xl bg-[var(--eh-terra,#c8623a)] hover:bg-[var(--eh-terra-deep,#a84d29)] active:scale-[0.99] text-white font-bold text-sm shadow-[0_2px_8px_rgba(200,98,58,0.20)] hover:shadow-[0_4px_16px_rgba(200,98,58,0.28)] flex items-center justify-center gap-2 cursor-pointer transition-all duration-150"
+                    className="w-full min-h-[44px] py-2.5 px-4 rounded-xl bg-[var(--eh-green-700,#105258)] hover:bg-[var(--eh-green-900,#0a3539)] active:scale-[0.99] text-white font-bold text-sm shadow-[0_2px_8px_rgba(200,98,58,0.20)] hover:shadow-[0_4px_16px_rgba(200,98,58,0.28)] flex items-center justify-center gap-2 cursor-pointer transition-all duration-150"
                   >
                     <span>{isKunde ? "Zum Eigentümer-Login" : "Zum Handwerker-Login"}</span>
                     <ArrowRight className="w-4 h-4" />

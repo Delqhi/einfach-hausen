@@ -18,13 +18,11 @@ import {
   Wrench,
   Sparkles,
   AlertCircle,
-  Check,
   Loader2,
   Server,
 } from "lucide-react";
 import { ForgotPasswordModal } from "./ForgotPasswordModal";
 import { LegalModal } from "./LegalModal";
-import { Logo } from "./Logo";
 
 export type Role = "kunde" | "handwerker";
 export type AuthMode = "login" | "register";
@@ -227,7 +225,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
                 />
               )}
               <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
-                <Home className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-colors ${role === "kunde" ? "text-[var(--eh-terra,#c8623a)]" : "text-stone-400"}`} />
+                <Home className={`w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-colors ${role === "kunde" ? "text-[var(--eh-green-700,#105258)]" : "text-stone-400"}`} />
                 <span className="truncate text-xs sm:text-sm">Eigentümer</span>
               </span>
             </button>
@@ -541,110 +539,47 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
           )}
         </div>
 
-        {/* Discreet Demo Quick-Fill */}
-        <div
-          id="demo-testzugang-bar"
-          className="pt-1 flex items-center justify-center gap-1.5 sm:gap-2 text-xs text-stone-600 select-none flex-wrap"
-        >
-          <span className="inline-flex items-center gap-1 text-stone-600 text-[11px] sm:text-xs" aria-hidden="true">
-            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#E69E66]" /> Demo-Login:
-          </span>
-          <div className="inline-flex items-center gap-1.5">
+        {/* Demo access stays available without competing with the primary auth flow. */}
+        <details id="demo-testzugang-disclosure" className="eh-auth-demo-disclosure">
+          <summary>Demo-Zugang</summary>
+          <div id="demo-testzugang-bar" className="eh-auth-demo-actions">
             <button
               id="btn-demo-kunde"
               type="button"
               disabled={isLoading}
               onClick={() => handleQuickFill("kunde")}
-              className="min-h-[36px] px-3 py-1 rounded-lg bg-[var(--eh-surface-subtle,#f2f5f5)] hover:bg-[var(--eh-text,#1c2129)] hover:text-white text-stone-700 font-semibold border border-[var(--eh-border,#e4e2dc)] transition-all duration-150 cursor-pointer text-[11px] sm:text-[11.5px] shadow-2xs hover:shadow-xs active:scale-[0.98]"
-              title="Klick: Demo Eigentümer ausfüllen"
             >
-              Eigentümer
+              Eigentümer-Demo
             </button>
             <button
               id="btn-demo-handwerker"
               type="button"
               disabled={isLoading}
               onClick={() => handleQuickFill("handwerker")}
-              className="min-h-[36px] px-3 py-1 rounded-lg bg-[var(--eh-surface-subtle,#f2f5f5)] hover:bg-[var(--eh-text,#1c2129)] hover:text-white text-stone-700 font-semibold border border-[var(--eh-border,#e4e2dc)] transition-all duration-150 cursor-pointer text-[11px] sm:text-[11.5px] shadow-2xs hover:shadow-xs active:scale-[0.98]"
-              title="Klick: Demo Handwerker ausfüllen"
             >
-              Handwerker
+              Handwerker-Demo
             </button>
           </div>
-        </div>
+        </details>
       </div>
 
-      {/* Subtle Footer: Trust Badges & Legal links */}
-      <div className="space-y-2 text-center px-1 select-none pt-2 sm:pt-3">
-        {/* Trust Icons: SSL, DSGVO, Server - crisp and readable on mobile */}
-        <div
-          id="trust-badges-bar"
-          className="flex items-center justify-center flex-wrap gap-x-2.5 sm:gap-x-3.5 gap-y-1 text-stone-600 text-[11px] sm:text-xs"
-        >
-          <div className="flex items-center gap-1 whitespace-nowrap" title="256-Bit SSL-Verschlüsselung">
-            <Lock className="w-3 h-3 text-stone-400 shrink-0" />
-            <span>SSL gesichert</span>
-          </div>
-          <span className="text-stone-300">•</span>
-          <div className="flex items-center gap-1 whitespace-nowrap" title="Streng nach europäischer DSGVO">
-            <ShieldCheck className="w-3 h-3 text-stone-400 shrink-0" />
-            <span>DSGVO konform</span>
-          </div>
-          <span className="text-stone-300">•</span>
-          <div className="flex items-center gap-1 whitespace-nowrap" title="Server in deutschen Rechenzentren">
-            <Server className="w-3 h-3 text-stone-400 shrink-0" />
-            <span>Server in DE</span>
-          </div>
+      {/* One calm assurance/legal block instead of stacked micro-chrome. */}
+      <div id="auth-assurance-footer" className="eh-auth-assurance-footer">
+        <div id="trust-badges-bar" className="eh-auth-assurance-badges">
+          <span title="256-Bit SSL-Verschlüsselung"><Lock className="w-3.5 h-3.5" /> SSL gesichert</span>
+          <span title="Streng nach europäischer DSGVO"><ShieldCheck className="w-3.5 h-3.5" /> DSGVO konform</span>
+          <span title="Server in deutschen Rechenzentren"><Server className="w-3.5 h-3.5" /> Server in DE</span>
         </div>
-
-        {/* Legal Disclaimer */}
-        <p className="text-xs text-stone-600">
+        <p>
           Mit der Anmeldung akzeptierst du unsere{" "}
-          <button
-            id="link-agb"
-            type="button"
-            onClick={() => openLegal("agb")}
-            className="text-stone-600 hover:text-[var(--eh-text,#1c2129)] font-semibold underline underline-offset-2 cursor-pointer"
-          >
-            AGB
-          </button>{" "}
+          <button id="link-agb" type="button" onClick={() => openLegal("agb")}>AGB</button>{" "}
           und{" "}
-          <button
-            id="link-datenschutz"
-            type="button"
-            onClick={() => openLegal("datenschutz")}
-            className="text-stone-600 hover:text-[var(--eh-text,#1c2129)] font-semibold underline underline-offset-2 cursor-pointer"
-          >
-            Datenschutz
-          </button>
-          .
+          <button id="link-datenschutz" type="button" onClick={() => openLegal("datenschutz")}>Datenschutz</button>
+          {" · "}
+          <button type="button" onClick={() => openLegal("impressum")}>Impressum</button>
+          {" · "}
+          <Link href="/hilfe">Hilfe</Link>
         </p>
-
-        {/* Footer Navigation */}
-        <div className="flex items-center justify-center gap-3 text-xs text-stone-600">
-          <button
-            type="button"
-            onClick={() => openLegal("impressum")}
-            className="hover:text-stone-700 transition-colors cursor-pointer"
-          >
-            Impressum
-          </button>
-          <span>•</span>
-          <button
-            type="button"
-            onClick={() => openLegal("datenschutz")}
-            className="hover:text-stone-700 transition-colors cursor-pointer"
-          >
-            DSGVO
-          </button>
-          <span>•</span>
-          <Link
-            href="/hilfe"
-            className="hover:text-stone-700 transition-colors cursor-pointer"
-          >
-            Hilfe
-          </Link>
-        </div>
       </div>
 
       {/* Modals */}

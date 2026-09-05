@@ -49,7 +49,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
         className="eh-auth-topbar"
       >
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <Link href="/" aria-label="Zur Startseite"><Logo variant="dark" size="sm" /></Link>
+          <Link href="/" aria-label="Zur Startseite"><Logo variant="dark" size="md" /></Link>
           <div className="eh-auth-brand-context hidden sm:flex items-center gap-2 border-l border-[var(--eh-border,#e4e2dc)] pl-3">
             <AnimatePresence mode="wait">
               <motion.div

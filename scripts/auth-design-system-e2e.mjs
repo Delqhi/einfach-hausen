@@ -62,12 +62,17 @@ try {
     const page = await context.newPage();
     for (const route of routes) {
       await page.goto(`${base}${route.path}`, { waitUntil: 'networkidle' });
+      await page.locator('#login-card-container').waitFor({ state: 'visible', timeout: 10000 });
       const data = await page.evaluate(({ buttonSelector, viewportWidth }) => {
         const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect();
         const card = rect('#login-card-container');
         const grid = rect('.eh-auth-grid');
         const hero = rect('#website-hero-panel');
         const heading = document.querySelector('.eh-auth-form-heading h2');
+        const heroHeading = document.querySelector('.eh-auth-trust-panel h1');
+        const heroPanel = document.querySelector('.eh-auth-trust-panel');
+        const demoDisclosure = document.querySelector('#demo-testzugang-disclosure');
+        const assuranceFooter = document.querySelector('#auth-assurance-footer');
         const button = document.querySelector(buttonSelector);
         const roleSwitch = document.querySelector('.eh-auth-topbar-role-switch');
         const networkBadge = document.querySelector('.eh-auth-network-badge');
@@ -77,6 +82,10 @@ try {
           gridWidth: grid?.width || 0,
           heroWidth: hero?.width || 0,
           headingSize: heading ? Number.parseFloat(getComputedStyle(heading).fontSize) : 0,
+          heroHeadingSize: heroHeading ? Number.parseFloat(getComputedStyle(heroHeading).fontSize) : 0,
+          heroBorderWidth: heroPanel ? getComputedStyle(heroPanel).borderTopWidth : 'missing',
+          demoDisclosure: Boolean(demoDisclosure),
+          assuranceFooter: Boolean(assuranceFooter),
           buttonBg: button ? getComputedStyle(button).backgroundColor : '',
           roleSwitchDisplay: roleSwitch ? getComputedStyle(roleSwitch).display : 'missing',
           networkBadgeDisplay: networkBadge ? getComputedStyle(networkBadge).display : 'missing',
@@ -94,7 +103,12 @@ try {
         const benefitsLink = page.locator('.eh-auth-mobile-benefits-link');
         if (!(await benefitsLink.isVisible().catch(() => false))) throw new Error(`${viewport.name}/${route.name}: calm mobile benefits link missing`);
       }
-      if (viewport.width >= 1320 && data.cardWidth < 500) throw new Error(`${viewport.name}/${route.name}: auth card too narrow ${data.cardWidth}px`);
+      if (viewport.width >= 1320 && data.cardWidth < 540) throw new Error(`${viewport.name}/${route.name}: auth card too narrow ${data.cardWidth}px`);
+      if (viewport.width >= 1320 && data.headingSize < 36) throw new Error(`${viewport.name}/${route.name}: form heading too small ${data.headingSize}px`);
+      if (viewport.width >= 1320 && data.heroHeadingSize < 50) throw new Error(`${viewport.name}/${route.name}: editorial hero heading too small ${data.heroHeadingSize}px`);
+      if (viewport.width >= 1320 && data.heroBorderWidth !== '0px') throw new Error(`${viewport.name}/${route.name}: legacy outer hero card still visible (${data.heroBorderWidth})`);
+      if (!data.demoDisclosure) throw new Error(`${viewport.name}/${route.name}: demo access is not a disclosure`);
+      if (!data.assuranceFooter) throw new Error(`${viewport.name}/${route.name}: consolidated assurance footer missing`);
       if (viewport.width >= 1490 && data.gridWidth < 1400) throw new Error(`${viewport.name}/${route.name}: auth composition too narrow ${data.gridWidth}px`);
       if (viewport.width >= 1490 && data.heroWidth < 760) throw new Error(`${viewport.name}/${route.name}: trust panel too narrow ${data.heroWidth}px`);
       results.push({ viewport: viewport.name, route: route.name, ...data });
