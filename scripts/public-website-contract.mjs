@@ -72,6 +72,9 @@ const homeHero = read('src/components/marketing/home-hero.tsx');
 assert.match(homeHero, /Die Betriebszentrale/);
 assert.match(homeHero, /HeroOrchestration/);
 assert.match(homeHero, /IntakeForm/);
+assert.doesNotMatch(homeHero, /Nichts wird ohne dich beauftragt/, 'homepage hero must not repeat the removed no-order proof line');
+const intakeForm = read('src/components/home/intake-form.tsx');
+assert.match(intakeForm, /variant !== \"hero\" && \(/, 'hero intake must hide the visible heading, badge, and meta row');
 
 const homeSections = read('src/components/marketing/home-sections.tsx');
 assert.ok(homeSections.includes("export { HomeHero } from './home-hero';"), 'homepage sections must export canonical hero v2');
