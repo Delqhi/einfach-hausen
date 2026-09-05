@@ -81,10 +81,10 @@ export function HomeHero() {
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         // Initial states – JS only.
         gsap.set(lines, { yPercent: 112 });
-        gsap.set([eyebrow, lead, intake, proof, secondary], { autoAlpha: 0, y: 22 });
-        gsap.set(visual, { autoAlpha: 0, y: 64, rotateX: 9, transformPerspective: 1400, transformOrigin: '50% 100%' });
+        gsap.set([eyebrow, lead, intake, proof, secondary], { y: 22 });
+        gsap.set(visual, { y: 64, rotateX: 9, transformPerspective: 1400, transformOrigin: '50% 100%' });
         gsap.set([glows, grid], { autoAlpha: 0 });
-        gsap.set(facts, { autoAlpha: 0, y: 18 });
+        gsap.set(facts, { y: 18 });
         bpPaths.forEach((p) => {
           const len = p.getTotalLength();
           gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
@@ -115,15 +115,15 @@ export function HomeHero() {
           .to(glows, { autoAlpha: 1, duration: 1.6, ease: 'power2.out' }, 0)
           .to(grid, { autoAlpha: 1, duration: 1.4, ease: 'power2.out' }, 0.2)
           .to(bpPaths, { strokeDashoffset: 0, duration: 2.2, ease: 'power2.inOut', stagger: 0.04 }, 0.1)
-          .to(eyebrow, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.3)
+          .to(eyebrow, { y: 0, duration: 0.7 }, 0.3)
           .to(lines, { yPercent: 0, duration: 1.05, stagger: 0.12 }, 0.42)
           .to(stroke, { strokeDashoffset: 0, duration: 0.75, ease: 'power2.inOut' }, 1.15)
-          .to(lead, { autoAlpha: 1, y: 0, duration: 0.85 }, 0.85)
-          .to(intake, { autoAlpha: 1, y: 0, duration: 0.95 }, 1.0)
-          .to(proof, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.07 }, 1.2)
-          .to(secondary, { autoAlpha: 1, y: 0, duration: 0.6 }, 1.4)
-          .to(visual, { autoAlpha: 1, y: 0, rotateX: 0, duration: 1.3 }, 0.95)
-          .to(facts, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.08 }, 1.45)
+          .to(lead, { y: 0, duration: 0.85 }, 0.85)
+          .to(intake, { y: 0, duration: 0.95 }, 1.0)
+          .to(proof, { y: 0, duration: 0.6, stagger: 0.07 }, 1.2)
+          .to(secondary, { y: 0, duration: 0.6 }, 1.4)
+          .to(visual, { y: 0, rotateX: 0, duration: 1.3 }, 0.95)
+          .to(facts, { y: 0, duration: 0.7, stagger: 0.08 }, 1.45)
           .call(countUp, [], 1.5)
           .call(() => loop.play(0), [], 1.75);
 
@@ -155,7 +155,7 @@ export function HomeHero() {
           .to(q('[data-h="copy"]'), { y: -50 }, 0)
           .to(tilt, { y: -110 }, 0)
           .to(q('[data-h="blueprint"]'), { y: 60 }, 0)
-          .to(q('[data-h="facts"]'), { autoAlpha: 0.15, y: -20 }, 0);
+          .to(q('[data-h="facts"]'), { y: -20 }, 0);
 
         /* Typewriter in the intake placeholder. Pauses on focus / value. */
         let typer: gsap.core.Timeline | undefined;
@@ -292,7 +292,6 @@ export function HomeHero() {
             <IntakeForm variant="hero" />
             <ul className={styles.proof} data-h="proof">
               <li><Check size={15} strokeWidth={2.5} aria-hidden="true" />Kostenlos starten</li>
-              <li><Check size={15} strokeWidth={2.5} aria-hidden="true" />Nichts wird ohne dich beauftragt</li>
               <li><Check size={15} strokeWidth={2.5} aria-hidden="true" />Ein Mensch aus deiner Region</li>
             </ul>
           </div>

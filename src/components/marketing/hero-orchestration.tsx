@@ -56,7 +56,7 @@ export function HeroOrchestration() {
 
         <div className={styles.panelBody}>
           {/* Progress rail */}
-          <div className={styles.rail}>
+          <div className={styles.rail} tabIndex={0} aria-label="Vorgangsfortschritt: Anliegen, Zuordnung, Partner, Hausakte">
             <span className={styles.railTrack} aria-hidden="true"><span className={styles.railFill} data-o="rail-fill" /></span>
             {RAIL.map((step, i) => (
               <div className={styles.railStep} data-o="rail" data-index={i} data-state={i === 0 ? 'active' : 'idle'} key={step.title}>
@@ -188,8 +188,8 @@ export function HeroOrchestration() {
 /* Timeline                                                            */
 /* ------------------------------------------------------------------ */
 
-const SCENE_IN = { autoAlpha: 1, y: 0, duration: 0.45 } as const;
-const SCENE_OUT = { autoAlpha: 0, y: -14, duration: 0.38, ease: 'power2.in' } as const;
+const SCENE_IN = { y: 0, duration: 0.45 } as const;
+const SCENE_OUT = { y: -14, duration: 0.38, ease: 'power2.in' } as const;
 
 function setRail(rail: HTMLElement[], active: number) {
   rail.forEach((el, i) => {
@@ -199,7 +199,7 @@ function setRail(rail: HTMLElement[], active: number) {
 
 /**
  * Builds the looping "Vorgang" choreography. Returns a paused timeline the
- * parent adds to its master. transform/opacity only; no bounce/elastic.
+ * parent adds to its master. Readable content uses transform-only motion; visibility swaps are atomic.
  */
 export function buildOrchestration(root: HTMLElement): gsap.core.Timeline {
   const q = gsap.utils.selector(root);
@@ -227,31 +227,36 @@ export function buildOrchestration(root: HTMLElement): gsap.core.Timeline {
     .call(() => setRail(rail, 0), [], 0.01);
 
   /* 1 · Anliegen */
-  tl.to(s(1), SCENE_IN, 0.05)
-    .from(q('[data-s1="bubble"]'), { autoAlpha: 0, y: 12, scale: 0.97, duration: 0.45 }, '<0.1')
-    .from(q('[data-s1="attach"] span'), { autoAlpha: 0, y: 8, stagger: 0.08, duration: 0.35 }, '>-0.1')
-    .from(q('[data-s1="assistant"]'), { autoAlpha: 0, y: 12, duration: 0.45 }, '>0.2')
-    .from(q('[data-s1="choice"]'), { autoAlpha: 0, x: -10, stagger: 0.09, duration: 0.35 }, '>-0.15')
-    .from(q('[data-s1="selected"]'), { autoAlpha: 0, duration: 0.3 }, '>0.45')
+  tl.set(s(1), { autoAlpha: 1 }, 0.04)
+    .to(s(1), SCENE_IN, 0.05)
+    .from(q('[data-s1="bubble"]'), { y: 12, scale: 0.97, duration: 0.45 }, '<0.1')
+    .from(q('[data-s1="attach"] span'), { y: 8, stagger: 0.08, duration: 0.35 }, '>-0.1')
+    .from(q('[data-s1="assistant"]'), { y: 12, duration: 0.45 }, '>0.2')
+    .from(q('[data-s1="choice"]'), { x: -10, stagger: 0.09, duration: 0.35 }, '>-0.15')
+    .from(q('[data-s1="selected"]'), { scale: 0.96, duration: 0.3 }, '>0.45')
     .to(q('[data-featured]'), { scale: 1.02, duration: 0.16, yoyo: true, repeat: 1, ease: 'power2.inOut' }, '<');
 
   /* 1 → 2 · Zuordnung */
   tl.to(s(1), SCENE_OUT, '+=0.75')
+    .set(s(1), { autoAlpha: 0 })
+    .set(s(2), { autoAlpha: 1, y: 16 })
     .call(() => setRail(rail, 1))
     .to(railFill, { scaleY: 1 / 3, duration: 0.5, ease: 'power2.inOut' }, '<')
     .to(s(2), SCENE_IN, '<0.1')
     .fromTo(scan, { y: 0, autoAlpha: 0 }, { y: 320, autoAlpha: 0.6, duration: 1.3, ease: 'none' }, '<')
-    .from(q('[data-s2="chip"]'), { autoAlpha: 0, y: 10, stagger: 0.24, duration: 0.4 }, '<0.05')
+    .from(q('[data-s2="chip"]'), { y: 10, stagger: 0.24, duration: 0.4 }, '<0.05')
     .from(q('[data-s2="check"]'), { scale: 0, stagger: 0.24, duration: 0.35 }, '<0.28')
     .to(scan, { autoAlpha: 0, duration: 0.2 }, '>-0.2');
 
   /* 2 → 3 · Partner */
   const counters = pctEls.map((el) => ({ el, v: 0, target: Number(el.dataset.value) }));
   tl.to(s(2), SCENE_OUT, '+=0.65')
+    .set(s(2), { autoAlpha: 0 })
+    .set(s(3), { autoAlpha: 1, y: 16 })
     .call(() => setRail(rail, 2))
     .to(railFill, { scaleY: 2 / 3, duration: 0.5, ease: 'power2.inOut' }, '<')
     .to(s(3), SCENE_IN, '<0.1')
-    .from(q('[data-s3="partner"]'), { autoAlpha: 0, y: 14, stagger: 0.14, duration: 0.45 }, '<0.1')
+    .from(q('[data-s3="partner"]'), { y: 14, stagger: 0.14, duration: 0.45 }, '<0.1')
     .to(q('[data-s3="bar"]'), { scaleX: (_i, el) => Number((el as HTMLElement).dataset.value) / 100, stagger: 0.14, duration: 0.8, ease: 'power2.out' }, '<0.2')
     .to(counters, {
       v: (i: number) => counters[i].target,
@@ -262,23 +267,29 @@ export function buildOrchestration(root: HTMLElement): gsap.core.Timeline {
         counters.forEach((c) => { c.el.textContent = String(Math.round(c.v)); });
       },
     }, '<')
-    .from(q('[data-s3="tag"]'), { autoAlpha: 0, scale: 0.85, duration: 0.35 }, '>-0.25')
-    .from(q('[data-s3="appointment"]'), { autoAlpha: 0, y: 10, duration: 0.4 }, '>0.25')
-    .to(floatA, { autoAlpha: 1, y: 0, scale: 1, duration: 0.5 }, '<0.15');
+    .from(q('[data-s3="tag"]'), { scale: 0.85, duration: 0.35 }, '>-0.25')
+    .from(q('[data-s3="appointment"]'), { y: 10, duration: 0.4 }, '>0.25')
+    .set(floatA, { autoAlpha: 1 }, '<0.15')
+    .to(floatA, { y: 0, scale: 1, duration: 0.5 }, '<');
 
   /* 3 → 4 · Hausakte */
   tl.to(s(3), SCENE_OUT, '+=0.95')
+    .set(s(3), { autoAlpha: 0 })
+    .set(s(4), { autoAlpha: 1, y: 16 })
     .call(() => setRail(rail, 3))
     .to(railFill, { scaleY: 1, duration: 0.5, ease: 'power2.inOut' }, '<')
     .to(s(4), SCENE_IN, '<0.1')
-    .from(q('[data-s4="row"]'), { autoAlpha: 0, x: -10, stagger: 0.12, duration: 0.4 }, '<0.1')
-    .from(q('[data-s4="foot"]'), { autoAlpha: 0, y: 10, duration: 0.4 }, '>0.1')
-    .to(floatB, { autoAlpha: 1, y: 0, scale: 1, duration: 0.5 }, '<')
+    .from(q('[data-s4="row"]'), { x: -10, stagger: 0.12, duration: 0.4 }, '<0.1')
+    .from(q('[data-s4="foot"]'), { y: 10, duration: 0.4 }, '>0.1')
+    .set(floatB, { autoAlpha: 1 }, '<')
+    .to(floatB, { y: 0, scale: 1, duration: 0.5 }, '<')
     .call(() => setRail(rail, 4), [], '>0.2');
 
   /* Hold, then clear for the next loop */
   tl.to(s(4), SCENE_OUT, '+=1.6')
-    .to([floatA, floatB], { autoAlpha: 0, y: 8, scale: 0.96, duration: 0.35 }, '<')
+    .set(s(4), { autoAlpha: 0 })
+    .to([floatA, floatB], { y: 8, scale: 0.96, duration: 0.35 }, '<')
+    .set([floatA, floatB], { autoAlpha: 0 })
     .to(railFill, { scaleY: 0, duration: 0.3, ease: 'power2.inOut' }, '<')
     .set(counters, { v: 0, onComplete: () => counters.forEach((c) => { c.el.textContent = '0'; }) });
 
