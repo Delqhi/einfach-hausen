@@ -1,8 +1,9 @@
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import localFont from 'next/font/local';
 import { IntakeForm } from '@/components/home/intake-form';
 import { ScrollShadow, SmoothScroll } from './motion';
+import { SERVICE_CATEGORIES } from './service-catalog';
 import './tokens.css';
 import styles from './mkt.module.css';
 import logoMark from './assets/logo-mark.png';
@@ -19,12 +20,12 @@ const interVariable = localFont({
   fallback: ['ui-sans-serif', 'system-ui', 'sans-serif'],
 });
 
-const primary = [
-  ["So funktioniert's", '/so-funktionierts'],
-  ['Leistungen', '/leistungen'],
-  ['Hausakte', '/hausakte'],
-  ['Preise', '/preise'],
-  ['Hilfe', '/hilfe'],
+const helpLinks = [
+  ['Hilfe & FAQ', '/hilfe'],
+  ['Sicherheit & Daten', '/sicherheit'],
+  ['Blog', '/blog'],
+  ['Lexikon', '/lexikon'],
+  ['Kontakt', '/kontakt'],
 ] as const;
 
 const mobileMore = [
@@ -94,7 +95,39 @@ export function MarketingShell({ children, footerIntake = true }: { children: Re
               <span className={styles.logoWord}><b>einfach</b><span>hausen</span></span>
             </a>
             <nav className={styles.desktopNav} aria-label="Hauptnavigation">
-              {primary.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
+              <a href="/so-funktionierts">So funktioniert&apos;s</a>
+              <details className={styles.navDisclosure}>
+                <summary>Leistungen <ChevronDown size={14} aria-hidden="true" /></summary>
+                <div className={styles.megaMenu}>
+                  <div className={styles.megaIntro}>
+                    <span>Alles rund ums Eigenheim</span>
+                    <strong>Du sagst, was ansteht. Wir ordnen den passenden nächsten Schritt ein.</strong>
+                    <a href="/leistungen">Alle Leistungen <ArrowRight size={14} aria-hidden="true" /></a>
+                  </div>
+                  <div className={styles.megaServices}>
+                    {SERVICE_CATEGORIES.map(({ slug, shortTitle, description, icon: Icon }) => (
+                      <a key={slug} href={`/leistungen/${slug}`} className={styles.megaService}>
+                        <Icon size={17} aria-hidden="true" />
+                        <span><strong>{shortTitle}</strong><small>{description}</small></span>
+                      </a>
+                    ))}
+                  </div>
+                  <div className={styles.megaQuick}>
+                    <span>Schnelle Wege</span>
+                    <a href="/beratung"><strong>Beratung</strong><small>Erst einen fachlichen Ansprechpartner finden.</small></a>
+                    <a href="/notfall"><strong>Notfall</strong><small>Dringenden Fall einordnen und verfügbare Hilfe suchen.</small></a>
+                    <a href="/so-funktionierts#ansprechpartner"><strong>Ansprechpartner</strong><small>Persönlicher Kontakt ohne Buchungszwang.</small></a>
+                  </div>
+                </div>
+              </details>
+              <a href="/hausakte">Hausakte</a>
+              <a href="/preise">Preise</a>
+              <details className={`${styles.navDisclosure} ${styles.helpDisclosure}`}>
+                <summary>Hilfe <ChevronDown size={14} aria-hidden="true" /></summary>
+                <div className={styles.helpMenu}>
+                  {helpLinks.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
+                </div>
+              </details>
             </nav>
             <div className={styles.headerActions}>
               <a className={`${styles.btnGhost} ${styles.btnSm}`} href="/login">Anmelden</a>
@@ -103,7 +136,19 @@ export function MarketingShell({ children, footerIntake = true }: { children: Re
             <details className={styles.mobileMenu}>
               <summary aria-label="Menü öffnen"><Menu className={styles.menuIcon} size={22} /><X className={styles.closeIcon} size={22} /></summary>
               <nav aria-label="Mobile Navigation">
-                {[...primary, ...mobileMore].map(([label, href]) => <a key={href} href={href}>{label}</a>)}
+                <a href="/so-funktionierts">So funktioniert&apos;s</a>
+                <details className={styles.mobileDisclosure}>
+                  <summary>Leistungen <ChevronDown size={16} aria-hidden="true" /></summary>
+                  <div>{SERVICE_CATEGORIES.map(({ slug, shortTitle }) => <a key={slug} href={`/leistungen/${slug}`}>{shortTitle}</a>)}</div>
+                  <a className={styles.mobileAllLink} href="/leistungen">Alle Leistungen</a>
+                </details>
+                <a href="/hausakte">Hausakte</a>
+                <a href="/preise">Preise</a>
+                <details className={styles.mobileDisclosure}>
+                  <summary>Hilfe <ChevronDown size={16} aria-hidden="true" /></summary>
+                  <div>{helpLinks.map(([label, href]) => <a key={href} href={href}>{label}</a>)}</div>
+                </details>
+                {mobileMore.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
                 <a href="/impressum">Impressum</a>
                 <a href="/datenschutz">Datenschutz</a>
                 <a href="/agb">AGB</a>

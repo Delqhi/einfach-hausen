@@ -52,6 +52,7 @@
 }
 .headerInner {
   composes: container;
+  position: relative;
   height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px;
 }
 .logoLink { display: inline-flex; align-items: center; gap: 10px; }
@@ -67,7 +68,42 @@
   transition: background .18s ease, color .18s ease;
 }
 .desktopNav a:hover { background: var(--eh-teal-050); color: var(--eh-teal-900); }
+
 .headerActions { display: none; align-items: center; gap: 10px; }
+.navDisclosure { position: static; }
+.navDisclosure > summary {
+  list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+  padding: 10px 14px; border-radius: var(--eh-r-pill); font-size: 15px; font-weight: 500;
+  color: var(--eh-ink-soft); transition: background .18s ease, color .18s ease;
+}
+.navDisclosure > summary::-webkit-details-marker { display: none; }
+.navDisclosure > summary:hover, .navDisclosure[open] > summary { background: var(--eh-teal-050); color: var(--eh-teal-900); }
+.navDisclosure[open] > summary svg { transform: rotate(180deg); }
+.navDisclosure > summary svg { transition: transform .18s ease; }
+.megaMenu {
+  position: absolute; left: 50%; top: 64px; transform: translateX(-50%); z-index: 30;
+  width: min(1040px, calc(100vw - 40px)); padding: 22px;
+  display: grid; grid-template-columns: 220px minmax(0,1fr) 210px; gap: 20px;
+  background: var(--eh-surface); border: 1px solid var(--eh-line); border-radius: 24px; box-shadow: var(--eh-shadow-md);
+}
+.megaIntro, .megaQuick { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.megaIntro > span, .megaQuick > span { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--eh-teal-700); }
+.megaIntro > strong { font-size: 17px; line-height: 1.35; color: var(--eh-ink); }
+.megaIntro > a { padding: 0; display: inline-flex; align-items: center; gap: 6px; color: var(--eh-teal-700); font-weight: 650; }
+.megaServices { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 4px 8px; }
+.desktopNav .megaService { display: flex; align-items: flex-start; gap: 10px; border-radius: 14px; padding: 9px 10px; color: var(--eh-ink); }
+.megaService > svg { flex: 0 0 auto; margin-top: 2px; color: var(--eh-teal-700); }
+.megaService span, .megaQuick a { display: flex; flex-direction: column; gap: 2px; }
+.megaService strong, .megaQuick strong { font-size: 13px; line-height: 1.25; }
+.megaService small, .megaQuick small { color: var(--eh-ink-muted); font-size: 11px; line-height: 1.35; }
+.megaQuick { padding-left: 18px; border-left: 1px solid var(--eh-line); }
+.desktopNav .megaQuick a { padding: 8px 0; border-radius: 0; }
+.helpDisclosure { position: relative; }
+.helpMenu {
+  position: absolute; right: 0; top: calc(100% + 10px); width: 220px; padding: 10px; z-index: 31;
+  display: flex; flex-direction: column; background: var(--eh-surface); border: 1px solid var(--eh-line); border-radius: 18px; box-shadow: var(--eh-shadow-md);
+}
+.desktopNav .helpMenu a { border-radius: 10px; }
 
 /* Mobile menu (native <details>, hydration-free) */
 .mobileMenu { position: relative; }
@@ -90,6 +126,17 @@
 .mobileMenu nav a:hover { background: var(--eh-teal-050); }
 .mobileMenuActions { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; margin-top: 8px; border-top: 1px solid var(--eh-line); }
 .mobileMenuActions a { text-align: center; }
+.mobileDisclosure { border-top: 1px solid var(--eh-line); border-bottom: 1px solid var(--eh-line); }
+.mobileDisclosure + .mobileDisclosure { border-top: 0; }
+.mobileMenu .mobileDisclosure > summary {
+  width: 100%; height: auto; min-height: 44px; padding: 10px 14px; border: 0; border-radius: 12px;
+  justify-content: space-between; background: transparent; color: var(--eh-ink); font-weight: 650;
+}
+.mobileDisclosure[open] > summary { color: var(--eh-teal-900); background: var(--eh-teal-050); }
+.mobileDisclosure[open] > summary svg { transform: rotate(180deg); }
+.mobileDisclosure > div { display: grid; padding: 4px 0 8px 10px; }
+.mobileMenu .mobileDisclosure > div a { padding: 9px 12px; font-size: 14px; color: var(--eh-ink-soft); }
+.mobileMenu .mobileAllLink { margin: 0 10px 8px; padding: 9px 12px; color: var(--eh-teal-700); font-weight: 650; }
 
 @media (min-width: 960px) {
   .desktopNav, .headerActions { display: flex; }

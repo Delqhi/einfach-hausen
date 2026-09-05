@@ -1,34 +1,12 @@
-import {
-  Bug,
-  Droplets,
-  Hammer,
-  Home,
-  Leaf,
-  Paintbrush,
-  Plug,
-  Shield,
-  Snowflake,
-  Sparkles,
-  ThermometerSun,
-  Trees,
-} from 'lucide-react';
+import { SERVICE_CATEGORIES } from './service-catalog';
 
 /** Single source of truth for public-website content that repeats across pages. */
 
-export const CATEGORIES = [
-  { icon: Home, title: 'Haus & Technik', text: 'Kleinere Reparaturen, Montage und technische Anliegen' },
-  { icon: Plug, title: 'Elektro & Smart Home', text: 'Elektroarbeiten, Wallbox, Sicherheit und Gebäudeautomation' },
-  { icon: ThermometerSun, title: 'Heizung, Klima & Energie', text: 'Heizung, Wärmepumpe, Klima, Energieberatung und Wartung' },
-  { icon: Droplets, title: 'Sanitär & Wasser', text: 'Sanitärarbeiten, Leitungen, Armaturen und wasserbezogene Probleme' },
-  { icon: Hammer, title: 'Dach, Fenster & Türen', text: 'Dach, Dachrinne, Fenster, Türen, Schlosser und Gebäudehülle' },
-  { icon: Paintbrush, title: 'Innenausbau & Sanierung', text: 'Maler, Schreiner, Boden, Renovierung und Sanierungsarbeiten' },
-  { icon: Trees, title: 'Garten & Außenbereich', text: 'Gartenpflege, Heckenschnitt, Baumarbeiten und Pflasterarbeiten' },
-  { icon: Leaf, title: 'Reinigung & Pflege', text: 'Hausreinigung, PV-Reinigung, Dachrinne und laufende Pflege' },
-  { icon: Snowflake, title: 'Saisonale Dienste', text: 'Winterdienst und wiederkehrende Aufgaben rund ums Grundstück' },
-  { icon: Bug, title: 'Spezialfälle', text: 'Schädlingsbekämpfung und weitere qualifikationsabhängige Dienste' },
-  { icon: Sparkles, title: 'Umzug & Entrümpelung', text: 'Unterstützung beim Räumen, Umzug und objektbezogenen Dienstleistungen' },
-  { icon: Shield, title: 'Beratung & dringende Fälle', text: 'Passende Ansprechpartner für fachliche Fragen oder dringenden Unterstützungsbedarf' },
-] as const;
+export const CATEGORIES = SERVICE_CATEGORIES.map(({ icon, title, description }) => ({
+  icon,
+  title,
+  text: description,
+}));
 
 export const FACTS = [
   { value: '0 €', label: 'Das Hauskonto bleibt kostenlos' },
