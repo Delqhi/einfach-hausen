@@ -21,6 +21,9 @@ import { RelevanzBadge } from '@/components/marketing/lexikon/entry-card';
 import { AblaufTimeline, Checklist, DetailMotionConfig, Gauges, ReadingProgress, Toc } from '@/components/marketing/lexikon/lexikon-detail';
 import styles from '@/components/marketing/lexikon/lexikon.module.css';
 
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   assertLexikonIntegrity();
   return LEXIKON_EINTRAEGE.map((t) => ({ begriff: t.slug }));

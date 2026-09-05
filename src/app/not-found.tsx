@@ -1,6 +1,11 @@
 import Link from 'next/link';
+import { headers } from 'next/headers';
+import { LexikonNotFound } from '@/components/marketing/lexikon/lexikon-not-found';
 
-export default function NotFound() {
+export default async function NotFound() {
+  const originalPath = (await headers()).get('x-original-path') ?? '';
+  if (originalPath.startsWith('/lexikon/')) return <LexikonNotFound />;
+
   return (
     <main className="nf-shell">
       {/* Dekorative Hausszene: reine CSS/SVG-Illustration */}
