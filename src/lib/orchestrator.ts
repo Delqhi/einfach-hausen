@@ -4,7 +4,7 @@ import { classifyLocally, byokEnabled, consumeCloudAction, type IntentResult } f
 
 // Stage-1 local assistant: a deterministic, template-based reply built from
 // the local intent result. Zero cloud cost, instant.
-function localAssistantReply(intent:IntentResult,body:string,context:string):string{
+function localAssistantReply(intent:IntentResult):string{
   const urgency=intent.urgency==='emergency'?'Sofort-Hilfe: das klingt dringend.':intent.urgency==='short_notice'?'Kurzfristig lässt sich das gut koordinieren.':'Das lässt sich gut planen.';
   const mode=intent.mode==='consultation'
     ?'Ich stelle dir gern eine fachliche Person für eine Beratung zusammen — oder du entscheidest dich direkt für einen Auftrag.'
@@ -132,7 +132,7 @@ export async function answerHausmeisterQuestion(userId:number,body:string,channe
   const intent=classifyLocally(body);
   let reply:string;
   if(!intent.needsCloud){
-    reply=localAssistantReply(intent,body,context);
+    reply=localAssistantReply(intent);
   }else if(byokEnabled(userId)){
     // BYOK runs unmetered against the user's own gateway.
     reply=await answerHouseQuestion(body,context);

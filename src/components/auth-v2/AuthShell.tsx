@@ -25,7 +25,7 @@ import { LegalModal } from "@/components/auth-v2/LegalModal";
 import "@/components/auth-v2/auth-shell.css";
 import { HelpCircle, Sparkles, Home, Wrench, Award, Users } from "lucide-react";
 
-export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: { initialAuthMode?: AuthMode; initialRole?: Role }) {
+export function AuthShell({ initialAuthMode = "login", initialRole = "kunde", nextPath }: { initialAuthMode?: AuthMode; initialRole?: Role; nextPath?: string }) {
   const [mobileTab, setMobileTab] = useState<"login" | "vorteile">("login");
   const [role, setRole] = useState<Role>(initialRole);
   const isDesktop = useIsDesktop();
@@ -230,6 +230,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
             <LoginForm
               role={role}
               initialAuthMode={initialAuthMode}
+              nextPath={nextPath}
               onRoleChange={setRole}
               onOpenLegalModal={setActiveLegalModal}
             />
@@ -251,6 +252,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
                   <LoginForm
                     role={role}
                     initialAuthMode={initialAuthMode}
+                    nextPath={nextPath}
                     onRoleChange={setRole}
                     onOpenLegalModal={setActiveLegalModal}
                   />

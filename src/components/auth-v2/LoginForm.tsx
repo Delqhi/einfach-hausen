@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 import { DEMO_PASSWORD, DEMO_USERS, demoEmailFor } from "@/lib/demo-accounts";
 import { registerAction } from "@/app/actions";
+import { safeNextPath } from "@/lib/safe-redirect";
 import { motion } from "motion/react";
 import {
   Mail,
@@ -31,11 +32,13 @@ interface LoginFormProps {
   role?: Role;
   initialRole?: Role;
   initialAuthMode?: AuthMode;
+  /** Validated same-origin path to open after a successful login (deep-link from the auth gate). */
+  nextPath?: string;
   onRoleChange?: (role: Role) => void;
   onOpenLegalModal?: (type: "agb" | "datenschutz" | "impressum" | "sicherheit" | "partnerkriterien") => void;
 }
 
-export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMode = "login", onRoleChange, onOpenLegalModal }: LoginFormProps = {}) {
+export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMode = "login", nextPath, onRoleChange, onOpenLegalModal }: LoginFormProps = {}) {
   const [internalRole, setInternalRole] = useState<Role>(initialRole);
   const role = propRole !== undefined ? propRole : internalRole;
 
@@ -100,7 +103,10 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
         return;
       }
       // Server-Identitaet aufloesen; /app leitet Provider nach /pro weiter.
-      router.replace("/app");
+      // Ein vom Auth-Gate mitgegebener Deep-Link (?next=) wird nach erneuter
+      // Validierung bevorzugt, damit z.B. /pro/anfragen nach dem Login nicht
+      // verloren geht.
+      router.replace(safeNextPath(nextPath));
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "Anmeldung fehlgeschlagen.");
       setIsLoading(false);

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Building2, CalendarDays, CheckCircle2, ChevronDown, MapPin, Phone, ShieldCheck, Globe } from 'lucide-react';
+import { ArrowRight, Building2, CalendarDays, CheckCircle2, MapPin, Phone, ShieldCheck, Globe } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';

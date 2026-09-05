@@ -240,10 +240,14 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 }
 
 async function getLocalUser(): Promise<CurrentUser | null> {
-  const store = await jar(); const token = store.get(DEV_COOKIE)?.value;
+  // Must read the same cookie name createSession() writes (respects the
+  // SESSION_COOKIE_NAME test seam); a hardcoded DEV_COOKIE silently logged
+  // local-mode users out whenever the override was active.
+  const name = cookieName();
+  const store = await jar(); const token = store.get(name)?.value;
   if (!token) return null;
   const row = db.prepare(`SELECT u.id,u.email,u.role,u.first_name,u.last_name,u.phone FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token=? AND s.expires_at > ?`).get(token, new Date().toISOString()) as CurrentUser | undefined;
-  if (!row) { db.prepare('DELETE FROM sessions WHERE token=?').run(token); try { store.delete(DEV_COOKIE); } catch {} return null; }
+  if (!row) { db.prepare('DELETE FROM sessions WHERE token=?').run(token); try { store.delete(name); } catch {} return null; }
   return row;
 }
 

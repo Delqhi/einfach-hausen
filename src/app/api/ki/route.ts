@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser, supabaseConfig } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import { applyRateLimitLockout, checkRateLimit, consumeRateLimitAttempt } from "@/lib/security/rate-limit";
 import { aiQuotaSnapshot, byokEnabled, byokKeyEnc, byokGateway, consumeCloudAction, FREEMIUM_MONTHLY, grantAdCreditsOnce, AD_CREDIT_GRANT } from "@/lib/ai-engine";
 import { verifyAdReceipt } from "@/lib/ad-receipt";

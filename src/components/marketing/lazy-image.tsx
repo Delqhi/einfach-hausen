@@ -30,7 +30,6 @@ export function LazyImage({ src, alt, blurhash, width, height, className, priori
   }, [src, blurhash, priority]);
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
     <img
       ref={ref}
       src={priority ? src : undefined}

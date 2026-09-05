@@ -1,6 +1,5 @@
 "use client";
 
-import { uiToast } from "@/components/ui-toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";

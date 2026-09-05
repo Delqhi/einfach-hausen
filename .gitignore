@@ -79,3 +79,9 @@ __pycache__/
 /.e2e-keys.env
 *.tsbuildinfo
 .sin-goal/
+
+# ad-hoc agent/debug scripts and stray SQLite files must never be committed
+/.tmp-*.mjs
+/*.db
+/*.db-wal
+/*.db-shm

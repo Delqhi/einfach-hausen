@@ -16,7 +16,7 @@
     "graph:install": "graphify hook install && graphify update .",
     "crm:import": "python3 scripts/import-business-research.py",
     "test:crm": "node scripts/crm-e2e.mjs",
-    "test:fixtures": "setopt NULL_GLOB; rm -f /tmp/einfach-hausen-fixtures.db /tmp/einfach-hausen-fixtures.db-*; unsetopt NULL_GLOB; DATABASE_PATH=/tmp/einfach-hausen-fixtures.db node --experimental-strip-types scripts/test-fixtures.mjs",
+    "test:fixtures": "rm -f /tmp/einfach-hausen-fixtures.db /tmp/einfach-hausen-fixtures.db-wal /tmp/einfach-hausen-fixtures.db-shm; DATABASE_PATH=/tmp/einfach-hausen-fixtures.db node --experimental-strip-types scripts/test-fixtures.mjs",
     "test:smoke": "node scripts/production-smoke.mjs",
     "test:e2e:architecture": "node scripts/e2e-architecture.mjs",
     "test:intake": "node scripts/t0004-intake-regression.mjs",
@@ -44,7 +44,15 @@
     "test:i18n": "node scripts/i18n-regression.mjs",
     "test:public-site": "node scripts/public-website-contract.mjs",
     "test:public-nav": "node scripts/public-navigation-e2e.mjs",
-    "test:auth-design": "node scripts/auth-design-system-e2e.mjs"
+    "test:auth-design": "node scripts/auth-design-system-e2e.mjs",
+    "test:observability": "node scripts/observability-regression.mjs",
+    "test:slo": "node scripts/t0123-slo-probes.mjs",
+    "test:backup-drill": "bash scripts/t0124-backup-drill.sh",
+    "test:error-tracking": "node scripts/t0132-error-tracking-regression.mjs",
+    "test:health-regression": "node scripts/t0134-health-regression.mjs",
+    "test:export-regression": "node scripts/t0143-export-regression.mjs",
+    "test:deletion-regression": "node scripts/t0144-deletion-regression.mjs",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@capacitor/keyboard": "^8.0.5",
@@ -93,12 +101,5 @@
   },
   "overrides": {
     "uuid": "npm:uuid@11.1.1"
-  },
-  "test:observability": "node scripts/observability-regression.mjs",
-  "test:slo": "node scripts/t0123-slo-probes.mjs",
-  "test:backup-drill": "bash scripts/t0124-backup-drill.sh",
-  "test:error-tracking": "node scripts/t0132-error-tracking-regression.mjs",
-  "test:health-regression": "node scripts/t0134-health-regression.mjs",
-  "test:export-regression": "node scripts/t0143-export-regression.mjs",
-  "test:deletion-regression": "node scripts/t0144-deletion-regression.mjs"
+  }
 }

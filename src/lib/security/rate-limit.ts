@@ -149,9 +149,14 @@ export function applyRateLimitLockout(kind: RateLimitKind, identifier: string): 
     withRetry(() => db.transaction(() => {
       const row = db.prepare('SELECT attempts FROM auth_rate_limits WHERE kind=? AND identifier=?').get(kind, id) as { attempts: number } | undefined;
       if (!row || row.attempts < p.maxAttempts) return;
-      const blockedUntil = new Date(Date.now() + p.blockMs).toISOString();
-      db.prepare('UPDATE auth_rate_limits SET blocked_until=?,updated_at=CURRENT_TIMESTAMP WHERE kind=? AND identifier=? AND (blocked_until IS NULL OR blocked_until<CURRENT_TIMESTAMP)')
-        .run(blockedUntil, kind, id);
+      const now = Date.now();
+      const blockedUntil = new Date(now + p.blockMs).toISOString();
+      // blocked_until is stored as an ISO-8601 string ("...T...Z"); comparing it
+      // against SQLite's CURRENT_TIMESTAMP ("YYYY-MM-DD HH:MM:SS") is a plain
+      // string comparison that never matched on the same calendar day, so an
+      // expired lockout was never renewed here. Compare ISO against ISO.
+      db.prepare('UPDATE auth_rate_limits SET blocked_until=?,updated_at=CURRENT_TIMESTAMP WHERE kind=? AND identifier=? AND (blocked_until IS NULL OR blocked_until<?)')
+        .run(blockedUntil, kind, id, new Date(now).toISOString());
       lockEvent = `locked_until=${blockedUntil}`;
     }).immediate());
     if (lockEvent) logSecurityEvent('rate_limit_block', `${kind}:${id}`, lockEvent);
