@@ -49,4 +49,18 @@ assert.ok(serviceIndex.includes('href={`/leistungen/${slug}`}'));
 const heatingPage = read('src/app/leistungen/heizung/page.tsx');
 assert.match(heatingPage, /ServiceDetailPage/);
 
-console.log(JSON.stringify({ ok: true, services: expectedSlugs.length, checks: ['catalog', 'megamenu', 'help-discovery', 'service-routes', 'sitemap'] }, null, 2));
+
+const productRoutes = [
+  ['beratung', /kein Auftrag/i],
+  ['notfall', /Bereitschaft|24\/7/],
+  ['versicherung', /nicht automatisch/i],
+  ['immobilienverkauf', /Freigabe|Makler/],
+];
+for (const [slug, pattern] of productRoutes) {
+  const rel = `src/app/${slug}/page.tsx`;
+  assert.ok(exists(rel), `public product page /${slug} must exist`);
+  assert.match(read(rel), pattern);
+  assert.ok(sitemap.includes(`/${slug}`), `sitemap must include /${slug}`);
+}
+
+console.log(JSON.stringify({ ok: true, services: expectedSlugs.length, productRoutes: productRoutes.length, checks: ['catalog', 'megamenu', 'help-discovery', 'service-routes', 'sitemap', 'product-pages'] }, null, 2));
