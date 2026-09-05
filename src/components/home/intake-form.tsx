@@ -60,10 +60,12 @@ export function IntakeForm({ variant = "hero", id }: { variant?: Variant; id?: s
     >
       <input type="hidden" name="role" value="homeowner" />
       <label htmlFor={inputId}>Was steht bei deinem Haus an?</label>
-      <div className={styles.intakeHead}>
-        <span className={styles.intakeLabel}>Was steht bei deinem Haus an?</span>
-        <span className={styles.intakeBadge}>kostenlos &amp; unverbindlich</span>
-      </div>
+      {variant !== "hero" && (
+        <div className={styles.intakeHead}>
+          <span className={styles.intakeLabel}>Was steht bei deinem Haus an?</span>
+          <span className={styles.intakeBadge}>kostenlos &amp; unverbindlich</span>
+        </div>
+      )}
       <div className={styles.intakeRow}>
         <div className={styles.intakeField}>
           <input
@@ -83,7 +85,7 @@ export function IntakeForm({ variant = "hero", id }: { variant?: Variant; id?: s
             className={styles.intakeGhost}
             aria-hidden="true"
             data-visible={value.length === 0 ? "true" : "false"}
-            style={{ opacity: value.length === 0 && ghostVisible ? 1 : 0, transitionDuration: `${FADE_MS}ms` }}
+            style={{ opacity: value.length === 0 && ghostVisible ? 1 : 0, transitionDuration: variant === "hero" ? "0ms" : `${FADE_MS}ms` }}
           >
             {EXAMPLES[exampleIndex]}
           </span>
@@ -105,11 +107,13 @@ export function IntakeForm({ variant = "hero", id }: { variant?: Variant; id?: s
           </button>
         ))}
       </div>
-      <div className={styles.intakeMeta}>
-        <span><CircleCheck size={15} aria-hidden="true" /> Hauskonto kostenlos</span>
-        <span><CircleCheck size={15} aria-hidden="true" /> unverbindlich starten</span>
-        <span><CircleCheck size={15} aria-hidden="true" /> kein Auftrag ohne deine Entscheidung</span>
-      </div>
+      {variant !== "hero" && (
+        <div className={styles.intakeMeta}>
+          <span><CircleCheck size={15} aria-hidden="true" /> Hauskonto kostenlos</span>
+          <span><CircleCheck size={15} aria-hidden="true" /> unverbindlich starten</span>
+          <span><CircleCheck size={15} aria-hidden="true" /> kein Auftrag ohne deine Entscheidung</span>
+        </div>
+      )}
     </form>
   );
 }
