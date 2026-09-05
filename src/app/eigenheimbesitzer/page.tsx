@@ -72,6 +72,14 @@ export default function Page() {
         </Split>
       </Section>
 
+      <Section tone="surface" eyebrow="Direkte Wege" title="Je nach Situation anders starten." text="Eine fachliche Frage, ein dringender Fall und ein Verkaufswunsch sind unterschiedliche Entscheidungen. Deshalb haben sie getrennte Einstiege.">
+        <div className={styles.cardGrid} data-cols="3">
+          <article className={styles.card}><span className={styles.cardIcon}><MessageCircle size={20} /></span><h3>Erst beraten lassen</h3><p>Einen passenden Ansprechpartner sprechen, ohne dass automatisch ein Auftrag entsteht.</p><TextLink href="/beratung">Beratung verstehen</TextLink></article>
+          <article className={styles.card}><span className={styles.cardIcon}><Bell size={20} /></span><h3>Dringenden Fall einordnen</h3><p>Bei einem Notfall wird nach passender verfügbarer Hilfe im regionalen Netzwerk gesucht.</p><TextLink href="/notfall">Notfallweg ansehen</TextLink></article>
+          <article className={styles.card}><span className={styles.cardIcon}><Wallet size={20} /></span><h3>Verkauf vorbereiten</h3><p>Bewertung, Makler-Matching und Datenfreigabe bleiben nachvollziehbar unter deiner Kontrolle.</p><TextLink href="/immobilienverkauf">Verkauf organisieren</TextLink></article>
+        </div>
+      </Section>
+
       <Section eyebrow="Langfristig" title="Ein Haus ist die größte Investition deines Lebens. Behandle es so." text="Wer die Geschichte seines Hauses kennt, entscheidet besser, spart bei Wartung und Verkauf und übergibt irgendwann sauber.">
         <div className={styles.split}>
           <FeatureGrid cols={2} items={[

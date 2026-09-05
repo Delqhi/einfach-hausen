@@ -3,7 +3,8 @@ import { ArrowRight, Check, CircleAlert, ShieldCheck } from 'lucide-react';
 import { IntakeForm } from '@/components/home/intake-form';
 import { Reveal, Stagger } from './motion';
 import { AppFrame, ContactScreen, HomeScreen, MiniContact, MiniCosts, MiniHausakte, MiniReminder, OrderStatusScreen, ReminderScreen } from './app-frames';
-import { CATEGORIES, FACTS, HOME_FAQ, PRINCIPLES } from './content';
+import { FACTS, HOME_FAQ, PRINCIPLES } from './content';
+import { SERVICE_CATEGORIES } from './service-catalog';
 import { Eyebrow, Facts, Faq, LinkButton, ProofRow, Section, Statement, Steps, TextLink } from './ui';
 import styles from './mkt.module.css';
 import Link from 'next/link';
@@ -156,8 +157,8 @@ export function CategoriesCompact() {
   return (
     <Section tone="surface" eyebrow="Wofür du uns fragen kannst" title="Alles, was ein Haus so braucht." text="Du musst dein Anliegen keiner Kategorie zuordnen. Das übernehmen wir. Zur Orientierung: so breit ist das Netz." tight>
       <div className={styles.catGrid}>
-        {CATEGORIES.slice(0, 11).map(({ icon: Icon, title }) => (
-          <Link key={title} className={styles.cat} href="/leistungen"><Icon size={20} aria-hidden="true" /> {title}</Link>
+        {SERVICE_CATEGORIES.slice(0, 11).map(({ icon: Icon, title, slug }) => (
+          <Link key={slug} className={styles.cat} href={`/leistungen/${slug}`}><Icon size={20} aria-hidden="true" /> {title}</Link>
         ))}
         <Link className={styles.catMore} href="/leistungen">Alle Leistungen <ArrowRight size={18} aria-hidden="true" /></Link>
       </div>

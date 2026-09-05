@@ -58,6 +58,13 @@ export default function Page() {
         </Split>
       </Section>
 
+      <Section tone="surface" eyebrow="Wenn mehr daraus wird" title="Hauswissen hilft auch bei Schaden und Verkauf." text="Die Akte ist nicht nur Archiv. Sie schafft Kontext für spätere Entscheidungen, ohne private Inhalte automatisch weiterzugeben.">
+        <Split>
+          <InfoPanel label="Schadenfall"><h3>Auftrag und Dokumentation zusammenhalten.</h3><p>Ein interner Servicefall kann an einen bestehenden Auftrag gekoppelt werden. Eine Versicherung wird dadurch nicht automatisch angeschrieben.</p><TextLink href="/versicherung">Versicherungsunterstützung verstehen</TextLink></InfoPanel>
+          <InfoPanel label="Verkauf"><h3>Hausgeschichte zeigen, Privates schützen.</h3><p>Bewertung und Makler-Matching können auf Hausdaten aufbauen. Welche Kontakt- und Objektdaten geteilt werden, bleibt eine ausdrückliche Freigabe.</p><TextLink href="/immobilienverkauf">Immobilienverkauf organisieren</TextLink></InfoPanel>
+        </Split>
+      </Section>
+
       <Section eyebrow="Häufige Fragen" title="Zur Hausakte." center>
 <div className={styles.centerRow}>
           <Faq items={[

@@ -63,4 +63,22 @@ for (const [slug, pattern] of productRoutes) {
   assert.ok(sitemap.includes(`/${slug}`), `sitemap must include /${slug}`);
 }
 
-console.log(JSON.stringify({ ok: true, services: expectedSlugs.length, productRoutes: productRoutes.length, checks: ['catalog', 'megamenu', 'help-discovery', 'service-routes', 'sitemap', 'product-pages'] }, null, 2));
+
+const homeSections = read('src/components/marketing/home-sections.tsx');
+assert.match(homeSections, /SERVICE_CATEGORIES/);
+assert.ok(homeSections.includes('href={`/leistungen/${slug}`}'));
+const helpPage = read('src/app/hilfe/page.tsx');
+for (const href of ['/sicherheit','/blog','/lexikon','/kontakt']) assert.ok(helpPage.includes(href), `help hub must link ${href}`);
+const houseFilePage = read('src/app/hausakte/page.tsx');
+assert.ok(houseFilePage.includes('/versicherung'));
+assert.ok(houseFilePage.includes('/immobilienverkauf'));
+const ownerPage = read('src/app/eigenheimbesitzer/page.tsx');
+for (const href of ['/beratung','/notfall','/immobilienverkauf']) assert.ok(ownerPage.includes(href), `owner page must discover ${href}`);
+const howPage = read('src/app/so-funktionierts/page.tsx');
+assert.ok(howPage.includes('/beratung'));
+assert.ok(howPage.includes('/notfall'));
+const partnerPage = read('src/app/partner/page.tsx');
+assert.match(partnerPage, /0 % Auftragsprovision/);
+assert.match(partnerPage, /Aufträge verwalten AN \/ AUS/);
+
+console.log(JSON.stringify({ ok: true, services: expectedSlugs.length, productRoutes: productRoutes.length, checks: ['catalog','megamenu','help-discovery','service-routes','sitemap','product-pages','core-discovery'] }, null, 2));

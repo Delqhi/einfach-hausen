@@ -3,7 +3,7 @@ import { canonical } from '@/lib/seo';
 import { BadgeCheck, BriefcaseBusiness, Building2, Handshake, ReceiptText, UsersRound } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { Statement } from '@/components/marketing/ui';
-import { BulletList, CtaBand, FeatureGrid, InfoPanel, LinkButton, PageHero, Section, Split } from '@/components/marketing/ui';
+import { BulletList, CtaBand, FeatureGrid, InfoPanel, LinkButton, PageHero, Section, Split, Steps } from '@/components/marketing/ui';
 import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
 import styles from '@/components/marketing/marketing.module.css';
 
@@ -13,6 +13,13 @@ export default function Page(){return <MarketingShell>
   <Statement kicker="Das Modell" tone="soft">Du bleibst Rechnungssteller. Wir sind deine Organisations-Ebene.</Statement>
   <Section eyebrow="Das Modell" title="Auftragswert bleibt beim Betrieb." text="Einfach Hausen monetarisiert Partner über Monatsabos, nicht über eine Gebühr pro Auftrag.">
     <FeatureGrid items={[{icon:<ReceiptText size={20}/>,title:'0 % Auftragsprovision',text:'Der ausführende Betrieb bleibt Rechnungssteller und behält 100 % des Auftragswertes.'},{icon:<Handshake size={20}/>,title:'Kundenbeziehung statt Lead-Verkauf',text:'Nach einer Verbindung kann ein konkreter Ansprechpartner dauerhaft beim Haus des Kunden gespeichert bleiben.'},{icon:<BriefcaseBusiness size={20}/>,title:'Einfacher Arbeitsbereich',text:'Anfragen, Termine, Team, Dokumentation und Rechnung – mit möglichst wenig Verwaltungsballast.'}]}/>
+  </Section>
+  <Section tone="surface" eyebrow="Arbeitsweise" title="Vom passenden Anliegen zum dauerhaften Kundenkontakt." text="Der Partnerbereich ist bewusst kein Mini-ERP. Er zeigt nur, was für den nächsten sinnvollen Schritt nötig ist.">
+    <Steps items={[
+      {title:'Passende Anfrage sehen',text:'Neue Anfragen kommen nur dort an, wo Leistung, Region, Verfügbarkeit und Qualitätskriterien zusammenpassen.'},
+      {title:'Angebot oder Kontakt übernehmen',text:'Je nach Wunsch des Eigentümers entsteht Beratung ohne Auftrag oder ein konkreter Auftrag mit Preis und Termin.'},
+      {title:'Beziehung am Haus behalten',text:'Nach Abschluss bleiben Vorgang, Rechnung und Ansprechpartner beim Haus dokumentiert. Folgeanfragen können an bekannte Kontakte anknüpfen.'},
+    ]}/>
   </Section>
   <Section id="qualitaet" eyebrow="Qualitätsnetzwerk" title="Nicht jeder Eintrag wird automatisch Partner." text="Vor aktiver Vermittlung sieht das Produktmodell eine Mindestprüfung und einen aktiven Partnervertrag vor." tone="soft">
     <Split><InfoPanel label="Mindestprüfung"><h3>Qualifikation und Betrieb müssen zum Einsatz passen.</h3><BulletList items={['Gewerbe / Unternehmen','Erforderliche Qualifikationen und Zulassungen','Betriebshaftpflicht','Referenzen bzw. vorhandene Bewertungen','Einsatzregion und Kapazität','Kommunikations- und Qualitätsstandard','Aktiver Partnervertrag']} /></InfoPanel><InfoPanel label="Matching"><h3>Tarife kaufen keine bessere fachliche Position.</h3><p>Beim Matching sollen unter anderem Entfernung, Fachgebiet, Qualifikation, Verfügbarkeit, Kapazität, Kundenzufriedenheit und bestehende Kundenbeziehungen berücksichtigt werden.</p><BulletList items={['Qualität vor Monetarisierung','Regionale Eignung statt Massenverteilung','Bestehende Kundenbeziehungen können berücksichtigt werden']} /></InfoPanel></Split>

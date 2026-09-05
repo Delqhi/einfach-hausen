@@ -57,6 +57,10 @@ export default function Page() {
           { icon: <UserRound size={20} />, title: 'Einen Menschen sprechen', text: 'Ein passender geprüfter Partner wird als konkreter Ansprechpartner verbunden, auch ohne Buchung. Zum Beispiel, um eine Einschätzung zu bekommen.' },
           { icon: <Wrench size={20} />, title: 'Erledigen lassen', text: 'Wenn du willst, dass es gemacht wird, vervollständigen wir die Auftragsdaten, holen Kostenrahmen und Termin ein und du gibst frei.' },
         ]} />
+        <div className={styles.heroActions}>
+          <LinkButton href="/beratung">Beratung ansehen</LinkButton>
+          <LinkButton href="/notfall" secondary>Dringender Fall</LinkButton>
+        </div>
       </Section>
 
       <Section id="ansprechpartner" tone="surface" eyebrow="Dein Ansprechpartner" title="Ein Mensch, kein Ticket." text="Bei Einfach Hausen sprichst du nicht mit einer Hotline. Nach der Vermittlung hast du einen konkreten Menschen mit Namen, Betrieb und Nummer, und der bleibt in deiner Hausakte, auch für das nächste Mal.">

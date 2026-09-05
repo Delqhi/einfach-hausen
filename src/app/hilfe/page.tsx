@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
+import { CtaBand, LinkButton, PageHero, Section, Statement, mkt as styles } from '@/components/marketing/ui';
 import { MiniContact } from '@/components/marketing/app-frames';
 import { FaqExplorer } from './faq-explorer';
 
@@ -35,6 +36,14 @@ export default function Page() {
       />
       <Section tone="surface" eyebrow="Häufige Fragen" title="Was du über Einfach Hausen wissen solltest.">
         <FaqExplorer entries={faq} />
+      </Section>
+      <Section eyebrow="Weiterführend" title="Wenn du tiefer einsteigen willst." text="Antworten, Sicherheit, Ratgeber und Kontakt bleiben bewusst getrennte Wege — damit du schnell dort landest, wo du hinwillst.">
+        <div className={styles.cardGrid} data-cols="2">
+          <Link className={styles.card} href="/sicherheit"><h3>Sicherheit & Daten</h3><p>Wie Partnerprüfung, Datenfreigaben und deine Entscheidungen geschützt werden.</p></Link>
+          <Link className={styles.card} href="/blog"><h3>Ratgeber</h3><p>Konkrete Themen rund um Wartung, Sanierung und Entscheidungen am Haus.</p></Link>
+          <Link className={styles.card} href="/lexikon"><h3>Lexikon</h3><p>Begriffe kurz und verständlich nachschlagen, ohne Fachchinesisch.</p></Link>
+          <Link className={styles.card} href="/kontakt"><h3>Kontakt</h3><p>Wenn du lieber direkt mit uns klären möchtest, was als Nächstes sinnvoll ist.</p></Link>
+        </div>
       </Section>
       <Statement kicker="Unser Anspruch">Verständlich bleiben. <mark>Bei jeder Frage, in jedem Schritt.</mark></Statement>
       <CtaBand title="Deine konkrete Frage ist ein guter Startpunkt." text="Leg kostenlos ein Hauskonto an und beschreib dein Anliegen in normalen Worten. Ein Auftrag entsteht daraus nur, wenn du es willst." />
