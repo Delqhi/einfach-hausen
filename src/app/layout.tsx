@@ -2,6 +2,7 @@ import type { Metadata,Viewport } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import './design-system.css';
+import '@/components/marketing/tokens.css';
 import { PwaRegister } from '@/components/pwa-register';
 import { AuthProvider } from '@/components/AuthContext';
 import NativeInit from '@/components/NativeInit';

@@ -40,3 +40,17 @@
    deploy/update-on-oci.sh
    npm run test:smoke
    ```
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-01
+updated: 2026-09-05T02:00:41+00:00
+actor: chatgpt-web
+evidence-sha256: 223ddabf850fcb56047dafd0834c4648fe0356286d14630d790002d451660459
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-02
+updated: 2026-09-05T02:19:47+00:00
+actor: chatgpt-web
+evidence-sha256: d3169b9afa465be4ab22588b73903be33178b28010810633f5fb6546dc51f563
+-->

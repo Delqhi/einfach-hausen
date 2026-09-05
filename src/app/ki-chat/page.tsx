@@ -22,7 +22,11 @@ export default function KiChatPage() {
   async function sendWith(text: string, history: Msg[]) {
     setLoading(true);
     try {
-      const res = await fetch("/api/ki", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history }) });
+      const apiMessages = history.map(({ role, text }) => ({
+        role: role === "ai" ? "assistant" : "user",
+        content: text,
+      }));
+      const res = await fetch("/api/ki", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: apiMessages }) });
       const data = await res.json();
       setMsgs((m) => [...m, { role: "ai", text: data.reply }]);
     } catch { setMsgs((m) => [...m, { role: "ai", text: "Ups, da ist etwas schiefgelaufen. Versuch es nochmal." }]); }

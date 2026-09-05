@@ -1,9 +1,48 @@
 /*
  * Einfach Hausen – public website design tokens.
- * Scoped to `.mkt` (MarketingShell root) so the accepted owner/partner app
- * surfaces (globals.css tokens, .phone-shell, .agent-*) stay untouched.
- * Reference: DESIGN.md §3 (kanonische --eh-* Namen als Aliase) + §"Public Website – erweiterte Palette".
+ * Global `:root` exposes the DESIGN.md contract to site, owner, provider and admin.
+ * `.mkt` extends that contract with website-only palette/layout primitives.
+ * Reference: DESIGN.md §3 (kanonische --eh-* Namen) + §"Public Website – erweiterte Palette".
  */
+:root {
+  /* DESIGN.md portal aliases: one palette for site, owner, provider and admin. */
+  --eh-green-900: #0a3539;
+  --eh-green-700: #105258;
+  --eh-green-600: #147078;
+  --eh-green-100: #dcebec;
+  --eh-green-50: #edf5f5;
+  --eh-bg: #faf8f4;
+  --eh-surface: #ffffff;
+  --eh-surface-subtle: #f2f5f5;
+  --eh-text: #10222a;
+  --eh-text-secondary: #4b5b60;
+  --eh-border: #e4e2dc;
+  --eh-border-strong: #cfcbc2;
+  --eh-terra: #a84d29;
+  --eh-terra-deep: #a84d29;
+  --eh-terra-soft: #f7e4da;
+  --eh-on-dark: #f3f6f5;
+  --eh-soft: var(--eh-surface-subtle);
+  --eh-soft-2: var(--eh-green-50);
+  --eh-muted: var(--eh-text-secondary);
+  --eh-accent: var(--eh-green-700);
+  --eh-accent-hover: var(--eh-green-900);
+  --eh-accent-soft: var(--eh-green-50);
+  --eh-dark: var(--eh-green-900);
+  --eh-dark-2: var(--eh-text);
+  --eh-dark-border: var(--eh-border-strong);
+  --eh-brand: var(--eh-green-900);
+  --eh-brand-2: var(--eh-green-700);
+  --green: var(--eh-green-700);
+  --green-dark: var(--eh-green-900);
+  --green-soft: var(--eh-green-100);
+  --ink: var(--eh-text);
+  --muted: var(--eh-text-secondary);
+  --line: var(--eh-border);
+  --bg: var(--eh-bg);
+  --white: var(--eh-surface);
+}
+
 .mkt {
   /* Brand teal scale (logo teal = 700) */
   --eh-teal-900: #0b3a3f;

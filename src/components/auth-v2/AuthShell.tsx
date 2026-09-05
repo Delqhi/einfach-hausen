@@ -1,6 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useSyncExternalStore } from "react";
+
+// Ein einzelnes LoginForm im DOM (keine doppelten IDs, keine Strict-Violations):
+// Desktop (>=1024px, wie .eh-auth-desktop/.eh-auth-mobile in auth-shell.css)
+// zeigt Hero+Formular, darunter die Tab-Ansicht. SSR rendert mobil.
+function useIsDesktop() {
+  return useSyncExternalStore(
+    (cb) => {
+      const mq = window.matchMedia("(min-width: 1024px)");
+      mq.addEventListener("change", cb);
+      return () => mq.removeEventListener("change", cb);
+    },
+    () => window.matchMedia("(min-width: 1024px)").matches,
+    () => false,
+  );
+}
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { HeroPanel } from "@/components/auth-v2/HeroPanel";
@@ -13,6 +28,7 @@ import { HelpCircle, Sparkles, Home, Wrench, Award, Users } from "lucide-react";
 export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: { initialAuthMode?: AuthMode; initialRole?: Role }) {
   const [mobileTab, setMobileTab] = useState<"login" | "vorteile">("login");
   const [role, setRole] = useState<Role>(initialRole);
+  const isDesktop = useIsDesktop();
   const [showHelpToast, setShowHelpToast] = useState(false);
   const [activeLegalModal, setActiveLegalModal] = useState<"agb" | "datenschutz" | "impressum" | "sicherheit" | "partnerkriterien" | null>(null);
 
@@ -149,6 +165,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
             <span className="hidden sm:inline">Hilfe</span>
           </button>
 
+          {!isDesktop && (
           <div className="lg:hidden flex items-center p-1 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] shadow-inner">
             <button
               type="button"
@@ -188,6 +205,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
               </span>
             </button>
           </div>
+          )}
         </div>
       </header>
 
@@ -199,6 +217,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
       )}
 
       <main className="eh-auth-main">
+        {isDesktop ? (
         <div className="eh-auth-grid eh-auth-desktop">
           <section className="eh-auth-hero">
             <HeroPanel
@@ -216,7 +235,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
             />
           </section>
         </div>
-
+        ) : (
         <div className="eh-auth-mobile">
           <AnimatePresence mode="wait">
             <motion.div
@@ -245,6 +264,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
             </motion.div>
           </AnimatePresence>
         </div>
+        )}
       </main>
 
       <LegalModal

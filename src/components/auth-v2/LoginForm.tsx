@@ -57,6 +57,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
   const [fullName, setFullName] = useState("");
   const [contactName, setContactName] = useState("");
   const [companyName, setCompanyName] = useState("");
+  const [trades, setTrades] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
 
@@ -157,6 +158,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
         fd.set("firstName", contactName.trim().split(/\s+/)[0] || companyName.trim() || "Inhaber");
         fd.set("lastName", contactName.trim().split(/\s+/).slice(1).join(" ") || "Betrieb");
         fd.set("businessName", companyName.trim());
+        fd.set("trades", trades.trim());
         fd.set("postcode", postalCode.trim());
       } else {
         const parts = fullName.trim().split(/\s+/);
@@ -363,7 +365,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
               id="btn-submit-login"
               type="submit"
               disabled={isLoading}
-              className="group relative w-full py-3 px-4 rounded-xl bg-[var(--eh-terra-deep,#a84d29)] hover:bg-[#8a3f22] active:scale-[0.99] disabled:bg-[var(--eh-terra,#c8623a)]/80 disabled:cursor-not-allowed disabled:transform-none text-white font-bold text-sm sm:text-base shadow-[0_2px_8px_rgba(200,98,58,0.20)] hover:shadow-[0_6px_20px_rgba(200,98,58,0.28)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none"
+              className="group relative w-full min-h-[44px] py-3 px-4 rounded-xl bg-[var(--eh-terra-deep,#a84d29)] hover:bg-[#8a3f22] active:scale-[0.99] disabled:bg-[var(--eh-terra,#c8623a)]/80 disabled:cursor-not-allowed disabled:transform-none text-white font-bold text-sm sm:text-base shadow-[0_2px_8px_rgba(200,98,58,0.20)] hover:shadow-[0_6px_20px_rgba(200,98,58,0.28)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer select-none"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
@@ -398,6 +400,23 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
                 className="w-full px-3.5 py-2.5 min-h-[44px] bg-stone-50/70 border border-[var(--eh-border,#e4e2dc)] rounded-xl text-base sm:text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:outline-none focus:border-[var(--eh-terra,#c8623a)] focus:ring-2 focus:ring-[var(--eh-terra,#c8623a)]/20 focus:shadow-[0_0_0_3px_rgba(200,98,58,0.12)] focus:bg-white focus-visible:outline-none focus-visible:border-[var(--eh-terra,#c8623a)] focus-visible:ring-2 focus-visible:ring-[var(--eh-terra,#c8623a)]/20 focus-visible:shadow-[0_0_0_3px_rgba(200,98,58,0.12)] focus-visible:bg-white transition-all duration-150"
               />
             </div>
+            {role === "handwerker" && (
+              <div className="space-y-1.5">
+                <label htmlFor="reg-trades" className="block text-xs sm:text-sm font-semibold text-stone-700">
+                  Gewerke / Leistungen
+                </label>
+                <input
+                  id="reg-trades"
+                  type="text"
+                  name="trades"
+                  required
+                  value={trades}
+                  onChange={(e) => setTrades(e.target.value)}
+                  placeholder="z. B. Garten, Elektro, SHK"
+                  className="w-full px-3.5 py-2.5 min-h-[44px] bg-stone-50/70 border border-[var(--eh-border,#e4e2dc)] rounded-xl text-base sm:text-sm text-stone-900 placeholder:text-stone-400 outline-none focus:outline-none focus:border-[var(--eh-terra,#c8623a)] focus:ring-2 focus:ring-[var(--eh-terra,#c8623a)]/20"
+                />
+              </div>
+            )}
             {role === "handwerker" && (
               <div className="space-y-1.5">
                 <label htmlFor="reg-contact" className="block text-xs sm:text-sm font-semibold text-stone-700">

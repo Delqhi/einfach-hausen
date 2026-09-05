@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { ArrowRight, BadgeCheck, CalendarDays, ClipboardList, FileText, Flame, Leaf, MapPin, MessageSquare, Sprout, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, BadgeCheck, ClipboardList, FileText, Flame, Leaf, MapPin, Sprout } from 'lucide-react';
 import { AppShell } from '@/components/shell';
-import { CountUp } from '@/components/count-up';
 import { ProviderAccessBoundary, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
@@ -97,16 +96,16 @@ export default async function Pro() {
       </section>
 
       {/* Ruhige Arbeitsleiste statt überladener KPI-Raster */}
-      <section className="mb-6 flex flex-wrap items-center gap-4 rounded-2xl border border-[#e4e2dc] bg-white p-4 shadow-sm" aria-label="Statusübersicht">
-        <div className="flex items-center gap-2 pr-4 border-r border-[#edf0ed]">
-          <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span className="text-xs font-bold text-[#10222a]">System aktiv</span>
+      <section className="mb-6 flex flex-wrap items-center gap-4 rounded-2xl border border-[var(--eh-border)] bg-[var(--eh-surface)] p-4 shadow-sm" aria-label="Statusübersicht">
+        <div className="flex items-center gap-2 pr-4">
+          <span className="inline-flex h-2.5 w-2.5 rounded-full bg-[var(--eh-green-600)] animate-pulse"></span>
+          <span className="text-xs font-bold text-[var(--eh-text)]">System aktiv</span>
         </div>
-        <div className="flex items-center gap-6 text-xs text-[#5f6e75]">
-          <span><strong className="font-bold text-[#10222a]">{newRequestsCount}</strong> neue Anfragen</span>
-          <span><strong className="font-bold text-[#10222a]">{companyOpen}</strong> laufende Aufträge</span>
-          <span><strong className="font-bold text-[#10222a]">{upcoming.length}</strong> anstehende Termine</span>
-          {messages > 0 && <span className="text-[#a84d29] font-bold"><strong className="text-[#a84d29]">{messages}</strong> neue Nachrichten</span>}
+        <div className="flex items-center gap-6 text-xs text-[var(--eh-text-secondary)]">
+          <span><strong className="font-bold text-[var(--eh-text)]">{newRequestsCount}</strong> neue Anfragen</span>
+          <span><strong className="font-bold text-[var(--eh-text)]">{companyOpen}</strong> laufende Aufträge</span>
+          <span><strong className="font-bold text-[var(--eh-text)]">{upcoming.length}</strong> anstehende Termine</span>
+          {messages > 0 && <span className="font-bold text-[var(--eh-terra)]"><strong className="text-[var(--eh-terra)]">{messages}</strong> neue Nachrichten</span>}
         </div>
       </section>
 

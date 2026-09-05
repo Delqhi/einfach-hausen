@@ -376,7 +376,8 @@ button,a,input,textarea,select{touch-action:manipulation}
 .app-shell-v3 .app-menu[open] .sidebar-nav a:hover{background:var(--eh-soft)}
 .app-shell-v3 .app-menu[open] .sidebar-brand{padding-bottom:22px}
 .app-shell-v3 .app-menu[open] .sidebar-footer{border-color:var(--eh-border)}
-.app-shell-v3 .topbar-v3{background:var(--eh-surface);border-color:var(--eh-border)}
+.app-shell-v3 .topbar-v3{background:var(--eh-surface);border-color:var(--eh-border);-webkit-backdrop-filter:none;backdrop-filter:none}
+.app-shell-v3 .bottom-nav{-webkit-backdrop-filter:none;backdrop-filter:none}
 .app-shell-v3 .top-actions>a:hover{background:var(--eh-soft)}
 .app-shell-v3 .screen-v3{background:var(--eh-bg)}
 .app-shell-v3 .btn.primary,.app-shell-v3 .send-action{background:var(--eh-accent);border-color:var(--eh-accent);color:#fff}
