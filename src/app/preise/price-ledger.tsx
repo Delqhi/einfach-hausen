@@ -68,7 +68,7 @@ export function PriceLedger({ owner, partner }: { owner: LedgerView; partner: Le
         </button>
       </div>
 
-      <div className={styles.tableScroll} id={PANEL_ID} role="tabpanel" aria-labelledby={`preise-tab-${view}`}>
+      <div className={styles.tableScroll} id={PANEL_ID} role="tabpanel" tabIndex={0} aria-labelledby={`preise-tab-${view}`}>
         <table className={styles.ledgerTable}>
           <caption className={styles.srOnly}>{active.caption}</caption>
           <thead>

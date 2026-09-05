@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "goal_id": "eh-finish",
+  "status": "active",
+  "repository_root": "/Users/jeremyschulze/dev/einfachhausen-landing-page",
+  "user_outcome": "Frontend+Backend+APIs fertig, DESIGN-konform, Gates grün, deployed",
+  "definition_of_done": [],
+  "functional_requirements": [],
+  "non_functional_requirements": [],
+  "quality_thresholds": {},
+  "explicit_non_goals": [],
+  "inferred_required_work": [],
+  "constraints": [],
+  "hard_external_blockers": [],
+  "completion_gates": [
+    "G1",
+    "G2",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7",
+    "G8",
+    "G9",
+    "G10"
+  ],
+  "created_at": "2026-09-04T09:47:44.347413+00:00",
+  "updated_at": "2026-09-04T09:47:44.347413+00:00"
+}

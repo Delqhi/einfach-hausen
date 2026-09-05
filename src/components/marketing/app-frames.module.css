@@ -31,7 +31,7 @@
 .tileRow { display: flex; align-items: center; gap: 10px; }
 .tileRow > div { display: flex; flex-direction: column; gap: 1px; flex: 1 1 auto; min-width: 0; }
 .tileRow strong { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tileRow span { font-size: 11.5px; color: var(--eh-ink-mute); }
+.tileRow > div span { font-size: 11.5px; color: var(--eh-ink-mute); }
 .icon { width: 34px; height: 34px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; flex: none; background: var(--eh-teal-050); color: var(--eh-teal-700); }
 .iconWarm { composes: icon; background: var(--eh-terra-soft); color: var(--eh-terra); }
 .iconSand { composes: icon; background: var(--eh-sand-100); color: #7a5a2a; }
