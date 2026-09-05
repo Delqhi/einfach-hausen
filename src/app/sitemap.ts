@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/seo';
-import { BLOG_POSTS, LEXIKON_TERMS } from '@/lib/seo-cluster';
+import { BLOG_POSTS } from '@/lib/seo-cluster';
+import { LEXIKON_EINTRAEGE, LEXIKON_KATEGORIEN } from '@/lib/lexikon';
 import { SERVICE_PATHS } from '@/components/marketing/service-catalog';
 
 /**
@@ -40,7 +41,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
   const cluster: Array<{ path: string; changeFrequency: 'weekly' | 'monthly' | 'yearly'; priority: number }> = [
     ...BLOG_POSTS.map((p) => ({ path: `/blog/${p.slug}`, changeFrequency: 'monthly' as const, priority: 0.6 })),
-    ...LEXIKON_TERMS.map((t) => ({ path: `/lexikon/${t.slug}`, changeFrequency: 'monthly' as const, priority: 0.6 })),
+    ...LEXIKON_KATEGORIEN.map((k) => ({ path: `/lexikon/kategorie/${k.slug}`, changeFrequency: 'monthly' as const, priority: 0.55 })),
+    ...LEXIKON_EINTRAEGE.map((t) => ({ path: `/lexikon/${t.slug}`, changeFrequency: 'monthly' as const, priority: 0.6 })),
   ];
   const now = new Date();
   return [...pages, ...servicePages, ...cluster].map(({ path, changeFrequency, priority }) => ({

@@ -5,6 +5,31 @@ Format angelehnt an [Keep a Changelog](https://keepachangelog.com/de/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- **Lexikon / Enterprise-Redesign (`feat/lexikon-enterprise-redesign`):**
+  `/lexikon` ist jetzt ein Explorer (Hero mit Wort-Stagger und Parallax-
+  Kartenstapel, Suche mit `/`-Shortcut und Synonym-Treffern, Sticky-Register
+  aus 7 Bereichen + A–Z, Layout-animiertes Raster, Bereichs-Bento).
+  `/lexikon/[begriff]` ist ein Entscheidungs-Archetyp: Lesefortschritt,
+  sticky „Auf einen Blick“-Panel (Kennzahlen, Orientierungs-Gauges, Wann
+  handeln), Scroll-Spy-TOC, gescrubbte Ablauf-Timeline, abhakbare Prüfpunkte
+  mit Anliegen-CTA, verwandte Begriffe und Vor/Zurück-Navigator.
+- **Neue Routen:** `/lexikon/kategorie/[kategorie]` (7 Bereiche) und eine
+  Lexikon-eigene 404 (`src/app/lexikon/not-found.tsx`).
+- **Inhalt:** 14 neue Begriffe (Energieausweis, Wärmepumpe, JAZ, U-Wert,
+  Taupunkt, FI-Schutzschalter, E-Check, Legionellenprüfung, Rückstauklappe,
+  Dachinspektion, Feuerstättenschau, Verkehrssicherungspflicht, Hausakte,
+  Instandhaltungsrücklage) in `src/lib/lexikon.ts` mit Relevanz, Stufen,
+  Kennzahlen, Synonymen und geprüften Verknüpfungen (`assertLexikonIntegrity`).
+- **SEO:** Sitemap um Kategorien/Begriffe erweitert; JSON-LD `DefinedTermSet`,
+  `DefinedTerm` (Article `about`) und `ItemList`.
+- **Docs:** `docs/LEXIKON.md` (Architektur, Content-Modell, Motion-Inventar,
+  A11y, Verifikationsliste); `docs/NEXT_AGENT.md` mit Kontinuationspunkt.
+
+### Changed
+- Lexikon-Motion nutzt zusätzlich `motion/react` (bereits Dependency) für
+  Layout-/Zustandsanimationen; GSAP-Reveals bleiben. `reducedMotion="user"`.
+
 ### Fixed
 - **Auth / Deep-Links:** `/login` wertet den vom Auth-Gate (`src/proxy.ts`)
   gesetzten `?next=`-Parameter jetzt aus. Vorher landete jeder Login stur auf
