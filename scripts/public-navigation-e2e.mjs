@@ -64,7 +64,7 @@ try {
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'de-DE' });
   const phone = await mobile.newPage();
   await phone.goto(`${base}/`, { waitUntil: 'networkidle' });
-  await phone.getByRole('button', { name: 'Menü öffnen' }).click();
+  await phone.locator('summary[aria-label="Menü öffnen"]').click();
   const mobileServices = phone.locator('details').filter({ has: phone.locator('summary', { hasText: 'Leistungen' }) }).last();
   await mobileServices.locator('summary').click();
   await mobileServices.locator('a[href="/leistungen/heizung"]').waitFor();
