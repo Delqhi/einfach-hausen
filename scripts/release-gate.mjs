@@ -169,7 +169,7 @@ async function liveGates() {
 
     // ---- Layer 2: axe a11y ----
     if (runA11y) log('\n== Layer 2: accessibility (axe-core) ==');
-    const ctx = runA11y ? await browser.newContext({ viewport: { width: 390, height: 844 } }) : null;
+    const ctx = runA11y ? await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' }) : null;
     const page = ctx ? await ctx.newPage() : null;
     let totalViolations = 0;
     const worst = [];
