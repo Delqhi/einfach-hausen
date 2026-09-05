@@ -163,6 +163,9 @@ async function liveGates() {
   try {
     await waitForServer(`${base}/`, 90000);
 
+    const lexikonHttp = run(process.execPath, [path.join(root, 'scripts/lexikon-http-semantics.mjs')], { BASE_URL: base }, 'lexikon HTTP semantics');
+    record('lexikon HTTP semantics', lexikonHttp.ok, lexikonHttp.ok ? 'known routes 200; unknown term/category routes 404' : (lexikonHttp.output || 'contract failed').trim().slice(0, 500));
+
     // Public routes exercised by the gate (mobile-first landing + core pages).
     const publicRoutes = ['/', '/so-funktionierts', '/leistungen', '/preise', '/partner', '/hilfe', '/kontakt', '/login', '/welcome'];
     browser = await chromium.launch({ headless: true, executablePath: browserExecutable() });
