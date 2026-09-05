@@ -469,6 +469,8 @@
 .bentoIndex .catDark h3 { font-size: 20px; font-weight: 700; }
 .bentoIndex .cat p,
 .bentoIndex .catDark p { font-size: 14px; line-height: 1.5; }
+.bentoIndex .catDark h3 { color: var(--eh-on-dark); }
+.bentoIndex .catDark p { color: var(--eh-on-dark-soft); }
 
 @media (min-width: 960px) {
   .heroVisual { min-height: 330px; }

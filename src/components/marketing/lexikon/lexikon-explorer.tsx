@@ -218,7 +218,7 @@ function Hero({ query, onQuery, inputRef, total, categories, featured, onQuick }
             Jeder Eintrag beantwortet dieselben vier Fragen: Was ist das, was kostet es, wie läuft es ab — und betrifft es mein Haus? Sachlich, mit Prüfpunkten, ohne Fachchinesisch.
           </motion.p>
 
-          <motion.div className={styles.searchGroup} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
+          <div className={styles.searchGroup}>
             <label className={styles.search}>
               <Search size={20} aria-hidden="true" />
               <input
@@ -243,12 +243,12 @@ function Hero({ query, onQuery, inputRef, total, categories, featured, onQuick }
                 <button key={t} type="button" onClick={() => onQuick(t)}>{t}</button>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div className={styles.heroMeta} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.75 }}>
+          <div className={styles.heroMeta}>
             <span><ShieldCheck size={15} aria-hidden="true" /> Kostenrahmen aus echten Anfrageverläufen</span>
             <span><Sparkles size={15} aria-hidden="true" /> Jeder Begriff führt zu einem konkreten nächsten Schritt</span>
-          </motion.div>
+          </div>
         </div>
 
         <div className={styles.heroVisual} aria-hidden="true">
