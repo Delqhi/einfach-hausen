@@ -163,13 +163,16 @@ async function liveGates() {
   try {
     await waitForServer(`${base}/`, 90000);
 
+    const lexikonHttp = run(process.execPath, [path.join(root, 'scripts/lexikon-http-semantics.mjs')], { BASE_URL: base }, 'lexikon HTTP semantics');
+    record('lexikon HTTP semantics', lexikonHttp.ok, lexikonHttp.ok ? 'known routes 200; unknown term/category routes 404' : (lexikonHttp.output || 'contract failed').trim().slice(0, 500));
+
     // Public routes exercised by the gate (mobile-first landing + core pages).
     const publicRoutes = ['/', '/so-funktionierts', '/leistungen', '/preise', '/partner', '/hilfe', '/kontakt', '/login', '/welcome'];
     browser = await chromium.launch({ headless: true, executablePath: browserExecutable() });
 
     // ---- Layer 2: axe a11y ----
     if (runA11y) log('\n== Layer 2: accessibility (axe-core) ==');
-    const ctx = runA11y ? await browser.newContext({ viewport: { width: 390, height: 844 } }) : null;
+    const ctx = runA11y ? await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' }) : null;
     const page = ctx ? await ctx.newPage() : null;
     let totalViolations = 0;
     const worst = [];

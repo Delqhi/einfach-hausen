@@ -19,10 +19,13 @@ function resolveCorrelationId(req: NextRequest): string {
 
 export function proxy(req: NextRequest) {
   const correlationId = resolveCorrelationId(req);
+  const isLexikonRequest = req.nextUrl.pathname === "/lexikon" || req.nextUrl.pathname.startsWith("/lexikon/");
   const requestHeaders = new Headers(req.headers);
+  if (isLexikonRequest) requestHeaders.set("x-original-path", req.nextUrl.pathname);
   requestHeaders.set("x-correlation-id", correlationId);
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.headers.set("x-correlation-id", correlationId);
+  if (isLexikonRequest) return response;
   if (process.env.NODE_ENV !== "production") return response;
   const hasSupabaseSession = req.cookies.getAll().some(({ name }) => name.startsWith("sb-") && name.includes("-auth-token"));
   if (!hasSupabaseSession) {
@@ -37,4 +40,4 @@ export function proxy(req: NextRequest) {
   }
   return response;
 }
-export const config = { matcher: ["/app/:path*", "/pro/:path*"] };
+export const config = { matcher: ["/app/:path*", "/pro/:path*", "/lexikon/:path*"] };

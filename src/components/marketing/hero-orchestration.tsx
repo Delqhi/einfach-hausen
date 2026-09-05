@@ -56,7 +56,7 @@ export function HeroOrchestration() {
 
         <div className={styles.panelBody}>
           {/* Progress rail */}
-          <div className={styles.rail}>
+          <div className={styles.rail} tabIndex={0}>
             <span className={styles.railTrack} aria-hidden="true"><span className={styles.railFill} data-o="rail-fill" /></span>
             {RAIL.map((step, i) => (
               <div className={styles.railStep} data-o="rail" data-index={i} data-state={i === 0 ? 'active' : 'idle'} key={step.title}>
