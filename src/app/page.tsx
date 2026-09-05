@@ -5,7 +5,6 @@ import { canonical } from '@/lib/seo';
 export const metadata: Metadata = { alternates: { canonical: canonical('/') } };
 import { getCurrentUser } from '@/lib/auth';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { MotionPresentation } from '@/components/marketing/motion-presentation';
 import { StickyIntake } from '@/components/marketing/sticky-intake';
 import {
   Benefits,
@@ -32,7 +31,6 @@ export default async function HomePage() {
   return (
     <MarketingShell footerIntake={false}>
       <HomeHero />
-      <MotionPresentation presentationId="home" title="Dein Zuhause. In Bewegung organisiert." />
       <ProblemMirror />
       <TheSwitch />
       <HowItWorks />

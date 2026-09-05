@@ -3,7 +3,6 @@ import { canonical } from '@/lib/seo';
 import Image from 'next/image';
 import { Check } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { MotionPresentation } from '@/components/marketing/motion-presentation';
 import { Reveal } from '@/components/marketing/motion';
 import { CtaBand, Facts, Faq, LinkButton, Numbered, PageHero, Section, Statement, mkt as styles } from '@/components/marketing/ui';
 
@@ -28,7 +27,6 @@ export default function PilotphasePage() {
           </Reveal>
         }
       />
-      <MotionPresentation presentationId="pilotphase" title="Früh starten. Einfach Hausen mitprägen." />
 
       <Statement kicker="Was das bedeutet">Einmal Pilot sein, <mark>dauerhaft weniger zahlen.</mark></Statement>
 
