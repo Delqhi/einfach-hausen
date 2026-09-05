@@ -20,8 +20,8 @@ type Variant = "hero" | "band" | "compact";
 /**
  * The single lead-capture control of the public website.
  * Submits as GET to /register (role=homeowner, request=…) so the funnel keeps
- * the homeowner's own words. E2E anchors: label "Was steht bei deinem Haus an?",
- * button "Anliegen starten", meta "Hauskonto kostenlos" / "kein Auftrag ohne deine Entscheidung".
+ * the homeowner's own words. The hero uses an aria-label instead of a visible
+ * prompt; band/compact variants retain their associated text label.
  */
 export function IntakeForm({ variant = "hero", id }: { variant?: Variant; id?: string }) {
   const [value, setValue] = useState("");
@@ -59,7 +59,9 @@ export function IntakeForm({ variant = "hero", id }: { variant?: Variant; id?: s
       }}
     >
       <input type="hidden" name="role" value="homeowner" />
-      <label htmlFor={inputId}>Was steht bei deinem Haus an?</label>
+      {variant !== "hero" && (
+        <label htmlFor={inputId}>Was steht bei deinem Haus an?</label>
+      )}
       {variant !== "hero" && (
         <div className={styles.intakeHead}>
           <span className={styles.intakeLabel}>Was steht bei deinem Haus an?</span>
@@ -76,6 +78,7 @@ export function IntakeForm({ variant = "hero", id }: { variant?: Variant; id?: s
             maxLength={700}
             required
             autoComplete="off"
+            aria-label={variant === "hero" ? "Anliegen beschreiben" : undefined}
             aria-describedby={compact ? undefined : examplesId}
             placeholder="Beschreibe einfach, was ansteht …"
             value={value}
