@@ -1,32 +1,15 @@
 import Image from 'next/image';
 import { ArrowRight, Check, CircleAlert, ShieldCheck } from 'lucide-react';
 import { IntakeForm } from '@/components/home/intake-form';
-import { Reveal, Stagger } from './motion';
-import { AppFrame, ContactScreen, HomeScreen, MiniContact, MiniCosts, MiniHausakte, MiniReminder, OrderStatusScreen, ReminderScreen } from './app-frames';
+import { Reveal } from './motion';
+import { AppFrame, ContactScreen, MiniContact, MiniCosts, MiniHausakte, MiniReminder, OrderStatusScreen, ReminderScreen } from './app-frames';
 import { FACTS, HOME_FAQ, PRINCIPLES } from './content';
 import { SERVICE_CATEGORIES } from './service-catalog';
 import { Eyebrow, Facts, Faq, LinkButton, ProofRow, Section, Statement, Steps, TextLink } from './ui';
 import styles from './mkt.module.css';
 import Link from 'next/link';
 
-/* 1 · Hero: dark teal stage, intake first, app screen as proof */
-export function HomeHero() {
-  return (
-    <section className={`${styles.homeHero} ${styles.onDark}`} id="anliegen">
-      <div className={styles.homeHeroInner}>
-        <Stagger className={styles.homeHeroCopy} gap={0.09}>
-          <Eyebrow>Dein persönlicher Hausmanager</Eyebrow>
-          <h1>Dein Zuhause. <em>Organisiert.</em></h1>
-          <p>Tropfender Hahn, Heizungswartung, Dachrinne: Du beschreibst, was ansteht. Wir kümmern uns um alles andere, und ein Mensch aus deiner Region übernimmt.</p>
-          <IntakeForm variant="hero" />
-        </Stagger>
-        <Reveal delay={0.25} y={32} className={styles.homeHeroVisual}>
-          <AppFrame label="Die Einfach Hausen App: Startseite mit fälliger Heizungswartung, laufendem Auftrag und Hausakte"><HomeScreen /></AppFrame>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
+export { HomeHero } from './home-hero';
 
 /* 2 · Problem mirror: the reader recognizes themselves before we talk product */
 const MIRROR = [

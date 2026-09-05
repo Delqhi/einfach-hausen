@@ -67,7 +67,14 @@ for (const [slug, pattern] of productRoutes) {
 }
 
 
+assert.ok(exists('src/components/marketing/home-hero.tsx'), 'canonical homepage hero v2 must exist');
+const homeHero = read('src/components/marketing/home-hero.tsx');
+assert.match(homeHero, /Die Betriebszentrale/);
+assert.match(homeHero, /HeroOrchestration/);
+assert.match(homeHero, /IntakeForm/);
+
 const homeSections = read('src/components/marketing/home-sections.tsx');
+assert.ok(homeSections.includes("export { HomeHero } from './home-hero';"), 'homepage sections must export canonical hero v2');
 assert.match(homeSections, /SERVICE_CATEGORIES/);
 assert.ok(homeSections.includes('href={`/leistungen/${slug}`}'));
 const helpPage = read('src/app/hilfe/page.tsx');

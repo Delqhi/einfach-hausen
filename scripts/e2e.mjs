@@ -208,8 +208,8 @@ try {
 const publicCtx=await newE2EContext({viewport:{width:390,height:844}}); const publicPage=await publicCtx.newPage(); trackPage(publicPage,'public-mobile');
 await nav(publicPage, base+'/')
 // Canonical root is the public lead-magnet homepage (premium redesign spec §9, T-0210).
-await publicPage.getByRole('heading',{name:/Dein Zuhause/i}).waitFor();
-await waitText(publicPage,'Organisiert.');
+await publicPage.getByRole('heading',{name:/Die Betriebszentrale/i}).waitFor();
+await waitText(publicPage,'für dein Zuhause.');
 await waitText(publicPage,'Was steht bei deinem Haus an?');
 await waitText(publicPage,'Hauskonto kostenlos'); await waitText(publicPage,'kein Auftrag ohne deine Entscheidung');
 if(!(await publicPage.locator('form[action="/register"] input[name="request"]').count()))throw new Error('Landing intake composer missing');
