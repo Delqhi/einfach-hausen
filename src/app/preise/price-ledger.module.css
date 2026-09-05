@@ -1,0 +1,186 @@
+/*
+ * /preise – Vergleichstabelle statt Kartenraster.
+ * Preise sind eine Rechnung: dieselben Daten, aber Zeile für Zeile
+ * vergleichbar. Hervorhebung der Leitspalte über eine getönte Fläche,
+ * nicht über eine größere Karte.
+ *
+ * DESIGN.md §2: Styles ausschließlich im CSS-Modul, Farben/Form/Motion
+ * über die kanonischen --eh-*-Tokens aus components/marketing/tokens.css.
+ */
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --- Zielgruppen-Umschalter ------------------------------------------- */
+
+.tabs {
+  display: inline-flex;
+  gap: 2px;
+  margin-bottom: var(--eh-space-5);
+  padding: 3px;
+  border: 1px solid var(--eh-line);
+  border-radius: var(--eh-r-pill);
+  background: var(--eh-canvas);
+}
+
+.tab {
+  appearance: none;
+  min-height: 44px; /* docs/DESIGN_SYSTEM.md: 44px+ Touch-Ziele */
+  padding: 9px 18px;
+  border: 0;
+  border-radius: var(--eh-r-pill);
+  background: transparent;
+  color: var(--eh-ink-soft);
+  font: inherit;
+  font-size: var(--eh-small);
+  font-weight: 580;
+  cursor: pointer;
+  transition: background var(--eh-dur) var(--eh-ease), color var(--eh-dur) var(--eh-ease);
+}
+
+.tab:hover {
+  color: var(--eh-teal-700);
+}
+
+.tabActive {
+  composes: tab;
+  background: var(--eh-teal-700);
+  color: var(--eh-on-dark);
+}
+
+.tabActive:hover {
+  color: var(--eh-on-dark);
+}
+
+/* --- Tabelle ----------------------------------------------------------- */
+
+.tableScroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ledgerTable {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+
+.ledgerTable th,
+.ledgerTable td {
+  padding: var(--eh-space-3) 16px;
+  border-bottom: 1px solid var(--eh-line);
+  vertical-align: top;
+}
+
+.ledgerTable thead th {
+  padding-top: 0;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--eh-line-strong);
+  font-weight: 600;
+}
+
+.ledgerTable tbody tr:last-child th,
+.ledgerTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.rowLabel {
+  width: 38%;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--eh-ink);
+}
+
+.planName {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--eh-teal-500);
+}
+
+.planPrice {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(23px, 2.4vw, 30px);
+  font-weight: 620;
+  letter-spacing: -0.026em;
+  color: var(--eh-teal-900);
+}
+
+.planUnit {
+  margin-left: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--eh-ink-mute);
+}
+
+.planNote {
+  display: block;
+  max-width: 24ch;
+  margin-top: 7px;
+  font-size: var(--eh-micro);
+  font-weight: 450;
+  line-height: 1.45;
+  color: var(--eh-ink-soft);
+}
+
+.colLead {
+  background: var(--eh-teal-050);
+}
+
+.colLead .planName {
+  color: var(--eh-teal-700);
+}
+
+.cellYes {
+  color: var(--eh-teal-700);
+}
+
+.cellNo {
+  color: var(--eh-line-strong);
+}
+
+.cellText {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--eh-ink-soft);
+}
+
+/* --- Fußnote unter der Tabelle ----------------------------------------- */
+
+.foot {
+  margin-top: var(--eh-space-5);
+}
+
+.note {
+  margin: 0;
+  font-size: var(--eh-small);
+  line-height: 1.55;
+  color: var(--eh-ink-mute);
+}
+
+.note strong {
+  color: var(--eh-ink-soft);
+  font-weight: 650;
+}
+
+.note a {
+  color: var(--eh-teal-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
