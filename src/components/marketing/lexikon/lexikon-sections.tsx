@@ -43,28 +43,31 @@ export function KategorieIcon({ slug }: { slug: LexikonKategorieSlug }) {
 }
 
 /** Bento-Raster aller Bereiche; erste Kachel dunkel und doppelt breit. */
-export function KategorieBento({ exclude }: { exclude?: LexikonKategorieSlug }) {
+export function KategorieBento({ exclude, reveal = true }: { exclude?: LexikonKategorieSlug; reveal?: boolean }) {
   const list = LEXIKON_KATEGORIEN.filter((k) => k.slug !== exclude);
   return (
-    <div className={styles.bento}>
+    <div className={`${styles.bento} ${!reveal ? styles.bentoIndex : ''}`}>
       {list.map((k, i) => {
         const entries = eintraegeInKategorie(k.slug);
         const dark = i === 0 && !exclude;
-        return (
-          <Reveal key={k.slug} delay={i * 0.05} y={20} style={{ minWidth: 0 }}>
-            <Link href={`/lexikon/kategorie/${k.slug}`} className={dark ? styles.catDark : styles.cat}>
-              <span className={styles.catIcon}>{ICONS[k.slug]}</span>
-              <h3>{k.name}</h3>
-              <p>{dark ? k.beschreibung : k.kurz}</p>
-              <div className={styles.catTerms} aria-hidden="true">
-                {entries.slice(0, dark ? 6 : 3).map((e) => <span key={e.slug}>{e.begriff}</span>)}
-              </div>
-              <div className={styles.catFoot}>
-                <span className={styles.catCount}>{entries.length} {entries.length === 1 ? 'Begriff' : 'Begriffe'}</span>
-                <span className={styles.entryArrow} aria-hidden="true"><ArrowRight size={16} /></span>
-              </div>
-            </Link>
-          </Reveal>
+        const card = (
+          <Link href={`/lexikon/kategorie/${k.slug}`} className={dark ? styles.catDark : styles.cat}>
+            <span className={styles.catIcon}>{ICONS[k.slug]}</span>
+            <h3>{k.name}</h3>
+            <p>{dark ? k.beschreibung : k.kurz}</p>
+            <div className={styles.catTerms} aria-hidden="true">
+              {entries.slice(0, dark ? 6 : 3).map((e) => <span key={e.slug}>{e.begriff}</span>)}
+            </div>
+            <div className={styles.catFoot}>
+              <span className={styles.catCount}>{entries.length} {entries.length === 1 ? 'Begriff' : 'Begriffe'}</span>
+              <span className={styles.entryArrow} aria-hidden="true"><ArrowRight size={16} /></span>
+            </div>
+          </Link>
+        );
+        return reveal ? (
+          <Reveal key={k.slug} delay={i * 0.05} y={20} style={{ minWidth: 0 }}>{card}</Reveal>
+        ) : (
+          <div key={k.slug} className={styles.bentoItem}>{card}</div>
         );
       })}
     </div>

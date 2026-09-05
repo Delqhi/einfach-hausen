@@ -166,8 +166,11 @@ async function liveGates() {
     const lexikonHttp = run(process.execPath, [path.join(root, 'scripts/lexikon-http-semantics.mjs')], { BASE_URL: base }, 'lexikon HTTP semantics');
     record('lexikon HTTP semantics', lexikonHttp.ok, lexikonHttp.ok ? 'known routes 200; unknown term/category routes 404' : (lexikonHttp.output || 'contract failed').trim().slice(0, 500));
 
+    const lexikonVisual = run(process.execPath, [path.join(root, 'scripts/lexikon-index-visual-contract.mjs')], { BASE_URL: base }, 'lexikon index visual contract');
+    record('lexikon index visual contract', lexikonVisual.ok, lexikonVisual.ok ? 'compact hero, tight handoff, categories visible, no horizontal overflow' : (lexikonVisual.output || 'contract failed').trim().slice(0, 500));
+
     // Public routes exercised by the gate (mobile-first landing + core pages).
-    const publicRoutes = ['/', '/so-funktionierts', '/leistungen', '/preise', '/partner', '/hilfe', '/kontakt', '/login', '/welcome'];
+    const publicRoutes = ['/', '/so-funktionierts', '/leistungen', '/preise', '/partner', '/hilfe', '/kontakt', '/lexikon', '/login', '/welcome'];
     browser = await chromium.launch({ headless: true, executablePath: browserExecutable() });
 
     // ---- Layer 2: axe a11y ----
@@ -187,7 +190,7 @@ async function liveGates() {
         }
       }
       const critical = worst.filter((entry) => /critical|serious/.test(entry));
-      record('axe a11y (9 public routes, mobile)', critical.length === 0,
+      record(`axe a11y (${publicRoutes.length} public routes, mobile)`, critical.length === 0,
         critical.length === 0 ? `${totalViolations} non-blocking findings` : critical.slice(0, 6).join('; '));
     }
     if (ctx) await ctx.close();

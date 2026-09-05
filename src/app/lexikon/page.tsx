@@ -48,7 +48,7 @@ export default function Page() {
       <LexikonExplorer entries={entries} categories={categories} letters={letters} featured={FEATURED} />
 
       <Section tone="surface" eyebrow="Nach Bereich" title="Sieben Bereiche, in denen Eigentümer Entscheidungen treffen." text="Jeder Bereich bündelt die Begriffe, die zusammengehören — und führt zur passenden Leistung, wenn aus Wissen ein Anliegen wird.">
-        <KategorieBento />
+        <KategorieBento reveal={false} />
       </Section>
 
       <Section tone="soft" eyebrow="So nutzt du das Lexikon" title="Vom Begriff zur Entscheidung in drei Schritten.">

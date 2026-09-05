@@ -110,10 +110,10 @@ export function LexikonExplorer({ entries, categories, letters, featured }: Prop
 
       <section className={styles.explorer} id="begriffe" aria-labelledby="ergebnis-titel">
         <div className={styles.explorerInner}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, marginBottom: 28 }}>
+          <div className={styles.explorerHead}>
             <div>
               <span className={styles.blockNum}>{hasFilter ? 'Gefiltert' : 'Glossar'}</span>
-              <h2 id="ergebnis-titel" style={{ fontSize: 'var(--eh-h2)', lineHeight: 1.1, letterSpacing: '-0.03em', fontWeight: 800, color: 'var(--eh-teal-900)', marginTop: 8 }}>
+              <h2 id="ergebnis-titel" className={styles.explorerTitle}>
                 {q ? <>Treffer für „{deferred.trim()}“</> : activeCategory ? activeCategory.name : buchstabe ? `Begriffe mit ${buchstabe}` : 'Alle Begriffe, alphabetisch'}
               </h2>
             </div>
@@ -133,7 +133,7 @@ export function LexikonExplorer({ entries, categories, letters, featured }: Prop
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.25 } }}
                     transition={{ layout: { duration: 0.55, ease: EASE }, duration: 0.5, ease: EASE }}
-                    style={{ minWidth: 0 }}
+                    className={styles.gridItem}
                   >
                     <EntryCard e={e} query={q ? deferred.trim() : undefined} />
                   </motion.div>
@@ -192,10 +192,9 @@ function Hero({ query, onQuery, inputRef, total, categories, featured, onQuick }
       <div className={styles.heroGrid}>
         <div className={styles.heroCopy}>
           <motion.span
-            className="eyebrow"
+            className={styles.heroEyebrow}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontSize: 12.5, fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--eh-teal-700)' }}
           >
             <BookMarked size={16} aria-hidden="true" /> Lexikon · {total} Begriffe · {categories} Bereiche
           </motion.span>
@@ -219,7 +218,7 @@ function Hero({ query, onQuery, inputRef, total, categories, featured, onQuick }
             Jeder Eintrag beantwortet dieselben vier Fragen: Was ist das, was kostet es, wie läuft es ab — und betrifft es mein Haus? Sachlich, mit Prüfpunkten, ohne Fachchinesisch.
           </motion.p>
 
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <motion.div className={styles.searchGroup} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
             <label className={styles.search}>
               <Search size={20} aria-hidden="true" />
               <input
