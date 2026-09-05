@@ -771,3 +771,10 @@ updated: 2026-09-05T04:33:10+00:00
 actor: local-agent
 evidence-sha256: b9300da9b1e348fc386da08fda11e75c105f6db589d60a0f190ae0af25041437
 -->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-04
+updated: 2026-09-05T06:26:03+00:00
+actor: chatgpt-web
+evidence-sha256: 0bf6db00102a87441e641b95f92d629df17ac5aa3144da80eeb67f83cab48460
+-->
