@@ -20,6 +20,7 @@
 
 ## 2. Source of truth
 
+- Unternehmensrollen: `docs/COMPANY_IDENTITY.md` — Gina Schulze ist Inhaberin/Geschäftsführerin; Jeremy Schulze ist ausschließlich Developer/technische Entwicklung.
 - Design: `DESIGN.md` + `src/components/marketing/tokens.css`.
 - Website-Spec: `docs/superpowers/specs/2026-09-05-public-website-finish-design.md`.
 - Implementierungsplan: `docs/superpowers/plans/2026-09-05-public-website-finish.md`.

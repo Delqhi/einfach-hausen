@@ -136,12 +136,11 @@ export function LegalModal({ isOpen, type, onClose }: LegalModalProps) {
               <span id="legal-modal-title">Impressum</span>
             </div>
             <div className="text-xs leading-relaxed text-stone-600 space-y-1.5">
-              <p className="font-bold text-stone-800 text-sm">einfachhausen GmbH</p>
-              <p>Musterring 12 · 20095 Hamburg · Deutschland</p>
-              <p>Handelsregister: Amtsgericht Hamburg, HRB 189234</p>
-              <p>Geschäftsführung: M. Schmidt, T. Weber</p>
-              <p>USt-IdNr.: DE 349 812 765</p>
-              <p>Kontakt: kontakt@einfachhausen.de · Tel: 040 / 822 19 000</p>
+              <p className="font-bold text-stone-800 text-sm">Einfach Hausen</p>
+              <p>Inhaberin &amp; Geschäftsführerin: Gina Schulze</p>
+              <p>Developer / technische Entwicklung: Jeremy Schulze</p>
+              <p>Kontakt: info@einfachhausen.de</p>
+              <p>Vollständige Anbieterkennzeichnung: einfachhausen.de/impressum</p>
             </div>
           </div>
         )}

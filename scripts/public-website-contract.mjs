@@ -84,4 +84,24 @@ const partnerPage = read('src/app/partner/page.tsx');
 assert.match(partnerPage, /0 % Auftragsprovision/);
 assert.match(partnerPage, /Aufträge verwalten AN \/ AUS/);
 
-console.log(JSON.stringify({ ok: true, services: expectedSlugs.length, productRoutes: productRoutes.length, checks: ['catalog','megamenu','help-discovery','service-routes','sitemap','product-pages','core-discovery'] }, null, 2));
+const imprint = read('src/app/impressum/page.tsx');
+assert.match(imprint, /Gina Schulze/, 'public imprint must name Gina Schulze');
+assert.match(imprint, /Inhaberin/, 'public imprint must identify Gina as owner');
+assert.match(imprint, /Geschäftsführerin/, 'public imprint must identify Gina as managing director');
+assert.doesNotMatch(imprint, /(?:Betreiber|Inhaber|Geschäftsführ)[^\n<]*Jeremy Schulze/i, 'Jeremy must not be presented as platform owner/operator');
+
+const authLegalModal = read('src/components/auth-v2/LegalModal.tsx');
+assert.match(authLegalModal, /Gina Schulze/, 'auth imprint modal must name Gina Schulze');
+assert.doesNotMatch(authLegalModal, /M\. Schmidt|T\. Weber|HRB 189234|DE 349 812 765|einfachhausen GmbH/, 'auth imprint modal must not contain placeholder legal identity');
+
+assert.ok(exists('docs/COMPANY_IDENTITY.md'), 'canonical company identity doc must exist');
+const companyIdentity = read('docs/COMPANY_IDENTITY.md');
+assert.match(companyIdentity, /Gina Schulze/);
+assert.match(companyIdentity, /Inhaberin/);
+assert.match(companyIdentity, /Geschäftsführerin/);
+assert.match(companyIdentity, /Jeremy Schulze/);
+assert.match(companyIdentity, /Developer|Entwickler/);
+assert.ok(read('README.md').includes('docs/COMPANY_IDENTITY.md'), 'README must link canonical company identity');
+assert.ok(read('AGENTS.md').includes('docs/COMPANY_IDENTITY.md'), 'AGENTS must link canonical company identity');
+
+console.log(JSON.stringify({ ok: true, services: expectedSlugs.length, productRoutes: productRoutes.length, checks: ['catalog','megamenu','help-discovery','service-routes','sitemap','product-pages','core-discovery','company-identity'] }, null, 2));

@@ -10,6 +10,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Einfach Hausen engineering workflow
 
+### Canonical company identity
+
+- **Gina Schulze = Inhaberin und Geschäftsführerin von Einfach Hausen.**
+- **Jeremy Schulze = Developer / technische Entwicklung; nicht Inhaber, Betreiber oder Geschäftsführer.**
+- Binding source: `docs/COMPANY_IDENTITY.md`. Public legal copy, docs and generated content must follow it. „Jerry-owned“ in task boards means engineering assignment only, never company ownership.
+- Never invent legal form, address, register, VAT-ID or phone data. Use only verified business data.
+
 ### Single-goal coordination contract
 
 - **One repository = one goal.** Every agent works toward the same canonical goal from `.sin-gpt-web/taskplan.sqlite3`: finish the complete Einfach Hausen platform to production quality, prove acceptance, then converge the repository. Do not create side-roadmaps, duplicate task lists, speculative redesign waves, or parallel infrastructure goals.

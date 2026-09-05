@@ -10,6 +10,13 @@ Einfach Hausen ist die zentrale Anlaufstelle für Eigenheimbesitzer. Der Kunde b
 
 Die verbindliche Produktdefinition steht in [`docs/PRODUCT_VISION.md`](docs/PRODUCT_VISION.md). Die strategische Positionierung als **persönlicher Hausmanager / Betriebszentrale für das eigene Zuhause** steht in [`docs/PRODUCT_POSITIONING.md`](docs/PRODUCT_POSITIONING.md). Das langlebige Daten- und Berechtigungsmodell steht in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
+## Unternehmensrollen (kanonisch)
+
+- **Gina Schulze** ist Inhaberin und Geschäftsführerin von Einfach Hausen.
+- **Jeremy Schulze** ist Developer / technische Entwicklung und nicht Inhaber oder Geschäftsführer.
+
+Verbindliche Rollenquelle: [`docs/COMPANY_IDENTITY.md`](docs/COMPANY_IDENTITY.md).
+
 ## Agenten & kanonischer Arbeitsstand
 
 Alle Agents arbeiten in diesem Repository **am selben Ziel**. Es gibt keinen zweiten Engineering-Taskplan in README, Issues oder Worker-Reports. Der verbindliche Einstieg ist [`docs/NEXT_AGENT.md`](docs/NEXT_AGENT.md); der transaktionale Taskstatus liegt in `.sin-gpt-web/taskplan.sqlite3` und wird nach `.sin-gpt-web/TASKPLAN.md` gerendert.

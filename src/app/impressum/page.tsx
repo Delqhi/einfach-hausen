@@ -18,12 +18,13 @@ export default function Page() {
         text="Angaben gemäß § 5 des Digitale-Dienste-Gesetzes (DDG)."
       />
 
-      <Section eyebrow="Anbieter" title="Verantwortlicher Betreiber der Plattform.">
+      <Section eyebrow="Anbieter" title="Verantwortliche Anbieterin der Plattform.">
         <div className={styles.stackLg}>
           <article className={styles.card}>
             <h3 className={styles.cardTitle}>Einfach Hausen</h3>
             <p className={styles.cardText}>
-              <strong>Betreiber:</strong> Jeremy Schulze / Einfach Hausen<br />
+              <strong>Inhaberin &amp; Geschäftsführerin:</strong> Gina Schulze<br />
+              <strong>Developer / technische Entwicklung:</strong> Jeremy Schulze<br />
               <strong>Kontakt:</strong> info@einfachhausen.de<br />
               <strong>Plattform:</strong> Vermittlungs- und Organisationsportal für Eigenheimbesitzer &amp; regionale Handwerksbetriebe.
             </p>
