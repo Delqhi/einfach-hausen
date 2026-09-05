@@ -29,3 +29,59 @@
 @media (min-width: 1024px) { .eh-auth-mobile { display: none; } }
 .eh-auth-desktop { display: none; }
 @media (min-width: 1024px) { .eh-auth-desktop { display: grid; } }
+
+/* Auth trust photo badge: literal geometry is intentional because the legacy global reset
+   is unlayered and otherwise wins over Tailwind spacing utilities. */
+.eh-auth-photo-badge {
+  align-self: flex-start; width: max-content; max-width: calc(100% - 24px); min-height: 40px;
+  margin: 12px; padding: 9px 12px; gap: 8px; border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(16,34,42,.12);
+}
+
+.eh-auth-help-wrap { position: relative; display: flex; align-items: center; }
+.eh-auth-help-popover {
+  position: absolute; top: calc(100% + 10px); right: 0; z-index: 80; width: 320px; min-height: 132px;
+  padding: 18px; border: 1px solid var(--eh-border, #e4e2dc); border-radius: 16px;
+  background: #fff; color: var(--eh-text, #10222a); box-shadow: 0 22px 60px rgba(16,34,42,.14);
+}
+.eh-auth-help-popover-head { display: flex; align-items: center; gap: 11px; }
+.eh-auth-help-icon { width: 36px; height: 36px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 11px; background: var(--eh-green-50, #edf5f5); color: var(--eh-green-700, #105258); }
+.eh-auth-help-kicker { display: block; margin-bottom: 2px; font-size: 10px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; color: var(--eh-green-700, #105258); }
+.eh-auth-help-popover-head strong { display: block; font-size: 15px; line-height: 1.25; color: var(--eh-green-900, #0a3539); }
+.eh-auth-help-popover > p { margin: 12px 0 14px; font-size: 12px; line-height: 1.55; color: var(--eh-text-secondary, #4b5b60); }
+.eh-auth-help-action { min-height: 42px; padding: 0 13px; border-radius: 11px; background: var(--eh-green-700, #105258); color: #fff !important; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; font-weight: 700; }
+.eh-auth-help-action:hover { background: var(--eh-green-900, #0a3539); }
+@media (max-width: 480px) { .eh-auth-help-popover { width: min(320px, calc(100vw - 28px)); right: -2px; } }
+
+/* Auth legal / standards modal: explicit geometry bypasses the legacy universal spacing reset. */
+.eh-auth-legal-backdrop { padding: 24px; background: rgba(16,34,42,.56); backdrop-filter: blur(7px); }
+.eh-auth-legal-modal {
+  width: min(680px, 100%); max-height: calc(100dvh - 48px); padding: 32px;
+  border-radius: 22px; box-shadow: 0 30px 90px rgba(16,34,42,.22);
+  scrollbar-gutter: stable;
+}
+.eh-auth-modal-close {
+  position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
+  border: 1px solid var(--eh-border, #e4e2dc); border-radius: 11px;
+  background: #fff; color: var(--eh-text-secondary, #4b5b60);
+}
+.eh-auth-modal-close:hover { background: var(--eh-surface-subtle, #f2f5f5); color: var(--eh-green-900, #0a3539); }
+.eh-auth-modal-heading { min-height: 44px; padding: 0 54px 18px 0; margin-bottom: 18px; border-bottom: 1px solid var(--eh-border, #e4e2dc); }
+.eh-auth-modal-heading svg { flex: 0 0 auto; }
+.eh-auth-modal-section > p { margin: 0 0 18px; font-size: 12.5px; line-height: 1.6; color: var(--eh-text-secondary, #4b5b60); }
+.eh-auth-modal-prose { display: grid; gap: 8px; }
+.eh-auth-modal-prose h4 { margin-top: 5px; }
+.eh-auth-modal-stack { display: grid; gap: 12px; }
+.eh-auth-modal-card { padding: 16px 17px; border-radius: 14px; background: #f7f9f8; }
+.eh-auth-modal-card h4 { margin: 0 0 5px; font-size: 13px; line-height: 1.3; }
+.eh-auth-modal-card p { margin: 0; font-size: 12px; line-height: 1.58; color: var(--eh-text-secondary, #4b5b60); }
+.eh-auth-modal-footer { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--eh-border, #e4e2dc); }
+.eh-auth-modal-confirm { min-height: 44px; padding: 0 18px; border: 0; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; }
+@media (max-width: 640px) {
+  .eh-auth-legal-backdrop { padding: 12px; align-items: flex-end; }
+  .eh-auth-legal-modal { width: 100%; max-height: calc(100dvh - 24px); padding: 24px 18px 18px; border-radius: 20px; }
+  .eh-auth-modal-close { top: 14px; right: 14px; }
+  .eh-auth-modal-heading { padding: 0 48px 16px 0; margin-bottom: 16px; }
+  .eh-auth-modal-card { padding: 14px; }
+  .eh-auth-modal-confirm { width: 100%; }
+}

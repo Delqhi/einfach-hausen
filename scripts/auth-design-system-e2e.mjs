@@ -111,6 +111,56 @@ try {
       if (!data.assuranceFooter) throw new Error(`${viewport.name}/${route.name}: consolidated assurance footer missing`);
       if (viewport.width >= 1490 && data.gridWidth < 1400) throw new Error(`${viewport.name}/${route.name}: auth composition too narrow ${data.gridWidth}px`);
       if (viewport.width >= 1490 && data.heroWidth < 760) throw new Error(`${viewport.name}/${route.name}: trust panel too narrow ${data.heroWidth}px`);
+      if (viewport.name === 'browser' && route.name === 'provider-register') {
+        const badge = page.locator('.eh-auth-trust-photo > div.relative').first();
+        const badgeBox = await badge.boundingBox();
+        const badgeStyle = await badge.evaluate((el) => {
+          const style = getComputedStyle(el);
+          return { paddingLeft: Number.parseFloat(style.paddingLeft), paddingRight: Number.parseFloat(style.paddingRight) };
+        });
+        if (!badgeBox || badgeBox.height < 36) throw new Error(`provider trust badge is too short (${badgeBox?.height || 0}px)`);
+        if (badgeBox.width > 280) throw new Error(`provider trust badge stretches across the photo (${badgeBox.width}px)`);
+        if (badgeStyle.paddingLeft < 10 || badgeStyle.paddingRight < 10) throw new Error('provider trust badge lost its horizontal padding');
+        await page.click('#btn-header-help');
+        const helpPanel = page.locator('#auth-help-popover');
+        if (!(await helpPanel.isVisible().catch(() => false))) throw new Error('header help does not open an anchored help panel');
+        const helpBox = await helpPanel.boundingBox();
+        const helpStyle = await helpPanel.evaluate((el) => {
+          const style = getComputedStyle(el);
+          return { paddingLeft: Number.parseFloat(style.paddingLeft), background: style.backgroundColor };
+        });
+        if (!helpBox || helpBox.width < 280 || helpBox.height < 110) throw new Error(`header help panel is undersized (${helpBox?.width || 0}x${helpBox?.height || 0})`);
+        if (helpStyle.paddingLeft < 16) throw new Error('header help panel lost its internal spacing');
+        if (await helpPanel.getByRole('link', { name: 'Hilfebereich öffnen' }).count() !== 1) throw new Error('header help panel lacks a clear help action');
+        if (await page.locator('#btn-header-help').getAttribute('aria-expanded') !== 'true') throw new Error('header help trigger does not expose expanded state');
+        await page.click('#btn-header-help');
+        if (await helpPanel.isVisible().catch(() => false)) throw new Error('header help panel does not close from its trigger');
+
+        await page.getByRole('button', { name: 'Aufnahmekriterien für Meisterbetriebe' }).click();
+        const legalModal = page.locator('#legal-modal-container');
+        if (!(await legalModal.isVisible().catch(() => false))) throw new Error('partner criteria modal does not open');
+        const modalBox = await legalModal.boundingBox();
+        const modalStyle = await legalModal.evaluate((el) => {
+          const style = getComputedStyle(el);
+          return { paddingLeft: Number.parseFloat(style.paddingLeft), borderRadius: Number.parseFloat(style.borderRadius) };
+        });
+        if (!modalBox || modalBox.width < 620 || modalBox.height < 360) throw new Error(`partner criteria modal is cramped (${modalBox?.width || 0}x${modalBox?.height || 0})`);
+        if (modalStyle.paddingLeft < 24) throw new Error('partner criteria modal lost its inner padding');
+        if (modalStyle.borderRadius > 28) throw new Error(`partner criteria modal radius is oversized (${modalStyle.borderRadius}px)`);
+        if (await legalModal.getAttribute('role') !== 'dialog' || await legalModal.getAttribute('aria-modal') !== 'true') throw new Error('partner criteria modal lacks dialog semantics');
+        if (await legalModal.locator('.eh-auth-modal-card').count() !== 3) throw new Error('partner criteria are not presented as three structured cards');
+        const confirmBox = await page.locator('#btn-confirm-legal-modal').boundingBox();
+        if (!confirmBox || confirmBox.height < 42) throw new Error(`partner criteria close action is undersized (${confirmBox?.height || 0}px)`);
+        await page.locator('#btn-confirm-legal-modal').focus();
+        await page.keyboard.press('Tab');
+        const focusStayedInModal = await page.evaluate(() => {
+          const modal = document.querySelector('#legal-modal-container');
+          return Boolean(modal && document.activeElement && modal.contains(document.activeElement));
+        });
+        if (!focusStayedInModal) throw new Error('partner criteria modal does not trap keyboard focus');
+        await page.keyboard.press('Escape');
+        if (await legalModal.isVisible().catch(() => false)) throw new Error('partner criteria modal does not close with Escape');
+      }
       results.push({ viewport: viewport.name, route: route.name, ...data });
     }
     await context.close();

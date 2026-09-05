@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useSyncExternalStore } from "react";
+import React, { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 // Ein einzelnes LoginForm im DOM (keine doppelten IDs, keine Strict-Violations):
 // Desktop (>=1024px, wie .eh-auth-desktop/.eh-auth-mobile in auth-shell.css)
@@ -23,13 +23,14 @@ import { LoginForm, Role, AuthMode } from "@/components/auth-v2/LoginForm";
 import { Logo } from "@/components/auth-v2/Logo";
 import { LegalModal } from "@/components/auth-v2/LegalModal";
 import "@/components/auth-v2/auth-shell.css";
-import { HelpCircle, Sparkles, Home, Wrench, Award, Users } from "lucide-react";
+import { HelpCircle, Home, Wrench, Award, Users, ArrowRight } from "lucide-react";
 
 export function AuthShell({ initialAuthMode = "login", initialRole = "kunde", nextPath }: { initialAuthMode?: AuthMode; initialRole?: Role; nextPath?: string }) {
   const [mobileTab, setMobileTab] = useState<"login" | "vorteile">("login");
   const [role, setRole] = useState<Role>(initialRole);
   const isDesktop = useIsDesktop();
-  const [showHelpToast, setShowHelpToast] = useState(false);
+  const [showHelpPopover, setShowHelpPopover] = useState(false);
+  const helpPopoverRef = useRef<HTMLDivElement>(null);
   const [activeLegalModal, setActiveLegalModal] = useState<"agb" | "datenschutz" | "impressum" | "sicherheit" | "partnerkriterien" | null>(null);
 
   const handleRoleSelectFromHero = (newRole: Role) => {
@@ -38,6 +39,22 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde", ne
       setMobileTab("login");
     }
   };
+
+  useEffect(() => {
+    if (!showHelpPopover) return;
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (!helpPopoverRef.current?.contains(event.target as Node)) setShowHelpPopover(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowHelpPopover(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsidePointer);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsidePointer);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [showHelpPopover]);
 
   return (
     <div
@@ -151,19 +168,35 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde", ne
             </motion.button>
           </AnimatePresence>
 
-          <button
-            id="btn-header-help"
-            type="button"
-            aria-label="Hilfe"
-            onClick={() => {
-              setShowHelpToast(true);
-              setTimeout(() => setShowHelpToast(false), 3500);
-            }}
-            className="px-3 py-1.5 text-stone-600 hover:text-[var(--eh-text,#1c2129)] hover:bg-stone-200/50 rounded-lg font-medium text-xs sm:text-[13px] flex items-center gap-1.5 transition-colors cursor-pointer"
-          >
-            <HelpCircle className="w-4 h-4" />
-            <span className="hidden sm:inline">Hilfe</span>
-          </button>
+          <div className="eh-auth-help-wrap" ref={helpPopoverRef}>
+            <button
+              id="btn-header-help"
+              type="button"
+              aria-label="Hilfe"
+              aria-expanded={showHelpPopover}
+              aria-controls="auth-help-popover"
+              onClick={() => setShowHelpPopover((open) => !open)}
+              className="font-medium text-xs sm:text-[13px] flex items-center transition-colors cursor-pointer"
+            >
+              <HelpCircle className="w-4 h-4" />
+              <span className="hidden sm:inline">Hilfe</span>
+            </button>
+            {showHelpPopover && (
+              <div id="auth-help-popover" role="dialog" aria-label="Hilfe & Support" className="eh-auth-help-popover">
+                <div className="eh-auth-help-popover-head">
+                  <span className="eh-auth-help-icon"><HelpCircle className="w-5 h-5" /></span>
+                  <div>
+                    <span className="eh-auth-help-kicker">Hilfe & Support</span>
+                    <strong>Wie können wir helfen?</strong>
+                  </div>
+                </div>
+                <p>Antworten zu Anmeldung, Hauskonto, Partnernetzwerk und Datenschutz findest du gesammelt im Hilfebereich.</p>
+                <Link href="/hilfe" className="eh-auth-help-action" onClick={() => setShowHelpPopover(false)}>
+                  Hilfebereich öffnen <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </Link>
+              </div>
+            )}
+          </div>
 
           {!isDesktop && (
           <div className="eh-auth-mobile-tabs lg:hidden flex items-center p-1 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] shadow-inner">
@@ -208,13 +241,6 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde", ne
           )}
         </div>
       </header>
-
-      {showHelpToast && (
-        <div className="fixed top-16 right-4 z-50 p-3 bg-[var(--eh-text,#1c2129)] text-white text-xs rounded-xl shadow-xl border border-white/20 flex items-center gap-2 animate-in fade-in duration-150">
-          <Sparkles className="w-4 h-4 text-[var(--eh-terra,#c8623a)] shrink-0" />
-          <span>Hilfe & Antworten: <Link href="/hilfe" className="underline font-semibold">Zur Hilfe-Seite</Link></span>
-        </div>
-      )}
 
       <main className="eh-auth-main">
         {isDesktop ? (

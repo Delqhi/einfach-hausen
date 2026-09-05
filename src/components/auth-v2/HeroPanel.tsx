@@ -147,7 +147,7 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
               <div className="absolute inset-0 bg-gradient-to-t from-stone-900/65 via-stone-900/10 to-transparent pointer-events-none" />
 
               {/* Overlaid glassmorphism pill at the bottom of the photo */}
-              <div className="relative z-10 m-2.5 sm:m-3 bg-white rounded-lg py-1.5 px-3 flex items-center gap-2 border border-stone-100 shadow-[0_4px_16px_rgba(17,58,60,0.08)]">
+              <div className="eh-auth-photo-badge relative z-10 bg-white flex items-center border border-stone-100 shadow-[0_4px_16px_rgba(17,58,60,0.08)]">
                 <ShieldCheck className="w-4 h-4 text-[var(--eh-text,#1c2129)] shrink-0" />
                 <span className="text-xs sm:text-[12.5px] font-semibold text-[var(--eh-text,#1c2129)] leading-snug">
                   {content.imageBadge}
