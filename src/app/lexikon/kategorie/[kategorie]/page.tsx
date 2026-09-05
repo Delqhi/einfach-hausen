@@ -10,6 +10,9 @@ import { Reveal, Stagger } from '@/components/marketing/motion';
 import { EntryGrid, KategorieBento, KategorieIcon } from '@/components/marketing/lexikon/lexikon-sections';
 import styles from '@/components/marketing/lexikon/lexikon.module.css';
 
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return LEXIKON_KATEGORIEN.map((k) => ({ kategorie: k.slug }));
 }
