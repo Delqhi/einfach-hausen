@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { breadcrumbJsonLd, canonical, leistungenServiceJsonLd } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { MotionPresentation } from '@/components/marketing/motion-presentation';
 import { AppFrame, ReminderScreen } from '@/components/marketing/app-frames';
 import { Reveal } from '@/components/marketing/motion';
 import { CtaBand, Faq, LinkButton, PageHero, Section, Statement, Steps, mkt as styles } from '@/components/marketing/ui';
@@ -29,6 +30,7 @@ export default function Page() {
         actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/so-funktionierts" secondary>So funktioniert&apos;s</LinkButton></>}
         aside={<AppFrame label="Erinnerungsansicht der App mit Heizungswartung, Dachrinnen und Rauchmelder"><ReminderScreen /></AppFrame>}
       />
+      <MotionPresentation presentationId="leistungen" title="Von „Da stimmt was nicht“ zur passenden Hilfe." />
 
       <Section tone="surface" eyebrow="Leistungsbereiche" title="Zwölf Bereiche. Ein Eingang." text="Zur Orientierung, nicht zum Aussuchen. Beschreib dein Anliegen einfach so, wie es ist.">
         <div className={styles.cardGrid} data-cols="3">

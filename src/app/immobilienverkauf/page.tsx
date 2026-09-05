@@ -18,5 +18,5 @@ export default function Page() {
     ctaTitle: 'Dein Haus verkaufen, ohne die Datenkontrolle abzugeben.', ctaText: 'Starte mit deinem Hauskonto. Bewertung und Maklerprozess bleiben nachvollziehbar und unter deiner Freigabe.',
   } as const;
   const breadcrumb = <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Immobilienverkauf', path: '/immobilienverkauf' }])) }} />;
-  return <ProductStoryPage story={story} breadcrumb={breadcrumb} />;
+  return <ProductStoryPage story={story} breadcrumb={breadcrumb} presentationId="immobilienverkauf" />;
 }

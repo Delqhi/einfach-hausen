@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { FileText, History, Home, LockKeyhole, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { MotionPresentation } from '@/components/marketing/motion-presentation';
 import { AppFrame, HausakteScreen, MiniHausakte, MiniReminder } from '@/components/marketing/app-frames';
 import { Reveal } from '@/components/marketing/motion';
 import { BulletList, CtaBand, Faq, FeatureGrid, InfoPanel, LinkButton, PageHero, Section, Split, Statement, TextLink, mkt as styles } from '@/components/marketing/ui';
@@ -18,6 +19,7 @@ export default function Page() {
         actions={<><LinkButton href="/register?role=homeowner">Hausakte kostenlos anlegen</LinkButton><LinkButton href="/#anliegen" secondary>Anliegen starten</LinkButton></>}
         aside={<AppFrame label="Hausakte in der App: Wärmepumpe mit aktiver Garantie, Verlauf und Dokumenten"><HausakteScreen /></AppFrame>}
       />
+      <MotionPresentation presentationId="hausakte" title="Hauswissen, das mit jedem Vorgang wächst." />
 
       <Section tone="surface" eyebrow="Der Unterschied" title="Kein Ordner, den du führen musst." text="Die Hausakte füllt sich von selbst. Jeder Vorgang über Einfach Hausen legt Rechnung, Protokoll, Fotos und Ansprechpartner am richtigen Bauteil ab. Was du schon hast, lädst du einmal hoch.">
         <div className={styles.benefitList}>

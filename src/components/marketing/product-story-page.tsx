@@ -1,4 +1,5 @@
 import { MarketingShell } from './site-shell';
+import { MotionPresentation } from './motion-presentation';
 import { BulletList, CtaBand, Faq, InfoPanel, LinkButton, PageHero, Section, Steps } from './ui';
 
 export type ProductStory = {
@@ -17,10 +18,11 @@ export type ProductStory = {
   ctaText: string;
 };
 
-export function ProductStoryPage({ story, breadcrumb }: { story: ProductStory; breadcrumb?: React.ReactNode }) {
+export function ProductStoryPage({ story, breadcrumb, presentationId }: { story: ProductStory; breadcrumb?: React.ReactNode; presentationId: string }) {
   return <MarketingShell>
     {breadcrumb}
     <PageHero eyebrow={story.eyebrow} title={story.title} text={story.text} actions={<><LinkButton href={story.primaryHref}>{story.primaryLabel}</LinkButton><LinkButton href="/so-funktionierts" secondary>So funktioniert&apos;s</LinkButton></>} />
+    <MotionPresentation presentationId={presentationId} title={`${story.eyebrow}: der Ablauf in Bewegung.`} />
     <Section tone="surface" eyebrow="Was du davon hast" title={story.proofTitle} text={story.proofText}><BulletList items={story.points} /></Section>
     <Section eyebrow="Ablauf" title="Klar getrennte Schritte."><Steps items={story.steps} /></Section>
     <Section tone="soft" eyebrow="Wichtig" title="Klare Grenzen statt falscher Versprechen."><InfoPanel label="So ist es im Produkt"><BulletList items={story.limits} /></InfoPanel></Section>

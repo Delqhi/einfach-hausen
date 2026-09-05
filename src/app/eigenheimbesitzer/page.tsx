@@ -3,6 +3,7 @@ import { canonical } from '@/lib/seo';
 import Image from 'next/image';
 import { Bell, FileText, Home, MessageCircle, UserRound, Wallet } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { MotionPresentation } from '@/components/marketing/motion-presentation';
 import { AppFrame, HomeScreen, MiniContact, MiniHausakte, MiniReminder } from '@/components/marketing/app-frames';
 import { Reveal } from '@/components/marketing/motion';
 import { BulletList, CtaBand, Facts, FeatureGrid, InfoPanel, LinkButton, PageHero, Section, Split, Statement, TextLink, mkt as styles } from '@/components/marketing/ui';
@@ -26,6 +27,7 @@ export default function Page() {
         actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/register?role=homeowner" secondary>Hauskonto kostenlos anlegen</LinkButton></>}
         aside={<AppFrame label="Startbildschirm der App mit fälligen Aufgaben, laufendem Auftrag und Hausakte"><HomeScreen /></AppFrame>}
       />
+      <MotionPresentation presentationId="eigenheimbesitzer" title="Ein Haus. Ein klarer Ablauf." />
 
       <Section eyebrow="Kennst du das?" title="Nicht die Reparatur ist das Problem. Das Drumherum ist es." text="Die meisten Dinge am Haus sind lösbar. Anstrengend ist, dass alles an dir hängt: erinnern, suchen, anrufen, dranbleiben, aufheben.">
         <div className={styles.cardGrid} data-cols="3">

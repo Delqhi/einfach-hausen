@@ -18,5 +18,5 @@ export default function Page() {
     ctaTitle: 'Du brauchst erst eine fachliche Einschätzung?', ctaText: 'Starte kostenlos mit deinem Hauskonto und entscheide erst nach dem Gespräch über weitere Schritte.',
   } as const;
   const breadcrumb = <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Beratung', path: '/beratung' }])) }} />;
-  return <ProductStoryPage story={story} breadcrumb={breadcrumb} />;
+  return <ProductStoryPage story={story} breadcrumb={breadcrumb} presentationId="beratung" />;
 }

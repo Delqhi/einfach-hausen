@@ -18,5 +18,5 @@ export default function Page() {
     ctaTitle: 'Ein dringender Fall an deinem Haus?', ctaText: 'Beschreib, was passiert ist. Wenn passende Hilfe im Netzwerk verfügbar ist, wird sie priorisiert gesucht.',
   } as const;
   const breadcrumb = <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Notfall', path: '/notfall' }])) }} />;
-  return <ProductStoryPage story={story} breadcrumb={breadcrumb} />;
+  return <ProductStoryPage story={story} breadcrumb={breadcrumb} presentationId="notfall" />;
 }

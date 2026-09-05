@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { BadgeCheck, Eye, FileCheck2, LockKeyhole, ShieldCheck, UserCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { MotionPresentation } from '@/components/marketing/motion-presentation';
 import { AppFrame, ContactScreen } from '@/components/marketing/app-frames';
 import { CtaBand, FeatureGrid, InfoPanel, LinkButton, Numbered, PageHero, Section, Statement, mkt as styles } from '@/components/marketing/ui';
 import { PRINCIPLES } from '@/components/marketing/content';
@@ -21,6 +22,7 @@ export default function Page() {
         actions={<><LinkButton href="/register?role=homeowner">Hauskonto kostenlos anlegen</LinkButton><LinkButton href="/datenschutz" secondary>Datenschutzerklärung</LinkButton></>}
         aside={<AppFrame label="Ansprechpartner-Ansicht: Du siehst vorher, wer kommt"><ContactScreen /></AppFrame>}
       />
+      <MotionPresentation presentationId="sicherheit" title="Freigaben bleiben deine Entscheidung." />
 
       <Section tone="surface" eyebrow="Vier Regeln" title="Woran du uns messen kannst.">
         <Numbered items={PRINCIPLES} />

@@ -785,3 +785,14 @@ updated: 2026-09-05T09:09:00+00:00
 actor: chatgpt-web
 evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
 -->
+
+## Route-specific presentation delivery (2026-09-05)
+
+The public marketing surface now has an additive static-motion delivery layer.
+`einfachhausen-presentation-generator` owns the Remotion source and renders
+route-specific MP4/poster pairs. This repository owns only the lightweight
+`MotionPresentation` web player and generated static files under
+`public/media/presentations/`.
+
+This boundary intentionally prevents Remotion from entering the production
+website bundle. See `docs/PRESENTATION_MOTION.md` for the regeneration contract.
