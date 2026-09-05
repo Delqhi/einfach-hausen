@@ -65,3 +65,11 @@ updated: 2026-09-05T09:09:00+00:00
 actor: chatgpt-web
 evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
 -->
+
+## Motion presentations
+
+Do not edit generated MP4/JPEG files by hand. Change the corresponding story or
+renderer in `einfachhausen-de/einfachhausen-presentation-generator`, regenerate
+the full set, then replace the website asset set atomically. Keep the website
+player free of Remotion runtime dependencies and preserve reduced-motion
+behavior. See `docs/PRESENTATION_MOTION.md`.

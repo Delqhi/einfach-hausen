@@ -917,3 +917,13 @@ updated: 2026-09-05T09:09:00+00:00
 actor: chatgpt-web
 evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
 -->
+
+## Motion presentation integration — 2026-09-05
+
+A dedicated generator repository now owns 25 route-specific Remotion stories.
+The website consumes generated MP4/JPEG pairs through the additive
+`MotionPresentation` component; existing page sections remain intact.
+
+Canonical source: `einfachhausen-de/einfachhausen-presentation-generator`.
+Website delivery: `public/media/presentations/`.
+Integration details: `docs/PRESENTATION_MOTION.md`.

@@ -3,6 +3,7 @@ import { canonical } from '@/lib/seo';
 import Image from 'next/image';
 import { MessageCircle, Phone, ShieldCheck, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { MotionPresentation } from '@/components/marketing/motion-presentation';
 import { AppFrame, ContactScreen, OrderStatusScreen, ReminderScreen } from '@/components/marketing/app-frames';
 import { Reveal } from '@/components/marketing/motion';
 import { BulletList, CtaBand, Faq, FeatureGrid, LinkButton, PageHero, Section, Statement, Steps, Timeline, mkt as styles } from '@/components/marketing/ui';
@@ -28,6 +29,7 @@ export default function Page() {
         actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/register?role=homeowner" secondary>Hauskonto kostenlos anlegen</LinkButton></>}
         aside={<AppFrame label="Vorgangsansicht in der App: Dachrinne reinigen, Schritt 3 von 4, Termin bestätigt"><OrderStatusScreen /></AppFrame>}
       />
+      <MotionPresentation presentationId="so-funktionierts" title="Vom ersten Satz zum nächsten Schritt." />
 
       <Section tone="surface" eyebrow="Der Ablauf" title="Drei Schritte. Für dich fühlt es sich an wie einer." text="Die Organisation im Hintergrund darf komplex sein. Für dich bleibt der Weg kurz.">
         <Steps

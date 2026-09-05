@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
+import { MotionPresentation } from '@/components/marketing/motion-presentation';
 import { CtaBand, Facts, Faq, LinkButton, PageHero, Section, Statement, mkt as styles } from '@/components/marketing/ui';
 import { MiniCosts } from '@/components/marketing/app-frames';
 import { PriceLedger } from './price-ledger';
@@ -61,6 +62,7 @@ export default function Page() {
         actions={<><LinkButton href="/register?role=homeowner">Hauskonto kostenlos anlegen</LinkButton><LinkButton href="/register?role=provider" secondary>Als Partner starten</LinkButton></>}
         aside={<MiniCosts />}
       />
+      <MotionPresentation presentationId="preise" title="Kosten sehen, bevor du entscheidest." />
 
       <Section tone="surface" eyebrow="Tarife" title="Eigentümer oder Betrieb?" text="Alle Beträge pro Monat, jederzeit kündbar. Kein Auftrag entsteht automatisch, und kein Tarif kauft eine bessere Matching-Position.">
         <PriceLedger owner={owner} partner={partner} />

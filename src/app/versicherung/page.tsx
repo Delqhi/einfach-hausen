@@ -18,5 +18,5 @@ export default function Page() {
     ctaTitle: 'Hausvorgänge nachvollziehbar dokumentieren.', ctaText: 'Mit dem kostenlosen Hauskonto bleiben Aufträge, Unterlagen und spätere Servicefälle in einem Zusammenhang.',
   } as const;
   const breadcrumb = <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Versicherung', path: '/versicherung' }])) }} />;
-  return <ProductStoryPage story={story} breadcrumb={breadcrumb} />;
+  return <ProductStoryPage story={story} breadcrumb={breadcrumb} presentationId="versicherung" />;
 }

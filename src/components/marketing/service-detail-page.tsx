@@ -1,5 +1,6 @@
 import { breadcrumbJsonLd, canonical, SITE_URL } from '@/lib/seo';
 import { MarketingShell } from './site-shell';
+import { MotionPresentation } from './motion-presentation';
 import type { ServiceCategory } from './service-catalog';
 import { BulletList, CtaBand, Faq, InfoPanel, LinkButton, PageHero, Section, Steps, TextLink, mkt as styles } from './ui';
 
@@ -15,6 +16,7 @@ export function ServiceDetailPage({ service }: { service: ServiceCategory }) {
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Leistungen', path: '/leistungen' }, { name: service.shortTitle, path: servicePath }])) }} />
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
     <PageHero eyebrow={`Leistungen · ${service.shortTitle}`} title={`${service.title}: einfach anfangen, ohne das Gewerk kennen zu müssen.`} text={`${service.description}. Beschreib, was du bemerkst oder vorhast. Wir helfen bei der Einordnung und zeigen den passenden nächsten Schritt — unverbindlich, bevor ein Auftrag entsteht.`} actions={<><LinkButton href="/#anliegen">Anliegen beschreiben</LinkButton><LinkButton href="/leistungen" secondary>Alle Leistungen</LinkButton></>} />
+    <MotionPresentation presentationId={`leistung-${service.slug}`} title={`${service.shortTitle}: vom Anliegen zum nächsten Schritt.`} />
     <Section tone="surface" eyebrow="Typische Situationen" title="Damit kannst du zu uns kommen." text="Die Beispiele sind Orientierung. Wenn dein Fall anders klingt, beschreib ihn trotzdem in deinen Worten.">
       <div className={styles.cardGrid} data-cols="3">{service.situations.map((situation) => <article className={styles.card} key={situation}><h3>{situation}</h3><p>Wir klären, welche Informationen und welcher Fachbereich dafür sinnvoll sind.</p></article>)}</div>
     </Section>
