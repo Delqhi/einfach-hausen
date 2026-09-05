@@ -61,6 +61,22 @@ try {
   await page.goto(`${base}/beratung`, { waitUntil: 'networkidle' });
   await page.getByRole('heading', { level: 1, name: /Erst einen Fachmann fragen/ }).waitFor();
   await desktop.close();
+
+  const wide = await browser.newContext({ viewport: { width: 1945, height: 1057 }, locale: 'de-DE' });
+  const wideLogin = await wide.newPage();
+  await wideLogin.goto(`${base}/login`, { waitUntil: 'networkidle' });
+  const wideGeometry = await wideLogin.evaluate(() => {
+    const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect();
+    const grid = rect('.eh-auth-grid');
+    const hero = rect('#website-hero-panel');
+    const card = rect('#login-card-container');
+    return { gridWidth: grid?.width || 0, heroWidth: hero?.width || 0, cardWidth: card?.width || 0 };
+  });
+  if (wideGeometry.gridWidth < 1500) throw new Error(`wide auth grid too narrow: ${wideGeometry.gridWidth}px`);
+  if (wideGeometry.heroWidth < 820) throw new Error(`wide auth trust panel too narrow: ${wideGeometry.heroWidth}px`);
+  if (wideGeometry.cardWidth < 500) throw new Error(`wide auth login card too narrow: ${wideGeometry.cardWidth}px`);
+  await wide.close();
+
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'de-DE' });
   const phone = await mobile.newPage();
   await phone.goto(`${base}/`, { waitUntil: 'networkidle' });
@@ -74,7 +90,7 @@ try {
   await phone.waitForURL('**/leistungen/heizung');
   await phone.getByRole('heading', { level: 1, name: /Heizung, Klima & Energie/ }).waitFor();
   await mobile.close();
-  console.log(JSON.stringify({ ok: true, checks: ['desktop-megamenu', 'keyboard-focus', 'mobile-disclosure', 'service-deeplink', 'product-story-route', 'no-mobile-overflow'] }, null, 2));
+  console.log(JSON.stringify({ ok: true, checks: ['desktop-megamenu', 'keyboard-focus', 'mobile-disclosure', 'service-deeplink', 'product-story-route', 'no-mobile-overflow', 'wide-auth-layout'] }, null, 2));
 } finally {
   if (browser) await browser.close().catch(() => {});
   server.kill('SIGTERM');

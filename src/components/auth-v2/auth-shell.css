@@ -7,6 +7,10 @@
 .eh-auth-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); width: 100%; max-width: 1280px; margin-left: auto; margin-right: auto; padding: 24px 24px; gap: 32px; align-items: center; }
 @media (min-width: 1024px) { .eh-auth-grid { padding-left: 32px; padding-right: 32px; } }
 @media (min-width: 1280px) { .eh-auth-grid { padding-top: 32px; padding-bottom: 32px; gap: 48px; } }
+@media (min-width: 1536px) {
+  .eh-auth-grid { max-width: 1600px; padding-left: 40px; padding-right: 40px; gap: 56px; }
+  #login-card-container { max-width: 520px; }
+}
 .eh-auth-grid > section { min-width: 0; }
 .eh-auth-hero { grid-column: span 12; }
 .eh-auth-form { grid-column: span 12; display: flex; flex-direction: column; justify-content: center; align-items: center; min-width: 0; }
