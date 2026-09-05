@@ -211,12 +211,12 @@ await nav(publicPage, base+'/')
 await publicPage.getByRole('heading',{name:/Die Betriebszentrale/i}).waitFor();
 await waitText(publicPage,'für dein Zuhause.');
 const hero=publicPage.locator('#anliegen');
-const hiddenHeroLabel=hero.getByText('Was steht bei deinem Haus an?',{exact:true});
-if(await hiddenHeroLabel.isVisible())throw new Error('Landing hero still shows the removed intake heading');
-for(const removedText of ['kostenlos & unverbindlich','Hauskonto kostenlos','unverbindlich starten','kein Auftrag ohne deine Entscheidung','Nichts wird ohne dich beauftragt']){
-  if(await hero.getByText(removedText,{exact:true}).count())throw new Error(`Landing hero still shows removed copy: ${removedText}`);
+for(const removedText of ['Was steht bei deinem Haus an?','kostenlos & unverbindlich','Hauskonto kostenlos','unverbindlich starten','kein Auftrag ohne deine Entscheidung','Nichts wird ohne dich beauftragt']){
+  if(await hero.getByText(removedText,{exact:true}).count())throw new Error(`Landing hero still contains removed copy: ${removedText}`);
 }
-if(!(await publicPage.locator('form[action="/register"] input[name="request"]').count()))throw new Error('Landing intake composer missing');
+const heroRequest=publicPage.locator('form[action="/register"] input[name="request"]');
+if(!(await heroRequest.count()))throw new Error('Landing intake composer missing');
+if((await heroRequest.getAttribute('aria-label'))!=='Anliegen beschreiben')throw new Error('Landing intake composer missing neutral aria-label');
 if(/KI-Hausmeister/i.test(await publicPage.locator('body').innerText()))throw new Error('Landing page still foregrounds AI instead of customer benefit');
 await assertNoOverflow(publicPage,'Mobile landing');
 // T-0129 v2: every canonical public route (DESIGN.md §5.1, 16 routes incl.
