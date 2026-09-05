@@ -52,6 +52,13 @@ try {
   const services = page.locator('nav[aria-label="Hauptnavigation"] details').filter({ has: page.locator('summary', { hasText: 'Leistungen' }) });
   await services.locator('summary').click();
   if (!(await services.getAttribute('open')) && !(await services.evaluate((el) => el.hasAttribute('open')))) throw new Error('desktop Leistungen megamenu did not open');
+  const menuHeading = services.getByRole('heading', { level: 2, name: 'Was steht bei dir an?' });
+  if (await menuHeading.count() !== 1) throw new Error('desktop megamenu is missing the homeowner-first orientation heading');
+  const menuCta = services.getByRole('link', { name: 'Anliegen beschreiben' });
+  if (await menuCta.getAttribute('href') !== '/#anliegen') throw new Error('desktop megamenu owner CTA does not route to the intake');
+  for (const href of ['/beratung', '/notfall', '/so-funktionierts#ansprechpartner']) {
+    if (await services.locator(`a[href="${href}"]`).count() !== 1) throw new Error(`desktop megamenu missing quick path ${href}`);
+  }
   const serviceLinks = services.locator('a[href^="/leistungen/"]');
   if (await serviceLinks.count() < 12) throw new Error('desktop megamenu exposes fewer than 12 service routes');
   await serviceLinks.first().focus();

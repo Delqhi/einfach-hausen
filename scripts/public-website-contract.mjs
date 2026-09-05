@@ -34,6 +34,9 @@ assert.match(shell, /Notfall/);
 assert.match(shell, /Blog/);
 assert.match(shell, /Lexikon/);
 assert.match(shell, /Sicherheit/);
+assert.match(shell, /Was steht bei dir an\?/);
+assert.match(shell, /Noch nicht sicher, was du brauchst\?/);
+assert.ok(shell.includes('href="\/#anliegen"'), 'megamenu must expose the homeowner intake CTA');
 
 
 assert.ok(exists('src/components/marketing/service-detail-page.tsx'), 'shared service detail page must exist');

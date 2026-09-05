@@ -37,6 +37,12 @@ const mobileMore = [
   ['Kontakt', '/kontakt'],
 ] as const;
 
+const megaServiceGroups = [
+  { title: 'Technik & Versorgung', items: SERVICE_CATEGORIES.slice(0, 4) },
+  { title: 'Gebäude & Grundstück', items: SERVICE_CATEGORIES.slice(4, 8) },
+  { title: 'Service & Sonderfälle', items: SERVICE_CATEGORIES.slice(8, 12) },
+] as const;
+
 const footerGroups = [
   {
     title: 'Produkt',
@@ -104,24 +110,52 @@ export function MarketingShell({ children, footerIntake = true }: { children: Re
               <details className={styles.navDisclosure}>
                 <summary>Leistungen <ChevronDown size={14} aria-hidden="true" /></summary>
                 <div className={styles.megaMenu}>
-                  <div className={styles.megaIntro}>
-                    <span>Alles rund ums Eigenheim</span>
-                    <strong>Du sagst, was ansteht. Wir ordnen den passenden nächsten Schritt ein.</strong>
-                    <Link href="/leistungen">Alle Leistungen <ArrowRight size={14} aria-hidden="true" /></Link>
+                  <div className={styles.megaTop}>
+                    <div className={styles.megaIntro}>
+                      <span>Alles rund ums Eigenheim</span>
+                      <h2>Was steht bei dir an?</h2>
+                      <p>Finde den passenden Bereich direkt — oder beschreib einfach dein Anliegen.</p>
+                    </div>
+                    <Link className={styles.megaAllLink} href="/leistungen">
+                      Alle Leistungen <ArrowRight size={15} aria-hidden="true" />
+                    </Link>
                   </div>
-                  <div className={styles.megaServices}>
-                    {SERVICE_CATEGORIES.map(({ slug, shortTitle, description, icon: Icon }) => (
-                      <a key={slug} href={`/leistungen/${slug}`} className={styles.megaService}>
-                        <Icon size={17} aria-hidden="true" />
-                        <span><strong>{shortTitle}</strong><small>{description}</small></span>
-                      </a>
-                    ))}
-                  </div>
-                  <div className={styles.megaQuick}>
-                    <span>Schnelle Wege</span>
-                    <a href="/beratung"><strong>Beratung</strong><small>Erst einen fachlichen Ansprechpartner finden.</small></a>
-                    <a href="/notfall"><strong>Notfall</strong><small>Dringenden Fall einordnen und verfügbare Hilfe suchen.</small></a>
-                    <a href="/so-funktionierts#ansprechpartner"><strong>Ansprechpartner</strong><small>Persönlicher Kontakt ohne Buchungszwang.</small></a>
+                  <div className={styles.megaBody}>
+                    <div className={styles.megaServices} aria-label="Leistungsbereiche">
+                      {megaServiceGroups.map((group) => (
+                        <section className={styles.megaGroup} key={group.title}>
+                          <h3>{group.title}</h3>
+                          <div className={styles.megaGroupList}>
+                            {group.items.map(({ slug, shortTitle, description, icon: Icon }) => (
+                              <a key={slug} href={`/leistungen/${slug}`} className={styles.megaService}>
+                                <span className={styles.megaServiceIcon}><Icon size={18} aria-hidden="true" /></span>
+                                <span className={styles.megaServiceCopy}>
+                                  <strong>{shortTitle}</strong>
+                                  <small>{description}</small>
+                                </span>
+                                <ArrowRight className={styles.megaServiceArrow} size={14} aria-hidden="true" />
+                              </a>
+                            ))}
+                          </div>
+                        </section>
+                      ))}
+                    </div>
+                    <aside className={styles.megaQuick} aria-label="Schnelle Wege">
+                      <div className={styles.megaQuickIntro}>
+                        <span className={styles.megaQuickEyebrow}>Einfach anfangen</span>
+                        <strong>Noch nicht sicher, was du brauchst?</strong>
+                        <p>Beschreib kurz, was ansteht. Wir helfen beim Einordnen — ohne Buchungszwang.</p>
+                        <Link className={styles.megaPrimaryAction} href="/#anliegen">
+                          Anliegen beschreiben <ArrowRight size={15} aria-hidden="true" />
+                        </Link>
+                      </div>
+                      <div className={styles.megaQuickLinks}>
+                        <a href="/beratung"><span><strong>Beratung</strong><small>Erst fachlich einordnen</small></span><ArrowRight size={13} aria-hidden="true" /></a>
+                        <a href="/notfall"><span><strong>Notfall</strong><small>Dringenden Fall richtig starten</small></span><ArrowRight size={13} aria-hidden="true" /></a>
+                        <a href="/so-funktionierts#ansprechpartner"><span><strong>Ansprechpartner</strong><small>Persönlichen Kontakt finden</small></span><ArrowRight size={13} aria-hidden="true" /></a>
+                      </div>
+                      <small className={styles.megaTrust}>Kein Auftrag ohne deine Entscheidung.</small>
+                    </aside>
                   </div>
                 </div>
               </details>

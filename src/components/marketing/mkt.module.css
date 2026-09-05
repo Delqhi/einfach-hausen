@@ -81,23 +81,73 @@
 .navDisclosure[open] > summary svg { transform: rotate(180deg); }
 .navDisclosure > summary svg { transition: transform .18s ease; }
 .megaMenu {
-  position: absolute; left: 50%; top: 64px; transform: translateX(-50%); z-index: 30;
-  width: min(1040px, calc(100vw - 40px)); padding: 22px;
-  display: grid; grid-template-columns: 220px minmax(0,1fr) 210px; gap: 20px;
-  background: var(--eh-surface); border: 1px solid var(--eh-line); border-radius: 24px; box-shadow: var(--eh-shadow-md);
+  position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%); z-index: 30;
+  width: min(1160px, calc(100vw - 32px)); overflow: hidden;
+  background: var(--eh-surface); border: 1px solid var(--eh-line); border-radius: var(--eh-r-card-lg); box-shadow: var(--eh-shadow-lg);
 }
-.megaIntro, .megaQuick { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-.megaIntro > span, .megaQuick > span { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--eh-teal-700); }
-.megaIntro > strong { font-size: 17px; line-height: 1.35; color: var(--eh-ink); }
-.megaIntro > a { padding: 0; display: inline-flex; align-items: center; gap: 6px; color: var(--eh-teal-700); font-weight: 650; }
-.megaServices { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 4px 8px; }
-.desktopNav .megaService { display: flex; align-items: flex-start; gap: 10px; border-radius: 14px; padding: 9px 10px; color: var(--eh-ink); }
-.megaService > svg { flex: 0 0 auto; margin-top: 2px; color: var(--eh-teal-700); }
-.megaService span, .megaQuick a { display: flex; flex-direction: column; gap: 2px; }
-.megaService strong, .megaQuick strong { font-size: 13px; line-height: 1.25; }
-.megaService small, .megaQuick small { color: var(--eh-ink-muted); font-size: 11px; line-height: 1.35; }
-.megaQuick { padding-left: 18px; border-left: 1px solid var(--eh-line); }
-.desktopNav .megaQuick a { padding: 8px 0; border-radius: 0; }
+.megaTop {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 28px;
+  padding: 24px 26px 20px; border-bottom: 1px solid var(--eh-line); background: var(--eh-surface);
+}
+.megaIntro { display: grid; gap: 4px; max-width: 620px; }
+.megaIntro > span, .megaQuickEyebrow {
+  font-size: 11px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; color: var(--eh-teal-700);
+}
+.megaIntro h2 { margin: 0; font-size: 24px; line-height: 1.08; letter-spacing: -.025em; font-weight: 750; color: var(--eh-teal-900); }
+.megaIntro p { margin: 3px 0 0; font-size: 13.5px; line-height: 1.45; color: var(--eh-ink-soft); }
+.desktopNav .megaAllLink {
+  display: inline-flex; align-items: center; gap: 8px; flex: none; padding: 9px 12px;
+  border-radius: var(--eh-r-pill); background: var(--eh-teal-050); color: var(--eh-teal-900); font-size: 13px; font-weight: 700;
+}
+.desktopNav .megaAllLink:hover { background: var(--eh-teal-100); color: var(--eh-teal-900); }
+.megaBody { display: grid; grid-template-columns: minmax(0,1fr) 286px; }
+.megaServices { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; padding: 22px 24px 24px; }
+.megaGroup { min-width: 0; }
+.megaGroup h3 {
+  margin: 0 0 8px 7px; font-size: 10.5px; line-height: 1.2; font-weight: 750; letter-spacing: .075em;
+  text-transform: uppercase; color: var(--eh-ink-mute);
+}
+.megaGroupList { display: grid; gap: 2px; }
+.desktopNav .megaService {
+  display: grid; grid-template-columns: 34px minmax(0,1fr) 14px; align-items: start; gap: 9px;
+  min-width: 0; padding: 9px 8px; border-radius: 14px; color: var(--eh-ink); transition: background var(--eh-dur-fast) var(--eh-ease), color var(--eh-dur-fast) var(--eh-ease);
+}
+.desktopNav .megaService:hover { background: var(--eh-teal-050); color: var(--eh-teal-900); }
+.megaServiceIcon {
+  width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--eh-line); border-radius: 10px; background: var(--eh-surface); color: var(--eh-teal-700); box-shadow: 0 1px 0 rgba(16,34,42,.03);
+}
+.megaServiceCopy { min-width: 0; display: grid; gap: 2px; }
+.megaServiceCopy strong { font-size: 13px; line-height: 1.22; font-weight: 700; color: var(--eh-ink); }
+.megaServiceCopy small {
+  display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  color: var(--eh-ink-mute); font-size: 10.75px; line-height: 1.35;
+}
+.megaServiceArrow { margin-top: 3px; color: var(--eh-teal-500); opacity: 0; transform: translateX(-3px); transition: opacity var(--eh-dur-fast) var(--eh-ease), transform var(--eh-dur-fast) var(--eh-ease); }
+.megaService:hover .megaServiceArrow, .megaService:focus-visible .megaServiceArrow { opacity: 1; transform: translateX(0); }
+.megaQuick {
+  display: flex; flex-direction: column; min-width: 0; padding: 22px 20px 18px;
+  border-left: 1px solid var(--eh-line); background: var(--eh-teal-050);
+}
+.megaQuickIntro { display: grid; gap: 7px; padding: 1px 1px 15px; }
+.megaQuickIntro > strong { font-size: 18px; line-height: 1.18; letter-spacing: -.015em; color: var(--eh-teal-900); }
+.megaQuickIntro > p { margin: 0; color: var(--eh-ink-soft); font-size: 12px; line-height: 1.45; }
+.desktopNav a.megaPrimaryAction {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 5px; padding: 11px 12px;
+  border-radius: var(--eh-r-btn); background: var(--eh-teal-700); color: var(--eh-on-dark); font-size: 12.5px; font-weight: 700; box-shadow: var(--eh-shadow-sm);
+}
+.desktopNav a.megaPrimaryAction:hover { background: var(--eh-teal-800); color: var(--eh-on-dark); }
+.megaQuickLinks { display: grid; gap: 1px; padding-top: 9px; border-top: 1px solid var(--eh-line); }
+.desktopNav .megaQuickLinks a {
+  display: grid; grid-template-columns: minmax(0,1fr) 14px; align-items: center; gap: 10px; padding: 9px 5px;
+  border-radius: 10px; color: var(--eh-ink); background: transparent;
+}
+.desktopNav .megaQuickLinks a:hover { background: rgba(255,255,255,.72); color: var(--eh-teal-900); }
+.megaQuickLinks a > span { min-width: 0; display: grid; gap: 1px; }
+.megaQuickLinks strong { font-size: 12.25px; line-height: 1.25; font-weight: 700; }
+.megaQuickLinks small { color: var(--eh-ink-mute); font-size: 10.5px; line-height: 1.3; }
+.megaQuickLinks svg { color: var(--eh-teal-500); }
+.megaTrust { margin-top: auto; padding: 12px 3px 0; color: var(--eh-ink-mute); font-size: 10.5px; line-height: 1.35; }
 .helpDisclosure { position: relative; }
 .helpMenu {
   position: absolute; right: 0; top: calc(100% + 10px); width: 220px; padding: 10px; z-index: 31;
