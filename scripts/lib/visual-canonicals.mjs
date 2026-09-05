@@ -43,6 +43,8 @@ export const PUBLIC_ROUTES = Object.freeze([
   '/eigenheimbesitzer',
   '/leistungen',
   '/leistungen/heizung',
+  '/leistungen/garten-aussenbereich',
+  '/beratung',
   '/blog',
   '/lexikon',
   '/hausakte',
