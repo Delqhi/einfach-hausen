@@ -38,20 +38,50 @@
   --eh-on-dark-soft: rgba(243, 246, 245, 0.72);
   --eh-on-dark-line: rgba(243, 246, 245, 0.16);
 
-  /* Shape + depth */
+  /*
+   * Shape: eine Skala. Die Aliase (xs, chip, input, media) ersetzen
+   * verstreute Einzelwerte in den Modulen. Bestehende Werte bleiben
+   * unverändert (Kanon, DESIGN.md §3) — es kommt nur dazu, nichts um.
+   */
+  --eh-r-xs: 8px;
+  --eh-r-chip: 10px;
   --eh-r-card: 24px;
   --eh-r-card-lg: 28px;
   --eh-r-btn: 12px;
+  --eh-r-input: 12px;
+  --eh-r-media: 28px;
   --eh-r-pill: 999px;
+
+  /* Depth: drei Stufen auf derselben Ink-Hue, dazu ein Hairline-Ring. */
   --eh-shadow-sm: 0 1px 2px rgba(16, 34, 42, 0.05), 0 6px 18px -8px rgba(16, 34, 42, 0.12);
   --eh-shadow-md: 0 2px 4px rgba(16, 34, 42, 0.05), 0 18px 40px -16px rgba(16, 34, 42, 0.22);
   --eh-shadow-lg: 0 4px 10px rgba(16, 34, 42, 0.06), 0 40px 80px -30px rgba(11, 58, 63, 0.35);
+  --eh-ring: 0 0 0 1px var(--eh-line);
 
   /* Layout */
   --eh-container: 1180px;
+  --eh-container-narrow: 760px;
   --eh-gutter: clamp(20px, 4vw, 32px);
   --eh-section-y: clamp(64px, 9vw, 120px);
   --eh-section-y-tight: clamp(48px, 6vw, 80px);
+
+  /*
+   * Vertikaler Rhythmus innerhalb einer Section. Bewusst ungleichmäßig,
+   * damit Blöcke atmen, statt überall gleich zu sitzen.
+   */
+  --eh-space-1: 4px;
+  --eh-space-2: 8px;
+  --eh-space-3: 14px;
+  --eh-space-4: 22px;
+  --eh-space-5: 34px;
+  --eh-space-6: 52px;
+  --eh-space-7: 76px;
+
+  /* Motion: eine Kurve, drei Dauern. Kein bounce, kein elastic. */
+  --eh-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --eh-dur-fast: 140ms;
+  --eh-dur: 240ms;
+  --eh-dur-slow: 420ms;
 
   /* DESIGN.md §3 Kanon-Aliase (gleiche Werte, Vertragsname) */
   --eh-green-900: #0a3539;
@@ -77,6 +107,7 @@
   --eh-lead: clamp(17px, 1.4vw, 20px);
   --eh-body: 17px;
   --eh-small: 14px;
+  --eh-micro: 12.5px;
 
   color: var(--eh-ink);
   background: var(--eh-canvas);
@@ -96,4 +127,16 @@
   outline: 3px solid var(--eh-teal-500);
   outline-offset: 3px;
   border-radius: 6px;
+}
+
+/*
+ * A11y: Motion-Tokens kollabieren, wenn das Betriebssystem Animationen
+ * reduziert. Module müssen nur die Tokens nutzen, nicht selbst abfragen.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .mkt {
+    --eh-dur-fast: 1ms;
+    --eh-dur: 1ms;
+    --eh-dur-slow: 1ms;
+  }
 }

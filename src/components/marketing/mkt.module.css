@@ -517,26 +517,8 @@
 .routeCard a:hover { color: var(--eh-teal-900); text-decoration: underline; text-underline-offset: 3px; }
 
 /* Pricing */
-.toggleRow { display: flex; justify-content: center; margin-bottom: 36px; }
-.toggle { display: inline-flex; padding: 4px; border-radius: var(--eh-r-pill); background: var(--eh-surface); border: 1px solid var(--eh-line); }
-.toggle button { border: 0; background: transparent; padding: 10px 20px; border-radius: var(--eh-r-pill); font-weight: 600; font-size: 15px; color: var(--eh-ink-soft); cursor: pointer; transition: background .18s ease, color .18s ease; }
-.toggleActive { background: var(--eh-teal-700) !important; color: var(--eh-on-dark) !important; }
-.priceGrid { display: grid; gap: 16px; grid-template-columns: 1fr; }
-@media (min-width: 960px) { .priceGrid { grid-template-columns: repeat(3, 1fr); align-items: start; } .priceGrid[data-cols='4'] { grid-template-columns: repeat(4, 1fr); } }
 .note { font-size: 15px; color: var(--eh-ink-soft); max-width: 760px; margin-top: 24px; }
 .note a { color: var(--eh-teal-700); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-.plan { composes: card; gap: 20px; padding: 30px; }
-.planHero { composes: plan; background: var(--eh-teal-900); border-color: transparent; color: var(--eh-on-dark); }
-.planHero h3, .planHero p { color: inherit; }
-.planHero .planPrice { color: var(--eh-sand-400); }
-.planHero .bulletList li span { background: rgba(255,255,255,.14); color: var(--eh-on-dark); }
-.planHead { display: flex; flex-direction: column; gap: 8px; }
-.planName { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--eh-teal-500); }
-.planHero .planName { color: var(--eh-teal-300); }
-.planPrice { font-size: 44px; line-height: 1; letter-spacing: -0.04em; font-weight: 800; color: var(--eh-teal-900); }
-.planPrice small { font-size: 15px; font-weight: 500; letter-spacing: 0; color: var(--eh-ink-mute); margin-left: 6px; }
-.planHero .planPrice small { color: var(--eh-on-dark-soft); }
-.planTag { align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 5px 10px; border-radius: var(--eh-r-pill); background: var(--eh-sand-400); color: var(--eh-teal-900); }
 
 /* Footer */
 .footer { margin-top: auto; background: var(--eh-teal-900); color: var(--eh-on-dark); }
