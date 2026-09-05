@@ -1,0 +1,109 @@
+#!/usr/bin/env node
+import { chromium } from 'playwright-core';
+import fs from 'node:fs';
+import net from 'node:net';
+import os from 'node:os';
+import path from 'node:path';
+import { randomUUID } from 'node:crypto';
+import { spawn } from 'node:child_process';
+
+const root = process.cwd();
+const browserCandidates = [
+  process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+  '/Applications/Chromium.app/Contents/MacOS/Chromium',
+].filter(Boolean);
+const executablePath = browserCandidates.find((candidate) => fs.existsSync(candidate));
+if (!executablePath) throw new Error('No Chromium browser found');
+if (!fs.existsSync(path.join(root, '.next', 'BUILD_ID'))) throw new Error('No production build found — run npm run build first');
+
+const freePort = () => new Promise((resolve, reject) => {
+  const server = net.createServer(); server.unref(); server.on('error', reject);
+  server.listen(0, '127.0.0.1', () => { const address = server.address(); server.close(() => resolve(address.port)); });
+});
+async function waitForServer(url, timeoutMs = 90000) {
+  const started = Date.now();
+  while (Date.now() - started < timeoutMs) {
+    try { const response = await fetch(url); if (response.status < 500) return; } catch {}
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw new Error(`Server did not become ready: ${url}`);
+}
+
+const viewports = [
+  { name: 'mobile', width: 390, height: 844 },
+  { name: 'tablet', width: 834, height: 1194 },
+  { name: 'desktop', width: 1320, height: 900 },
+  { name: 'browser', width: 1490, height: 805 },
+  { name: 'wide', width: 1945, height: 1057 },
+];
+const routes = [
+  { name: 'login', path: '/login', button: '#btn-submit-login' },
+  { name: 'owner-register', path: '/register?role=homeowner', button: '#btn-submit-register' },
+  { name: 'provider-register', path: '/register?role=provider', button: '#btn-submit-register' },
+];
+
+const port = await freePort();
+const base = `http://127.0.0.1:${port}`;
+const dbPath = path.join(os.tmpdir(), `eh-auth-design-${randomUUID()}.db`);
+const nextBin = path.join(root, 'node_modules/next/dist/bin/next');
+const server = spawn(process.execPath, [nextBin, 'start', '-H', '127.0.0.1', '-p', String(port)], {
+  cwd: root,
+  env: { ...process.env, DATABASE_PATH: dbPath, ADMIN_PASSWORD: `AuthDesign!${randomUUID()}`, SESSION_COOKIE_NAME: 'auth_design_session', NEXT_PUBLIC_APP_URL: base, AUTH_MODE: 'supabase', E2E_INSECURE_COOKIES: '1' },
+  stdio: 'ignore',
+});
+let browser;
+const results = [];
+try {
+  await waitForServer(`${base}/login`);
+  browser = await chromium.launch({ headless: true, executablePath });
+  for (const viewport of viewports) {
+    const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height }, locale: 'de-DE' });
+    const page = await context.newPage();
+    for (const route of routes) {
+      await page.goto(`${base}${route.path}`, { waitUntil: 'networkidle' });
+      const data = await page.evaluate(({ buttonSelector, viewportWidth }) => {
+        const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect();
+        const card = rect('#login-card-container');
+        const grid = rect('.eh-auth-grid');
+        const hero = rect('#website-hero-panel');
+        const heading = document.querySelector('.eh-auth-form-heading h2');
+        const button = document.querySelector(buttonSelector);
+        const roleSwitch = document.querySelector('.eh-auth-topbar-role-switch');
+        const networkBadge = document.querySelector('.eh-auth-network-badge');
+        return {
+          overflow: document.documentElement.scrollWidth - window.innerWidth,
+          cardWidth: card?.width || 0,
+          gridWidth: grid?.width || 0,
+          heroWidth: hero?.width || 0,
+          headingSize: heading ? Number.parseFloat(getComputedStyle(heading).fontSize) : 0,
+          buttonBg: button ? getComputedStyle(button).backgroundColor : '',
+          roleSwitchDisplay: roleSwitch ? getComputedStyle(roleSwitch).display : 'missing',
+          networkBadgeDisplay: networkBadge ? getComputedStyle(networkBadge).display : 'missing',
+          viewportWidth,
+        };
+      }, { buttonSelector: route.button, viewportWidth: viewport.width });
+      if (data.overflow > 1) throw new Error(`${viewport.name}/${route.name}: horizontal overflow ${data.overflow}px`);
+      if (data.headingSize < 27) throw new Error(`${viewport.name}/${route.name}: heading too small ${data.headingSize}px`);
+      if (data.buttonBg !== 'rgb(16, 82, 88)') throw new Error(`${viewport.name}/${route.name}: primary action is not canonical petrol (${data.buttonBg})`);
+      if (data.roleSwitchDisplay !== 'none') throw new Error(`${viewport.name}/${route.name}: duplicate topbar role switch still visible`);
+      if (data.networkBadgeDisplay !== 'none') throw new Error(`${viewport.name}/${route.name}: network micro-badge still visible`);
+      if (viewport.width === 390) {
+        const crampedTabsVisible = await page.getByText('Vorteile', { exact: true }).isVisible().catch(() => false);
+        if (crampedTabsVisible) throw new Error(`${viewport.name}/${route.name}: cramped auth tabs still visible in mobile topbar`);
+        const benefitsLink = page.locator('.eh-auth-mobile-benefits-link');
+        if (!(await benefitsLink.isVisible().catch(() => false))) throw new Error(`${viewport.name}/${route.name}: calm mobile benefits link missing`);
+      }
+      if (viewport.width >= 1320 && data.cardWidth < 500) throw new Error(`${viewport.name}/${route.name}: auth card too narrow ${data.cardWidth}px`);
+      if (viewport.width >= 1490 && data.gridWidth < 1400) throw new Error(`${viewport.name}/${route.name}: auth composition too narrow ${data.gridWidth}px`);
+      if (viewport.width >= 1490 && data.heroWidth < 760) throw new Error(`${viewport.name}/${route.name}: trust panel too narrow ${data.heroWidth}px`);
+      results.push({ viewport: viewport.name, route: route.name, ...data });
+    }
+    await context.close();
+  }
+  console.log(JSON.stringify({ ok: true, checks: results.length, results }, null, 2));
+} finally {
+  if (browser) await browser.close().catch(() => {});
+  server.kill('SIGTERM');
+  for (const suffix of ['', '-wal', '-shm']) { try { fs.rmSync(dbPath + suffix, { force: true }); } catch {} }
+}

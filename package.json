@@ -43,7 +43,8 @@
     "test:a11y:matrix": "node scripts/a11y-matrix.mjs",
     "test:i18n": "node scripts/i18n-regression.mjs",
     "test:public-site": "node scripts/public-website-contract.mjs",
-    "test:public-nav": "node scripts/public-navigation-e2e.mjs"
+    "test:public-nav": "node scripts/public-navigation-e2e.mjs",
+    "test:auth-design": "node scripts/auth-design-system-e2e.mjs"
   },
   "dependencies": {
     "@capacitor/keyboard": "^8.0.5",

@@ -194,9 +194,9 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
       )}
 
       {/* Main White Card matching website aesthetics with soft ambient depth */}
-      <div className="bg-white rounded-2xl shadow-[0_8px_30px_-6px_rgba(17,58,60,0.07)] sm:shadow-[0_12px_36px_-10px_rgba(17,58,60,0.08)] border border-[var(--eh-border,#e4e2dc)] p-4 sm:p-8 space-y-4 sm:space-y-6">
+      <div className="eh-auth-card bg-white rounded-2xl shadow-[0_8px_30px_-6px_rgba(17,58,60,0.07)] sm:shadow-[0_12px_36px_-10px_rgba(17,58,60,0.08)] border border-[var(--eh-border,#e4e2dc)] p-4 sm:p-8 space-y-4 sm:space-y-6">
         {/* Top Header: Security Badge & Role Subtitle */}
-        <div className="flex items-center justify-between pb-2 border-b border-stone-100 text-xs sm:text-[13px]">
+        <div className="eh-auth-card-meta flex items-center justify-between pb-2 border-b border-stone-100 text-xs sm:text-[13px]">
           <div className="flex items-center gap-1.5 text-stone-600 font-medium">
             <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--eh-text,#1c2129)] shrink-0" />
             <span className="text-[11.5px] sm:text-[13px]">Offizielles Meisterportal</span>
@@ -208,7 +208,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
 
         {/* Role Toggle Selector with smooth sliding pill */}
         <div className="space-y-1">
-          <div className="relative grid grid-cols-2 p-1 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] text-xs sm:text-sm font-semibold shadow-2xs">
+          <div className="eh-auth-role-toggle relative grid grid-cols-2 p-1 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] text-xs sm:text-sm font-semibold shadow-2xs">
             <button
               id="role-tab-kunde"
               type="button"
@@ -257,7 +257,7 @@ export function LoginForm({ role: propRole, initialRole = "kunde", initialAuthMo
         </div>
 
         {/* Title and Subtitle */}
-        <div className="space-y-1">
+        <div className="eh-auth-form-heading space-y-1">
           <h2 className="text-xl sm:text-[26px] font-extrabold tracking-tight text-[var(--eh-text,#1c2129)] leading-tight">
             {authMode === "login"
               ? "Willkommen zurück."

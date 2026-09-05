@@ -89,7 +89,7 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
   return (
     <div
       id="website-hero-panel"
-      className="relative w-full my-auto flex flex-col p-4 sm:p-7 lg:p-8 xl:p-9 rounded-2xl bg-white border border-[var(--eh-border,#e4e2dc)] shadow-[0_8px_30px_-6px_rgba(17,58,60,0.07)] sm:shadow-xs overflow-hidden select-none"
+      className="eh-auth-trust-panel relative w-full my-auto flex flex-col p-4 sm:p-7 lg:p-8 xl:p-9 rounded-2xl bg-white border border-[var(--eh-border,#e4e2dc)] shadow-[0_8px_30px_-6px_rgba(17,58,60,0.07)] sm:shadow-xs overflow-hidden select-none"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -122,7 +122,7 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
           </div>
 
           {/* 4 Stat Boxes with refined typography and micro-interactions */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
+          <div className="eh-auth-facts grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5">
             {content.stats.map((stat, idx) => (
               <div
                 key={idx}
@@ -142,9 +142,9 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
           </div>
 
           {/* Lower 2-column layout: Photo on Left, Guarantees & Links on Right */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 xl:gap-6 items-stretch pt-1">
+          <div className="eh-auth-trust-details grid grid-cols-1 md:grid-cols-12 gap-5 xl:gap-6 items-stretch pt-1">
             {/* Left: Authentic photo card with ambient shadow & glassmorphism badge */}
-            <div className="md:col-span-5 relative min-h-[190px] sm:min-h-[240px] rounded-xl overflow-hidden border border-[var(--eh-border,#e4e2dc)] shadow-[0_12px_32px_-8px_rgba(17,58,60,0.12)] group flex flex-col justify-end">
+            <div className="eh-auth-trust-photo md:col-span-5 relative min-h-[190px] sm:min-h-[240px] rounded-xl overflow-hidden border border-[var(--eh-border,#e4e2dc)] shadow-[0_12px_32px_-8px_rgba(17,58,60,0.12)] group flex flex-col justify-end">
               <Image
                 src={content.image}
                 alt={content.imageBadge}
@@ -165,7 +165,7 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
             </div>
 
             {/* Right: The 4 Guarantees with clean petrol checkmarks & links directly attached */}
-            <div className="md:col-span-7 flex flex-col justify-between space-y-3">
+            <div className="eh-auth-trust-points md:col-span-7 flex flex-col justify-between space-y-3">
               <div className="space-y-2.5 xl:space-y-3">
                 {content.points.map((point, idx) => (
                   <div key={idx} className="flex items-start gap-2.5">
@@ -199,7 +199,7 @@ export function HeroPanel({ role, onSelectRole, onOpenLegalModal, onSwitchToLogi
               )}
 
               {/* Links below matching the exact link style from the screenshot */}
-              <div className="pt-3 border-t border-stone-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-[13px]">
+              <div className="eh-auth-trust-links pt-3 border-t border-stone-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-[13px]">
                 <button
                   type="button"
                   onClick={() => onSelectRole(content.link1.targetRole)}

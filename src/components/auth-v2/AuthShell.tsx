@@ -50,7 +50,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
       >
         <div className="flex items-center gap-2.5 sm:gap-3">
           <Link href="/" aria-label="Zur Startseite"><Logo variant="dark" size="sm" /></Link>
-          <div className="hidden sm:flex items-center gap-2 border-l border-[var(--eh-border,#e4e2dc)] pl-3">
+          <div className="eh-auth-brand-context hidden sm:flex items-center gap-2 border-l border-[var(--eh-border,#e4e2dc)] pl-3">
             <AnimatePresence mode="wait">
               <motion.div
                 key={role}
@@ -77,7 +77,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
           </div>
         </div>
 
-        <div className="hidden lg:flex items-center p-0.5 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] text-xs font-semibold">
+        <div className="eh-auth-topbar-role-switch hidden lg:flex items-center p-0.5 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] text-xs font-semibold">
           <button
             id="topbar-role-kunde"
             type="button"
@@ -120,7 +120,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
           </button>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-[13px]">
+        <div className="eh-auth-topbar-actions flex items-center gap-2 sm:gap-3 text-xs sm:text-[13px]">
           <AnimatePresence mode="wait">
             <motion.button
               key={role}
@@ -131,7 +131,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
               type="button"
               onClick={() => setActiveLegalModal("partnerkriterien")}
               title={role === "kunde" ? "Qualitätsstandards einsehen" : "Aufnahmekriterien für Partnerbetriebe einsehen"}
-              className={`hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-all cursor-pointer group ${
+              className={`eh-auth-network-badge hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-all cursor-pointer group ${
                 role === "kunde"
                   ? "bg-[var(--eh-green-50,#edf5f5)] hover:bg-[var(--eh-green-100,#dcebec)] text-[var(--eh-green-700,#105258)] border-[var(--eh-green-100,#dcebec)]"
                   : "bg-[var(--eh-green-50,#edf5f5)] hover:bg-[var(--eh-green-100,#dcebec)] text-[var(--eh-text,#1c2129)] border-[var(--eh-green-100,#dcebec)]"
@@ -166,7 +166,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
           </button>
 
           {!isDesktop && (
-          <div className="lg:hidden flex items-center p-1 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] shadow-inner">
+          <div className="eh-auth-mobile-tabs lg:hidden flex items-center p-1 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] shadow-inner">
             <button
               type="button"
               onClick={() => setMobileTab("login")}
@@ -247,12 +247,21 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde" }: 
               className="w-full max-w-md my-auto py-1"
             >
               {mobileTab === "login" ? (
-                <LoginForm
-                  role={role}
-                  initialAuthMode={initialAuthMode}
-                  onRoleChange={setRole}
-                  onOpenLegalModal={setActiveLegalModal}
-                />
+                <>
+                  <LoginForm
+                    role={role}
+                    initialAuthMode={initialAuthMode}
+                    onRoleChange={setRole}
+                    onOpenLegalModal={setActiveLegalModal}
+                  />
+                  <button
+                    type="button"
+                    className="eh-auth-mobile-benefits-link"
+                    onClick={() => setMobileTab("vorteile")}
+                  >
+                    Warum einfachhausen? Vorteile ansehen
+                  </button>
+                </>
               ) : (
                 <HeroPanel
                   role={role}

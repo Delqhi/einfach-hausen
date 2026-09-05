@@ -68,6 +68,217 @@
   min-height: 44px;
 }
 
+
+/* Shared AuthShell convergence: /login + /register use the canonical product language. */
+.authV2Page {
+  min-height: 100dvh;
+  background: var(--eh-bg, #faf8f4);
+}
+.loginPage { position: relative; }
+.authV2Page :global(.eh-auth) {
+  min-height: 100dvh;
+  background: transparent;
+  color: var(--eh-text, #10222a);
+}
+.authV2Page :global(.eh-auth-topbar) {
+  height: 72px;
+  padding-inline: max(24px, calc((100vw - 1520px) / 2));
+  background: color-mix(in srgb, var(--eh-bg, #faf8f4) 96%, white);
+  border-bottom: 1px solid var(--eh-border, #e4e2dc);
+}
+.authV2Page :global(.eh-auth-brand-context),
+.authV2Page :global(.eh-auth-topbar-role-switch),
+.authV2Page :global(.eh-auth-network-badge) {
+  display: none !important;
+}
+.authV2Page :global(#btn-header-help) {
+  min-height: 44px;
+  padding-inline: 12px;
+  color: var(--eh-text-secondary, #4b5b60);
+  border-radius: 10px;
+}
+.authV2Page :global(.eh-auth-main) { justify-content: center; }
+.authV2Page :global(.eh-auth-grid) {
+  width: 100%;
+  max-width: 1520px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(520px, .8fr);
+  padding: clamp(36px, 5vh, 64px) 32px;
+  gap: clamp(48px, 4vw, 72px);
+}
+.authV2Page :global(.eh-auth-hero) { grid-column: 1; }
+.authV2Page :global(.eh-auth-form) { grid-column: 2; align-items: center; }
+.authV2Page :global(#login-card-container) {
+  width: 100%;
+  max-width: 540px;
+  margin-inline: auto;
+}
+.authV2Page :global(.eh-auth-card) {
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid var(--eh-border, #e4e2dc);
+  background: var(--eh-surface, #fff);
+  box-shadow: 0 18px 50px rgba(16, 34, 42, .07);
+}
+.authV2Page :global(.eh-auth-card-meta) { display: none; }
+.authV2Page :global(.eh-auth-role-toggle) {
+  padding: 4px;
+  border-radius: 14px;
+  background: var(--eh-surface-subtle, #f2f5f5);
+  border-color: var(--eh-border, #e4e2dc);
+  box-shadow: none;
+}
+.authV2Page :global(.eh-auth-role-toggle button) { min-height: 48px; }
+.authV2Page :global(.eh-auth-form-heading h2) {
+  font-size: clamp(30px, 2.4vw, 36px);
+  line-height: 1.05;
+  letter-spacing: -.04em;
+  font-weight: 650;
+  color: var(--eh-green-900, #0a3539);
+}
+.authV2Page :global(.eh-auth-form-heading p) {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--eh-text-secondary, #4b5b60);
+}
+.authV2Page :global(.eh-auth-card label) {
+  font-size: 13px;
+  color: var(--eh-text, #10222a);
+}
+.authV2Page :global(.eh-auth-card input[type="text"]),
+.authV2Page :global(.eh-auth-card input[type="email"]),
+.authV2Page :global(.eh-auth-card input[type="password"]) {
+  min-height: 50px;
+  border-radius: 12px;
+  border-color: var(--eh-border-strong, #cfcbc2);
+  background: #fff;
+  box-shadow: none;
+}
+.authV2Page :global(.eh-auth-card input:focus) {
+  border-color: var(--auth-petrol);
+  box-shadow: 0 0 0 4px rgba(16, 82, 88, .12);
+}
+.authV2Page :global(#btn-submit-login),
+.authV2Page :global(#btn-submit-register) {
+  min-height: 50px;
+  border-radius: 12px;
+  background: var(--auth-petrol);
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+.authV2Page :global(#btn-submit-login:hover),
+.authV2Page :global(#btn-submit-register:hover) {
+  background: var(--auth-petrol-hover);
+  box-shadow: none;
+  transform: none;
+}
+.authV2Page :global(#demo-testzugang-bar),
+.authV2Page :global(#trust-badges-bar) {
+  color: var(--eh-text-secondary, #4b5b60);
+  opacity: .82;
+}
+.authV2Page :global(.eh-auth-trust-panel) {
+  padding: clamp(32px, 3.2vw, 46px) !important;
+  border-radius: 28px;
+  border: 1px solid var(--eh-border, #e4e2dc);
+  background: var(--eh-surface, #fff);
+  box-shadow: 0 16px 48px rgba(16, 34, 42, .055);
+}
+.authV2Page :global(.eh-auth-trust-panel h1) {
+  max-width: 680px;
+  font-size: clamp(36px, 3.3vw, 48px);
+  line-height: 1.02;
+  letter-spacing: -.045em;
+  font-weight: 600;
+  color: var(--eh-green-900, #0a3539);
+}
+.authV2Page :global(.eh-auth-trust-panel h1 + p) {
+  max-width: 690px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--eh-text-secondary, #4b5b60);
+}
+.authV2Page :global(.eh-auth-trust-panel span[class*="uppercase"]) {
+  color: var(--eh-green-700, #105258);
+  letter-spacing: .07em;
+}
+.authV2Page :global(.eh-auth-facts) {
+  gap: 0;
+  border-top: 1px solid var(--eh-border, #e4e2dc);
+  border-bottom: 1px solid var(--eh-border, #e4e2dc);
+}
+.authV2Page :global(.eh-auth-facts > div) {
+  min-height: 94px;
+  padding: 18px 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+.authV2Page :global(.eh-auth-facts > div + div) {
+  border-left: 1px solid var(--eh-border, #e4e2dc);
+}
+.authV2Page :global(.eh-auth-facts > div > div:first-child > div:first-child) {
+  font-size: 28px;
+  color: var(--eh-green-900, #0a3539);
+}
+.authV2Page :global(.eh-auth-facts > div > div:first-child > span) { display: none; }
+.authV2Page :global(.eh-auth-trust-details) { gap: 28px; }
+.authV2Page :global(.eh-auth-trust-photo) {
+  min-height: 270px;
+  border-radius: 20px;
+  box-shadow: none;
+}
+.authV2Page :global(.eh-auth-trust-points h4) {
+  color: var(--eh-text, #10222a);
+  font-size: 14px;
+}
+.authV2Page :global(.eh-auth-trust-points p) {
+  color: var(--eh-text-secondary, #4b5b60);
+  font-size: 12.5px;
+}
+.authV2Page :global(.eh-auth-trust-points > div:first-child > div > div:first-child) {
+  background: var(--eh-green-700, #105258);
+  box-shadow: none;
+}
+.authV2Page :global(.eh-auth-trust-links button:first-child) { color: var(--eh-green-700, #105258); }
+.authV2Page :global(.eh-auth-trust-links button:first-child:hover) { color: var(--eh-green-900, #0a3539); }
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .authV2Page :global(.eh-auth-grid) { max-width: 760px; grid-template-columns: 1fr; }
+  .authV2Page :global(.eh-auth-hero) { display: none !important; }
+  .authV2Page :global(.eh-auth-form) { grid-column: 1 / -1 !important; }
+}
+@media (max-width: 1023px) {
+  .authV2Page :global(.eh-auth-topbar) { height: 64px; padding-inline: 18px; }
+  .authV2Page :global(.eh-auth-mobile-tabs) { display: none !important; }
+  .authV2Page :global(.eh-auth-mobile) { padding: 28px 18px 40px; }
+  .authV2Page :global(#login-card-container) { max-width: 560px; }
+  .authV2Page :global(.eh-auth-mobile-benefits-link) {
+    display: block;
+    min-height: 44px;
+    margin: 12px auto 0;
+    padding: 10px 14px;
+    border: 0;
+    background: transparent;
+    color: var(--eh-green-700, #105258);
+    font-size: 13px;
+    font-weight: 650;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .authV2Page :global(.eh-auth-card) { padding: 26px 22px; border-radius: 20px; box-shadow: none; }
+  .authV2Page :global(.eh-auth-trust-panel) { padding: 24px !important; border-radius: 22px; box-shadow: none; }
+}
+@media (max-width: 520px) {
+  .authV2Page :global(.eh-auth-mobile) { padding: 18px 14px 28px; }
+  .authV2Page :global(.eh-auth-card) { padding: 22px 18px; }
+  .authV2Page :global(.eh-auth-form-heading h2) { font-size: 28px; }
+  .authV2Page :global(.eh-auth-facts > div) { min-height: 78px; padding: 14px 10px; }
+}
+
 .registerPage :global(.ehn-reg-head),
 .registerPage :global(.ehn-reg-hero),
 .registerPage :global(.ehn-reg-form-section) { position: relative; z-index: 1; }
