@@ -35,4 +35,18 @@ assert.match(shell, /Blog/);
 assert.match(shell, /Lexikon/);
 assert.match(shell, /Sicherheit/);
 
-console.log(JSON.stringify({ ok: true, services: expectedSlugs.length, checks: ['catalog', 'megamenu', 'help-discovery'] }, null, 2));
+
+assert.ok(exists('src/components/marketing/service-detail-page.tsx'), 'shared service detail page must exist');
+assert.ok(exists('src/app/leistungen/[slug]/page.tsx'), 'dynamic service route must exist');
+const dynamicServicePage = read('src/app/leistungen/[slug]/page.tsx');
+assert.match(dynamicServicePage, /generateStaticParams/);
+assert.match(dynamicServicePage, /generateMetadata/);
+const sitemap = read('src/app/sitemap.ts');
+assert.match(sitemap, /SERVICE_PATHS/);
+const serviceIndex = read('src/app/leistungen/page.tsx');
+assert.match(serviceIndex, /SERVICE_CATEGORIES/);
+assert.ok(serviceIndex.includes('href={`/leistungen/${slug}`}'));
+const heatingPage = read('src/app/leistungen/heizung/page.tsx');
+assert.match(heatingPage, /ServiceDetailPage/);
+
+console.log(JSON.stringify({ ok: true, services: expectedSlugs.length, checks: ['catalog', 'megamenu', 'help-discovery', 'service-routes', 'sitemap'] }, null, 2));

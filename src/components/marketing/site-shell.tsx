@@ -1,5 +1,6 @@
 import { ArrowRight, ChevronDown, Menu, X } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import localFont from 'next/font/local';
 import { IntakeForm } from '@/components/home/intake-form';
 import { ScrollShadow, SmoothScroll } from './motion';
@@ -102,7 +103,7 @@ export function MarketingShell({ children, footerIntake = true }: { children: Re
                   <div className={styles.megaIntro}>
                     <span>Alles rund ums Eigenheim</span>
                     <strong>Du sagst, was ansteht. Wir ordnen den passenden nächsten Schritt ein.</strong>
-                    <a href="/leistungen">Alle Leistungen <ArrowRight size={14} aria-hidden="true" /></a>
+                    <Link href="/leistungen">Alle Leistungen <ArrowRight size={14} aria-hidden="true" /></Link>
                   </div>
                   <div className={styles.megaServices}>
                     {SERVICE_CATEGORIES.map(({ slug, shortTitle, description, icon: Icon }) => (
@@ -140,7 +141,7 @@ export function MarketingShell({ children, footerIntake = true }: { children: Re
                 <details className={styles.mobileDisclosure}>
                   <summary>Leistungen <ChevronDown size={16} aria-hidden="true" /></summary>
                   <div>{SERVICE_CATEGORIES.map(({ slug, shortTitle }) => <a key={slug} href={`/leistungen/${slug}`}>{shortTitle}</a>)}</div>
-                  <a className={styles.mobileAllLink} href="/leistungen">Alle Leistungen</a>
+                  <Link className={styles.mobileAllLink} href="/leistungen">Alle Leistungen</Link>
                 </details>
                 <a href="/hausakte">Hausakte</a>
                 <a href="/preise">Preise</a>

@@ -6,6 +6,7 @@ import { AppFrame, ContactScreen, HomeScreen, MiniContact, MiniCosts, MiniHausak
 import { CATEGORIES, FACTS, HOME_FAQ, PRINCIPLES } from './content';
 import { Eyebrow, Facts, Faq, LinkButton, ProofRow, Section, Statement, Steps, TextLink } from './ui';
 import styles from './mkt.module.css';
+import Link from 'next/link';
 
 /* 1 · Hero: dark teal stage, intake first, app screen as proof */
 export function HomeHero() {
@@ -156,9 +157,9 @@ export function CategoriesCompact() {
     <Section tone="surface" eyebrow="Wofür du uns fragen kannst" title="Alles, was ein Haus so braucht." text="Du musst dein Anliegen keiner Kategorie zuordnen. Das übernehmen wir. Zur Orientierung: so breit ist das Netz." tight>
       <div className={styles.catGrid}>
         {CATEGORIES.slice(0, 11).map(({ icon: Icon, title }) => (
-          <a key={title} className={styles.cat} href="/leistungen"><Icon size={20} aria-hidden="true" /> {title}</a>
+          <Link key={title} className={styles.cat} href="/leistungen"><Icon size={20} aria-hidden="true" /> {title}</Link>
         ))}
-        <a className={styles.catMore} href="/leistungen">Alle Leistungen <ArrowRight size={18} aria-hidden="true" /></a>
+        <Link className={styles.catMore} href="/leistungen">Alle Leistungen <ArrowRight size={18} aria-hidden="true" /></Link>
       </div>
     </Section>
   );

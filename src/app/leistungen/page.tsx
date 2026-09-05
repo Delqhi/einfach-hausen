@@ -4,7 +4,7 @@ import { MarketingShell } from '@/components/marketing/site-shell';
 import { AppFrame, ReminderScreen } from '@/components/marketing/app-frames';
 import { Reveal } from '@/components/marketing/motion';
 import { CtaBand, Faq, LinkButton, PageHero, Section, Statement, Steps, mkt as styles } from '@/components/marketing/ui';
-import { CATEGORIES } from '@/components/marketing/content';
+import { SERVICE_CATEGORIES } from '@/components/marketing/service-catalog';
 
 export const metadata: Metadata = { title: 'Leistungen', description: 'Alles rund ums Eigenheim: Reparatur, Heizung, Dach, Garten, Sanierung, Wartung. Du beschreibst, wir ordnen zu.' , alternates: { canonical: canonical('/leistungen') } };
 
@@ -32,13 +32,14 @@ export default function Page() {
 
       <Section tone="surface" eyebrow="Leistungsbereiche" title="Zwölf Bereiche. Ein Eingang." text="Zur Orientierung, nicht zum Aussuchen. Beschreib dein Anliegen einfach so, wie es ist.">
         <div className={styles.cardGrid} data-cols="3">
-          {CATEGORIES.map(({ icon: Icon, title, text }, i) => (
-            <Reveal key={title} delay={(i % 3) * 0.05}>
-              <article className={styles.card}>
+          {SERVICE_CATEGORIES.map(({ icon: Icon, title, description, slug }, i) => (
+            <Reveal key={slug} delay={(i % 3) * 0.05}>
+              <a className={styles.card} href={`/leistungen/${slug}`}>
                 <span className={styles.cardIcon}><Icon size={22} aria-hidden="true" /></span>
                 <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
+                <p>{description}</p>
+                <span className={styles.textLink}>Mehr erfahren →</span>
+              </a>
             </Reveal>
           ))}
         </div>
