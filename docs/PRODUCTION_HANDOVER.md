@@ -1,5 +1,11 @@
 # Einfach Hausen — Production Handover and Continuation Runbook
 
+## Repository checkpoint — Public Website Finish (2026-09-05)
+
+Der lokale `main` enthält den operator-freigegebenen Public-Website-Finish. Er ändert **nicht** die Produktionsinfrastruktur und **nicht** die App-Informationsarchitektur; er vertieft die öffentliche Website innerhalb des bestehenden Design-Systems. Enthalten sind das Leistungen-Megamenü, 12 echte Service-Unterseiten, `/beratung`, `/notfall`, `/versicherung`, `/immobilienverkauf`, Discovery-/SEO-Finish und erweiterte Browser-/Visual-Gates.
+
+Lokale Release-Evidence vor Push/Deploy: Next.js Production Build **115/115**, `test:public-site` PASS, `test:public-nav` PASS, Full E2E PASS, Visual **72/72**, Lint 0 Fehler und `git diff --check` PASS. Diese Evidence ersetzt **keine** OCI-Live-Verifikation. Vor Deployment weiterhin den kanonischen OCI-Deploypfad und anschließend Public Smoke/Health ausführen; niemals lokale `.next`-Artefakte auf Produktion kopieren.
+
 **Status snapshot:** 2026-08-31 — **Production runs `b74876a` on OCI (`/srv/einfach-hausen`), deployed through the mandatory unified release gate (T-0157, 10/10 green) with live smoke 200 on `/`, `/preise`, `/login`, `/admin/login`, `/api/health`. Product Final Acceptance Website/Homeowner/Partner (T-0160/T-0161/T-0162) passed with evidence on 2026-08-31 (evidence dir `.sin-gpt-web/evidence/acceptance-20260831/`). SIN Supabase OSS on OCI remains the production auth/data authority. Self-hosted HA/PITR/failover must be re-proven on the actual OCI stack before being described as active.**
 
 **Execution boundary:** complete the one-time verified Mac-M1 → GitHub handoff, then run `einfach-hausen` engineering and Prime Agent Luna on **OCI-VM**. GitHub is the only transfer boundary; do not copy a dirty Mac working tree directly to OCI. Supabase Cloud is not part of the target architecture.

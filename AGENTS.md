@@ -22,6 +22,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - `docs/PRODUCT_VISION.md` is the binding product definition. Preserve the core model: AI organizes, verified regional partners execute, and a concrete human contact takes over after booking.
 - `docs/PRODUCT_POSITIONING.md` is the binding strategic positioning layer. Product and UX choices must reinforce Einfach Hausen as the **personal house manager / operating system for the home**: reduce mental load, increase decision confidence, preserve house memory and value, and reduce fragmented tools/contacts. Do not foreground AI, lead-marketplace or generic portal positioning when a homeowner-facing benefit can express the same capability.
 - `DESIGN.md` is the binding visual/UX contract across the public website, homeowner app, and partner app. Read it before touching UI. During parallel surface-specific design waves, treat it and shared business logic as read-only and stay inside the task's allowed paths.
+
+### Public website finish contract (2026-09-05)
+
+- The public website now has a canonical information architecture: existing top-level navigation stays stable, while `Leistungen` exposes the 12 service areas through a desktop megamenu and mobile disclosure. Do not flatten this back into a single generic link list.
+- `src/components/marketing/service-catalog.tsx` is the public service source of truth; detail pages use the shared `ServiceDetailPage` archetype. Do not create divergent copy-paste service pages.
+- Public product explainers `/beratung`, `/notfall`, `/versicherung` and `/immobilienverkauf` describe existing app capabilities and their limits. Marketing copy must not promise automatic insurer contact, guaranteed 24/7 emergency coverage, or data sharing without explicit approval.
+- Website polish must stay inside the accepted design system. No rebrand, no alternate token set, no new visual language. Improvements are hierarchy, composition, spacing, typography, navigation, responsive behavior and accessibility using the existing `--eh-*` tokens/components.
+- Public website release evidence now includes `npm run test:public-site`, `npm run test:public-nav`, full `npm run test:e2e` and the 72-shot visual matrix.
 - For architecture, dependency flow, blast-radius questions, and unfamiliar code paths, use Graphify first: `graphify query`, `graphify explain`, or `graphify path`. If the graph is absent or stale, run `npm run graph:update`.
 - Graphify output is generated local state under `graphify-out/` and is intentionally not committed. Git hooks installed by Graphify refresh the graph after commit/checkout.
 - Before shipping application changes run `npm run lint`, `npm run build`, and the relevant E2E flow (`npm run test:e2e` for end-to-end product changes).

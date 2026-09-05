@@ -16,6 +16,19 @@ Alle Agents arbeiten in diesem Repository **am selben Ziel**. Es gibt keinen zwe
 
 Aktueller Endpfad: **T-0131 Convergence abgeschlossen (2026-09-03, `3fbe3c9`) → main-HEAD `13496d7 feat(seo): GSC FILE verification token`**. Live verifiziert: UI-Wellen A-E, Supabase-App-Schema + RLS, öffentliche Demo-Logins, GSC-Verifikation sowie Blog/Lexikon-Cluster. Bereits erledigte oder abgelöste Wellen werden nicht erneut begonnen. Neue Implementierungsarbeit entsteht nur aus einem reproduzierbaren Acceptance-Fehler und wird als kanonischer Remediation-Task erfasst.
 
+### Public Website Finish — Stand 2026-09-05
+
+Die öffentliche Website ist zusätzlich auf den freigegebenen Premium-Zielzustand konvergiert, **ohne Rebranding** und weiterhin innerhalb von `DESIGN.md` / `--eh-*`:
+
+- bestehende Top-Level-Navigation beibehalten, aber `Leistungen` als Desktop-Megamenü + Mobile-Disclosure vertieft;
+- 12 Leistungsbereiche aus einem zentralen Service-Katalog mit echten Detailrouten;
+- öffentliche Erklärseiten `/beratung`, `/notfall`, `/versicherung`, `/immobilienverkauf`;
+- stärkere Discovery auf Startseite, Leistungen, Hilfe, Hausakte, Eigenheimbesitzer, Ablauf und Partnerseite;
+- Sitemap/Metadata/Structured-Data aus derselben Content-Quelle;
+- Release-Gates: Public-Site-Vertrag, echter Chrome-Navigationstest, vollständiges Produkt-E2E und 72 Visual Canonicals (390 / Tablet / 1320).
+
+Implementierungs- und Designentscheidungen: `docs/superpowers/specs/2026-09-05-public-website-finish-design.md` und `docs/superpowers/plans/2026-09-05-public-website-finish.md`.
+
 ## Systemübersicht
 
 ![Einfach Hausen Plattformarchitektur](docs/diagrams/platform-architecture.svg)

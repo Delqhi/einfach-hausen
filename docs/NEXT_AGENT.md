@@ -1,45 +1,34 @@
 # NEXT AGENT — Handoff & Handback
 
-**Stand:** 2026-09-03 ~23:55 UTC  
-**Letzte Merges auf main:**
-- `c711b167` (PR #19): UI-Konvergenz-Welle über Admin, CRM, Eigentümer-App und Partner-App.
-- `ef20da18` (PR #20): Dokumentation der UI-Konvergenz-Meilensteine.
+**Stand:** 2026-09-05
+**Kanonischer Abschlussstand:** Public Website Finish auf `main`; EH-01..EH-04 sind die aktuelle `eh-finish`-Kette.
 
----
+## 1. Was ist fertig und frisch verifiziert?
 
-## 1. Was ist 100% fertig und verifiziert?
+- Public Website: bestehendes Design-System beibehalten, kein Rebranding.
+- Desktop-Megamenü + mobile Leistungs-Disclosure mit allen 12 Leistungsbereichen.
+- 12 Service-Detailrouten aus `service-catalog.tsx` + gemeinsamem `ServiceDetailPage`-Archetyp.
+- Produkt-Erklärseiten: `/beratung`, `/notfall`, `/versicherung`, `/immobilienverkauf`.
+- Discovery-Finish auf Startseite, Hilfe, Hausakte, Eigenheimbesitzer, So funktioniert's und Partner.
+- Sitemap/Metadata/Structured Data für die neuen öffentlichen Flächen.
+- `npm run build`: PASS, 115/115 statische Seiten.
+- `npm run test:public-site`: PASS.
+- `npm run test:public-nav`: PASS (Megamenü, Keyboard, Mobile, Deep-Links, kein 390-px-Overflow).
+- `npm run test:e2e`: PASS mit zero browser runtime errors.
+- `npm run test:visual`: **72/72 PASS** über 390 / Tablet / 1320.
+- `npm run lint`: 0 Fehler (24 bestehende Warnungen).
 
-1. **Eigentümer-App (`/app/page.tsx`):**
-   - Hausmeister-Composer ist primäre Hauptaktion direkt unter der Begrüßung.
-   - „Als Nächstes“ (Termine, Quotes, Wartung) folgt direkt darunter.
-   - FAB entfernt, Schnellaktionen dezent untergeordnet.
-2. **Handwerker-App (`/pro/page.tsx`):**
-   - ERP-Dashboard aufgelöst: 4 KPI-Karten durch eine ruhige Arbeits-Zusammenfassungsleiste ersetzt.
-   - Ein klarer nächster Schritt („Kostenvoranschlag senden“) vor der Auftragsliste.
-3. **Admin & CRM (`/admin/page.tsx`, `/admin/crm/page.tsx`, `admin.module.css`):**
-   - Harmonisierung auf den Token-Kanon (`#faf8f4` Canvas, `#105258` Petrol, `#e4e2dc` Borders).
-4. **Webseiten-Archetypen (`/leistungen`, `/preise`, `/hausakte`, `/partner`, `/sicherheit`, `/so-funktionierts`):**
-   - Differenzierte Layouts statt repetitiver Kachelwüsten.
+## 2. Source of truth
 
----
+- Design: `DESIGN.md` + `src/components/marketing/tokens.css`.
+- Website-Spec: `docs/superpowers/specs/2026-09-05-public-website-finish-design.md`.
+- Implementierungsplan: `docs/superpowers/plans/2026-09-05-public-website-finish.md`.
+- Service-Katalog: `src/components/marketing/service-catalog.tsx`.
+- Kanonischer Taskstatus: `.sin-gpt-web/taskplan.sqlite3` / `.sin-gpt-web/TASKPLAN.md`.
 
-## 2. Offene Aufgaben für den nächsten Agenten / Host-Lauf
+## 3. Nächster Schritt
 
-1. **Visual Regression Baselines aktualisieren:**
-   ```bash
-   npm run test:visual:update
-   npm run test:visual:apps:update
-   ```
-   *Grund:* Die Layouts von `/app`, `/pro` und den Marketing-Unterseiten wurden strukturell verbessert; die alten Screenshots schlagen wegen Intentional Diffs an.
-2. **Release Gate laufen lassen:**
-   ```bash
-   npm run release-gate
-   ```
-3. **Deploy & Smoke:**
-   ```bash
-   deploy/update-on-oci.sh
-   npm run test:smoke
-   ```
+Keinen weiteren Website-Redesign-Track starten. Erst `sin-gpt-web-state --repo . next` prüfen. Neue UI-Arbeit nur aus einem reproduzierbaren Acceptance-Fehler oder einer neuen expliziten Operator-Anforderung ableiten. Produktion/Deploy nur nach `docs/PRODUCTION_HANDOVER.md` und frischer Live-Verifikation.
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: EH-01

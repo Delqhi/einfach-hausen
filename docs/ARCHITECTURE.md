@@ -6,6 +6,18 @@ Diese Datei beschreibt die langlebigen Produktbeziehungen hinter der bewusst ein
 
 Komplexität gehört in die Technik, nicht in die Benutzeroberfläche. Ein Eigentümer soll immer in Alltagssprache starten können: **Was möchtest du erledigen?** Ein professioneller Anbieter hat **ein Konto** und erweitert darin seine Tätigkeiten und Leistungen.
 
+## Öffentliche Website-Architektur
+
+Die Marketing-Website ist keine zweite Produktarchitektur. Sie erklärt die vorhandenen Produktpfade und führt anschließend in dieselben Owner-/Provider-Flows. Die Top-Level-Navigation bleibt bewusst kompakt; fachliche Tiefe liegt darunter:
+
+- `Leistungen` → Megamenü / Mobile Disclosure → 12 kanonische Servicebereiche.
+- `src/components/marketing/service-catalog.tsx` hält Slugs, Titel, Kurztexte, typische Situationen und SEO-Copy als zentrale Quelle.
+- `src/app/leistungen/[slug]/page.tsx` und `ServiceDetailPage` bilden den gemeinsamen Service-Archetyp; `/leistungen/heizung` bleibt als kompatible statische Route im selben Archetyp.
+- `/beratung`, `/notfall`, `/versicherung` und `/immobilienverkauf` sind öffentliche Erklärschichten für existierende App-Funktionen, keine separaten Workflows.
+- Sitemap, Navigation und Visual Canonicals werden aus bzw. gegen diese öffentliche IA geprüft.
+
+Die visuelle Grenze bleibt `DESIGN.md` + `--eh-*`. Website-Optimierung darf Komposition, Hierarchie, Typografie, Spacing, responsive Verhalten und Accessibility verbessern, aber keine zweite Designsprache oder Rebrand-Tokens einführen.
+
 ### Visuelle / Präsentations-Source-of-Truth
 
 Für T-0165 gilt die Kette **Notion App Design → `DESIGN.md` → `docs/PRESENTATION_BRAND.md` → `presentation/premium/brand.config.json` → `presentation/premium/deck.html`**. Notion ist visuelle Evidence, nicht automatisch fachliche Produktspezifikation. Änderungen am App-Design müssen daher auch gegen Presentation Brand und Präsentation geprüft werden; Owner und Pro bleiben auf derselben hellen visuellen Foundation.
