@@ -3,6 +3,7 @@ import { breadcrumbJsonLd, canonical, leistungenServiceJsonLd } from '@/lib/seo'
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { AppFrame, ReminderScreen } from '@/components/marketing/app-frames';
 import { EHScope, EHSection, EHPageHero, EHServiceIndex, EHProse, EHSplitStory, EHSteps, EHFAQ, EHClosing, EHButton, EHEyebrow, EHHeading, EHText } from '@/design-system';
+import { mkt as styles } from '@/components/marketing/ui';
 import { SERVICE_CATEGORIES } from '@/components/marketing/service-catalog';
 
 export const metadata: Metadata = { title: 'Leistungen', description: 'Alles rund ums Eigenheim: Reparatur, Heizung, Dach, Garten, Sanierung, Wartung. Du beschreibst, wir ordnen zu.' , alternates: { canonical: canonical('/leistungen') } };
@@ -40,9 +41,9 @@ export default function Page() {
             <p><strong>Beispiele.</strong> So klingen echte Anliegen. <mark>Genau so darfst du schreiben.</mark></p>
           </EHProse>
           {/* Ausnahme 05-WEB-02: Beispiel-Chips mit Request-Prefill haben kein Rezept; Interaktion unverändert erhalten. */}
-          <div data-density="airy">
+          <div className={styles.chipRow} data-density="airy">
             {EXAMPLES.map((e) => (
-              <a key={e} href={`/register?role=homeowner&request=${encodeURIComponent(e)}`}>{e}</a>
+              <a key={e} className={styles.chip} data-size="lg" href={`/register?role=homeowner&request=${encodeURIComponent(e)}`}>{e}</a>
             ))}
           </div>
         </EHSection>
