@@ -1,0 +1,57 @@
+{
+  "session": "01a07406-6786-758d-9c72-5d3fddfa353d",
+  "host": "sinsupabase",
+  "executor": "prime-agent (operator session; isolated bai/glm-5.3-flash dispatch failed 401, see delegation.json)",
+  "branch": "design/einfachhausen-brand-system-20260906",
+  "base": "3d7d84ed100c21ecfe6a27074d7a22aa7ff92c04",
+  "verify": {
+    "status": "pass",
+    "screenshots": 27,
+    "exit": 0
+  },
+  "openviking_receipts": [
+    {
+      "mem": "mem-a70c844b09f13067c64c",
+      "receipt": "74954489-2e75-427a-8abb-7072faad7e1a",
+      "kind": "constraint"
+    },
+    {
+      "mem": "mem-f4b51fa5ecfc06e518f8",
+      "receipt": "95987115-e2e7-46c7-8d4d-6bc25e554bae",
+      "kind": "verified_fact"
+    },
+    {
+      "mem": "mem-14f3c1aa9a2580172fd1",
+      "receipt": "fe743aa6-2c03-4706-a21e-ba4fa2e3e890",
+      "kind": "verified_fact"
+    },
+    {
+      "mem": "mem-1c844836e074955ee861",
+      "receipt": "345d7725-1d95-43ac-8c39-a2ec2b93a21d",
+      "kind": "resolved_failure"
+    }
+  ],
+  "open_items": [
+    {
+      "item": "openviking_readback",
+      "retry": "openviking-recall --limit 5 'EH-BRAND'",
+      "reason": "HTTP 429 upstream embedding quota"
+    },
+    {
+      "item": "sin_brain_conventions",
+      "retry": "locate configured store, then store with readback",
+      "reason": "no configured sin-brain.db on host; new DB forbidden"
+    },
+    {
+      "item": "honcho_delegation_preference",
+      "retry": "pip install honcho-ai==2.1.2 with running server, then retain.sh",
+      "reason": "library missing, no server (stub mode)"
+    }
+  ],
+  "issue": "https://github.com/Delqhi/einfach-hausen/issues/39",
+  "tasks": [
+    "EH-BRAND-01",
+    "EH-BRAND-02"
+  ],
+  "next_action": "push branch, draft PR, issue comment, complete EH-BRAND-01/02 via canonical CLI"
+}

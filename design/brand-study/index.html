@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>einfachhausen · Markenstudie</title>
+<link rel="stylesheet" href="/study.css">
+<script src="/study.js" defer></script>
+</head>
+<body>
+<div class="study-controls">
+<div class="study-title"><strong>einfachhausen · Markenstudie</strong><span>Entwurf · identische Inhalte · Beispieldaten</span></div>
+<div class="choice-row" role="group" aria-label="Markenrichtung">
+<button type="button" data-direction="architecture" aria-pressed="true">01 Warme Architektur</button>
+<button type="button" data-direction="companion" aria-pressed="false">02 Persönlicher Hausbegleiter</button>
+<button type="button" data-direction="journal" aria-pressed="false">03 Das Hausjournal</button>
+</div>
+<div class="choice-row secondary" role="group" aria-label="Ansicht">
+<button type="button" data-view="home" aria-pressed="true">Startseite</button>
+<button type="button" data-view="file" aria-pressed="false">Mobile Hausakte</button>
+<button type="button" data-view="contact" aria-pressed="false">Kontakt</button>
+</div>
+<p class="direction-note" id="direction-note" aria-live="polite">Präzise Formen, warme Materialien und eine offene architektonische Rahmung.</p>
+</div>
+<main class="brand-world" id="brand-world" data-direction="architecture" data-view="home">
+<header class="brand-header">
+<img class="original-logo" src="/brand/logo.png" alt="einfachhausen" width="150" height="104">
+<span class="header-note">Dein persönlicher Hausmanager.</span>
+<button class="quiet-action" type="button" data-open-view="contact">Kontakt aufnehmen <span aria-hidden="true">↗</span></button>
+</header>
+<section class="home-view" data-panel="home" aria-label="Startseitenpassage">
+<div class="hero">
+<div class="hero-copy">
+<p class="eyebrow"><span class="chapter-number">01</span> Zuhause, mit Überblick.</p>
+<h1>Dein Haus.<br><em>Einfach geregelt.</em></h1>
+<p class="lead">Weniger kümmern. Mehr zuhause sein. Behalte im Blick, was ansteht, und finde die passenden Menschen für dein Haus.</p>
+<button class="primary-action" type="button" data-open-view="file">Deine Hausakte entdecken <span aria-hidden="true">↗</span></button>
+<div class="hero-foot"><span>Hauswissen bewahren</span><span>Persönlich verbunden</span></div>
+</div>
+<div class="hero-media">
+<div class="architectural-frame" aria-hidden="true"></div>
+<img class="home-photo" src="/images/home.jpg" alt="Bestandsmotiv: Familie vor ihrem Zuhause" width="1000" height="800">
+<div class="photo-caption"><span>Ein Zuhause. Viele Geschichten.</span><span aria-hidden="true">↗</span></div>
+<div class="home-record"><span class="record-index">HAUSAKTE / 01</span><strong>Gut aufgehoben.</strong><span>Dein Hauswissen an einem Ort.</span></div>
+</div>
+</div>
+<div class="brand-promises">
+<div><span>01</span><strong>Alles wissen.</strong><p>Dokumente und die Geschichte deines Hauses.</p></div>
+<div><span>02</span><strong>Nichts vergessen.</strong><p>Anstehende Wartungen und wichtige Termine.</p></div>
+<div><span>03</span><strong>Nicht alles selbst machen.</strong><p>Passende Ansprechpartner, wenn Hilfe nötig ist.</p></div>
+</div>
+</section>
+<section class="file-view" data-panel="file" aria-label="Mobile Hausakte" hidden>
+<div class="file-intro"><p class="eyebrow">Dein Hausgedächtnis</p><h1>Alles an<br><em>seinem Platz.</em></h1><p class="lead">Die Geschichte deines Hauses bleibt bei dir. Klar geordnet und schnell wiedergefunden.</p></div>
+<div class="house-file">
+<div class="file-heading"><span>MEIN ZUHAUSE</span><span class="file-number">HA / 01</span></div>
+<h2>Mein Haus</h2><p class="file-subtitle">Dein Überblick für heute.</p>
+<div class="register-tabs" role="group" aria-label="Hausakte-Register">
+<button type="button" data-register="overview" aria-pressed="true">Überblick</button>
+<button type="button" data-register="documents" aria-pressed="false">Dokumente</button>
+<button type="button" data-register="people" aria-pressed="false">Menschen</button>
+</div>
+<div data-register-panel="overview">
+<div class="next-item"><span class="record-index">ALS NÄCHSTES</span><h3>Heizungswartung planen</h3><p>Prüfe den Wartungsrhythmus deiner Anlage.</p><button class="text-action" type="button" data-open-register="people">Ansprechpartner ansehen ↗</button></div>
+<div class="file-timeline">
+<div><span class="timeline-dot"></span><div><strong>Die Geschichte bleibt.</strong><p>Wartungen, Rechnungen und Notizen an einem Ort.</p></div></div>
+<div><span class="timeline-dot hollow"></span><div><strong>Der nächste Schritt wird klar.</strong><p>Offene Fragen übersichtlich sammeln.</p></div></div>
+</div>
+</div>
+<div data-register-panel="documents" hidden><h3>Deine Dokumente</h3><details><summary>Wartung &amp; Technik <span>↗</span></summary><p>Hier stehen im Produkt deine hinterlegten Unterlagen. Diese Stilprobe verwendet keine Kundendaten.</p></details><details><summary>Rechnungen &amp; Belege <span>↗</span></summary><p>Dokumente bleiben dem richtigen Haus zugeordnet.</p></details></div>
+<div data-register-panel="people" hidden><h3>Deine Ansprechpartner</h3><div class="person-row"><span class="person-symbol" aria-hidden="true">↗</span><div><strong>Die richtigen Menschen.</strong><p>Bewährte Kontakte bleiben bei deinem Haus.</p></div></div><button class="primary-action" type="button" data-open-view="contact">Kontaktansicht öffnen ↗</button></div>
+<p class="local-status" id="file-status" aria-live="polite"></p>
+</div>
+</section>
+<section class="contact-view" data-panel="contact" aria-label="Kontaktansicht" hidden>
+<div class="contact-story"><p class="eyebrow"><span class="chapter-number">03</span> Persönlich verbunden.</p><h1>Dein Anliegen.<br><em>Ein offenes Ohr.</em></h1><p class="lead">Beschreib, was dich beschäftigt. Gemeinsam wird der nächste Schritt klar.</p><img src="/images/partner.jpg" alt="Bestandsmotiv: persönliches Gespräch an der Haustür" width="900" height="650"><p class="image-source">Bestehendes Bildmaterial · Motivstudie</p></div>
+<form class="contact-form" id="contact-form">
+<p class="record-index">WIR HÖREN ZU</p><h2>Was können wir für dich tun?</h2>
+<label for="contact-name">Dein Name</label><input id="contact-name" name="name" autocomplete="off" placeholder="Vorname" required maxlength="80">
+<label for="contact-message">Dein Anliegen</label><textarea id="contact-message" name="message" rows="5" placeholder="Was steht bei deinem Haus an?" required maxlength="2000"></textarea>
+<button class="primary-action" type="submit">Rückmeldung ansehen <span aria-hidden="true">↗</span></button>
+<p class="prototype-note">Stilprobe: Eingaben bleiben in dieser Ansicht und werden nicht versendet oder gespeichert.</p>
+<p class="local-status" id="contact-status" role="status"></p>
+</form>
+</section>
+<footer class="brand-footer"><span>Dein Haus. Einfach geregelt.</span><span>Regional. Menschlich. Organisiert.</span></footer>
+</main>
+</body>
+</html>

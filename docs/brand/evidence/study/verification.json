@@ -1,0 +1,200 @@
+{
+  "status": "pass",
+  "screenshots": 27,
+  "originalLogo": true,
+  "localOnlyForm": true,
+  "keyboardSwitch": true,
+  "reducedMotion": true,
+  "sourceExposureGuard": true,
+  "records": [
+    {
+      "direction": "architecture",
+      "view": "home",
+      "width": 390,
+      "image": "architecture-home-390.png",
+      "overflow": false
+    },
+    {
+      "direction": "architecture",
+      "view": "file",
+      "width": 390,
+      "image": "architecture-file-390.png",
+      "overflow": false
+    },
+    {
+      "direction": "architecture",
+      "view": "contact",
+      "width": 390,
+      "image": "architecture-contact-390.png",
+      "overflow": false
+    },
+    {
+      "direction": "companion",
+      "view": "home",
+      "width": 390,
+      "image": "companion-home-390.png",
+      "overflow": false
+    },
+    {
+      "direction": "companion",
+      "view": "file",
+      "width": 390,
+      "image": "companion-file-390.png",
+      "overflow": false
+    },
+    {
+      "direction": "companion",
+      "view": "contact",
+      "width": 390,
+      "image": "companion-contact-390.png",
+      "overflow": false
+    },
+    {
+      "direction": "journal",
+      "view": "home",
+      "width": 390,
+      "image": "journal-home-390.png",
+      "overflow": false
+    },
+    {
+      "direction": "journal",
+      "view": "file",
+      "width": 390,
+      "image": "journal-file-390.png",
+      "overflow": false
+    },
+    {
+      "direction": "journal",
+      "view": "contact",
+      "width": 390,
+      "image": "journal-contact-390.png",
+      "overflow": false
+    },
+    {
+      "direction": "architecture",
+      "view": "home",
+      "width": 736,
+      "image": "architecture-home-736.png",
+      "overflow": false
+    },
+    {
+      "direction": "architecture",
+      "view": "file",
+      "width": 736,
+      "image": "architecture-file-736.png",
+      "overflow": false
+    },
+    {
+      "direction": "architecture",
+      "view": "contact",
+      "width": 736,
+      "image": "architecture-contact-736.png",
+      "overflow": false
+    },
+    {
+      "direction": "companion",
+      "view": "home",
+      "width": 736,
+      "image": "companion-home-736.png",
+      "overflow": false
+    },
+    {
+      "direction": "companion",
+      "view": "file",
+      "width": 736,
+      "image": "companion-file-736.png",
+      "overflow": false
+    },
+    {
+      "direction": "companion",
+      "view": "contact",
+      "width": 736,
+      "image": "companion-contact-736.png",
+      "overflow": false
+    },
+    {
+      "direction": "journal",
+      "view": "home",
+      "width": 736,
+      "image": "journal-home-736.png",
+      "overflow": false
+    },
+    {
+      "direction": "journal",
+      "view": "file",
+      "width": 736,
+      "image": "journal-file-736.png",
+      "overflow": false
+    },
+    {
+      "direction": "journal",
+      "view": "contact",
+      "width": 736,
+      "image": "journal-contact-736.png",
+      "overflow": false
+    },
+    {
+      "direction": "architecture",
+      "view": "home",
+      "width": 1320,
+      "image": "architecture-home-1320.png",
+      "overflow": false
+    },
+    {
+      "direction": "architecture",
+      "view": "file",
+      "width": 1320,
+      "image": "architecture-file-1320.png",
+      "overflow": false
+    },
+    {
+      "direction": "architecture",
+      "view": "contact",
+      "width": 1320,
+      "image": "architecture-contact-1320.png",
+      "overflow": false
+    },
+    {
+      "direction": "companion",
+      "view": "home",
+      "width": 1320,
+      "image": "companion-home-1320.png",
+      "overflow": false
+    },
+    {
+      "direction": "companion",
+      "view": "file",
+      "width": 1320,
+      "image": "companion-file-1320.png",
+      "overflow": false
+    },
+    {
+      "direction": "companion",
+      "view": "contact",
+      "width": 1320,
+      "image": "companion-contact-1320.png",
+      "overflow": false
+    },
+    {
+      "direction": "journal",
+      "view": "home",
+      "width": 1320,
+      "image": "journal-home-1320.png",
+      "overflow": false
+    },
+    {
+      "direction": "journal",
+      "view": "file",
+      "width": 1320,
+      "image": "journal-file-1320.png",
+      "overflow": false
+    },
+    {
+      "direction": "journal",
+      "view": "contact",
+      "width": 1320,
+      "image": "journal-contact-1320.png",
+      "overflow": false
+    }
+  ]
+}

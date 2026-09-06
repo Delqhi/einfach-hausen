@@ -906,3 +906,14 @@ updated: 2026-09-05T09:09:00+00:00
 actor: chatgpt-web
 evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
 -->
+
+## EH-BRAND — Operator-Auftrag vom 06.09.2026
+
+Die eigenständige einfachhausen-Markenstudie wird auf einem isolierten Branch entwickelt. Sie umfasst drei vergleichbare Richtungen, vollständige Quellpakete und visuelle Evidenz. Sie ist keine bereits ausgewählte oder produktiv veröffentlichte neue Marke.
+
+- Spezifikation: `docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md`
+- Ausführungsplan: `docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md`
+- Handoff: `docs/brand/HANDOFF.md`
+- Vollständiger Zielquelltext: `docs/brand/SOURCE_PACKET.md`
+- Tasks: EH-BRAND-01 bis EH-BRAND-06; vorhandenes T-0151 und Issue #33 berücksichtigen.
+- Ausführung: `/home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906`, Branch `design/einfachhausen-brand-system-20260906`, Node 22.23.0.

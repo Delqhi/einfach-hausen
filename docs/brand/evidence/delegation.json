@@ -1,0 +1,14 @@
+{
+  "host": "sinsupabase",
+  "provider": "bai",
+  "model": "glm-5.3-flash",
+  "workspace": "/home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906",
+  "pid": 1352794,
+  "daemon_socket": "/home/ubuntu/.local/share/eh-brand-prime-20260906/daemon.sock",
+  "session_dir": "/home/ubuntu/.local/share/eh-brand-prime-20260906/sessions",
+  "private_log": "/home/ubuntu/.local/share/eh-brand-prime-20260906/prime-isolated-events.jsonl",
+  "started_at": "2026-09-05T23:19:19.983273+00:00",
+  "issue": "https://github.com/Delqhi/einfach-hausen/issues/39",
+  "state": "process_started_not_yet_verified",
+  "prior_failure": "Default daemon ownership conflict; no session created; existing services preserved."
+}

@@ -1,0 +1,111 @@
+{
+  "base": "3d7d84ed100c21ecfe6a27074d7a22aa7ff92c04",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "b2c95614b37789b2ca480d985776e70b6fa8d24c8435554260caa5c22892fa45",
+      "bytes": 29297
+    },
+    {
+      "path": "README.md",
+      "sha256": "3b695affc1bddc45372d9cee88ca606421cb11781ef6321369ef825bc99e5a8f",
+      "bytes": 35308
+    },
+    {
+      "path": "design/brand-study/index.html",
+      "sha256": "396ddab46b3dfebd5100f5939334620ddd992e4fc52f8646c7c41173d16ff272",
+      "bytes": 7065
+    },
+    {
+      "path": "design/brand-study/server.mjs",
+      "sha256": "d390db34dcca020acdf6c54589b792b0a31461c8105a49674fd800409518bf03",
+      "bytes": 2609
+    },
+    {
+      "path": "design/brand-study/study.css",
+      "sha256": "65dbaca17c88bda7ec381721e96d33a79468cc30e9a72a70dca73c8df748c635",
+      "bytes": 12879
+    },
+    {
+      "path": "design/brand-study/study.js",
+      "sha256": "00b411fd0e9cb3ce394b87743c64cd1ba182e22f0f19eee12f3c9da701f9626f",
+      "bytes": 2707
+    },
+    {
+      "path": "design/brand-study/verify.mjs",
+      "sha256": "424d0f866333f006ffdfad22a745ef3e79e63b5203b925c8868fb3022558c688",
+      "bytes": 4018
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "sha256": "d2299502621563282f75d6d1a7544614c695babd36995f758d93e3f61d2d778b",
+      "bytes": 28764
+    },
+    {
+      "path": "docs/NEXT_AGENT.md",
+      "sha256": "ff4df34d7beaca0003fbf0170d5f2cb8a15ab3b54ac3765a7e21166d1b187c1b",
+      "bytes": 6883
+    },
+    {
+      "path": "docs/PRODUCTION_HANDOVER.md",
+      "sha256": "a8322cc59bc946d92c3e8cb4b00baad03daf8c0064f03bcbdb086e36fbe3f71f",
+      "bytes": 35243
+    },
+    {
+      "path": "docs/brand/HANDOFF.md",
+      "sha256": "f46019393e05f7b3cb634e2bf85651c2d908b294c4def9476d690c51d0052552",
+      "bytes": 3032
+    },
+    {
+      "path": "docs/brand/ISSUE_BODY.md",
+      "sha256": "2c3ca2e77778364cfc637bc876e247fa3418acd42679870b22fef00fe5c4f1c7",
+      "bytes": 2930
+    },
+    {
+      "path": "docs/brand/evidence/WORKER_REPORT.md",
+      "sha256": "bda9ef3734a83e719e846b3be96b8953b588bce68f034a52371f414f7e512dac",
+      "bytes": 5021
+    },
+    {
+      "path": "docs/brand/evidence/delegation.json",
+      "sha256": "827582d246c2a4af97249de7a065b90c1b9a8fb76478df6c2c8df4dad1cb3c9d",
+      "bytes": 710
+    },
+    {
+      "path": "docs/brand/evidence/issue.json",
+      "sha256": "6912123fb29fc8b26188906e5748d38bc3153fa2728a2b80b260420fbbae89ea",
+      "bytes": 94
+    },
+    {
+      "path": "docs/brand/evidence/persistence.json",
+      "sha256": "de5b96f412e200d0ba1a6c38f6b62be9bc084d6bc462f60920dd0793b518c02e",
+      "bytes": 1774
+    },
+    {
+      "path": "docs/brand/evidence/task-registration.json",
+      "sha256": "9e51875d5cd87c48725a7207969450f71a1cc4547e33899b0c9ab33ea80919e1",
+      "bytes": 998
+    },
+    {
+      "path": "docs/brand/source/apply_package.py",
+      "sha256": "4f49b08a183df4587ba4762e15051bce4f13eb56d5d6cbd317ed4238c375b529",
+      "bytes": 1572
+    },
+    {
+      "path": "docs/brand/source/export_packet.py",
+      "sha256": "7f4f35310c05f2f03c685056ba2d177e7e8333b9d1440e897e7b9ff9400034f8",
+      "bytes": 2984
+    },
+    {
+      "path": "docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md",
+      "sha256": "87e62f63a70257687d9fe0a88dca3e7a4461c3f37170a341964a0c6ad1e17618",
+      "bytes": 10769
+    },
+    {
+      "path": "docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md",
+      "sha256": "ee7d52b539bbe40d524693a931f559d293040a2cdb1e429f7d3db5e5a1ad13b6",
+      "bytes": 21538
+    }
+  ],
+  "packet_sha256": "ada257013b537f507537c6234cda17fa5252935b5a2df6b847aeb051fcf6fbee"
+}
