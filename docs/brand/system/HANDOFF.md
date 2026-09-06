@@ -55,3 +55,18 @@ Separat versionierte Consumer-Manifeste pinnen den Quellcommit und SHA256 jedes 
 ## Dokumentationspflicht
 
 Alle Folgeänderungen müssen Taskstatus, NEXT_AGENT, Handoff, Prüfnachweise, vollständige Source-Blöcke und Hashmanifest aktualisieren. Designentscheidungen in Brain/Memory mit Quellen und Versionsstand festhalten. Alte Stilproben bleiben historische Evidenz. Keine Behauptung einer Installation, eines Merge, Deployments oder Pflichtchecks ohne tatsächlichen Nachweis.
+
+
+## Lieferstand und letzte Nutzersteuerung
+
+Designsystem und Skills sind versioniert geliefert; EH-BRAND-04 ist abgeschlossen. Beide Skills sind auf OCI und Mac i9 in Codex/OpenCode installiert und lokale AGENTS.md ergänzt. Verbindliche Commit-/PR-/Issue-/Installationspfade: docs/brand/system/delivery.json. PR42 ist als durch PR41 ersetzt geschlossen; sein Branch bleibt erhalten. Weitere Tests und Restmigration sind auf ausdrückliche Nutzeranweisung an lokale Agenten übergeben (EH-BRAND-05-WEB/APPS/CRM/HUB und06). Kein Merge/Deployment/Pflichtstatus wurde als erfolgt behauptet.
+
+
+### Direkte Übernahme
+
+- Hauptbibliothek: https://github.com/Delqhi/einfach-hausen/pull/41
+- Skills (bereits lokal installiert): https://github.com/OpenSIN-Code/wow-my-zsh/pull/101
+- Präsentationsgenerator: https://github.com/einfachhausen-de/einfachhausen-presentation-generator/pull/1
+- CRM-Vertrag: https://github.com/einfachhausen-de/einfach-hausen-crm/pull/3
+- Hub-Vertrag: https://github.com/einfachhausen-de/portalhub/pull/1
+- Lokale Folgeaufgaben: Website #43, Apps #44, CRM #4, Hub #2, Regression/Pflichtstatus #45 in den jeweiligen Repos.

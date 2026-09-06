@@ -96,9 +96,29 @@
       "bytes": 2819,
       "kind": "text"
     },
+    "docs/brand/evidence/system/brand-brain-readback.txt": {
+      "sha256": "2f23b25fe7ca7f59d457a8666c518036f3b78c0232ac4b067f8d3ecc8cc04f80",
+      "bytes": 165,
+      "kind": "text"
+    },
+    "docs/brand/evidence/system/brand-brain-receipt.txt": {
+      "sha256": "2863f8f41f9a30ad83179782bbabe8c7f7feeaca2ceb0938a43ce3e4a88dbfd8",
+      "bytes": 37,
+      "kind": "text"
+    },
+    "docs/brand/evidence/system/brand-task-completion.json": {
+      "sha256": "e258b49557eee0eeefed9909f4da920bd842cb7c46c8e39acf939ae1bd8d0977",
+      "bytes": 22,
+      "kind": "text"
+    },
     "docs/brand/evidence/system/browser.json": {
       "sha256": "df0ed7279bef7e9318972a426a86a20103ef4e10ea9b2f7c8a554ec414497921",
       "bytes": 6520,
+      "kind": "text"
+    },
+    "docs/brand/evidence/system/final-task-records.json": {
+      "sha256": "3c0a725c42baac4085bd251f836b64d8fae82e31842a50788517b2833983ee3f",
+      "bytes": 15052,
       "kind": "text"
     },
     "docs/brand/evidence/system/impact-HomeHero.txt": {
@@ -141,9 +161,19 @@
       "bytes": 13054,
       "kind": "text"
     },
+    "docs/brand/evidence/system/mac-skill-install.json": {
+      "sha256": "1aef6ffbca2fb3370a4574b4fb0486303da58d59af6e32ccb4097f2dfdf93ebb",
+      "bytes": 704,
+      "kind": "text"
+    },
     "docs/brand/evidence/system/migration-tasks.json": {
       "sha256": "7a4c370514de51879ebb0ab93a3fc42632895d9932178b0cf98640df7c03e5a9",
       "bytes": 421,
+      "kind": "text"
+    },
+    "docs/brand/evidence/system/oci-skill-install.json": {
+      "sha256": "949957b2103cedd26ac6e957f696c383f1f63b27a316988dda28cda0b0abb8dd",
+      "bytes": 648,
       "kind": "text"
     },
     "docs/brand/evidence/system/public-hausakte-1440.png": {
@@ -372,8 +402,8 @@
       "kind": "text"
     },
     "docs/brand/system/HANDOFF.md": {
-      "sha256": "a16d478132e854c23b7e4520be9d694530f1dd0d17986f637fa83f086a9201f5",
-      "bytes": 6577,
+      "sha256": "96c26e2185e2d9205b0d824b96ed26a30a9d95c501334396280dc377b2abd23e",
+      "bytes": 7719,
       "kind": "text"
     },
     "docs/brand/system/PR42_RECONCILIATION.md": {
@@ -381,9 +411,14 @@
       "bytes": 2371,
       "kind": "text"
     },
+    "docs/brand/system/delivery.json": {
+      "sha256": "92654c4e07a54509aa97541c2361d6e8f7b801645ca385850a82366e56528750",
+      "bytes": 2952,
+      "kind": "text"
+    },
     "docs/superpowers/plans/2026-09-06-einfachhausen-design-system-v1.md": {
-      "sha256": "9f8dbfd730ee2110d624b16443c091035fe83b45e91bfe7d175ba6d0aeac3873",
-      "bytes": 10726,
+      "sha256": "91e069cbe0f71d8a98cd9a47f322c50ffc563e2fbd2301121721249b77fca79b",
+      "bytes": 11315,
       "kind": "text"
     },
     "docs/superpowers/specs/2026-09-06-einfachhausen-design-system-v1.md": {

@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-06",
+  "status": "design-system-and-skills-delivered; migration-and-further-tests-delegated",
+  "canonicalPackageCommit": "80fbbb2edbbea6bdf26ff1a9594ad7c7076d4676",
+  "mainPR": "https://github.com/Delqhi/einfach-hausen/pull/41",
+  "skillsInstalledCommit": "8ffb067167c72c22a42dbb4fb1e7270956fdb1db",
+  "pullRequests": {
+    "OpenSIN-Code/wow-my-zsh": {
+      "code": 0,
+      "url": "https://github.com/OpenSIN-Code/wow-my-zsh/pull/101",
+      "branch": "design/eh-brand-skills-v1-20260906",
+      "commit": "8ffb067167c72c22a42dbb4fb1e7270956fdb1db"
+    },
+    "einfachhausen-de/einfachhausen-presentation-generator": {
+      "code": 0,
+      "url": "https://github.com/einfachhausen-de/einfachhausen-presentation-generator/pull/1",
+      "branch": "design/atelier-02-brand-system-20260906",
+      "commit": "d1313a943a41b2ab84416c6a69adf13b363e1106"
+    },
+    "einfachhausen-de/einfach-hausen-crm": {
+      "code": 0,
+      "url": "https://github.com/einfachhausen-de/einfach-hausen-crm/pull/3",
+      "branch": "design/eh-brand-contract-20260906",
+      "commit": "a13fb5ce71d9d48c548baa6b37cfc2e0ec48a591"
+    },
+    "einfachhausen-de/portalhub": {
+      "code": 0,
+      "url": "https://github.com/einfachhausen-de/portalhub/pull/1",
+      "branch": "design/eh-brand-contract-20260906",
+      "commit": "c2b69d716539f7a3c70c52c640eface8e7d0897c"
+    }
+  },
+  "issues": {
+    "EH-BRAND-05-WEB": "https://github.com/Delqhi/einfach-hausen/issues/43",
+    "EH-BRAND-05-APPS": "https://github.com/Delqhi/einfach-hausen/issues/44",
+    "EH-BRAND-05-CRM": "https://github.com/einfachhausen-de/einfach-hausen-crm/issues/4",
+    "EH-BRAND-05-HUB": "https://github.com/einfachhausen-de/portalhub/issues/2",
+    "EH-BRAND-06": "https://github.com/Delqhi/einfach-hausen/issues/45"
+  },
+  "supersededPR": {
+    "url": "https://github.com/Delqhi/einfach-hausen/pull/42",
+    "state": "closed",
+    "branchPreserved": true
+  },
+  "machines": {
+    "OCI": "/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906",
+    "Mac-i9": "/Users/jeremyschulze/orca/workspaces/einfach-hausen-brand-atelier-20260906"
+  },
+  "skillBackupReceipts": {
+    "OCI": "/home/ubuntu/.local/share/eh-design-backups/20260906T200459Z/receipt.json",
+    "Mac-i9": "/Users/jeremyschulze/.local/share/eh-design-backups/20260906T200623Z/receipt.json"
+  },
+  "brainID": "6564dc0e-2c74-4867-99d8-992fda0cbc66",
+  "merged": false,
+  "deployed": false,
+  "requiredCheckActivated": false,
+  "remainingGateTask": "EH-BRAND-06",
+  "limitations": [
+    "Historical screens are not all migrated.",
+    "Public mandatory status activation remains local-agent task06.",
+    "Private Free-org mandatory branch protection is unavailable403.",
+    "GitNexus graph outputs truncated; CRM checkout alias unresolved; no full graph success claimed.",
+    "Latest typography label wording, vendor sync and final CSS integration receive further local-agent regression."
+  ]
+}

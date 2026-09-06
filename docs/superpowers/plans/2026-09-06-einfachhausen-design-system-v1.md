@@ -102,3 +102,8 @@ Provide each continuation package with owning paths, dependency version/hash, fu
 - [ ] Update canonical task evidence through sin-gpt-web-state, render and validate.
 - [ ] Regenerate a complete source capsule and per-repo manifest for every changed primary source; originals/rejected prototype remain historical.
 - [ ] Push isolated branches/PRs and synchronize Mac-i9 review. Never claim merge/deploy unless actually performed and authorized.
+
+
+## Lieferstand und letzte Nutzersteuerung
+
+Designsystem und Skills sind versioniert geliefert; EH-BRAND-04 ist abgeschlossen. Beide Skills sind auf OCI und Mac i9 in Codex/OpenCode installiert und lokale AGENTS.md ergänzt. Verbindliche Commit-/PR-/Issue-/Installationspfade: docs/brand/system/delivery.json. PR42 ist als durch PR41 ersetzt geschlossen; sein Branch bleibt erhalten. Weitere Tests und Restmigration sind auf ausdrückliche Nutzeranweisung an lokale Agenten übergeben (EH-BRAND-05-WEB/APPS/CRM/HUB und06). Kein Merge/Deployment/Pflichtstatus wurde als erfolgt behauptet.

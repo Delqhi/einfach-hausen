@@ -5519,6 +5519,27 @@ EXIT 0
 
 `````
 
+## docs/brand/evidence/system/brand-brain-readback.txt
+
+`````text
+[core] 6564dc0e-2c74-4867-99d8-992fda0cbc66 Einfachhausen design authority: Jerry approved Atelier 02 and prohibited autonomous redesign. Canonical executable syste
+
+`````
+
+## docs/brand/evidence/system/brand-brain-receipt.txt
+
+`````text
+6564dc0e-2c74-4867-99d8-992fda0cbc66
+
+`````
+
+## docs/brand/evidence/system/brand-task-completion.json
+
+`````json
+completed EH-BRAND-04
+
+`````
+
 ## docs/brand/evidence/system/browser.json
 
 `````json
@@ -5745,6 +5766,287 @@ EXIT 0
   "interactions": "passed",
   "failedViews": 0
 }
+
+`````
+
+## docs/brand/evidence/system/final-task-records.json
+
+`````json
+[
+  {
+    "id": "EH-BRAND-03",
+    "sequence": 131,
+    "title": "Visuelle Markenentscheidung und Refinements dokumentieren",
+    "description": "2026-09-06: Nutzer hat die drei PR-40-Studien verworfen. Root Codex gestaltet Atelier 02 selbst, kein weiterer Prime/bai-Dispatch. Workspace /home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906; Branch design/einfachhausen-brand-atelier-20260906. Konzept/R01-R08/vollständiges Feedback in docs/brand/ATELIER_02.md. Neue Vollansicht design/brand-atelier/preview.html. 12 Responsive-Ansichten und 6 axe-Prüfungen bestanden. Neue Richtung noch nicht vom Nutzer bewertet; kein Merge/Deploy.",
+    "kind": "review",
+    "status": "done",
+    "priority": 3,
+    "owner": "chatgpt-web",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:15+00:00",
+    "updated_at": "2026-09-06T08:05:25+00:00",
+    "started_at": "2026-09-06T03:02:09+00:00",
+    "completed_at": "2026-09-06T08:05:25+00:00",
+    "evidence": "Operator explicit acceptance 2026-09-06: omg das ist MEGA! Requested legibility improvement and binding system, components, SIN-EH-design, corrected sin-frontend-design, merge consistency checks and presentation-generator adoption. Accepted Atelier 02 from PR41 at 77e1e558afbfd27ae4d80cec571a6b2a6c2ad685; previous PR40 remains rejected.",
+    "completion_report": "Atelier 02 accepted by operator. Next authorized task EH-BRAND-04: binding shared system with readability refinements and reusable components.",
+    "blocked_reason": "",
+    "revision": 4,
+    "completion_contract_version": 1,
+    "handover_json": "{\"contract\": \"v1\", \"docs\": {\"AGENTS.md\": {\"marker_sha256\": \"0c668d0b1a9edd7750a85a04912abde0b752a5bf8ff2fb34ea384f188d76844f\", \"bound_task\": \"EH-BRAND-03\"}, \"README.md\": {\"marker_sha256\": \"0c668d0b1a9edd7750a85a04912abde0b752a5bf8ff2fb34ea384f188d76844f\", \"bound_task\": \"EH-BRAND-03\"}, \"docs/NEXT_AGENT.md\": {\"marker_sha256\": \"0c668d0b1a9edd7750a85a04912abde0b752a5bf8ff2fb34ea384f188d76844f\", \"bound_task\": \"EH-BRAND-03\"}, \"docs/PRODUCTION_HANDOVER.md\": {\"marker_sha256\": \"0c668d0b1a9edd7750a85a04912abde0b752a5bf8ff2fb34ea384f188d76844f\", \"bound_task\": \"EH-BRAND-03\"}, \"docs/ARCHITECTURE.md\": {\"marker_sha256\": \"0c668d0b1a9edd7750a85a04912abde0b752a5bf8ff2fb34ea384f188d76844f\", \"bound_task\": \"EH-BRAND-03\"}}}",
+    "priority_name": "high",
+    "acceptance": [
+      "Tatsächliche Entscheidung nach sichtbaren Alternativen dokumentiert; Empfehlung nicht als Nutzerfreigabe ausgeben."
+    ],
+    "allowed_paths": [],
+    "depends_on": [
+      "EH-BRAND-02"
+    ],
+    "dependency_blockers": []
+  },
+  {
+    "id": "EH-BRAND-04",
+    "sequence": 132,
+    "title": "Zentraler Marken- und Komponentenvertrag aus gewählter Richtung",
+    "description": "Operator approved Atelier 02 (PR41) and explicitly requests complete shared design system, larger small text, reusable content/app components and page recipes, DESIGN.md, no autonomous redesign by other agents, corrected sin-frontend-design and new SIN-EH-design skills, repo guards/CI and presentation-generator alignment. Root Codex owns design decisions. Full original steering to be captured in accepted-system spec.",
+    "kind": "implement",
+    "status": "done",
+    "priority": 3,
+    "owner": "chatgpt-web",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:16+00:00",
+    "updated_at": "2026-09-06T20:09:19+00:00",
+    "started_at": "2026-09-06T08:05:26+00:00",
+    "completed_at": "2026-09-06T20:09:19+00:00",
+    "evidence": "Design and skills delivery: mainPR41 foundation80fbbb2, 49components/8recipes/fullsource; skillsPR101 commit8ffb067 installed with hash receipts on OCI and Mac i9; generatorPR1 d1313a9; CRMPR3 a13fb5c; HubPR1 c2b69d7. PR42 reconciled without deleting work. Further migration/tests/merge gates explicitly assigned to local agents via EH-BRAND-05 children and06 (#43/#44/CRM#4/Hub#2/#45). No merge or deployment.",
+    "completion_report": "Design and skills delivery: mainPR41 foundation80fbbb2, 49components/8recipes/fullsource; skillsPR101 commit8ffb067 installed with hash receipts on OCI and Mac i9; generatorPR1 d1313a9; CRMPR3 a13fb5c; HubPR1 c2b69d7. PR42 reconciled without deleting work. Further migration/tests/merge gates explicitly assigned to local agents via EH-BRAND-05 children and06 (#43/#44/CRM#4/Hub#2/#45). No merge or deployment.",
+    "blocked_reason": "",
+    "revision": 4,
+    "completion_contract_version": 1,
+    "handover_json": "{\"contract\": \"v1\", \"docs\": {\"AGENTS.md\": {\"marker_sha256\": \"b229edef0936ab22bf0ee20e4ff536318b2982738ad5f569a3361998fa0a24a6\", \"bound_task\": \"EH-BRAND-04\"}, \"README.md\": {\"marker_sha256\": \"b229edef0936ab22bf0ee20e4ff536318b2982738ad5f569a3361998fa0a24a6\", \"bound_task\": \"EH-BRAND-04\"}, \"docs/NEXT_AGENT.md\": {\"marker_sha256\": \"b229edef0936ab22bf0ee20e4ff536318b2982738ad5f569a3361998fa0a24a6\", \"bound_task\": \"EH-BRAND-04\"}, \"docs/PRODUCTION_HANDOVER.md\": {\"marker_sha256\": \"b229edef0936ab22bf0ee20e4ff536318b2982738ad5f569a3361998fa0a24a6\", \"bound_task\": \"EH-BRAND-04\"}, \"docs/ARCHITECTURE.md\": {\"marker_sha256\": \"b229edef0936ab22bf0ee20e4ff536318b2982738ad5f569a3361998fa0a24a6\", \"bound_task\": \"EH-BRAND-04\"}}}",
+    "priority_name": "high",
+    "acceptance": [
+      "Logonutzung, Tokens, Typo, Bilder, Motion, Zustände, Agentenregeln; vollständige aktuelle Quellpakete und Impact-Evidenz vor produktiven Änderungen."
+    ],
+    "allowed_paths": [],
+    "depends_on": [
+      "EH-BRAND-03"
+    ],
+    "dependency_blockers": []
+  },
+  {
+    "id": "EH-BRAND-05",
+    "sequence": 133,
+    "title": "Website und Apps schrittweise auf ausgewählte Marke konvergieren",
+    "description": "Atelier 02 accepted by Jerry on 2026-09-06. Root Codex built canonical system v1, reusable React/native HTML recipes and generator brand adaptation. Remaining product migrations are the explicit child tasks EH-BRAND-05-WEB/APPS/CRM/HUB; they compose the frozen library and MUST NOT redesign. Canonical handoff docs/brand/system/HANDOFF.md. Earlier rejected-study delegation is historical, not the current design authority.",
+    "kind": "implement",
+    "status": "backlog",
+    "priority": 3,
+    "owner": "unassigned",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:16+00:00",
+    "updated_at": "2026-09-06T09:06:27+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 2,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Hero/Lexikon/Kontakt/Footer-Parallel-Arbeit und alle Produktflüsse/Navigation/Auth/Daten erhalten; pro Oberfläche visuelle Abnahme."
+    ],
+    "allowed_paths": [],
+    "depends_on": [
+      "EH-BRAND-04",
+      "EH-BRAND-05-APPS",
+      "EH-BRAND-05-CRM",
+      "EH-BRAND-05-HUB",
+      "EH-BRAND-05-WEB"
+    ],
+    "dependency_blockers": [
+      "EH-BRAND-05-APPS",
+      "EH-BRAND-05-CRM",
+      "EH-BRAND-05-HUB",
+      "EH-BRAND-05-WEB"
+    ]
+  },
+  {
+    "id": "EH-BRAND-05-WEB",
+    "sequence": 135,
+    "title": "Unterseiten mit Atelier-02-Komponenten vollständig konvergieren",
+    "description": "Latest explicit user steering: design library and skills are delivered; local agents own further migration/verification. Exact issue: https://github.com/Delqhi/einfach-hausen/issues/43. Main PR41 foundation80fbbb2; skills PR101 installed OCI/Mac i9. Read DESIGN.md, SIN-EH-design and full per-repo docs/brand/system/SOURCE.md before changes. No autonomous design, no weakening guard/seal/baseline. Preserve backend/auth/routes and other agent work.",
+    "kind": "implement",
+    "status": "backlog",
+    "priority": 3,
+    "owner": "local-agent",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-06T09:06:25+00:00",
+    "updated_at": "2026-09-06T20:09:17+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 2,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Jede migrierte Route verwendet kanonische Bausteine; 390/736/1440 Screens persönlich geprüft; keine neuen Designverstöße; Navigation, Intake und SEO unverändert; vollständiger Code-Handoff."
+    ],
+    "allowed_paths": [
+      "src/app/",
+      "src/components/marketing/",
+      "src/lib/lexikon.ts",
+      "docs/brand/"
+    ],
+    "depends_on": [
+      "EH-BRAND-04"
+    ],
+    "dependency_blockers": []
+  },
+  {
+    "id": "EH-BRAND-05-APPS",
+    "sequence": 136,
+    "title": "Owner- und Handwerker-Screens auf verbindliche UI-Bibliothek migrieren",
+    "description": "Latest explicit user steering: design library and skills are delivered; local agents own further migration/verification. Exact issue: https://github.com/Delqhi/einfach-hausen/issues/44. Main PR41 foundation80fbbb2; skills PR101 installed OCI/Mac i9. Read DESIGN.md, SIN-EH-design and full per-repo docs/brand/system/SOURCE.md before changes. No autonomous design, no weakening guard/seal/baseline. Preserve backend/auth/routes and other agent work.",
+    "kind": "implement",
+    "status": "backlog",
+    "priority": 3,
+    "owner": "local-agent",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-06T09:06:26+00:00",
+    "updated_at": "2026-09-06T20:09:17+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 2,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Reale Owner/Provider-Testkonten und Rollenisolierung geprüft; bestehende Navigation bleibt; kanonische Komponenten für migrierte Flächen; mobile Eingaben >=16px; keine kleinen Metadaten; vollständige Quelldateien und Prüfevidence."
+    ],
+    "allowed_paths": [
+      "src/app/app/",
+      "src/app/pro/",
+      "src/components/homeowner/",
+      "src/components/provider/",
+      "docs/brand/"
+    ],
+    "depends_on": [
+      "EH-BRAND-04"
+    ],
+    "dependency_blockers": []
+  },
+  {
+    "id": "EH-BRAND-05-CRM",
+    "sequence": 137,
+    "title": "Standalone CRM mit dem kanonischen HTML-Adapter ausstatten",
+    "description": "Latest explicit user steering: design library and skills are delivered; local agents own further migration/verification. Exact issue: https://github.com/einfachhausen-de/einfach-hausen-crm/issues/4. Main PR41 foundation80fbbb2; skills PR101 installed OCI/Mac i9. Read DESIGN.md, SIN-EH-design and full per-repo docs/brand/system/SOURCE.md before changes. No autonomous design, no weakening guard/seal/baseline. Preserve backend/auth/routes and other agent work.",
+    "kind": "implement",
+    "status": "backlog",
+    "priority": 3,
+    "owner": "local-agent",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-06T09:06:26+00:00",
+    "updated_at": "2026-09-06T20:09:18+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 2,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Identische Hashes zum kanonischen Paket; native UI verwendet Original-Logo/Inter/Marken-CSS; npm test, npm run check, npm run cf:dry-run und Browserprüfung; keine Outreach-/Datenänderung; voller Code im Handoff."
+    ],
+    "allowed_paths": [
+      "src/ui.js",
+      "src/eh-brand-adapter.mjs",
+      "docs/brand/",
+      "docs/NEXT_AGENT.md"
+    ],
+    "depends_on": [
+      "EH-BRAND-04"
+    ],
+    "dependency_blockers": []
+  },
+  {
+    "id": "EH-BRAND-05-HUB",
+    "sequence": 138,
+    "title": "Portalhub mit derselben Einfachhausen-Bibliothek migrieren",
+    "description": "Latest explicit user steering: design library and skills are delivered; local agents own further migration/verification. Exact issue: https://github.com/einfachhausen-de/portalhub/issues/2. Main PR41 foundation80fbbb2; skills PR101 installed OCI/Mac i9. Read DESIGN.md, SIN-EH-design and full per-repo docs/brand/system/SOURCE.md before changes. No autonomous design, no weakening guard/seal/baseline. Preserve backend/auth/routes and other agent work.",
+    "kind": "implement",
+    "status": "backlog",
+    "priority": 3,
+    "owner": "local-agent",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-06T09:06:27+00:00",
+    "updated_at": "2026-09-06T20:09:18+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 2,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Projektverzeichnis, Detail, Formular, Aktivität und Einstellungen nutzen dieselbe Marke; echte Handler bleiben; npm run typecheck/lint/build plus responsive Screens; vollständiger Quellcode und Hashprüfung."
+    ],
+    "allowed_paths": [
+      "src/app/",
+      "src/components/",
+      "src/design-system.ts",
+      "docs/brand/",
+      "NEXT_AGENT.md"
+    ],
+    "depends_on": [
+      "EH-BRAND-04"
+    ],
+    "dependency_blockers": []
+  },
+  {
+    "id": "EH-BRAND-06",
+    "sequence": 134,
+    "title": "Markenregression und belastbare Release-Evidenz",
+    "description": "Latest explicit user steering: design library and skills are delivered; local agents own further migration/verification. Exact issue: https://github.com/Delqhi/einfach-hausen/issues/45. Main PR41 foundation80fbbb2; skills PR101 installed OCI/Mac i9. Read DESIGN.md, SIN-EH-design and full per-repo docs/brand/system/SOURCE.md before changes. No autonomous design, no weakening guard/seal/baseline. Preserve backend/auth/routes and other agent work. Activate public main required design status only after workflow integration; verify and consolidate PR42, inspect historic presentation/premium, complete current regression. Private Free-org403 is a real protection limitation. No new tests by root after user redirection. No merge/deployment claimed. GitNexus CRM alias was not registered; register exact checkout before graph checks.",
+    "kind": "test",
+    "status": "backlog",
+    "priority": 3,
+    "owner": "local-agent",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:17+00:00",
+    "updated_at": "2026-09-06T20:09:19+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 2,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Aktuelle funktionale/visuelle/A11y/Responsive-Gates, T-0151 und Issue #33 verknüpft, keine unbewiesenen Baseline- oder Deploy-Erfolgsaussagen."
+    ],
+    "allowed_paths": [],
+    "depends_on": [
+      "EH-BRAND-05"
+    ],
+    "dependency_blockers": [
+      "EH-BRAND-05"
+    ]
+  }
+]
 
 `````
 
@@ -8598,6 +8900,27 @@ EXIT 0
 
 `````
 
+## docs/brand/evidence/system/mac-skill-install.json
+
+`````json
+{
+  "status": "EH_SKILLS_INSTALLED",
+  "commit": "8ffb067167c72c22a42dbb4fb1e7270956fdb1db",
+  "backup": "/Users/jeremyschulze/.local/share/eh-design-backups/20260906T200623Z",
+  "paths": [
+    "/Users/jeremyschulze/.codex/skills/sin-eh-design",
+    "/Users/jeremyschulze/.codex/skills/sin-frontend-design",
+    "/Users/jeremyschulze/.config/opencode/skills/sin-eh-design",
+    "/Users/jeremyschulze/.config/opencode/skills/sin-frontend-design"
+  ],
+  "rules": {
+    "/Users/jeremyschulze/.codex/AGENTS.md": "c08d2d06b09ca16c7c38953483aeaaba374cb893fb854633e09e4d39838182e1",
+    "/Users/jeremyschulze/.config/opencode/AGENTS.md": "aeb3fcf3a55b53d04e7e31cf8f55bfec1bf51733fb71841ada31338b296cd8ca"
+  }
+}
+
+`````
+
 ## docs/brand/evidence/system/migration-tasks.json
 
 `````json
@@ -8627,6 +8950,27 @@ EXIT 0
     "error": ""
   }
 ]
+
+`````
+
+## docs/brand/evidence/system/oci-skill-install.json
+
+`````json
+{
+  "status": "EH_SKILLS_INSTALLED",
+  "commit": "8ffb067167c72c22a42dbb4fb1e7270956fdb1db",
+  "backup": "/home/ubuntu/.local/share/eh-design-backups/20260906T200459Z",
+  "paths": [
+    "/home/ubuntu/.codex/skills/sin-eh-design",
+    "/home/ubuntu/.codex/skills/sin-frontend-design",
+    "/home/ubuntu/.config/opencode/skills/sin-eh-design",
+    "/home/ubuntu/.config/opencode/skills/sin-frontend-design"
+  ],
+  "rules": {
+    "/home/ubuntu/.codex/AGENTS.md": "c97a015193565dea73e181180c2275de3341c1bd5fd2dcec14d24f0a8cd63060",
+    "/home/ubuntu/.config/opencode/AGENTS.md": "aeb3fcf3a55b53d04e7e31cf8f55bfec1bf51733fb71841ada31338b296cd8ca"
+  }
+}
 
 `````
 
@@ -9163,6 +9507,21 @@ Separat versionierte Consumer-Manifeste pinnen den Quellcommit und SHA256 jedes 
 
 Alle Folgeänderungen müssen Taskstatus, NEXT_AGENT, Handoff, Prüfnachweise, vollständige Source-Blöcke und Hashmanifest aktualisieren. Designentscheidungen in Brain/Memory mit Quellen und Versionsstand festhalten. Alte Stilproben bleiben historische Evidenz. Keine Behauptung einer Installation, eines Merge, Deployments oder Pflichtchecks ohne tatsächlichen Nachweis.
 
+
+## Lieferstand und letzte Nutzersteuerung
+
+Designsystem und Skills sind versioniert geliefert; EH-BRAND-04 ist abgeschlossen. Beide Skills sind auf OCI und Mac i9 in Codex/OpenCode installiert und lokale AGENTS.md ergänzt. Verbindliche Commit-/PR-/Issue-/Installationspfade: docs/brand/system/delivery.json. PR42 ist als durch PR41 ersetzt geschlossen; sein Branch bleibt erhalten. Weitere Tests und Restmigration sind auf ausdrückliche Nutzeranweisung an lokale Agenten übergeben (EH-BRAND-05-WEB/APPS/CRM/HUB und06). Kein Merge/Deployment/Pflichtstatus wurde als erfolgt behauptet.
+
+
+### Direkte Übernahme
+
+- Hauptbibliothek: https://github.com/Delqhi/einfach-hausen/pull/41
+- Skills (bereits lokal installiert): https://github.com/OpenSIN-Code/wow-my-zsh/pull/101
+- Präsentationsgenerator: https://github.com/einfachhausen-de/einfachhausen-presentation-generator/pull/1
+- CRM-Vertrag: https://github.com/einfachhausen-de/einfach-hausen-crm/pull/3
+- Hub-Vertrag: https://github.com/einfachhausen-de/portalhub/pull/1
+- Lokale Folgeaufgaben: Website #43, Apps #44, CRM #4, Hub #2, Regression/Pflichtstatus #45 in den jeweiligen Repos.
+
 `````
 
 ## docs/brand/system/PR42_RECONCILIATION.md
@@ -9183,6 +9542,77 @@ Korrekte CRM-Unterscheidung: /admin/crm im Hauptrepo ist React Server Component.
 Die Änderungen an presentation/premium in #42 verbessern einige Farben, enthalten aber weiterhin alte Akzente/Verläufe und einen historischen SVG-Mark-Pfad. Sie wurden nicht als fertige Markenmigration übernommen. Dieses historische Deck gehört in die Folgeprüfung EH-BRAND-06; der tatsächlich aktive separate Präsentationsgenerator wurde vollständig am Renderer-/Token-/Exportkern angepasst.
 
 Letzte Nutzersteuerung: Designbibliothek und Skills fertigstellen; weitere Test-/Regressionsläufe an lokale Agenten übergeben. Bereits erhobene Nachweise bleiben Evidenz, keine Behauptung zusätzlicher Läufe. Pflicht-Check-Aktivierung/Branchschutz und endgültige Merge-Regression sind EH-BRAND-06. Kein Merge und kein Deployment durch diese Lieferung.
+
+`````
+
+## docs/brand/system/delivery.json
+
+`````json
+{
+  "date": "2026-09-06",
+  "status": "design-system-and-skills-delivered; migration-and-further-tests-delegated",
+  "canonicalPackageCommit": "80fbbb2edbbea6bdf26ff1a9594ad7c7076d4676",
+  "mainPR": "https://github.com/Delqhi/einfach-hausen/pull/41",
+  "skillsInstalledCommit": "8ffb067167c72c22a42dbb4fb1e7270956fdb1db",
+  "pullRequests": {
+    "OpenSIN-Code/wow-my-zsh": {
+      "code": 0,
+      "url": "https://github.com/OpenSIN-Code/wow-my-zsh/pull/101",
+      "branch": "design/eh-brand-skills-v1-20260906",
+      "commit": "8ffb067167c72c22a42dbb4fb1e7270956fdb1db"
+    },
+    "einfachhausen-de/einfachhausen-presentation-generator": {
+      "code": 0,
+      "url": "https://github.com/einfachhausen-de/einfachhausen-presentation-generator/pull/1",
+      "branch": "design/atelier-02-brand-system-20260906",
+      "commit": "d1313a943a41b2ab84416c6a69adf13b363e1106"
+    },
+    "einfachhausen-de/einfach-hausen-crm": {
+      "code": 0,
+      "url": "https://github.com/einfachhausen-de/einfach-hausen-crm/pull/3",
+      "branch": "design/eh-brand-contract-20260906",
+      "commit": "a13fb5ce71d9d48c548baa6b37cfc2e0ec48a591"
+    },
+    "einfachhausen-de/portalhub": {
+      "code": 0,
+      "url": "https://github.com/einfachhausen-de/portalhub/pull/1",
+      "branch": "design/eh-brand-contract-20260906",
+      "commit": "c2b69d716539f7a3c70c52c640eface8e7d0897c"
+    }
+  },
+  "issues": {
+    "EH-BRAND-05-WEB": "https://github.com/Delqhi/einfach-hausen/issues/43",
+    "EH-BRAND-05-APPS": "https://github.com/Delqhi/einfach-hausen/issues/44",
+    "EH-BRAND-05-CRM": "https://github.com/einfachhausen-de/einfach-hausen-crm/issues/4",
+    "EH-BRAND-05-HUB": "https://github.com/einfachhausen-de/portalhub/issues/2",
+    "EH-BRAND-06": "https://github.com/Delqhi/einfach-hausen/issues/45"
+  },
+  "supersededPR": {
+    "url": "https://github.com/Delqhi/einfach-hausen/pull/42",
+    "state": "closed",
+    "branchPreserved": true
+  },
+  "machines": {
+    "OCI": "/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906",
+    "Mac-i9": "/Users/jeremyschulze/orca/workspaces/einfach-hausen-brand-atelier-20260906"
+  },
+  "skillBackupReceipts": {
+    "OCI": "/home/ubuntu/.local/share/eh-design-backups/20260906T200459Z/receipt.json",
+    "Mac-i9": "/Users/jeremyschulze/.local/share/eh-design-backups/20260906T200623Z/receipt.json"
+  },
+  "brainID": "6564dc0e-2c74-4867-99d8-992fda0cbc66",
+  "merged": false,
+  "deployed": false,
+  "requiredCheckActivated": false,
+  "remainingGateTask": "EH-BRAND-06",
+  "limitations": [
+    "Historical screens are not all migrated.",
+    "Public mandatory status activation remains local-agent task06.",
+    "Private Free-org mandatory branch protection is unavailable403.",
+    "GitNexus graph outputs truncated; CRM checkout alias unresolved; no full graph success claimed.",
+    "Latest typography label wording, vendor sync and final CSS integration receive further local-agent regression."
+  ]
+}
 
 `````
 
@@ -9293,6 +9723,11 @@ Provide each continuation package with owning paths, dependency version/hash, fu
 - [ ] Update canonical task evidence through sin-gpt-web-state, render and validate.
 - [ ] Regenerate a complete source capsule and per-repo manifest for every changed primary source; originals/rejected prototype remain historical.
 - [ ] Push isolated branches/PRs and synchronize Mac-i9 review. Never claim merge/deploy unless actually performed and authorized.
+
+
+## Lieferstand und letzte Nutzersteuerung
+
+Designsystem und Skills sind versioniert geliefert; EH-BRAND-04 ist abgeschlossen. Beide Skills sind auf OCI und Mac i9 in Codex/OpenCode installiert und lokale AGENTS.md ergänzt. Verbindliche Commit-/PR-/Issue-/Installationspfade: docs/brand/system/delivery.json. PR42 ist als durch PR41 ersetzt geschlossen; sein Branch bleibt erhalten. Weitere Tests und Restmigration sind auf ausdrückliche Nutzeranweisung an lokale Agenten übergeben (EH-BRAND-05-WEB/APPS/CRM/HUB und06). Kein Merge/Deployment/Pflichtstatus wurde als erfolgt behauptet.
 
 `````
 
