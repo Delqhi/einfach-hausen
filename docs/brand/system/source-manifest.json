@@ -37,7 +37,7 @@
       "kind": "text"
     },
     "design/design-lock.json": {
-      "sha256": "1fcde613f0a7c72bc76fbdd735e3c653ead64e7561313e7d45a4488cf76ba9a9",
+      "sha256": "69d0c435966d8fdcec715d9671d1b580013ca00d9cb5af4422164e11f16debd1",
       "bytes": 3893,
       "kind": "text"
     },
@@ -507,8 +507,8 @@
       "kind": "text"
     },
     "scripts/eh-design-sync.mjs": {
-      "sha256": "6ecd9ad6c926e128e9e3bd8fb63f9ede86c1af5ca6a8bf173bd555424ae8c9be",
-      "bytes": 2927,
+      "sha256": "b33e7f99b92b7a717dd6a8794a78ac7d4d2e962553888783c9e416daa1674629",
+      "bytes": 2940,
       "kind": "text"
     },
     "scripts/public-website-contract.mjs": {

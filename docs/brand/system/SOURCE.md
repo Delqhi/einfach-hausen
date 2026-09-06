@@ -3475,7 +3475,7 @@ Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren tec
     "scripts/eh-design-check.test.mjs": "dbfe6716678ecbad9bf3b1466326f21e8083a78a567fe467e3a21ea32a5b4287",
     "scripts/eh-design-generate.mjs": "55fd71312a134e475c25043da10d11f93ad0ae310310261f153750593dc543f3",
     "scripts/eh-design-seal.mjs": "7be13b011f7cf28530e46d65089b514b4158d036471f768400e5b824e5214024",
-    "scripts/eh-design-sync.mjs": "6ecd9ad6c926e128e9e3bd8fb63f9ede86c1af5ca6a8bf173bd555424ae8c9be",
+    "scripts/eh-design-sync.mjs": "b33e7f99b92b7a717dd6a8794a78ac7d4d2e962553888783c9e416daa1674629",
     "src/app/app/homeowner.module.css": "a483bea8f8ae24cd74dddf79da6fd556217559aa659e532961d972c695877d80",
     "src/app/design-system.css": "234971f6eeb51a6f6c96fb4e3b73190e159944d7a7ed9d371a5d38874e45c9bd",
     "src/app/globals.css": "4721b8a3af2685c2fbd629be5b2916d643fd0b09f1907f205df791d51818841a",
@@ -10637,7 +10637,7 @@ const status=execFileSync("git",["status","--porcelain","--","packages/eh-design
 const commit=execFileSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim();
 function walk(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(resolve(dir,e.name)):[resolve(dir,e.name)]);}
 const files=walk(source).map(p=>relative(source,p)).sort();
-if(files.some(p=>!/^((src\/[a-z-]+\.(tsx?|mjs|css|json))|(assets\/(logo-full\.png|inter-variable\.woff2))|package\.json)$/.test(p)))throw new Error("Undeclared canonical package file");
+if(files.some(p=>!/^((src\/[a-z-]+(?:\.module)?\.(tsx?|mjs|css|json))|(assets\/(logo-full\.png|inter-variable\.woff2))|package\.json)$/.test(p)))throw new Error("Undeclared canonical package file");
 const prior=existsSync(manifestPath)?JSON.parse(readFileSync(manifestPath,"utf8")):null;
 if(existsSync(dest))for(const file of walk(dest)) {
  const p=relative(dest,file);const bytes=hash(readFileSync(file));const old=prior?.files[p];

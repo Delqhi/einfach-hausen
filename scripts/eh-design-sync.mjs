@@ -12,7 +12,7 @@ const status=execFileSync("git",["status","--porcelain","--","packages/eh-design
 const commit=execFileSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim();
 function walk(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(resolve(dir,e.name)):[resolve(dir,e.name)]);}
 const files=walk(source).map(p=>relative(source,p)).sort();
-if(files.some(p=>!/^((src\/[a-z-]+\.(tsx?|mjs|css|json))|(assets\/(logo-full\.png|inter-variable\.woff2))|package\.json)$/.test(p)))throw new Error("Undeclared canonical package file");
+if(files.some(p=>!/^((src\/[a-z-]+(?:\.module)?\.(tsx?|mjs|css|json))|(assets\/(logo-full\.png|inter-variable\.woff2))|package\.json)$/.test(p)))throw new Error("Undeclared canonical package file");
 const prior=existsSync(manifestPath)?JSON.parse(readFileSync(manifestPath,"utf8")):null;
 if(existsSync(dest))for(const file of walk(dest)) {
  const p=relative(dest,file);const bytes=hash(readFileSync(file));const old=prior?.files[p];
