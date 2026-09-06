@@ -22,8 +22,8 @@
       "kind": "text"
     },
     "DESIGN.md": {
-      "sha256": "5adefb3dd1be1ddd0ccd7825a65d78acaa381ca00b60528937c3b6bc149ab8d7",
-      "bytes": 14244,
+      "sha256": "5b19ecc0dde6a4eeabd18da70cddb9bc12b7be574d7dcda7d5fd46b430e52cf1",
+      "bytes": 14737,
       "kind": "text"
     },
     "README.md": {
@@ -37,8 +37,8 @@
       "kind": "text"
     },
     "design/design-lock.json": {
-      "sha256": "69d0c435966d8fdcec715d9671d1b580013ca00d9cb5af4422164e11f16debd1",
-      "bytes": 3893,
+      "sha256": "9d6737075835b3a34a04066edb50922094af0a8093a60ad4f544fd03f32152fd",
+      "bytes": 4010,
       "kind": "text"
     },
     "design/design-policy.json": {
@@ -411,9 +411,14 @@
       "bytes": 1196,
       "kind": "text"
     },
+    "docs/brand/system/DOMAIN_RECIPES_HANDOFF.md": {
+      "sha256": "e150eb7b83363c9981be596f27285e3fcefbfb8c44d0dd3963902224610bc6c1",
+      "bytes": 19596,
+      "kind": "text"
+    },
     "docs/brand/system/HANDOFF.md": {
-      "sha256": "96c26e2185e2d9205b0d824b96ed26a30a9d95c501334396280dc377b2abd23e",
-      "bytes": 7719,
+      "sha256": "3f9a7084084ce96886fb2f2e2dba6c2a3040934c67ed8adb67a3c39d10bee3c5",
+      "bytes": 8133,
       "kind": "text"
     },
     "docs/brand/system/PR42_RECONCILIATION.md": {
@@ -422,8 +427,8 @@
       "kind": "text"
     },
     "docs/brand/system/delivery.json": {
-      "sha256": "9cc3c4826d1301708e181bcc4b34fd6af95b3d16f4b5e30c1f8e7329c7873773",
-      "bytes": 3167,
+      "sha256": "d9e5b0261f842afec37b999d457dc7f39f094ad10e09a46f035c833b923b972d",
+      "bytes": 3561,
       "kind": "text"
     },
     "docs/superpowers/plans/2026-09-06-einfachhausen-design-system-v1.md": {
@@ -461,6 +466,11 @@
       "bytes": 8226,
       "kind": "text"
     },
+    "packages/eh-design/src/domain-recipes.tsx": {
+      "sha256": "4ab6bc03926690539761d73b55a18ed08da43688cb04c907b80429226d1876a7",
+      "bytes": 10418,
+      "kind": "text"
+    },
     "packages/eh-design/src/html-style.mjs": {
       "sha256": "888448eea28f1456f818c59b78412f9305d47562850bb06245ca5d2d2767ac91",
       "bytes": 266905,
@@ -477,8 +487,8 @@
       "kind": "text"
     },
     "packages/eh-design/src/index.ts": {
-      "sha256": "37791a4d9355acfa00dc616adcfc925c308758062f26715d19fae85a3e6cf5c0",
-      "bytes": 105,
+      "sha256": "fae788164fc6a69b2bdad26952e4b4c5ffa2511dffe6c61fcadf6b68a1c03640",
+      "bytes": 139,
       "kind": "text"
     },
     "packages/eh-design/src/primitives.tsx": {

@@ -70,3 +70,8 @@ Designsystem und Skills sind versioniert geliefert; EH-BRAND-04 ist abgeschlosse
 - CRM-Vertrag: https://github.com/einfachhausen-de/einfach-hausen-crm/pull/3
 - Hub-Vertrag: https://github.com/einfachhausen-de/portalhub/pull/1
 - Lokale Folgeaufgaben: Website #43, Apps #44, CRM #4, Hub #2, Regression/Pflichtstatus #45 in den jeweiligen Repos.
+
+
+## Fachliche Vorlagen · neue Fortsetzung
+
+Der nächste begrenzte Übernahmeauftrag ist DOMAIN_RECIPES_HANDOFF.md. Acht zusätzliche fertig geschriebene Kompositionen; zusammen 16 Seitenrezepte. Edition 2 ist noch nicht auf Consumer oder installierte Skills synchronisiert und noch nicht visuell geprüft. Lokale Agenten übernehmen diesen technischen Schritt mit vollständigem Code und den vorhandenen Regeln.

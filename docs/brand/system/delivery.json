@@ -67,5 +67,11 @@
     "receipt": "4eea7760-2e83-4e4a-b69b-8ce763ffdec5",
     "readbackVerified": true,
     "brainConvention": "6564dc0e-2c74-4867-99d8-992fda0cbc66"
-  }
+  },
+  "recipeEdition": 2,
+  "baseComponents": 49,
+  "pageRecipes": 16,
+  "domainRecipesStatus": "authored; local-agent synchronization and rendering/behavior validation pending",
+  "domainHandoff": "docs/brand/system/DOMAIN_RECIPES_HANDOFF.md",
+  "installedSkillsNote": "Installed skill edition1 remains verified at8ffb067. Skill v1.0.1 references edition2; local agent must install that update."
 }
