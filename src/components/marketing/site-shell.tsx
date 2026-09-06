@@ -7,7 +7,6 @@ import { ScrollShadow, SmoothScroll } from './motion';
 import { SERVICE_CATEGORIES } from './service-catalog';
 import './tokens.css';
 import styles from './mkt.module.css';
-import logoMark from './assets/logo-mark.png';
 import logoFull from './assets/logo-full.png';
 
 // Self-hosted Inter Variable (DESIGN.md: "System-/Inter-nahe Sans"), scoped to
@@ -102,8 +101,7 @@ export function MarketingShell({ children, footerIntake = true }: { children: Re
             {/* Native navigation keeps the public shell hydration-free. */}
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a className={styles.logoLink} href="/" aria-label="einfachhausen Startseite">
-              <Image src={logoMark} alt="" width={34} height={26} priority className={styles.logoImg} />
-              <span className={styles.logoWord}><b>einfach</b><span>hausen</span></span>
+              <Image src={logoFull} alt="einfachhausen" width={114} height={72} priority className={styles.logoImg} />
             </a>
             <nav className={styles.desktopNav} aria-label="Hauptnavigation">
               <a href="/so-funktionierts">So funktioniert&apos;s</a>

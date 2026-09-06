@@ -69,8 +69,10 @@ for (const [slug, pattern] of productRoutes) {
 
 assert.ok(exists('src/components/marketing/home-hero.tsx'), 'canonical homepage hero v2 must exist');
 const homeHero = read('src/components/marketing/home-hero.tsx');
-assert.match(homeHero, /Die Betriebszentrale/);
-assert.match(homeHero, /HeroOrchestration/);
+assert.match(homeHero, /EHPageHero/);
+assert.match(homeHero, /EHImageFrame/);
+assert.match(homeHero, /Dein Haus/);
+assert.doesNotMatch(homeHero, /HeroOrchestration|gsap/);
 assert.match(homeHero, /IntakeForm/);
 assert.doesNotMatch(homeHero, /Nichts wird ohne dich beauftragt/, 'homepage hero must not repeat the removed no-order proof line');
 const intakeForm = read('src/components/home/intake-form.tsx');

@@ -1,34 +1,156 @@
-# Einfach Hausen — Design Contract
+# Einfachhausen · Designsystem 1.0
 
-**Status:** verbindliche visuelle und UX-Leitlinie für Website, Eigentümer-App, Handwerker-/Partner-App und CRM (Stand: 2026-09-03).
+**Verbindlich seit 6. September 2026.** Jerry hat Atelier 02 ausdrücklich angenommen: „omg das ist MEGA!“ Diese Freigabe ersetzt den früheren Status „noch nicht visuell freigegeben“. Die drei alten Stilproben aus PR40 sind verworfen. Der angenommene Entwurf und seine ursprüngliche Begutachtung bleiben unter `design/brand-atelier/` und `docs/brand/ATELIER_02.md` als historische Referenz erhalten.
 
-Diese Datei ist die gemeinsame Design-Quelle für alle Produktflächen. Bestehende Funktionalität, Produktlogik und Sicherheitsregeln bleiben bestehen. Die Oberflächen dürfen sich in Informationsarchitektur und Nutzungskontext unterscheiden, fühlen sich aber wie **ein einziges, konvergentes Premium-Produkt** an.
+## 1. Autorität und Geltungsbereich
 
-## 0. Visuelle Source of Truth · Notion App Design & Canonical Tokens
+Dieses Dokument und `packages/eh-design/` definieren die Marke für Website, Unterseiten, Hausakte, Owner-App, Handwerker-App, CRM, Portalhub und Präsentationen. **Andere Agenten dürfen das Design nicht eigenständig verändern.** Der Auftrag, eine neue Seite zu bauen, ist keine Erlaubnis, Farben, Schrift, Logo, Radien, Effekte oder eine eigene Komponentenfamilie zu erfinden. Nur eine ausdrückliche Anweisung von Jerry zum Markendesign autorisiert eine neue Designversion. Ein fehlender Baustein wird als Bedarf dokumentiert; bis zur Entscheidung wird eine bestehende passende Komposition verwendet.
 
-Für Portal-UI (`/app`, `/pro`, Admin `/admin`, Auth und responsive Shells) ist das einheitliche Token-System verbindlich:
+Inhalt, Reihenfolge, Seitenstruktur, echte Bilder, fachliche Daten, erlaubte Komponentenvarianten und bestehende Aktionen dürfen passend zum Thema kombiniert werden. Unterschiedliche Seiten sollen unterschiedlich aufgebaut sein. Einheitlichkeit bedeutet gemeinsame Gestaltungssprache, nicht identische Seiten.
 
-- Kanonische Token-Quelle: `src/components/marketing/tokens.css` (`--eh-*`).
-- Farbkonsistenz: Warmes Off-White/Canvas (`#faf8f4` / `#f4f7f7`), Brand-Teal (`#105258`), dunkles Petrol (`#0a3539`), Charcoal-Ink (`#10222a` / `#1c2129`) und dezente Haarlinien (`#e4e2dc`).
-- Kein ERP-Cockpit, kein Dark-Mode im Pro-Bereich: Handwerker und Eigentümer nutzen dieselbe helle, ruhige Basisfarbe.
+Bei widersprüchlichen alten Dokumenten gilt diese angenommene Version. Historische Freigaben, Screenshots und Aufgaben bleiben nachvollziehbar, dürfen aber nicht als heutige Gestaltungsanweisung wiederverwendet werden.
 
-## 1. Produktflächen im Überblick
+## 2. Das Eigene an Einfachhausen
 
-1. **Öffentliche Website & Content (`/`, `/leistungen`, `/preise`, `/hausakte`, `/partner`, `/blog`, `/lexikon`):**
-   - Reduktion von redundanten Kartenrastern zu spezifischen Seiten-Archetypen (Index, Akte, Vergleichstabelle, Vertragsblatt).
-   - Kein störendes Lade-Overlay („Wir bereiten die Inhalte vor“), sondern subtile Indikatoren.
-2. **Eigentümer-App (`/app`):**
-   - **Hausmeister-Composer an 1. Stelle:** Das KI-Eingabefeld steht dominant oben.
-   - **Als Nächstes an 2. Stelle:** Termine, offene Angebote und anstehende Wartungen.
-   - **Schnellaktionen & Archiv:** Dezent untergeordnet, kein Floating Action Button (FAB).
-3. **Handwerker-/Partner-App (`/pro`):**
-   - Keine 4 isolierten KPI-Kacheln, sondern eine schlanke Statuszeile.
-   - Ein primärer Call-to-Action („Nächster Schritt: Angebot erstellen“), gefolgt von einer klaren Auftragsliste.
-4. **Admin & CRM (`/admin`, `/admin/crm`):**
-   - Vollständige visuelle Angleichung an den warmen Canvas und saubere Typo-Hierarchie ohne harte Brüche.
+**Zuhause, mit Überblick.** Die Marke verbindet ein persönliches Zuhause mit klarer, nachvollziehbarer Ordnung. Die Gestaltung fühlt sich warm und entschieden an. Sie zeigt echte Inhalte und Beziehungen: Menschen, Unterlagen, Arbeiten, Termine und Hausgeschichte.
 
-## 2. CSS-Architektur & Konsolidierungs-Regeln
+- **Hauskante:** genau eine bewusst geschnittene 45°-Ecke an großen Bildflächen und Aktenumschlägen. Keine abgeschnittenen Eingabefelder oder Schaltflächen. Wichtige Gesichter und Bildaussagen bleiben sichtbar. Interaktive Elemente liegen nicht im abgeschnittenen Bereich.
+- **Hauslinie:** feine, funktionale Linien gliedern Register, Abläufe, Listen, Vergleiche und Chroniken. Nummern geben Orientierung. Keine zufälligen farbigen Streifen als Dekoration.
+- **Wortbild:** kräftige, eng gesetzte Inter-Überschriften mit ruhigem Fließtext. Keine zweite Displayschrift. Der handschriftliche Teil des unveränderten Original-Logos bleibt die einzige Schreibschrift.
+- **Rhythmus:** helle Arbeitsflächen und Lesestrecken, dunkle Kapitel oder Aktenumschläge. Sand setzt inhaltlich begründete Flächen ab. Keine beliebige Sammlung gleichförmiger Karten.
+- **Fotografie:** glaubwürdige Wohnsituationen und persönliche Zusammenarbeit. Keine erfundenen Kunden, Mitarbeiter, Bewertungen oder Erfolgszahlen. Illustrative Bilder werden entsprechend bezeichnet. Bilder nie pauschal so beschneiden, dass Köpfe verschwinden.
 
-- Neue Stile werden ausschließlich über CSS-Module (`*.module.css`) oder Scoped Tokens implementiert.
-- Veraltete Überschreibungen (`.premium-*`, `.conversion-*`, inkonsistente Utility-Layers) werden schrittweise neutralisiert.
-- Keine `border-left`/`border-right`-Accent-Stripes, keine Text-Gradients, kein Glassmorphism als Standard.
+Verboten sind neue Verläufe, Glow, Glassmorphism, schwebende Kugeln, dekorative Dauerschleifen, beliebige Pillen, nachgebaute Logos und autonome „Verbesserungen“ der Marke.
+
+## 3. Eine einzige Markenquelle
+
+| Quelle | Aufgabe |
+| --- | --- |
+| `packages/eh-design/src/tokens.json` | Kanonische, versionierte Werte |
+| `packages/eh-design/src/tokens.css` und `tokens.ts` | Daraus generierte CSS- und TypeScript-Ausgaben |
+| `packages/eh-design/src/styles.module.css` | Einzige neue Komponentenstilquelle |
+| `packages/eh-design/src/primitives.tsx` | Grundlagen |
+| `packages/eh-design/src/blocks.tsx` | Inhaltsblöcke |
+| `packages/eh-design/src/app.tsx` | Interaktive und funktionale App-Komponenten |
+| `packages/eh-design/src/recipes.tsx` | Vollständige, ausführbare Seitenvorlagen |
+| `src/design-system/index.ts` | Importstelle der Website |
+| `src/app/design-system/` | Browserbibliothek unter /design-system; noindex |
+| `src/components/marketing/ui.tsx` | Kompatible Adapter für vorhandene Unterseiten |
+| `src/components/marketing/tokens.css` | Alte Namen als Aliase, keine zweite Palette |
+| `design/design-lock.json` | Prüfsummen des geschützten Designkerns |
+
+Andere Repositories erhalten eine identische, versionierte Kopie nach `vendor/eh-design/` und eine Prüfsummenliste unter `design/eh-design-vendor.json`. Diese Kopie wird niemals lokal umgestaltet.
+
+### Farben
+
+| Rolle | Wert | Verwendung |
+| --- | --- | --- |
+| Papier | #faf8f4 | Grundfläche |
+| Petrol | #105258 | Primäre Aktion, Orientierung |
+| Tiefes Petrol | #0a3539 | Aktenumschlag, Kapitel, Abschluss |
+| Tinte | #10222a | Fließtext und Überschriften |
+| Sekundärtext | #4b5b60 | Lesbare Metadaten |
+| Linie | #e4e2dc | Gliederung auf hellen Flächen |
+| Sand | #ecdfc9 | Hinweise und sachliche Hervorhebungen |
+| Terra | #a84d29 | Kleine Registersignale und begründete Hinweise |
+| Weiß | #ffffff | Eingaben und funktionale Arbeitsflächen |
+
+Statusfarben `error` und `success` gehören ebenfalls zu den kanonischen Tokens. Status braucht immer Text; Farbe alleine ist keine Information. Dunkle Flächen verwenden Papier als Textfarbe und Sand als Sekundärtext.
+
+### Schrift und Lesbarkeit
+
+Inter Variable wird selbst gehostet. Originaldatei: `src/fonts/InterVariable.woff2`; identische Paketkopie: `packages/eh-design/assets/inter-variable.woff2`. Keine externen Google-Font-Anfragen.
+
+| Verwendung | Mindestwert / Skala |
+| --- | --- |
+| Website-Fließtext | 17–18 px; lesende Artikel 18 px |
+| App-Fließtext | 16 px |
+| Beschriftungen und Aktionen | 15 px; bestehende Übergangsflächen mindestens 14 px |
+| Metadaten und Bildunterschriften | 13 px |
+| Kurze, nicht entscheidende Großbuchstabenregister | 12 px |
+| Input, Select, Textarea | 16 px, auch mobil |
+| Startseiten-Display | 56–112 px, responsive |
+| Unterseiten-H1 | 44–68 px |
+| App-H1 | 32–44 px |
+| Präsentation bei 1920×1080 | Bild-/Fußtexte mindestens 24 px, Inhalt 32–36 px, Titel 56–88 px |
+
+Eine überladene Folie wird inhaltlich aufgeteilt. Text wird nicht bis zur Unlesbarkeit verkleinert oder abgeschnitten. Numerische Schritte bleiben ungebrochen. Absätze haben kurze, sinnvolle Leselängen; lange Fachtexte kommen in `EHProse`.
+
+### Form, Abstand und Bewegung
+
+Eingaben und Schaltflächen: 6 px Radius. Funktionale Panels: 8 px. Fotografien und Aktenumschläge: die kanonische Hauskante. Touch-Ziele mindestens 44×44 px, reguläre Buttons 48 px hoch. Sichtbarer Fokus mit 3-px-Kontur und Abstand, keine Entfernung ohne gleichwertigen Ersatz.
+
+Bewegung unterstützt einen Zustand oder einen Wechsel. Kurze endliche Übergänge; keine Typewriter-Platzhalter, Hintergrunddrifts oder erzwungenen Scroll-Animationen. `prefers-reduced-motion` zeigt den vollständigen Endzustand. Keine Animation darf den Inhalt für Tastatur- oder Screenreader-Nutzer verbergen.
+
+## 4. Komponentenregister
+
+| Familie | Kanonische Komponenten |
+| --- | --- |
+| Grundlagen | EHScope, EHLogo, EHContainer, EHSection, EHEyebrow, EHHeading, EHText, EHButton, EHTextLink, EHActions, EHImageFrame, EHRecordCover, EHStatus, EHDivider |
+| Einstieg und Erzählung | EHPageHero, EHPromiseRow, EHSplitStory, EHMediaStory, EHClosing |
+| Leistung und Erklärung | EHFeatureRows, EHSteps, EHTimeline, EHFacts, EHComparison, EHFAQ, EHCallout, EHServiceIndex, EHPricing |
+| Lesen und Navigation | EHProse, EHArticleHeader, EHArticleLayout, EHContents, EHRelated |
+| Arbeitsflächen | EHAppHeader, EHPanel, EHList, EHDataTable, EHDocumentList |
+| Eingaben | EHField, EHInput, EHTextarea, EHSelect, EHCheckbox, EHComposer |
+| Interaktion und Zustände | EHTabs, EHDialog, EHEmptyState, EHLoadingState, EHErrorState |
+
+Die vollständigen TypeScript-Props sind die API-Referenz; sie stehen mit dem vollständigen Code in der Quellkapsel. Keine zusätzlichen `style`- oder `className`-Schlupflöcher an den neuen öffentlichen Komponenten. Bestehende Adapter behalten ihre bisherigen Schnittstellen, damit Unterseiten nicht brechen.
+
+`EHField` verknüpft Label und Eingabe über dieselbe ID. Hinweise und Fehler werden mit `aria-describedby` verbunden; Fehlerzustand über `aria-invalid`. `EHTabs` unterstützt Links/Rechts, Home/End und deaktivierte Einträge. `EHDialog` nutzt den nativen modalen Dialog, Fokusbindung und Escape. Datenlisten behalten eindeutige IDs. Tabellen haben Caption und Spaltenköpfe; auf kleinen Bildschirmen ist ausschließlich der Tabellenbereich horizontal scrollbar.
+
+## 5. Seiten individuell zusammensetzen
+
+| Inhalt | Vollständige Vorlage | Schwerpunkt |
+| --- | --- | --- |
+| Startseite | EHHomePage | Starkes Wortbild, Fotografie, Versprechen, Hausakte, Ablauf |
+| Leistungsdetail | EHServicePage | Bedarf, Leistungsumfang, Entscheidung, Fragen |
+| Ratgeber / Fachartikel | EHArticlePage | Inhaltsverzeichnis, Lesespalte, Zwischenüberschriften, verwandte Themen |
+| Leistungsübersicht | EHServiceIndexPage | Themenregister und konkrete nächste Wege |
+| Kontakt | EHContactPage | Persönlicher Kontext, vollständiges Formular, tatsächliche Kontaktdaten |
+| Preise / Umfang | EHPricingPage | Klarer Leistungsumfang, gültige Preise, Bedingungen |
+| Owner-App | EHOwnerPage | Hausakte, Unterlagen, Menschen, Chronik, Anliegen |
+| Handwerker-App | EHProviderPage | Anfragen, Bearbeitungsstatus, Termine |
+
+Die Vorlagen nehmen Inhalte und echte Handler als Props entgegen. Datenzugriff, Authentifizierung, Routing, Speicherung und Beauftragung werden aus dem bestehenden Produkt angebunden. Die Browserbibliothek enthält gekennzeichnete Vorschauhandlungen und Beispieldaten; sie sind keine produktiven Endpunkte. Keine Vorschau-Antwort oder Beispieladresse wird in eine echte App übernommen.
+
+Eine neue Seite beginnt mit der passenden vollständigen Vorlage. Fachlich begründete Umstellungen mit vorhandenen Blöcken sind erlaubt. Eine neue Seitenfarbe, Schrift oder lokale Komponentenfamilie ist es nicht.
+
+## 6. Präsentationen
+
+Kanonischer Verbraucher: `einfachhausen-de/einfachhausen-presentation-generator`.
+
+- Die 13 Schema-Typen bleiben kompatibel: title, section, bullets, cards, comparison, steps, stats, quote, timeline, chart, image, split, closing.
+- Die 25 vorhandenen Remotion-Geschichten behalten ihre Inhalte, Aufrufwege und fachlichen Einschränkungen.
+- Beide Renderer lesen dieselben vendorten Tokens; Logo und Inter kommen aus den unveränderten Paketassets.
+- Karten werden als lesbare Registereinträge gestaltet. Aktenpanels verwenden die Hauskante.
+- Der historische API-Name `Phone` bleibt erhalten; sein Inhalt wird als lesbare Hausakte dargestellt.
+- Keine zweite Palette, kein nachgebautes Wortzeichen, keine zusätzliche Schrift.
+- Diagramme bilden tatsächlich übergebene Zahlen ab. Beispielzahlen sind keine Belege.
+- Remotion bleibt im Generator. Die früher entfernten Website-Präsentationsbereiche werden durch diese Arbeit nicht wieder eingeführt.
+
+## 7. Schutz vor unbeabsichtigter Änderung
+
+`node scripts/eh-design-generate.mjs --check` verhindert Abweichungen generierter Tokens.
+`node scripts/eh-design-check.mjs` prüft die versiegelten Kerndateien und neue Verstöße.
+`node --test scripts/eh-design-check.test.mjs` beweist Positiv- und Negativfälle.
+`node scripts/eh-design-browser.mjs` prüft die echte Bibliothek auf responsives Verhalten, WCAG-Meldungen, Lesbarkeit und Bedienung.
+
+Vorhandene Altlasten stehen präzise pro Datei und Fundtyp in `design/design-debt.json`. Sie dürfen abnehmen, aber nicht durch eine neue Baseline versteckt werden. Neue CSS-Dateien und UI-Dateien ohne kanonischen Import scheitern im PR-Check. Ein Umbruch oder Verschieben von Zeilen schafft kein neues Kontingent für Verstöße.
+
+Der GitHub-Check verwendet gewöhnliche, unprivilegierte PR-Jobs mit Leserechten. Er verwendet weder fremden Code mit Produktionsgeheimnissen noch einen Produktionsrunner. Der öffentliche Haupt-Repository kann GitHub-Actions-Prüfungen ohne bezahlten Bot verwenden. Bei privaten Organisations-Repositories hängt verpflichtender Branch-Schutz vom vorhandenen GitHub-Plan ab.
+
+**Technische Grenze:** Prüfungen können definierte Abweichungen blockieren und Review erzwingen; sie beurteilen nicht automatisch jede gestalterische Qualität. Agenten mit denselben Administratorrechten wie der Eigentümer sind keine separat absperrbare Identität. Kein Dokument oder kostenloser CI-Check rechtfertigt das Versprechen, ein Administrator könne das System niemals umgehen. Ein Agent darf deshalb weder Schutzregeln lockern noch den Designkern neu versiegeln, um seinen eigenen fehlgeschlagenen Check grün zu machen.
+
+## 8. Übergabe und Änderung
+
+Pflichtreihenfolge: `AGENTS.md` → `DESIGN.md` → `NEXT_AGENT.md` → konkrete Aufgabe → `sin-eh-design` → passende vollständige Recipe-Datei → tatsächlicher betroffener Code.
+
+Vor Änderungen an geteilten Funktionen: GitNexus-Auswirkung und echte Aufrufer prüfen. UNKNOWN bedeutet nicht unbenutzt. PageHero, LinkButton, MarketingShell und der Präsentationsrenderer haben große Auswirkung; Schnittstellen bleiben stabil.
+
+Jede Übergabe enthält Repository, Branch, Basis-Commit, absolute Workspace-Pfade, vollständigen neuen/geänderten Quelltext, unveränderte Assets mit Hash, exakte Befehle, Prüfergebnisse, tatsächliche Restarbeit und nächste Aufgabe. Keine Ellipsen, „den Rest analog“, TODO-Komponenten oder erfundenen Freigaben.
+
+Die aktuellen vollständigen Quellkapseln und Prüfsummen liegen unter `docs/brand/system/`. Die alte Atelier-Quellkapsel bleibt unverändert historisch erhalten. Neue Freigaben werden mit ihrer tatsächlichen Aussage in Aufgaben, Handoff und den verfügbaren Memory-Systemen fortgeschrieben.
+
+## Native HTML / Worker
+
+CRM verwendet denselben Vertrag ohne React-Umbau: packages/eh-design/src/html.mjs, html.css und html-style.mjs. Der Generator erzeugt diese aus den kanonischen CSS-Modulen und Original-Assets. html-style.mjs enthält Schrift und Logo eingebettet. Vollständige datenabhängige CRM-Komposition: docs/brand/system/CRM_RECIPE.mjs. Ausschließlich dokumentierte HTML-Slots dürfen bereits sicher gerendertes HTML enthalten; Daten werden escaped, URLs validiert. Keine zweite Palette oder lokale Komponenten-Kopie.

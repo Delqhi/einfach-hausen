@@ -1,0 +1,287 @@
+{
+  "target": {
+    "id": "Function:src/components/slides/SlideFrame.tsx:SlideFrame",
+    "name": "SlideFrame",
+    "type": "Function",
+    "filePath": "src/components/slides/SlideFrame.tsx"
+  },
+  "direction": "upstream",
+  "impactedCount": 4,
+  "risk": "HIGH",
+  "epistemic": "exact",
+  "summary": {
+    "direct": 2,
+    "processes_affected": 4,
+    "modules_affected": 2
+  },
+  "byDepthCounts": {
+    "1": 2,
+    "2": 2
+  },
+  "affected_processes": [
+    {
+      "name": "EditorPage",
+      "type": "Function",
+      "filePath": "src/app/editor/[id]/page.tsx",
+      "affected_process_count": 7,
+      "total_hits": 14,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "PresentPage",
+      "type": "Function",
+      "filePath": "src/app/present/[id]/page.tsx",
+      "affected_process_count": 6,
+      "total_hits": 12,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Editor",
+      "type": "Function",
+      "filePath": "src/components/Editor.tsx",
+      "affected_process_count": 2,
+      "total_hits": 2,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "DeckPlayer",
+      "type": "Function",
+      "filePath": "src/components/slides/DeckPlayer.tsx",
+      "affected_process_count": 1,
+      "total_hits": 1,
+      "earliest_broken_step": 1
+    }
+  ],
+  "affected_modules": [
+    {
+      "name": "Components",
+      "hits": 2,
+      "impact": "direct"
+    },
+    {
+      "name": "Slides",
+      "hits": 2,
+      "impact": "direct"
+    }
+  ],
+  "byDepth": {
+    "1": [
+      {
+        "depth": 1,
+        "id": "Function:src/components/Editor.tsx:Editor",
+        "name": "Editor",
+        "filePath": "src/components/Editor.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_2_editorpage",
+            "label": "EditorPage → Rv",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_3_editorpage",
+            "label": "EditorPage → Cls",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_33_editorpage",
+            "label": "EditorPage → Logo",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_4_editorpage",
+            "label": "EditorPage → CheckIcon",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_21_editorpage",
+            "label": "EditorPage → SlideToJson",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_34_editor",
+            "label": "Editor → Rv",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_10_editorpage",
+            "label": "EditorPage → SurfaceStyle",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_13_editorpage",
+            "label": "EditorPage → Update",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_35_editor",
+            "label": "Editor → Cls",
+            "processType": "cross_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/components/slides/DeckPlayer.tsx:DeckPlayer",
+        "name": "DeckPlayer",
+        "filePath": "src/components/slides/DeckPlayer.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_25_presentpage",
+            "label": "PresentPage → Cls",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_26_presentpage",
+            "label": "PresentPage → CheckIcon",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_29_presentpage",
+            "label": "PresentPage → Update",
+            "processType": "intra_community",
+            "step": 2
+          },
+          {
+            "id": "proc_43_deckplayer",
+            "label": "DeckPlayer → Rv",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_24_presentpage",
+            "label": "PresentPage → Rv",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_28_presentpage",
+            "label": "PresentPage → SurfaceStyle",
+            "processType": "cross_community",
+            "step": 2
+          },
+          {
+            "id": "proc_22_presentpage",
+            "label": "PresentPage → Go",
+            "processType": "intra_community",
+            "step": 2
+          }
+        ]
+      }
+    ],
+    "2": [
+      {
+        "depth": 2,
+        "id": "Function:src/app/editor/[id]/page.tsx:EditorPage",
+        "name": "EditorPage",
+        "filePath": "src/app/editor/[id]/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_10_editorpage",
+            "label": "EditorPage → SurfaceStyle",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_13_editorpage",
+            "label": "EditorPage → Update",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_21_editorpage",
+            "label": "EditorPage → SlideToJson",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_4_editorpage",
+            "label": "EditorPage → CheckIcon",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_2_editorpage",
+            "label": "EditorPage → Rv",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_3_editorpage",
+            "label": "EditorPage → Cls",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_33_editorpage",
+            "label": "EditorPage → Logo",
+            "processType": "cross_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 2,
+        "id": "Function:src/app/present/[id]/page.tsx:PresentPage",
+        "name": "PresentPage",
+        "filePath": "src/app/present/[id]/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_24_presentpage",
+            "label": "PresentPage → Rv",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_28_presentpage",
+            "label": "PresentPage → SurfaceStyle",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_22_presentpage",
+            "label": "PresentPage → Go",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_25_presentpage",
+            "label": "PresentPage → Cls",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_26_presentpage",
+            "label": "PresentPage → CheckIcon",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_29_presentpage",
+            "label": "PresentPage → Update",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      }
+    ]
+  }
+}

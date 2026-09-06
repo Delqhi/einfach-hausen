@@ -1,0 +1,85 @@
+{
+  "target": {
+    "id": "Function:src/components/marketing/home-hero.tsx:HomeHero",
+    "name": "HomeHero",
+    "type": "Function",
+    "filePath": "src/components/marketing/home-hero.tsx"
+  },
+  "direction": "upstream",
+  "impactedCount": 1,
+  "risk": "LOW",
+  "epistemic": "exact",
+  "summary": {
+    "direct": 1,
+    "processes_affected": 1,
+    "modules_affected": 1
+  },
+  "byDepthCounts": {
+    "1": 1
+  },
+  "affected_processes": [
+    {
+      "name": "HomePage",
+      "type": "Function",
+      "filePath": "src/app/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    }
+  ],
+  "affected_modules": [
+    {
+      "name": "Marketing",
+      "hits": 1,
+      "impact": "direct"
+    }
+  ],
+  "byDepth": {
+    "1": [
+      {
+        "depth": 1,
+        "id": "Function:src/app/page.tsx:HomePage",
+        "name": "HomePage",
+        "filePath": "src/app/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_40_homepage",
+            "label": "HomePage → S",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_373_homepage",
+            "label": "HomePage → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_374_homepage",
+            "label": "HomePage → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_41_homepage",
+            "label": "HomePage → SetRail",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_370_homepage",
+            "label": "HomePage → Update",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      }
+    ]
+  },
+  "staleness": {
+    "commitsBehind": 2,
+    "hint": "⚠️ Index is 2 commits behind HEAD. Run analyze tool to update."
+  }
+}

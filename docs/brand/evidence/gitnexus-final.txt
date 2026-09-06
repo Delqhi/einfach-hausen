@@ -1,0 +1,55 @@
+
+  GitNexus Analyzer
+
+[2K  Skipped 3 large files (>512KB, likely generated/vendored)
+[2K  - design/brand-atelier/preview.html
+[2K  - docs/brand/ATELIER_02_SOURCE.md
+[2K  - docs/brand/source/BASE_SNAPSHOT.md
+[2K  Set GITNEXUS_MAX_FILE_SIZE=<KB> to include files above the default cap.
+{"level":40,"time":1788686263752,"name":"gitnexus","msg":"[scope-resolution] 709 property read/write site(s) name a field that IS defined in this workspace, but only in another language, so per-language inference declined to link them. Queries for these fields return an empty result that does NOT mean \"unused\" — it means the definition anchor is in a different language. Affected: ADMIN_PASSWORD (javascript), AI_BASE_URL (javascript), AI_MODEL (javascript), AUTH_MODE (javascript), DATABASE_PATH (javascript), E2E_INSECURE_COOKIES (javascript), NEXT_PUBLIC_APP_URL (javascript), NEXT_PUBLIC_SUPABASE_ANON_KEY (javascript), NEXT_PUBLIC_SUPABASE_URL (javascript), NODE_ENV (javascript), …"}
+{"level":40,"time":1788686263993,"name":"gitnexus","truncation":{"truncated":true,"entryPointCandidatesDropped":466,"entryPointsUnexplored":46,"walksCutByBudget":44,"tracesDepthCapped":0,"calleesDropped":765,"processesDropped":256},"msg":"[processes] 588 flows reported, but whole flows are MISSING: 466 of 666 candidate entry point(s) never ranked in, 46 ranked entry point(s) never traced, 256 deduplicated flow(s) dropped at maxProcesses, 0 trace(s) cut at maxTraceDepth, 765 callee(s) skipped at maxBranching, 44 walk(s) cut by the per-entry trace budget. An absent flow does NOT mean the code path does not exist."}
+[2KIncremental: changed=21, added=53, deleted=0 (skipping wipe + 534 unchanged file rows preserved)
+[2KIncremental: +35 importer(s) added to writable set (BFS depth ≤ 4)
+[2KParse cache: pruned 1 stale chunk entries
+
+  Repository indexed successfully (51.7s)
+
+  7,079 nodes | 16,895 edges | 279 clusters | 588 flows
+  /home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906
+
+EXIT 0
+Changes: 16 files, 48 symbols
+Affected processes: 149
+Risk level: critical
+
+Changed symbols:
+  Section Verbindliche Einfachhausen Gestaltung · 2026-09-06 → AGENTS.md
+  Section Einfachhausen · Designsystem 1.0 → DESIGN.md
+  Section 1. Autorität und Geltungsbereich → DESIGN.md
+  Section 2. Das Eigene an Einfachhausen → DESIGN.md
+  Section 3. Eine einzige Markenquelle → DESIGN.md
+  Section Farben → DESIGN.md
+  Section Schrift und Lesbarkeit → DESIGN.md
+  Section Form, Abstand und Bewegung → DESIGN.md
+  Section 4. Komponentenregister → DESIGN.md
+  Section 5. Seiten individuell zusammensetzen → DESIGN.md
+  Section 6. Präsentationen → DESIGN.md
+  Section 7. Schutz vor unbeabsichtigter Änderung → DESIGN.md
+  Section 8. Übergabe und Änderung → DESIGN.md
+  Section Native HTML / Worker → DESIGN.md
+  Section OCI deployment → deploy/README.md
+... and 33 more
+
+Affected execution flows:
+  • Page → EHContainer (5 steps) — changed: PageHero
+  • Page → Update (4 steps) — changed: MarketingShell
+  • Page → EHHeading (4 steps) — changed: LegalNotice
+  • Page → EHEyebrow (4 steps) — changed: PageHero
+  • Page → EHText (4 steps) — changed: PageHero
+  • TrustSection → EHTextLink (4 steps) — changed: InfoPanel
+  • Page → IntakeForm (3 steps) — changed: MarketingShell
+  • Page → SmoothScroll (3 steps) — changed: MarketingShell
+  • Page → EHButton (3 steps) — changed: LinkButton
+  • Page → EHContainer (5 steps) — changed: PageHero
+... and 139 more
+EXIT 0

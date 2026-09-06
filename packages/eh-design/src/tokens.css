@@ -1,0 +1,38 @@
+/* Generated from tokens.json. Run node scripts/eh-design-generate.mjs. */
+:root {
+  --eh-color-paper: #faf8f4;
+  --eh-color-petrol: #105258;
+  --eh-color-deep: #0a3539;
+  --eh-color-ink: #10222a;
+  --eh-color-secondary: #4b5b60;
+  --eh-color-line: #e4e2dc;
+  --eh-color-sand: #ecdfc9;
+  --eh-color-terra: #a84d29;
+  --eh-color-white: #ffffff;
+  --eh-color-error: #a13232;
+  --eh-color-success: #236344;
+  --eh-color-focus: #a84d29;
+  --eh-font-family: Inter, var(--font-marketing, Arial), sans-serif;
+  --eh-font-body: 1.0625rem;
+  --eh-font-app: 1rem;
+  --eh-font-label: 0.9375rem;
+  --eh-font-meta: 0.8125rem;
+  --eh-font-eyebrow: 0.75rem;
+  --eh-font-input: 1rem;
+  --eh-font-display: clamp(3.5rem, 7.8vw, 7rem);
+  --eh-font-page: clamp(2.75rem, 5vw, 4.25rem);
+  --eh-font-section: clamp(2rem, 3.6vw, 3.25rem);
+  --eh-font-app-title: clamp(2rem, 3vw, 2.75rem);
+  --eh-space-xs: 0.5rem;
+  --eh-space-sm: 1rem;
+  --eh-space-md: 1.5rem;
+  --eh-space-lg: 2rem;
+  --eh-space-xl: 3rem;
+  --eh-space-section: clamp(3.5rem, 7vw, 7rem);
+  --eh-space-gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --eh-shape-control: 0.375rem;
+  --eh-shape-panel: 0.5rem;
+  --eh-shape-cut: clamp(1.5rem, 3vw, 3rem);
+  --eh-motion-duration: 180ms;
+  --eh-motion-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

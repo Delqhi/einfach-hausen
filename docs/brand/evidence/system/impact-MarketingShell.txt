@@ -1,0 +1,1133 @@
+{
+  "target": {
+    "id": "Function:src/components/marketing/site-shell.tsx:MarketingShell",
+    "name": "MarketingShell",
+    "type": "Function",
+    "filePath": "src/components/marketing/site-shell.tsx"
+  },
+  "direction": "upstream",
+  "impactedCount": 32,
+  "risk": "CRITICAL",
+  "epistemic": "exact",
+  "summary": {
+    "direct": 24,
+    "processes_affected": 21,
+    "modules_affected": 3
+  },
+  "byDepthCounts": {
+    "1": 24,
+    "2": 8
+  },
+  "affected_processes": [
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/blog/[slug]/page.tsx",
+      "affected_process_count": 6,
+      "total_hits": 6,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/blog/page.tsx",
+      "affected_process_count": 6,
+      "total_hits": 6,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/leistungen/page.tsx",
+      "affected_process_count": 6,
+      "total_hits": 6,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/agb/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/barrierefreiheit/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/datenschutz/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/eigenheimbesitzer/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/hausakte/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/hilfe/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/impressum/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/kontakt/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "HomePage",
+      "type": "Function",
+      "filePath": "src/app/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/partner/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "PilotphasePage",
+      "type": "Function",
+      "filePath": "src/app/pilotphase/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/preise/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/sicherheit/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/so-funktionierts/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/ueber-uns/page.tsx",
+      "affected_process_count": 5,
+      "total_hits": 5,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/lexikon/page.tsx",
+      "affected_process_count": 4,
+      "total_hits": 4,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/lexikon/kategorie/[kategorie]/page.tsx",
+      "affected_process_count": 3,
+      "total_hits": 3,
+      "earliest_broken_step": 1
+    },
+    {
+      "name": "Page",
+      "type": "Function",
+      "filePath": "src/app/lexikon/[begriff]/page.tsx",
+      "affected_process_count": 1,
+      "total_hits": 1,
+      "earliest_broken_step": 1
+    }
+  ],
+  "affected_modules": [
+    {
+      "name": "Marketing",
+      "hits": 24,
+      "impact": "direct"
+    },
+    {
+      "name": "[slug]",
+      "hits": 7,
+      "impact": "direct"
+    },
+    {
+      "name": "Lexikon",
+      "hits": 1,
+      "impact": "direct"
+    }
+  ],
+  "byDepth": {
+    "1": [
+      {
+        "depth": 1,
+        "id": "Function:src/app/agb/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/agb/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_52_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_53_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_37_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_36_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_51_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/barrierefreiheit/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/barrierefreiheit/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_98_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_106_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_108_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_107_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_97_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/blog/[slug]/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/blog/[slug]/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_136_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_129_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_138_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_68_page",
+            "label": "Page → Canonical",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_130_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_137_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/blog/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/blog/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_162_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_156_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_161_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_157_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_113_page",
+            "label": "Page → Canonical",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_163_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/datenschutz/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/datenschutz/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_187_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_181_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_180_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_185_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_186_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/eigenheimbesitzer/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/eigenheimbesitzer/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_204_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_205_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_209_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_210_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_211_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/hausakte/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/hausakte/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_228_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_233_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_227_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_231_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_232_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/hilfe/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/hilfe/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_249_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_250_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_254_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_253_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_255_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/impressum/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/impressum/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_271_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_274_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_275_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_276_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_270_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/kontakt/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/kontakt/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_295_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_297_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_291_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_292_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_296_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/leistungen/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/leistungen/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_313_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_318_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_142_page",
+            "label": "Page → Canonical",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_312_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_316_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_317_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/lexikon/[begriff]/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/lexikon/[begriff]/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_70_page",
+            "label": "Page → SafeDecode",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/lexikon/kategorie/[kategorie]/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/lexikon/kategorie/[kategorie]/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_333_page",
+            "label": "Page → Update",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_337_page",
+            "label": "Page → SmoothScroll",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_336_page",
+            "label": "Page → IntakeForm",
+            "processType": "cross_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/lexikon/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/lexikon/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_71_page",
+            "label": "Page → RegisterBuchstabe",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_356_page",
+            "label": "Page → IntakeForm",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_353_page",
+            "label": "Page → Update",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_357_page",
+            "label": "Page → SmoothScroll",
+            "processType": "cross_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/page.tsx:HomePage",
+        "name": "HomePage",
+        "filePath": "src/app/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_373_homepage",
+            "label": "HomePage → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_374_homepage",
+            "label": "HomePage → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_40_homepage",
+            "label": "HomePage → S",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_41_homepage",
+            "label": "HomePage → SetRail",
+            "processType": "cross_community",
+            "step": 1
+          },
+          {
+            "id": "proc_370_homepage",
+            "label": "HomePage → Update",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/partner/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/partner/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_391_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_338_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_387_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_334_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_390_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/pilotphase/page.tsx:PilotphasePage",
+        "name": "PilotphasePage",
+        "filePath": "src/app/pilotphase/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_404_pilotphasepage",
+            "label": "PilotphasePage → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_407_pilotphasepage",
+            "label": "PilotphasePage → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_408_pilotphasepage",
+            "label": "PilotphasePage → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_354_pilotphasepage",
+            "label": "PilotphasePage → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_358_pilotphasepage",
+            "label": "PilotphasePage → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/preise/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/preise/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_419_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_371_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_423_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_375_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_422_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/sicherheit/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/sicherheit/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_392_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_388_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_438_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_434_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_437_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/so-funktionierts/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/so-funktionierts/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_449_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_451_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_452_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_405_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_409_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/app/ueber-uns/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/ueber-uns/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": [
+          {
+            "id": "proc_420_page",
+            "label": "Page → AnimateIn",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_462_page",
+            "label": "Page → IntakeForm",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_424_page",
+            "label": "Page → Eyebrow",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_463_page",
+            "label": "Page → SmoothScroll",
+            "processType": "intra_community",
+            "step": 1
+          },
+          {
+            "id": "proc_460_page",
+            "label": "Page → Update",
+            "processType": "intra_community",
+            "step": 1
+          }
+        ]
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/components/marketing/lexikon/lexikon-not-found.tsx:LexikonNotFound",
+        "name": "LexikonNotFound",
+        "filePath": "src/components/marketing/lexikon/lexikon-not-found.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/components/marketing/product-story-page.tsx:ProductStoryPage",
+        "name": "ProductStoryPage",
+        "filePath": "src/components/marketing/product-story-page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      },
+      {
+        "depth": 1,
+        "id": "Function:src/components/marketing/service-detail-page.tsx:ServiceDetailPage",
+        "name": "ServiceDetailPage",
+        "filePath": "src/components/marketing/service-detail-page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      }
+    ],
+    "2": [
+      {
+        "depth": 2,
+        "id": "Function:src/app/beratung/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/beratung/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      },
+      {
+        "depth": 2,
+        "id": "Function:src/app/immobilienverkauf/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/immobilienverkauf/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      },
+      {
+        "depth": 2,
+        "id": "Function:src/app/leistungen/[slug]/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/leistungen/[slug]/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      },
+      {
+        "depth": 2,
+        "id": "Function:src/app/leistungen/heizung/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/leistungen/heizung/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      },
+      {
+        "depth": 2,
+        "id": "Function:src/app/lexikon/not-found.tsx:NotFound",
+        "name": "NotFound",
+        "filePath": "src/app/lexikon/not-found.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      },
+      {
+        "depth": 2,
+        "id": "Function:src/app/not-found.tsx:NotFound",
+        "name": "NotFound",
+        "filePath": "src/app/not-found.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      },
+      {
+        "depth": 2,
+        "id": "Function:src/app/notfall/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/notfall/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      },
+      {
+        "depth": 2,
+        "id": "Function:src/app/versicherung/page.tsx:Page",
+        "name": "Page",
+        "filePath": "src/app/versicherung/page.tsx",
+        "relationType": "CALLS",
+        "confidence": 0.85,
+        "processes": []
+      }
+    ]
+  },
+  "staleness": {
+    "commitsBehind": 2,
+    "hint": "⚠️ Index is 2 commits behind HEAD. Run analyze tool to update."
+  }
+}

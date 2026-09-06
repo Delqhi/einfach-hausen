@@ -1,0 +1,38 @@
+import type {ReactNode, ComponentProps} from "react";
+import {EHScope, EHSection, EHEyebrow, EHHeading, EHButton, EHImageFrame, EHRecordCover, EHStatus, EHActions} from "./primitives";
+import {EHPageHero, EHPromiseRow, EHFeatureRows, EHSplitStory, EHSteps, EHTimeline, EHFAQ, EHClosing, EHArticleHeader, EHArticleLayout, EHRelated, EHServiceIndex, EHPricing, EHPanel, type EHItem, type EHLink} from "./blocks";
+import {EHAppHeader, EHTabs, EHComposer, EHDocumentList, EHList, EHDataTable, type EHDocument} from "./app";
+
+/** Complete recipes: supply verified content and existing application handlers. No demo backend. */
+export function EHServicePage({title, description, image, benefits, scope, steps, faq, contactHref}: {title: string; description: string; image: {src:string;alt:string;caption?:string}; benefits: EHItem[]; scope: EHItem[]; steps: EHItem[]; faq: {q:string;a:ReactNode}[]; contactHref: string}) {
+  return <EHScope><EHPageHero eyebrow="Für dein Zuhause" number="01" title={title} text={description} actions={<EHButton href={contactHref} arrow>Anliegen besprechen</EHButton>} media={<EHImageFrame {...image} priority/>}/><EHSection compact><EHPromiseRow items={benefits}/></EHSection><EHSection tone="white"><EHSplitStory eyebrow="Was dazugehört" title="Alles Wichtige. Klar vereinbart." text="Der konkrete Umfang wird vor einer Beauftragung gemeinsam geklärt." media={<EHFeatureRows items={scope}/>}/></EHSection><EHSection tone="deep"><EHSplitStory eyebrow="Der nächste Schritt" title="Du entscheidest. Wir helfen beim Sortieren." media={<EHSteps items={steps}/>}/></EHSection><EHSection><EHEyebrow>Gut zu wissen</EHEyebrow><EHFAQ items={faq}/></EHSection><EHClosing title="Was steht bei dir an?" href={contactHref}/></EHScope>;
+}
+export function EHArticlePage({category,title,description,author,date,readingTime,contents,children,related}: {category:string;title:string;description?:string;author?:string;date?:string;readingTime?:string;contents:{id:string;title:string}[];children:ReactNode;related:EHLink[]}) {
+  return <EHScope><EHSection><EHArticleHeader {...{category,title,description,author,date,readingTime}}/><EHArticleLayout contents={contents}>{children}</EHArticleLayout></EHSection><EHSection tone="white"><EHRelated items={related}/></EHSection></EHScope>;
+}
+export function EHServiceIndexPage({title,text,items,contactHref}: {title:string;text:string;items:EHLink[];contactHref:string}) {
+  return <EHScope><EHPageHero eyebrow="Rund ums Haus" title={title} text={text}/><EHSection compact><EHServiceIndex items={items}/></EHSection><EHClosing title="Noch nicht sicher, was du brauchst?" text="Beschreibe uns, was dich beschäftigt. Gemeinsam finden wir den nächsten Schritt." href={contactHref}/></EHScope>;
+}
+export function EHContactPage({title = "Dein Anliegen. Ein offenes Ohr.", text, image, form, contactDetails}: {title?:string;text:string;image:{src:string;alt:string;caption?:string};form:ReactNode;contactDetails:ReactNode}) {
+  return <EHScope><EHPageHero eyebrow="Lass uns sprechen" title={title} text={text}/><EHSection compact><EHSplitStory title="Wir hören erst einmal zu." media={<EHPanel title="Was können wir für dich tun?">{form}</EHPanel>}><EHImageFrame {...image}/>{contactDetails}</EHSplitStory></EHSection></EHScope>;
+}
+export function EHPricingPage({title,text,plans,note,faq}: {title:string;text:string;plans:ComponentProps<typeof EHPricing>["plans"];note:string;faq:{q:string;a:ReactNode}[]}) {
+  return <EHScope><EHPageHero eyebrow="Leistungen & Umfang" title={title} text={text}/><EHSection compact><EHPricing plans={plans} note={note}/></EHSection><EHSection tone="white"><EHHeading>Deine Fragen. Klare Antworten.</EHHeading><EHFAQ items={faq}/></EHSection></EHScope>;
+}
+export function EHOwnerPage({houseName,address,documents,history,people,onRequest,pending,error}: {houseName:string;address:string;documents:EHDocument[];history:ComponentProps<typeof EHTimeline>["items"];people:ComponentProps<typeof EHList>["items"];onRequest:(text:string)=>void|Promise<void>;pending?:boolean;error?:string}) {
+  return <EHScope app><EHSection compact><EHAppHeader eyebrow="Dein Zuhause" title={houseName} text={address}/><EHTabs label="Hausakte" tabs={[
+    {id:"overview",label:"Überblick",content:<EHSplitStory title="Alles an seinem Platz." text="Deine Unterlagen, Menschen und nächsten Schritte gehören zusammen." media={<EHRecordCover title="Ein Zuhause. Eine Geschichte." subtitle={address}/>}><EHComposer onSubmit={onRequest} pending={pending} error={error}/></EHSplitStory>},
+    {id:"documents",label:"Dokumente",content:<EHDocumentList documents={documents}/>},
+    {id:"people",label:"Menschen",content:<EHList label="Menschen rund ums Haus" items={people}/>},
+    {id:"history",label:"Chronik",content:<EHTimeline items={history}/>}
+  ]}/></EHSection></EHScope>;
+}
+export function EHProviderPage({name,summary,requests,appointments,onOpenRequest}: {name:string;summary:string;requests:{id:string;title:string;location:string;status:string}[];appointments:{id:string;time:string;title:string;address:string}[];onOpenRequest:(id:string)=>void}) {
+  return <EHScope app><EHSection compact><EHAppHeader eyebrow="Dein Arbeitstag" title={name} text={summary}/><EHTabs label="Aufträge und Termine" tabs={[
+    {id:"requests",label:"Anfragen",content:<EHList label="Offene Anfragen" items={requests.map(r=>({id:r.id,title:r.title,text:r.location,meta:<EHStatus tone="info">{r.status}</EHStatus>,action:<EHButton variant="secondary" size="small" onClick={()=>onOpenRequest(r.id)}>Anfrage ansehen</EHButton>}))}/>},
+    {id:"appointments",label:"Termine",content:<EHDataTable caption="Deine Termine" columns={[{key:"time",label:"Zeit"},{key:"title",label:"Auftrag"},{key:"address",label:"Adresse"}]} rows={appointments.map(a=>({id:a.id,cells:{time:a.time,title:a.title,address:a.address}}))}/>}
+  ]}/></EHSection></EHScope>;
+}
+export function EHHomePage({image,contactHref,accountHref}: {image:{src:string;alt:string;caption?:string};contactHref:string;accountHref:string}) {
+  return <EHScope><EHPageHero display eyebrow="Zuhause, mit Überblick." number="01" title={<>Dein Haus.<br/>Einfach<br/>geregelt.</>} text="Weniger Kümmern. Mehr Zuhause sein. Behalte im Blick, was ansteht, und finde die passenden Menschen für dein Haus." actions={<EHButton href={accountHref} arrow>Deine Hausakte entdecken</EHButton>} media={<EHImageFrame {...image} priority/>}/><EHSection compact><EHPromiseRow items={[{title:"Alles wissen.",text:"Dokumente und die Geschichte deines Hauses."},{title:"Nichts vergessen.",text:"Anstehende Wartungen und wichtige Termine."},{title:"Nicht alles selbst machen.",text:"Passende Ansprechpartner, wenn es Hilfe braucht."}]}/></EHSection><EHSection tone="deep"><EHSplitStory eyebrow="Deine Hausakte" title="Ein Zuhause. Eine Geschichte." text="Was heute erledigt wird, hilft dir morgen weiter. So bleibt Wissen beim Haus." media={<EHRecordCover title="Gut aufgehoben." subtitle="Unterlagen. Termine. Menschen."/>}><EHActions><EHButton href={accountHref} variant="on-dark" arrow>Hausakte kennenlernen</EHButton></EHActions></EHSplitStory></EHSection><EHSection><EHSplitStory eyebrow="So geht einfach" title="Ein Anliegen. Ein klarer nächster Schritt." media={<EHSteps items={[{title:"Beschreiben",text:"Sag in deinen Worten, was bei deinem Haus ansteht."},{title:"Gemeinsam einordnen",text:"Wir helfen dir, den Bedarf und passende Möglichkeiten zu klären."},{title:"Bewusst entscheiden",text:"Eine Beauftragung erfolgt erst nach deiner Entscheidung."}]}/>}/></EHSection><EHClosing title="Mehr Zuhause. Weniger auf dem Zettel." href={contactHref}/></EHScope>;
+}

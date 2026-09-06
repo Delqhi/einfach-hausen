@@ -1,0 +1,223 @@
+{
+  "result": [
+    {
+      "view": "Startseite",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Leistung",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Ratgeber",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Leistungsübersicht",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Kontakt",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Leistungsumfang",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Owner-App",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Handwerker-App",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Bausteine",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Startseite",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Leistung",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Ratgeber",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Leistungsübersicht",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Kontakt",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Leistungsumfang",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Owner-App",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Handwerker-App",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Bausteine",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Startseite",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Leistung",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Ratgeber",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Leistungsübersicht",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Kontakt",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Leistungsumfang",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Owner-App",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Handwerker-App",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    },
+    {
+      "view": "Bausteine",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+      "axe": []
+    }
+  ],
+  "errors": [],
+  "interactions": "passed",
+  "failedViews": 0
+}

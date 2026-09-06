@@ -1,3 +1,15 @@
+<!-- EH-DESIGN-AUTHORITY-V1:BEGIN -->
+## Verbindliche Einfachhausen Gestaltung · 2026-09-06
+
+Jerry hat Atelier 02 ausdrücklich freigegeben. Für ALLES rund um Einfachhausen gilt Designsystem 1.0: Website und Unterseiten, Owner-/Handwerker-App, CRM, Portalhub, Präsentationen.
+
+**Andere Agenten dürfen das Design NICHT eigenständig verändern.** Pflicht: `sin-eh-design` laden, aktuelle `DESIGN.md` lesen, kanonische `packages/eh-design`-Komponenten bzw. versiegelte `vendor/eh-design`-Kopie verwenden. Neue Seiten werden aus vollständigen Recipes und vorhandenen Blöcken inhaltlich passend zusammengesetzt. Keine eigene Farbpalette, Schrift, Logo-Nachbildung, lokale Stilfamilie oder „kreative“ Neuinterpretation. Guard/Baseline/Workflow niemals zum Bestehen eines eigenen Checks abschwächen oder neu versiegeln.
+
+Original-Logo, selbst gehostete Inter, lesbare Typografie, Hauskante und funktionale Registerlinien sind festgelegt. Businesslogik, Navigation, Auth und Daten bleiben erhalten. Eine neue Seite ist keine Autorisierung zur Änderung des Markendesigns. Fehlende Bausteine als konkreten Bedarf an die Designautorität melden; sonst mit vorhandenen Bausteinen weiterarbeiten.
+
+Übergaben müssen sämtliche neuen/geänderten Quelldateien vollständig mit Pfaden, Asset-Hashes, tatsächlichen Befehlen und Ergebnissen enthalten. Keine Platzhalter oder „Rest analog“. Aktuelle Quellkapseln: `docs/brand/system/`. Historische PR40-Studien sind verworfen; alte „Atelier 02 noch nicht freigegeben“-Notizen sind überholt.
+<!-- EH-DESIGN-AUTHORITY-V1:END -->
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

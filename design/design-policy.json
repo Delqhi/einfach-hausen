@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "protected": [
+    "packages/eh-design/",
+    "design/design-policy.json",
+    "design/design-debt.json",
+    "design/design-lock.json",
+    "scripts/eh-design-check.mjs",
+    "scripts/eh-design-check.test.mjs",
+    "scripts/eh-design-seal.mjs",
+    "scripts/eh-design-generate.mjs",
+    "scripts/eh-design-sync.mjs",
+    ".github/workflows/eh-design.yml",
+    ".github/CODEOWNERS",
+    "DESIGN.md",
+    "src/design-system/",
+    "src/components/marketing/ui.tsx",
+    "src/components/marketing/tokens.css",
+    "src/components/marketing/mkt.module.css",
+    "src/components/marketing/home-hero.tsx",
+    "src/components/marketing/site-shell.tsx",
+    "src/app/globals.css",
+    "src/app/design-system.css",
+    "src/app/app/homeowner.module.css",
+    "src/app/pro/provider-workspace.module.css"
+  ],
+  "ownedStyleFiles": [
+    "src/components/marketing/tokens.css",
+    "src/components/marketing/mkt.module.css",
+    "src/app/app/homeowner.module.css",
+    "src/app/pro/provider-workspace.module.css"
+  ]
+}
