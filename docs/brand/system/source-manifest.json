@@ -116,6 +116,16 @@
       "bytes": 6520,
       "kind": "text"
     },
+    "docs/brand/evidence/system/delivery-memory-readback.json": {
+      "sha256": "861f4ee85822585b427a8596ba860b9ad5a9943df6b196abe11d2e1f773e517b",
+      "bytes": 2640,
+      "kind": "text"
+    },
+    "docs/brand/evidence/system/delivery-memory-receipts.txt": {
+      "sha256": "9758ef9bef8dd64593d3cfb016d95bf2f1286ead7e2ac9a9e5914182433e1d82",
+      "bytes": 210,
+      "kind": "text"
+    },
     "docs/brand/evidence/system/final-task-records.json": {
       "sha256": "3c0a725c42baac4085bd251f836b64d8fae82e31842a50788517b2833983ee3f",
       "bytes": 15052,
@@ -412,8 +422,8 @@
       "kind": "text"
     },
     "docs/brand/system/delivery.json": {
-      "sha256": "92654c4e07a54509aa97541c2361d6e8f7b801645ca385850a82366e56528750",
-      "bytes": 2952,
+      "sha256": "9cc3c4826d1301708e181bcc4b34fd6af95b3d16f4b5e30c1f8e7329c7873773",
+      "bytes": 3167,
       "kind": "text"
     },
     "docs/superpowers/plans/2026-09-06-einfachhausen-design-system-v1.md": {
