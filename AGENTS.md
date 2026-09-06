@@ -706,3 +706,7 @@ updated: 2026-09-05T09:09:00+00:00
 actor: chatgpt-web
 evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
 -->
+
+
+## EH-BRAND-04 — Design-Stopp (freigegeben 2026-09-06)
+Ab sofort ist eigenständiges Erstellen/Ändern von Design in einfachhausen-Repos strikt verboten. Ausschliesslich `docs/brand/BRAND_CONTRACT.md` + `docs/brand/COMPONENTS.md` + `docs/brand/SIN-EH-DESIGN-SKILL.md` verwenden. Jede design-berührende PR braucht `node scripts/brand-guard.mjs` grün. `PageHero`/`LinkButton`-Props, `site-shell`, Tokens (`--eh-*`), Logo-Assets nur additiv/kompatibel. Verstösse blockieren.

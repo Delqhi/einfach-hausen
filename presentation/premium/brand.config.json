@@ -1,15 +1,15 @@
 {
   "brand": {
     "colors": {
-      "primary": "#176B45",
-      "secondary": "#123C2A",
-      "canvas": "#F7F8F7",
+      "primary": "#105258",
+      "secondary": "#0a3539",
+      "canvas": "#faf8f4",
       "surface": "#FFFFFF",
-      "surfaceMuted": "#F2F4F2",
-      "text": "#171A18",
-      "muted": "#66706A",
-      "border": "#E4E8E5",
-      "accent": "#238454"
+      "surfaceMuted": "#f2f5f5",
+      "text": "#10222a",
+      "muted": "#4b5b60",
+      "border": "#e4e2dc",
+      "accent": "#105258"
     },
     "logo": {
       "src": "assets/branding/einfachhausen-mark.svg",
@@ -28,7 +28,11 @@
     }
   },
   "rhythm": {
-    "darkSlides": [1, 11, 15]
+    "darkSlides": [
+      1,
+      11,
+      15
+    ]
   },
   "qa": {
     "maxPhoneFramePx": 5

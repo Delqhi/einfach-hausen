@@ -32,3 +32,7 @@ Für Portal-UI (`/app`, `/pro`, Admin `/admin`, Auth und responsive Shells) ist 
 - Neue Stile werden ausschließlich über CSS-Module (`*.module.css`) oder Scoped Tokens implementiert.
 - Veraltete Überschreibungen (`.premium-*`, `.conversion-*`, inkonsistente Utility-Layers) werden schrittweise neutralisiert.
 - Keine `border-left`/`border-right`-Accent-Stripes, keine Text-Gradients, kein Glassmorphism als Standard.
+
+
+## 3. Atelier-02-Markenvertrag (freigegeben 2026-09-06)
+Freigegebene Richtung „Ein Zuhause mit Gedächtnis“. Verbindlich: `docs/brand/BRAND_CONTRACT.md`, Rezepte `docs/brand/COMPONENTS.md`, Skill `docs/brand/SIN-EH-DESIGN-SKILL.md`, Klassen `src/components/marketing/atelier-signatures.css` (opt-in), Guard `scripts/brand-guard.mjs`. Keine eigenständigen Design-Änderungen durch Agenten. Bestehende §§0–2 bleiben.
