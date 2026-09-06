@@ -43,8 +43,8 @@
     },
     {
       "path": "docs/NEXT_AGENT.md",
-      "sha256": "ff4df34d7beaca0003fbf0170d5f2cb8a15ab3b54ac3765a7e21166d1b187c1b",
-      "bytes": 6883
+      "sha256": "2092e2bda5e1698d78aa3a7dc19bb43f267de421eadc07ccb938655956313906",
+      "bytes": 7277
     },
     {
       "path": "docs/PRODUCTION_HANDOVER.md",
@@ -63,8 +63,8 @@
     },
     {
       "path": "docs/brand/evidence/WORKER_REPORT.md",
-      "sha256": "bda9ef3734a83e719e846b3be96b8953b588bce68f034a52371f414f7e512dac",
-      "bytes": 5021
+      "sha256": "15a11cf29bcc8e62de565d4fc86bff61ac088229d58a82961f059728f4d1e945",
+      "bytes": 5946
     },
     {
       "path": "docs/brand/evidence/delegation.json",
@@ -78,8 +78,8 @@
     },
     {
       "path": "docs/brand/evidence/persistence.json",
-      "sha256": "de5b96f412e200d0ba1a6c38f6b62be9bc084d6bc462f60920dd0793b518c02e",
-      "bytes": 1774
+      "sha256": "1ee7ed2b28e13cad8ac17a0b6074179bb6b940670ee8791240b8a4c16ee7289d",
+      "bytes": 2810
     },
     {
       "path": "docs/brand/evidence/task-registration.json",
@@ -107,5 +107,5 @@
       "bytes": 21538
     }
   ],
-  "packet_sha256": "ada257013b537f507537c6234cda17fa5252935b5a2df6b847aeb051fcf6fbee"
+  "packet_sha256": "7af57651211d12f97a3547acb9d803da66b0dd50746a59be1ac15c314ea66a7f"
 }

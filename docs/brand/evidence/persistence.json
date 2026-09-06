@@ -1,7 +1,7 @@
 {
   "session": "01a07406-6786-758d-9c72-5d3fddfa353d",
   "host": "sinsupabase",
-  "executor": "prime-agent (operator session; isolated bai/glm-5.3-flash dispatch failed 401, see delegation.json)",
+  "executor": "prime-agent operator session (self-execution; operator 2026-09-06: bai path dead, no dispatch)",
   "branch": "design/einfachhausen-brand-system-20260906",
   "base": "3d7d84ed100c21ecfe6a27074d7a22aa7ff92c04",
   "verify": {
@@ -29,23 +29,42 @@
       "mem": "mem-1c844836e074955ee861",
       "receipt": "345d7725-1d95-43ac-8c39-a2ec2b93a21d",
       "kind": "resolved_failure"
+    },
+    {
+      "mem": "mem-a998df97be06e1b3a4cc",
+      "receipt": "cdb0dce6-4969-4921-a22f-1bc082f3ef03",
+      "kind": "verified_fact",
+      "note": "re-stored after mem-14f3c1aa session NOT_FOUND; readback ok"
+    },
+    {
+      "mem": "mem-6f209b2cc5f446f23a3d",
+      "receipt": "28bc6f25-0308-474a-ae03-9e097a6aec3f",
+      "kind": "verified_fact",
+      "note": "operator preference: no bai dispatch, self-execute; readback ok"
     }
   ],
   "open_items": [
     {
-      "item": "openviking_readback",
-      "retry": "openviking-recall --limit 5 'EH-BRAND'",
-      "reason": "HTTP 429 upstream embedding quota"
+      "item": "openviking_recall_cli",
+      "status": "bypassed-verified",
+      "detail": "recall CLI still 429; all 5 memories verified via ov session get-session-context instead (sessions 32f2416d, 87f7ed99, 584cfff7, 1ce69282, ab3ecee8)"
     },
     {
       "item": "sin_brain_conventions",
-      "retry": "locate configured store, then store with readback",
-      "reason": "no configured sin-brain.db on host; new DB forbidden"
+      "status": "resolved",
+      "store": "/home/ubuntu/.local/share/sin-brain/sin-brain.db",
+      "ids": [
+        "458f3791-4df2-4775-809f-ad4252b98075",
+        "b55c2858-b690-43aa-9fca-31232786baaa",
+        "2dff2aba-99dc-4b6b-bbab-3ea359eca198",
+        "2e121f3b-efdf-419d-ac17-44c4bbf4855f"
+      ],
+      "note": "no pre-existing store; single XDG-canonical store established, all 4 read back"
     },
     {
-      "item": "honcho_delegation_preference",
-      "retry": "pip install honcho-ai==2.1.2 with running server, then retain.sh",
-      "reason": "library missing, no server (stub mode)"
+      "item": "honcho_backend",
+      "status": "blocked-external",
+      "detail": "honcho-ai==2.1.2 installed (pip --user); package is client-only, no serve component; no server on :8000; OSS-server deploy or hosted key = operator decision. Preference retained in OpenViking mem-6f209b2c + Brain 2e121f3b instead. No stub claimed."
     }
   ],
   "issue": "https://github.com/Delqhi/einfach-hausen/issues/39",
@@ -53,5 +72,6 @@
     "EH-BRAND-01",
     "EH-BRAND-02"
   ],
-  "next_action": "push branch, draft PR, issue comment, complete EH-BRAND-01/02 via canonical CLI"
+  "next_action": "EH-BRAND-03 visible direction decision (design-lead/user) on PR #40; then 04-06",
+  "operator_note_2026_09_06": "bai dead: dispatch_prime.py retired, self-execution only"
 }

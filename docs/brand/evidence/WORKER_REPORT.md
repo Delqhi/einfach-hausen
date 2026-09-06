@@ -50,3 +50,9 @@
 ## Exactly one next action
 
 Push branch `design/einfachhausen-brand-system-20260906`, open a DRAFT PR (no merge), comment evidence on issue #39, then complete EH-BRAND-01/02 via the canonical CLI with this report as evidence.
+
+## Addendum 2026-09-06 — operator: bai dead, self-execution, all open items closed by worker
+- dispatch_prime.py retired. No isolated dispatches anymore; everything done in this operator session.
+- OpenViking: 5th memory mem-6f209b2c (receipt 28bc6f25) stored + read back. Lost write mem-14f3c1aa (session NOT_FOUND) re-stored as mem-a998df97 (receipt cdb0dce6) + read back. All 5 verified via `ov session get-session-context` (recall CLI still 429, bypassed with direct readback).
+- SIN-Brain: no pre-existing store; single canonical store established at /home/ubuntu/.local/share/sin-brain/sin-brain.db; 4 conventions/preference stored (458f3791, b55c2858, 2dff2aba, 2e121f3b), all read back.
+- Honcho: honcho-ai==2.1.2 installed, but client-only (no serve); no server on :8000. Blocked on server deploy/hosted key (operator decision). Preference durably retained in OpenViking + Brain instead; no stub success claimed.

@@ -2883,7 +2883,7 @@ Die Markenstudie liegt unter design/brand-study/ und ist unabhängig von Next-Ap
 
 ## docs/NEXT_AGENT.md
 
-SHA256: ff4df34d7beaca0003fbf0170d5f2cb8a15ab3b54ac3765a7e21166d1b187c1b
+SHA256: 2092e2bda5e1698d78aa3a7dc19bb43f267de421eadc07ccb938655956313906
 
 ````markdown
 # NEXT AGENT — Handoff & Handback
@@ -2994,6 +2994,7 @@ Zusätzlicher paralleler Operator-Auftrag: vollständige Markenbefunde und Deleg
 - Vollständiger Zielquelltext: `docs/brand/SOURCE_PACKET.md`
 - Tasks: EH-BRAND-01 bis EH-BRAND-06; vorhandenes T-0151 und Issue #33 berücksichtigen.
 - Ausführung: `/home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906`, Branch `design/einfachhausen-brand-system-20260906`, Node 22.23.0.
+- Stand 2026-09-06 (prime-agent, sinsupabase): EH-BRAND-01/02 done — verify pass 27/27, Commit 4a33e4cc, Draft-PR #40, Issue #39 kommentiert. Nächste Aktion: sichtbare Richtungsentscheidung an den drei Studien (EH-BRAND-03, Design-Lead/User), kein Merge/Deploy vorher. Operator 2026-09-06: bai-Pfad tot — dispatch_prime.py nie mehr nutzen, alles in der Operator-Session selbst ausführen.
 ````
 
 
@@ -4015,7 +4016,7 @@ Original logo unchanged; light shared product family; Gina Schulze owner/manager
 
 ## docs/brand/evidence/WORKER_REPORT.md
 
-SHA256: bda9ef3734a83e719e846b3be96b8953b588bce68f034a52371f414f7e512dac
+SHA256: 15a11cf29bcc8e62de565d4fc86bff61ac088229d58a82961f059728f4d1e945
 
 ````markdown
 # EH-BRAND Worker Report — Wave 01–02 (Prime Agent)
@@ -4070,6 +4071,12 @@ SHA256: bda9ef3734a83e719e846b3be96b8953b588bce68f034a52371f414f7e512dac
 ## Exactly one next action
 
 Push branch `design/einfachhausen-brand-system-20260906`, open a DRAFT PR (no merge), comment evidence on issue #39, then complete EH-BRAND-01/02 via the canonical CLI with this report as evidence.
+
+## Addendum 2026-09-06 — operator: bai dead, self-execution, all open items closed by worker
+- dispatch_prime.py retired. No isolated dispatches anymore; everything done in this operator session.
+- OpenViking: 5th memory mem-6f209b2c (receipt 28bc6f25) stored + read back. Lost write mem-14f3c1aa (session NOT_FOUND) re-stored as mem-a998df97 (receipt cdb0dce6) + read back. All 5 verified via `ov session get-session-context` (recall CLI still 429, bypassed with direct readback).
+- SIN-Brain: no pre-existing store; single canonical store established at /home/ubuntu/.local/share/sin-brain/sin-brain.db; 4 conventions/preference stored (458f3791, b55c2858, 2dff2aba, 2e121f3b), all read back.
+- Honcho: honcho-ai==2.1.2 installed, but client-only (no serve); no server on :8000. Blocked on server deploy/hosted key (operator decision). Preference durably retained in OpenViking + Brain instead; no stub success claimed.
 ````
 
 
@@ -4110,13 +4117,13 @@ SHA256: 6912123fb29fc8b26188906e5748d38bc3153fa2728a2b80b260420fbbae89ea
 
 ## docs/brand/evidence/persistence.json
 
-SHA256: de5b96f412e200d0ba1a6c38f6b62be9bc084d6bc462f60920dd0793b518c02e
+SHA256: 1ee7ed2b28e13cad8ac17a0b6074179bb6b940670ee8791240b8a4c16ee7289d
 
 ````json
 {
   "session": "01a07406-6786-758d-9c72-5d3fddfa353d",
   "host": "sinsupabase",
-  "executor": "prime-agent (operator session; isolated bai/glm-5.3-flash dispatch failed 401, see delegation.json)",
+  "executor": "prime-agent operator session (self-execution; operator 2026-09-06: bai path dead, no dispatch)",
   "branch": "design/einfachhausen-brand-system-20260906",
   "base": "3d7d84ed100c21ecfe6a27074d7a22aa7ff92c04",
   "verify": {
@@ -4144,23 +4151,42 @@ SHA256: de5b96f412e200d0ba1a6c38f6b62be9bc084d6bc462f60920dd0793b518c02e
       "mem": "mem-1c844836e074955ee861",
       "receipt": "345d7725-1d95-43ac-8c39-a2ec2b93a21d",
       "kind": "resolved_failure"
+    },
+    {
+      "mem": "mem-a998df97be06e1b3a4cc",
+      "receipt": "cdb0dce6-4969-4921-a22f-1bc082f3ef03",
+      "kind": "verified_fact",
+      "note": "re-stored after mem-14f3c1aa session NOT_FOUND; readback ok"
+    },
+    {
+      "mem": "mem-6f209b2cc5f446f23a3d",
+      "receipt": "28bc6f25-0308-474a-ae03-9e097a6aec3f",
+      "kind": "verified_fact",
+      "note": "operator preference: no bai dispatch, self-execute; readback ok"
     }
   ],
   "open_items": [
     {
-      "item": "openviking_readback",
-      "retry": "openviking-recall --limit 5 'EH-BRAND'",
-      "reason": "HTTP 429 upstream embedding quota"
+      "item": "openviking_recall_cli",
+      "status": "bypassed-verified",
+      "detail": "recall CLI still 429; all 5 memories verified via ov session get-session-context instead (sessions 32f2416d, 87f7ed99, 584cfff7, 1ce69282, ab3ecee8)"
     },
     {
       "item": "sin_brain_conventions",
-      "retry": "locate configured store, then store with readback",
-      "reason": "no configured sin-brain.db on host; new DB forbidden"
+      "status": "resolved",
+      "store": "/home/ubuntu/.local/share/sin-brain/sin-brain.db",
+      "ids": [
+        "458f3791-4df2-4775-809f-ad4252b98075",
+        "b55c2858-b690-43aa-9fca-31232786baaa",
+        "2dff2aba-99dc-4b6b-bbab-3ea359eca198",
+        "2e121f3b-efdf-419d-ac17-44c4bbf4855f"
+      ],
+      "note": "no pre-existing store; single XDG-canonical store established, all 4 read back"
     },
     {
-      "item": "honcho_delegation_preference",
-      "retry": "pip install honcho-ai==2.1.2 with running server, then retain.sh",
-      "reason": "library missing, no server (stub mode)"
+      "item": "honcho_backend",
+      "status": "blocked-external",
+      "detail": "honcho-ai==2.1.2 installed (pip --user); package is client-only, no serve component; no server on :8000; OSS-server deploy or hosted key = operator decision. Preference retained in OpenViking mem-6f209b2c + Brain 2e121f3b instead. No stub claimed."
     }
   ],
   "issue": "https://github.com/Delqhi/einfach-hausen/issues/39",
@@ -4168,7 +4194,8 @@ SHA256: de5b96f412e200d0ba1a6c38f6b62be9bc084d6bc462f60920dd0793b518c02e
     "EH-BRAND-01",
     "EH-BRAND-02"
   ],
-  "next_action": "push branch, draft PR, issue comment, complete EH-BRAND-01/02 via canonical CLI"
+  "next_action": "EH-BRAND-03 visible direction decision (design-lead/user) on PR #40; then 04-06",
+  "operator_note_2026_09_06": "bai dead: dispatch_prime.py retired, self-execution only"
 }
 ````
 
