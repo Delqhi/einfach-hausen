@@ -1,0 +1,107 @@
+{
+  "errors": [],
+  "result": [
+    {
+      "route": "/leistungen",
+      "width": 390,
+      "overflow": false,
+      "small": [
+        "9:41●●●/11px",
+        "9:41/11px",
+        "●●●/11px",
+        "Erinnerungen/11px",
+        " Diese Woche/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "Empfohlen alle 12 Monate/11.5px",
+        " Oktober/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "Letztes Jahr: 180 €/11.5px",
+        " Dezember/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "Gesetzliche Pflicht/11.5px"
+      ],
+      "axe": 1
+    },
+    {
+      "route": "/leistungen",
+      "width": 736,
+      "overflow": false,
+      "small": [
+        "9:41●●●/11px",
+        "9:41/11px",
+        "●●●/11px",
+        "Erinnerungen/11px",
+        " Diese Woche/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "Empfohlen alle 12 Monate/11.5px",
+        " Oktober/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "Letztes Jahr: 180 €/11.5px",
+        " Dezember/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "Gesetzliche Pflicht/11.5px"
+      ],
+      "axe": 1
+    },
+    {
+      "route": "/leistungen",
+      "width": 1440,
+      "overflow": false,
+      "small": [
+        "9:41●●●/11px",
+        "9:41/11px",
+        "●●●/11px",
+        "Erinnerungen/11px",
+        " Diese Woche/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "Empfohlen alle 12 Monate/11.5px",
+        " Oktober/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "Letztes Jahr: 180 €/11.5px",
+        " Dezember/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "/10.5px",
+        "Gesetzliche Pflicht/11.5px"
+      ],
+      "axe": 1
+    },
+    {
+      "route": "/leistungen/heizung",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "axe": 0
+    },
+    {
+      "route": "/leistungen/heizung",
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "axe": 0
+    },
+    {
+      "route": "/leistungen/heizung",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "axe": 0
+    }
+  ]
+}
