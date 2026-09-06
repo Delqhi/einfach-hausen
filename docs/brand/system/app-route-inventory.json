@@ -1,0 +1,730 @@
+{
+  "commit": "703be044d602c7d4ea50a578d6831c3219173660",
+  "method": "Static route/file inventory; does not prove runtime state or complete nested-component coverage.",
+  "routes": [
+    {
+      "file": "src/app/admin/crm/page.tsx",
+      "route": "/admin/crm",
+      "kind": "page",
+      "bytes": 20941,
+      "actions": [
+        "addCrmLeadAction",
+        "syncBusinessResearchAction",
+        "updateCrmLeadAction"
+      ],
+      "features": {
+        "forms": 4,
+        "selects": 11,
+        "textareas": 1,
+        "permission": 2
+      }
+    },
+    {
+      "file": "src/app/admin/login/page.tsx",
+      "route": "/admin/login",
+      "kind": "page",
+      "bytes": 728,
+      "actions": [
+        "adminLoginAction"
+      ],
+      "features": {
+        "forms": 1
+      }
+    },
+    {
+      "file": "src/app/admin/ops/page.tsx",
+      "route": "/admin/ops",
+      "kind": "page",
+      "bytes": 3876,
+      "actions": [
+        "requeueDeadNotificationAction",
+        "toggleFeatureFlagAction"
+      ],
+      "features": {
+        "forms": 3,
+        "permission": 2
+      }
+    },
+    {
+      "file": "src/app/admin/page.tsx",
+      "route": "/admin",
+      "kind": "page",
+      "bytes": 14167,
+      "actions": [
+        "adminLogoutAction",
+        "adminReviewVerificationLifecycleAction",
+        "adminUpdateClaimAction",
+        "adminUpdatePartnerContractLifecycleAction",
+        "moderateReviewAction"
+      ],
+      "features": {
+        "forms": 7,
+        "checks": 4,
+        "selects": 2,
+        "textareas": 3,
+        "permission": 2
+      }
+    },
+    {
+      "file": "src/app/anfrage/[id]/page.tsx",
+      "route": "/anfrage/[id]",
+      "kind": "page",
+      "bytes": 5309,
+      "actions": [],
+      "features": {
+        "textareas": 1
+      }
+    },
+    {
+      "file": "src/app/anfrage/neu/page.tsx",
+      "route": "/anfrage/neu",
+      "kind": "page",
+      "bytes": 7784,
+      "actions": [],
+      "features": {
+        "textareas": 1
+      }
+    },
+    {
+      "file": "src/app/anfragen-pro/page.tsx",
+      "route": "/anfragen-pro",
+      "kind": "page",
+      "bytes": 2042,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/app/calendar/page.tsx",
+      "route": "/app/calendar",
+      "kind": "page",
+      "bytes": 2903,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/app/consultation/page.tsx",
+      "route": "/app/consultation",
+      "kind": "page",
+      "bytes": 2642,
+      "actions": [
+        "createConsultationAction"
+      ],
+      "features": {
+        "forms": 1,
+        "file_inputs": 1,
+        "textareas": 1
+      }
+    },
+    {
+      "file": "src/app/app/documents/[jobId]/receipt/page.tsx",
+      "route": "/app/documents/[jobId]/receipt",
+      "kind": "page",
+      "bytes": 1834,
+      "actions": [],
+      "features": {
+        "payments": 1
+      }
+    },
+    {
+      "file": "src/app/app/documents/page.tsx",
+      "route": "/app/documents",
+      "kind": "page",
+      "bytes": 2767,
+      "actions": [],
+      "features": {
+        "payments": 14,
+        "uploads": 3
+      }
+    },
+    {
+      "file": "src/app/app/emergency/page.tsx",
+      "route": "/app/emergency",
+      "kind": "page",
+      "bytes": 2435,
+      "actions": [
+        "createEmergencyAction"
+      ],
+      "features": {
+        "forms": 1,
+        "selects": 1,
+        "textareas": 1
+      }
+    },
+    {
+      "file": "src/app/app/error.tsx",
+      "route": "/app",
+      "kind": "error",
+      "bytes": 967,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/app/hausmeister/page.tsx",
+      "route": "/app/hausmeister",
+      "kind": "page",
+      "bytes": 4911,
+      "actions": [
+        "startHausmeisterRouteAction"
+      ],
+      "features": {
+        "forms": 2
+      }
+    },
+    {
+      "file": "src/app/app/home/history/page.tsx",
+      "route": "/app/home/history",
+      "kind": "page",
+      "bytes": 8966,
+      "actions": [
+        "addHouseHistoryAction",
+        "createHouseTransferAction"
+      ],
+      "features": {
+        "forms": 2,
+        "file_inputs": 3,
+        "selects": 1,
+        "textareas": 1
+      }
+    },
+    {
+      "file": "src/app/app/home/page.tsx",
+      "route": "/app/home",
+      "kind": "page",
+      "bytes": 8067,
+      "actions": [
+        "addHouseAssetAction",
+        "completeMaintenanceTaskAction",
+        "saveHouseProfileAction"
+      ],
+      "features": {
+        "forms": 3,
+        "selects": 2,
+        "payments": 3
+      }
+    },
+    {
+      "file": "src/app/app/home/passport/page.tsx",
+      "route": "/app/home/passport",
+      "kind": "page",
+      "bytes": 2392,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/app/home/sale/page.tsx",
+      "route": "/app/home/sale",
+      "kind": "page",
+      "bytes": 12035,
+      "actions": [
+        "approveBrokerShareAction",
+        "requestPropertyValuationAction",
+        "revokeBrokerShareAction",
+        "startSaleProcessAction",
+        "storeExistingValuationAction"
+      ],
+      "features": {
+        "forms": 6,
+        "checks": 1,
+        "selects": 2,
+        "textareas": 2
+      }
+    },
+    {
+      "file": "src/app/app/insurance/page.tsx",
+      "route": "/app/insurance",
+      "kind": "page",
+      "bytes": 4400,
+      "actions": [
+        "createInsuranceSupportAction"
+      ],
+      "features": {
+        "forms": 1,
+        "textareas": 1
+      }
+    },
+    {
+      "file": "src/app/app/invoices/[id]/page.tsx",
+      "route": "/app/invoices/[id]",
+      "kind": "page",
+      "bytes": 1736,
+      "actions": [
+        "createInvoiceCheckoutAction"
+      ],
+      "features": {
+        "forms": 1,
+        "payments": 22
+      }
+    },
+    {
+      "file": "src/app/app/jobs/[id]/page.tsx",
+      "route": "/app/jobs/[id]",
+      "kind": "page",
+      "bytes": 16469,
+      "actions": [
+        "acceptQuoteAction",
+        "cancelJobAction",
+        "createCheckoutAction",
+        "createClaimAction",
+        "reviewAction",
+        "sendMessageAction",
+        "sendSavedContactMessageAction",
+        "turnContactIntoServiceAction"
+      ],
+      "features": {
+        "forms": 8,
+        "selects": 1,
+        "textareas": 2,
+        "payments": 10
+      }
+    },
+    {
+      "file": "src/app/app/jobs/page.tsx",
+      "route": "/app/jobs",
+      "kind": "page",
+      "bytes": 3889,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/app/loading.tsx",
+      "route": "/app",
+      "kind": "loading",
+      "bytes": 502,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/app/messages/page.tsx",
+      "route": "/app/messages",
+      "kind": "page",
+      "bytes": 8364,
+      "actions": [
+        "updateContactCategoryAction"
+      ],
+      "features": {
+        "forms": 1,
+        "selects": 1
+      }
+    },
+    {
+      "file": "src/app/app/more/page.tsx",
+      "route": "/app/more",
+      "kind": "page",
+      "bytes": 1535,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/app/onboarding/page.tsx",
+      "route": "/app/onboarding",
+      "kind": "page",
+      "bytes": 3640,
+      "actions": [
+        "saveOnboardingContactAction",
+        "saveOnboardingInterestsAction",
+        "saveOnboardingProfileAction"
+      ],
+      "features": {
+        "forms": 3,
+        "checks": 1,
+        "selects": 1
+      }
+    },
+    {
+      "file": "src/app/app/page.tsx",
+      "route": "/app",
+      "kind": "page",
+      "bytes": 7058,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/app/partners/[id]/page.tsx",
+      "route": "/app/partners/[id]",
+      "kind": "page",
+      "bytes": 4456,
+      "actions": [
+        "reportReviewAction"
+      ],
+      "features": {
+        "forms": 1
+      }
+    },
+    {
+      "file": "src/app/app/partners/page.tsx",
+      "route": "/app/partners",
+      "kind": "page",
+      "bytes": 421,
+      "actions": [],
+      "features": {
+        "redirects": 1
+      }
+    },
+    {
+      "file": "src/app/app/plans/page.tsx",
+      "route": "/app/plans",
+      "kind": "page",
+      "bytes": 4433,
+      "actions": [
+        "purchasePackageAction",
+        "startMembershipCheckoutAction"
+      ],
+      "features": {
+        "forms": 2,
+        "payments": 7
+      }
+    },
+    {
+      "file": "src/app/app/profile/page.tsx",
+      "route": "/app/profile",
+      "kind": "page",
+      "bytes": 3002,
+      "actions": [
+        "logoutAction",
+        "saveProfileAction"
+      ],
+      "features": {
+        "forms": 2
+      }
+    },
+    {
+      "file": "src/app/app/settings/page.tsx",
+      "route": "/app/settings",
+      "kind": "page",
+      "bytes": 4032,
+      "actions": [],
+      "features": {
+        "checks": 2
+      }
+    },
+    {
+      "file": "src/app/app/year/page.tsx",
+      "route": "/app/year",
+      "kind": "page",
+      "bytes": 5065,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/chat/[anfrageId]/page.tsx",
+      "route": "/chat/[anfrageId]",
+      "kind": "page",
+      "bytes": 4000,
+      "actions": [],
+      "features": {
+        "permission": 2
+      }
+    },
+    {
+      "file": "src/app/check-email/page.tsx",
+      "route": "/check-email",
+      "kind": "page",
+      "bytes": 984,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/ki-chat/page.tsx",
+      "route": "/ki-chat",
+      "kind": "page",
+      "bytes": 3424,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/login/page.tsx",
+      "route": "/login",
+      "kind": "page",
+      "bytes": 799,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/mein-haus/page.tsx",
+      "route": "/mein-haus",
+      "kind": "page",
+      "bytes": 203,
+      "actions": [],
+      "features": {
+        "redirects": 1
+      }
+    },
+    {
+      "file": "src/app/notifications/page.tsx",
+      "route": "/notifications",
+      "kind": "page",
+      "bytes": 3167,
+      "actions": [
+        "markAllNotificationsReadForCurrentUserAction",
+        "setNotificationReadStateAction"
+      ],
+      "features": {
+        "forms": 2
+      }
+    },
+    {
+      "file": "src/app/onboarding/pro/[schritt]/page.tsx",
+      "route": "/onboarding/pro/[schritt]",
+      "kind": "page",
+      "bytes": 4919,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/onboarding/pro/gebiet/page.tsx",
+      "route": "/onboarding/pro/gebiet",
+      "kind": "page",
+      "bytes": 4022,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/onboarding/pro/page.tsx",
+      "route": "/onboarding/pro",
+      "kind": "page",
+      "bytes": 11267,
+      "actions": [],
+      "features": {
+        "textareas": 1
+      }
+    },
+    {
+      "file": "src/app/partner-invite/[token]/page.tsx",
+      "route": "/partner-invite/[token]",
+      "kind": "page",
+      "bytes": 1655,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/pro/calendar/page.tsx",
+      "route": "/pro/calendar",
+      "kind": "page",
+      "bytes": 3181,
+      "actions": [],
+      "features": {
+        "permission": 8
+      }
+    },
+    {
+      "file": "src/app/pro/error.tsx",
+      "route": "/pro",
+      "kind": "error",
+      "bytes": 733,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/pro/invoices/[id]/page.tsx",
+      "route": "/pro/invoices/[id]",
+      "kind": "page",
+      "bytes": 1827,
+      "actions": [
+        "cancelInvoiceAction"
+      ],
+      "features": {
+        "forms": 1,
+        "payments": 21,
+        "permission": 4
+      }
+    },
+    {
+      "file": "src/app/pro/jobs/[id]/page.tsx",
+      "route": "/pro/jobs/[id]",
+      "kind": "page",
+      "bytes": 20035,
+      "actions": [
+        "acceptContactRequestAction",
+        "assignJobContactAction",
+        "declineDispatchAction",
+        "markCompleteAction",
+        "markInProgressAction",
+        "sendMessageAction",
+        "sendSavedContactMessageAction",
+        "submitQuoteAction"
+      ],
+      "features": {
+        "forms": 9,
+        "selects": 3,
+        "textareas": 1,
+        "payments": 20,
+        "permission": 11
+      }
+    },
+    {
+      "file": "src/app/pro/leads/page.tsx",
+      "route": "/pro/leads",
+      "kind": "page",
+      "bytes": 5313,
+      "actions": [
+        "updateBrokerLeadStatusAction"
+      ],
+      "features": {
+        "forms": 1,
+        "selects": 1
+      }
+    },
+    {
+      "file": "src/app/pro/loading.tsx",
+      "route": "/pro",
+      "kind": "loading",
+      "bytes": 639,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/pro/messages/page.tsx",
+      "route": "/pro/messages",
+      "kind": "page",
+      "bytes": 7974,
+      "actions": [],
+      "features": {
+        "permission": 4
+      }
+    },
+    {
+      "file": "src/app/pro/onboarding/page.tsx",
+      "route": "/pro/onboarding",
+      "kind": "page",
+      "bytes": 10347,
+      "actions": [
+        "saveWizardStepAction"
+      ],
+      "features": {
+        "forms": 4,
+        "checks": 3,
+        "selects": 2,
+        "textareas": 1,
+        "permission": 1
+      }
+    },
+    {
+      "file": "src/app/pro/orders/page.tsx",
+      "route": "/pro/orders",
+      "kind": "page",
+      "bytes": 4291,
+      "actions": [
+        "nextAction"
+      ],
+      "features": {
+        "permission": 8
+      }
+    },
+    {
+      "file": "src/app/pro/page.tsx",
+      "route": "/pro",
+      "kind": "page",
+      "bytes": 10979,
+      "actions": [],
+      "features": {
+        "permission": 6
+      }
+    },
+    {
+      "file": "src/app/pro/plans/page.tsx",
+      "route": "/pro/plans",
+      "kind": "page",
+      "bytes": 3721,
+      "actions": [
+        "startPartnerPlanCheckoutAction"
+      ],
+      "features": {
+        "forms": 1,
+        "payments": 6,
+        "permission": 1
+      }
+    },
+    {
+      "file": "src/app/pro/profile/page.tsx",
+      "route": "/pro/profile",
+      "kind": "page",
+      "bytes": 16395,
+      "actions": [
+        "createStripeOnboardingAction",
+        "logoutAction",
+        "saveProviderProfileLifecycleAction",
+        "submitProviderVerificationAction"
+      ],
+      "features": {
+        "forms": 4,
+        "file_inputs": 2,
+        "checks": 11,
+        "selects": 1,
+        "textareas": 3,
+        "payments": 15,
+        "permission": 9
+      }
+    },
+    {
+      "file": "src/app/pro/team/page.tsx",
+      "route": "/pro/team",
+      "kind": "page",
+      "bytes": 5295,
+      "actions": [
+        "addProviderMemberAction",
+        "updateProviderMemberAction"
+      ],
+      "features": {
+        "forms": 2,
+        "checks": 3,
+        "permission": 11
+      }
+    },
+    {
+      "file": "src/app/register-owner/page.tsx",
+      "route": "/register-owner",
+      "kind": "page",
+      "bytes": 7659,
+      "actions": [],
+      "features": {
+        "forms": 1
+      }
+    },
+    {
+      "file": "src/app/register-pro/page.tsx",
+      "route": "/register-pro",
+      "kind": "page",
+      "bytes": 6544,
+      "actions": [],
+      "features": {
+        "forms": 1
+      }
+    },
+    {
+      "file": "src/app/register/page.tsx",
+      "route": "/register",
+      "kind": "page",
+      "bytes": 681,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/role/page.tsx",
+      "route": "/role",
+      "kind": "page",
+      "bytes": 3642,
+      "actions": [],
+      "features": {}
+    },
+    {
+      "file": "src/app/transfer/[token]/page.tsx",
+      "route": "/transfer/[token]",
+      "kind": "page",
+      "bytes": 2012,
+      "actions": [
+        "acceptHouseTransferAction"
+      ],
+      "features": {
+        "forms": 1
+      }
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "route": "/welcome",
+      "kind": "page",
+      "bytes": 3339,
+      "actions": [],
+      "features": {}
+    }
+  ]
+}
