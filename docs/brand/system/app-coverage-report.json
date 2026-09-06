@@ -1,0 +1,4036 @@
+{
+ "meta": {
+  "task": "EH-BRAND-APP-COVERAGE",
+  "issue": 47,
+  "branch": "feat/eh-brand-app-coverage",
+  "source_ref": "origin/design/einfachhausen-brand-atelier-20260906 @ 0efea86 (Inventar-Basis 703be04)",
+  "method": "Statisch: 58 page.tsx + 4 Zustandsdateien; relative + @/-Importe eine Ebene vertieft, AuthShell Tiefe 2. Keine Runtime-Tests, keine Anmeldung.",
+  "recipe_universe": [
+   "EHArticlePage",
+   "EHContactPage",
+   "EHHomePage",
+   "EHOwnerPage",
+   "EHPricingPage",
+   "EHProviderPage",
+   "EHServiceIndexPage",
+   "EHServicePage",
+   "EHAccessPage",
+   "EHAppointmentsPage",
+   "EHBillingPage",
+   "EHGlossaryEntryPage",
+   "EHJobDetailPage",
+   "EHMessageThreadPage",
+   "EHSensitiveServicePage",
+   "EHSettingsPage"
+  ],
+  "note": "Dateiname/generischer Slot zaehlt nicht als Fachmaske. Unklare Laufzeitfaelle unter unverified."
+ },
+ "routes": [
+  {
+   "route": "/admin/crm",
+   "file": "src/app/admin/crm/page.tsx",
+   "role": "admin",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/admin/crm/page.tsx :: Layout src/app/admin/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/admin/crm/page.tsx :: Aufruf addCrmLeadAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/admin/crm/page.tsx :: Aufruf syncBusinessResearchAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/admin/crm/page.tsx :: Aufruf updateCrmLeadAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)"
+   ],
+   "sections": [
+    "H1/H2: Leads &amp; Outreach CRM",
+    "H1/H2: {lead.company_name || lead.name}",
+    "H1/H2: Lead erfassen",
+    "Komponente: ArrowLeft",
+    "Komponente: Database",
+    "Komponente: Globe2",
+    "Komponente: Icon",
+    "Komponente: Link",
+    "Komponente: Mail",
+    "Komponente: MessageCircle",
+    "Komponente: Phone",
+    "Komponente: Record",
+    "Komponente: Search"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "q",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "type",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "status",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "category",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "followup",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "status",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "permission",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "sourceType",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "sourceDetail",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "nextFollowUpAt",
+     "type": "date"
+    },
+    {
+     "tag": "select",
+     "name": "channel",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "notes",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "leadType",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "sourceType",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "name",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "companyName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "category",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "postcode",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "locality",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "country",
+     "type": "hidden"
+    },
+    {
+     "tag": "input",
+     "name": "email",
+     "type": "email"
+    },
+    {
+     "tag": "input",
+     "name": "phone",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "website",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "profileUrl",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "sourceDetail",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "nextFollowUpAt",
+     "type": "date"
+    },
+    {
+     "tag": "select",
+     "name": "permission",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "notes",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "addCrmLeadAction",
+    "syncBusinessResearchAction",
+    "updateCrmLeadAction"
+   ],
+   "states": [
+    "Marken statisch: length === 0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Lead-Filter (q/type/status/category/followup)",
+    "Lead-Anlage/-Ablage (add/update + sourceDetail/nextFollowUpAt)",
+    "Follow-up-Datum"
+   ],
+   "missingPatterns": [
+    "Entscheidungs-Workflow mit Begründungspflicht",
+    "Vertrags-Lebenszyklus-Ansicht",
+    "Moderations-Queue mit Verlauf",
+    "Fall-Bearbeitung mit Verlauf",
+    "CRM-Flags/Lookup/Zustellstatus-Detail",
+    "Lead-Verlauf mit Flags",
+    "Lookup-Detail (Gegenstück in /admin/ops)",
+    "Zustellstatus je Lead"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/admin/login",
+   "file": "src/app/admin/login/page.tsx",
+   "role": "admin",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/admin/login/page.tsx :: Layout src/app/admin/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/admin/login/page.tsx :: Aufruf adminLoginAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/logo.tsx :: export Logo :: verschachtelt via Logo (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Plattform-Administration",
+    "Komponente: Link",
+    "Komponente: Logo",
+    "Komponente: Record"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "password",
+     "type": "password"
+    }
+   ],
+   "actions": [
+    "adminLoginAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHAccessPage"
+   ],
+   "belegte_Muster": [
+    "Admin-Anmeldung (adminLoginAction, 1 Formular)"
+   ],
+   "missingPatterns": [
+    "Sperr-/MFA-Zustände (ungeprüft)",
+    "Weiterleitung nach Anmeldung (next-Pfad ungeprüft)",
+    "Fehlerdarstellung bei Fehlanmeldung (statisch nicht belegt)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/admin/ops",
+   "file": "src/app/admin/ops/page.tsx",
+   "role": "admin",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/admin/ops/page.tsx :: Layout src/app/admin/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/admin/ops/page.tsx :: Aufruf requeueDeadNotificationAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/admin/ops/page.tsx :: Aufruf toggleFeatureFlagAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)"
+   ],
+   "sections": [
+    "H1/H2: Operations",
+    "H1/H2: Feature-Flags",
+    "H1/H2: Lookup",
+    "H1/H2: Zustellstatus (Outbox)",
+    "H1/H2: Matching-Trace",
+    "Komponente: Record"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "q",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "requeueDeadNotificationAction",
+    "toggleFeatureFlagAction"
+   ],
+   "states": [
+    "Marken statisch: length===0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Feature-Flag-Schaltung (toggleFeatureFlagAction)",
+    "Lookup-Suche (q)",
+    "Dead-Letter-Wiederzustellung (requeue...)",
+    "Outbox-Zustellstatus"
+   ],
+   "missingPatterns": [
+    "Entscheidungs-Workflow mit Begründungspflicht",
+    "Vertrags-Lebenszyklus-Ansicht",
+    "Moderations-Queue mit Verlauf",
+    "Fall-Bearbeitung mit Verlauf",
+    "CRM-Flags/Lookup/Zustellstatus-Detail",
+    "Flag-Verlauf",
+    "Zustell-Detail je Nachricht"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/admin",
+   "file": "src/app/admin/page.tsx",
+   "role": "admin",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/admin/page.tsx :: Layout src/app/admin/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/admin/page.tsx :: Aufruf adminLogoutAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/admin/page.tsx :: Aufruf adminReviewVerificationLifecycleAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/admin/page.tsx :: Aufruf adminUpdateClaimAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/admin/page.tsx :: Aufruf adminUpdatePartnerContractLifecycleAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/admin/page.tsx :: Aufruf moderateReviewAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)"
+   ],
+   "sections": [
+    "H1/H2: Einfach Hausen · Admin",
+    "H1/H2: Betriebsübersicht",
+    "H1/H2: Admin-Audit-Log",
+    "Komponente: BadgeCheck",
+    "Komponente: CalendarCheck",
+    "Komponente: Database",
+    "Komponente: FileWarning",
+    "Komponente: Handshake",
+    "Komponente: Link",
+    "Komponente: ListChecks",
+    "Komponente: LogOut",
+    "Komponente: Record",
+    "Komponente: ShieldCheck"
+   ],
+   "fields": [
+    {
+     "tag": "textarea",
+     "name": "adminNote",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "status",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "responseTarget",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "discountBps",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "insurance",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "qualification",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "contract",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "quality",
+     "type": "checkbox"
+    },
+    {
+     "tag": "textarea",
+     "name": "contractNotes",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "decision",
+     "type": "hidden"
+    },
+    {
+     "tag": "input",
+     "name": "decision",
+     "type": "hidden"
+    },
+    {
+     "tag": "input",
+     "name": "decision",
+     "type": "hidden"
+    },
+    {
+     "tag": "select",
+     "name": "status",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "adminNote",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "adminLogoutAction",
+    "adminReviewVerificationLifecycleAction",
+    "adminUpdateClaimAction",
+    "adminUpdatePartnerContractLifecycleAction",
+    "moderateReviewAction"
+   ],
+   "states": [
+    "Marken statisch: length===0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Verifizierungs-Lebenszyklus (adminReviewVerificationLifecycleAction + Status/Notiz)",
+    "Claim-Pflege (adminUpdateClaimAction)",
+    "Partnervertrags-Lebenszyklus",
+    "Bewertungs-Moderation (moderateReviewAction)",
+    "Audit-Log-Ansicht"
+   ],
+   "missingPatterns": [
+    "Entscheidungs-Workflow mit Begründungspflicht",
+    "Vertrags-Lebenszyklus-Ansicht",
+    "Moderations-Queue mit Verlauf",
+    "Fall-Bearbeitung mit Verlauf",
+    "CRM-Flags/Lookup/Zustellstatus-Detail",
+    "Begründungspflicht-Prüfung (Feld vorhanden, Pflichtregel ungeprüft)",
+    "Massenmoderation"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/anfrage/[id]",
+   "file": "src/app/anfrage/[id]/page.tsx",
+   "role": "public/gemischt (Berechtigung ungeprüft)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/anfrage/[id]/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via BackIcon,ChatBubbleIcon (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: {anfrage.titel}",
+    "Komponente: BackIcon",
+    "Komponente: ChatBubbleIcon"
+   ],
+   "fields": [
+    {
+     "tag": "textarea",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Marken statisch: length === 0; useState(\"\"; useState(false; useState<any>(null; useState<any[]>([]",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Angebots-Annahme (Supabase-Update angenommen/in_bearbeitung)",
+    "Angebots-Abgabe (Insert mit Text/Preis)",
+    "Annahme-Status (hasAccepted-Weiche)"
+   ],
+   "missingPatterns": [
+    "Anhang-Upload mit Fortschritt/Fehler (wo kein file-Input belegt)",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Schadenfall an bestehenden Vorgang binden",
+    "Erfolgs-/Fehlerquittung",
+    "Fallback-Werte bewertung:4.8/entfernung:12 statisch belegt — Herkunft ungeprüft",
+    "Rollentrennung Owner/Pro (proMode-State, Berechtigung ungeprüft)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/anfrage/neu",
+   "file": "src/app/anfrage/neu/page.tsx",
+   "role": "public/gemischt (Berechtigung ungeprüft)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/anfrage/neu/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/Stepper.tsx :: export  :: verschachtelt via Stepper (0 Formulare, keine benannten Felder)",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via CameraIcon,MicIcon (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Anfrage gesendet!",
+    "H1/H2: Worum geht es?",
+    "H1/H2: Beschreibe dein Vorhaben",
+    "H1/H2: Wo & wann?",
+    "H1/H2: Zusammenfassung",
+    "Komponente: ArrowRightWhite",
+    "Komponente: BackIcon",
+    "Komponente: CameraIcon",
+    "Komponente: CheckIcon",
+    "Komponente: MicIcon",
+    "Komponente: PinSmallIcon",
+    "Komponente: ReturnType",
+    "Komponente: Stepper"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": "date"
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Marken statisch: useState(\"\"; useState(1; useState(false; useState<string | null>(null; useState<string[]>([]",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Client-Wizard (Kategorie/Unterkategorie/Beschreibung/Termin, Stepper)",
+    "Weiter-Sperre ohne Auswahl (!cat||!sub)",
+    "Erfolgsansicht (Anfrage gesendet!)"
+   ],
+   "missingPatterns": [
+    "Anhang-Upload mit Fortschritt/Fehler (wo kein file-Input belegt)",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Schadenfall an bestehenden Vorgang binden",
+    "Erfolgs-/Fehlerquittung",
+    "Echte Foto-Uploads (nur Platzhalter `Foto N` belegt)",
+    "Backend-Anbindung des Submits (ungeprüft)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/anfragen-pro",
+   "file": "src/app/anfragen-pro/page.tsx",
+   "role": "public/gemischt (Berechtigung ungeprüft)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/anfragen-pro/page.tsx :: Layout src/app/anfragen-pro/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/AuthContext.tsx :: export AuthProvider,useAuth :: verschachtelt via useAuth (0 Formulare, keine benannten Felder)",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via BackIcon,PinSmallIcon (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Offene Anfragen",
+    "Komponente: ArrowRightThin",
+    "Komponente: BackIcon",
+    "Komponente: PinSmallIcon"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Marken statisch: length === 0; useState(\"Alle\"; useState<any[]>([]",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Offene-Anfragen-Liste mit Gebiets-Filter (useState)"
+   ],
+   "missingPatterns": [
+    "Anhang-Upload mit Fortschritt/Fehler (wo kein file-Input belegt)",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Schadenfall an bestehenden Vorgang binden",
+    "Erfolgs-/Fehlerquittung",
+    "Filter-UI über Alle-Standard hinaus (ungeprüft)",
+    "Annahme-Aktion aus Liste"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/calendar",
+   "file": "src/app/app/calendar/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/calendar\" title=\"Kalender\" subtitle=\"Termine rund )",
+   "evidence": [
+    "src/app/app/calendar/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/calendar\" title=\"Kalender\" subtitle=\"Termine rund um dein Zuhause\" :: Rollen-Shell belegt",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell,SectionTitle (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Kalender",
+    "Komponente: AppShell",
+    "Komponente: CalendarDays",
+    "Komponente: Link",
+    "Komponente: MessageCircle",
+    "Komponente: PastAppointments",
+    "Komponente: SectionTitle"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Marken statisch: length===0",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [
+    "EHAppointmentsPage"
+   ],
+   "belegte_Muster": [
+    "Kalender-Ansicht mit .map-Liste"
+   ],
+   "missingPatterns": [
+    "Zeitraumsteuerung",
+    "Termin-Detail mit Statuswechsel",
+    "Monatsübersicht (Rezept sieht Tagesagenda vor)",
+    "Zeitraumsteuerung",
+    "Termin-Detail mit Statuswechsel",
+    "Agenda-Zeit/Ort-Darstellung (Rezept-Anspruch ungeprüft)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/consultation",
+   "file": "src/app/app/consultation/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app\" title=\"Beratung\" subtitle=\"Erst einen Fachmann fr)",
+   "evidence": [
+    "src/app/app/consultation/page.tsx :: <AppShell role=\"homeowner\" active=\"/app\" title=\"Beratung\" subtitle=\"Erst einen Fachmann fragen – ohne Auftrag\" :: Rollen-Shell belegt",
+    "src/app/app/consultation/page.tsx :: Aufruf createConsultationAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/homeowner/hausmeister-assistant.tsx :: export HausmeisterAssistant :: verschachtelt via HausmeisterAssistant (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Frag erst einen Fachmann.",
+    "Komponente: AppShell",
+    "Komponente: Camera",
+    "Komponente: HausmeisterAssistant",
+    "Komponente: Link",
+    "Komponente: MessageCircle",
+    "Komponente: Record",
+    "Komponente: ShieldCheck",
+    "Komponente: UserRound"
+   ],
+   "fields": [
+    {
+     "tag": "textarea",
+     "name": "description",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "photo",
+     "type": "file"
+    }
+   ],
+   "actions": [
+    "createConsultationAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Beratungs-Anfrage (createConsultationAction, description)",
+    "Foto-Anhang (photo file-Input, Fortschritt/Fehler ungeprüft)",
+    "HausmeisterAssistant-Einbettung"
+   ],
+   "missingPatterns": [
+    "Anhang-Upload mit Fortschritt/Fehler (wo kein file-Input belegt)",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Schadenfall an bestehenden Vorgang binden",
+    "Erfolgs-/Fehlerquittung",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Erfolgsquittung"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/documents/[jobId]/receipt",
+   "file": "src/app/app/documents/[jobId]/receipt/page.tsx",
+   "role": "homeowner",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/app/documents/[jobId]/receipt/page.tsx :: Layout src/app/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/app/documents/[jobId]/receipt/page.tsx :: notFound() :: Bedingung: !p",
+    "src/components/logo.tsx :: export Logo :: verschachtelt via Logo (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Zahlungsbeleg",
+    "Komponente: Logo"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Zahlungsbeleg nur für status=paid (SQL + notFound)",
+    "Belegnummer/Logo-Darstellung"
+   ],
+   "missingPatterns": [
+    "Upload-Dialog mit Fortschritt/Fehler",
+    "Dokumentdetail-Ansicht",
+    "Rechnungspositionen-Aufschlüsselung",
+    "Checkout-/Zahlungsstatus-Anzeige",
+    "Storno-Ablauf",
+    "Druckansicht",
+    "Druck-CSS (kein @media print belegt)",
+    "Storno-/Rückerstattungs-Hinweis"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/documents",
+   "file": "src/app/app/documents/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/documents\")",
+   "evidence": [
+    "src/app/app/documents/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/documents\" :: Rollen-Shell belegt",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Dokumente & Rechnungen",
+    "Komponente: AppShell",
+    "Komponente: FileText",
+    "Komponente: Link",
+    "Komponente: MessageCircle",
+    "Komponente: ReceiptText",
+    "Komponente: ShieldCheck"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Marken statisch: length===0",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Rechnungs-/Beleg-/Zahlungs-Listen mit Links (invoices/uploaded/payments)",
+    "Leerzustand mit Hausmeister-CTA"
+   ],
+   "missingPatterns": [
+    "Upload-Dialog mit Fortschritt/Fehler",
+    "Dokumentdetail-Ansicht",
+    "Rechnungspositionen-Aufschlüsselung",
+    "Checkout-/Zahlungsstatus-Anzeige",
+    "Storno-Ablauf",
+    "Druckansicht",
+    "Upload-Dialog mit Fortschritt/Fehler (kein form/file-Input belegt; Inventar-uploads:3 statisch nicht bestätigt → ungeprüft)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/emergency",
+   "file": "src/app/app/emergency/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app\" title=\"Notfall\" subtitle=\"Schnell verfügbare Hilf)",
+   "evidence": [
+    "src/app/app/emergency/page.tsx :: <AppShell role=\"homeowner\" active=\"/app\" title=\"Notfall\" subtitle=\"Schnell verfügbare Hilfe in deiner Nähe\" :: Rollen-Shell belegt",
+    "src/app/app/emergency/page.tsx :: Aufruf createEmergencyAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Was ist passiert?",
+    "Komponente: AlertTriangle",
+    "Komponente: AppShell",
+    "Komponente: Clock3",
+    "Komponente: MapPin",
+    "Komponente: Record",
+    "Komponente: ShieldCheck"
+   ],
+   "fields": [
+    {
+     "tag": "select",
+     "name": "emergencyType",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "description",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "createEmergencyAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHSensitiveServicePage"
+   ],
+   "belegte_Muster": [
+    "Notfall-Anfrage (createEmergencyAction, emergencyType + description)"
+   ],
+   "missingPatterns": [
+    "Anhang-Upload mit Fortschritt/Fehler (wo kein file-Input belegt)",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Schadenfall an bestehenden Vorgang binden",
+    "Erfolgs-/Fehlerquittung",
+    "Anhang-Upload",
+    "Helfer-Suchergebnis als nächster Schritt (ungeprüft)",
+    "Erfolgsquittung",
+    "An Vorgang binden"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/hausmeister",
+   "file": "src/app/app/hausmeister/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app\" title=\"Hausmeister\" subtitle=\"Fragen klären oder )",
+   "evidence": [
+    "src/app/app/hausmeister/page.tsx :: <AppShell role=\"homeowner\" active=\"/app\" title=\"Hausmeister\" subtitle=\"Fragen klären oder etwas organisieren\" :: Rollen-Shell belegt",
+    "src/app/app/hausmeister/page.tsx :: Aufruf startHausmeisterRouteAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/hausmeister/page.tsx :: role==='assistant' :: Auth-Hinweis (Rollenmodell ungeprüft)",
+    "src/app/app/hausmeister/page.tsx :: role==='user' :: Auth-Hinweis (Rollenmodell ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/homeowner/homeowner-hausmeister-composer.tsx :: export HomeownerHausmeisterComposer :: verschachtelt via HomeownerHausmeisterComposer (1 Formulare, description,photo)"
+   ],
+   "sections": [
+    "H1/H2: Hallo {user.first_name}.",
+    "Komponente: AppShell",
+    "Komponente: ChevronRight",
+    "Komponente: ClipboardCheck",
+    "Komponente: HelpCircle",
+    "Komponente: HomeownerHausmeisterComposer",
+    "Komponente: MessageCircle",
+    "Komponente: Record",
+    "Komponente: Sparkles",
+    "Komponente: Wrench"
+   ],
+   "fields": [],
+   "actions": [
+    "startHausmeisterRouteAction"
+   ],
+   "states": [
+    "Marken statisch: length===0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Composer (HomeownerHausmeisterComposer)",
+    "Routen-Start (startHausmeisterRouteAction, 2 Formulare)",
+    "Verlaufsliste mit Leerzustand"
+   ],
+   "missingPatterns": [
+    "Anhang-Upload mit Fortschritt/Fehler (wo kein file-Input belegt)",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Schadenfall an bestehenden Vorgang binden",
+    "Erfolgs-/Fehlerquittung",
+    "Antwort-/Auswahlzustände",
+    "Beratung/Kontakt/Auftrag-Weiche im Composer (ungeprüft)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/home/history",
+   "file": "src/app/app/home/history/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/home\")",
+   "evidence": [
+    "src/app/app/home/history/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/home\" :: Rollen-Shell belegt",
+    "src/app/app/home/history/page.tsx :: Aufruf addHouseHistoryAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/home/history/page.tsx :: Aufruf createHouseTransferAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell,SectionTitle (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Was wurde wann am Haus gemacht?",
+    "Komponente: AppShell",
+    "Komponente: ChevronRight",
+    "Komponente: History",
+    "Komponente: Home",
+    "Komponente: ImageIcon",
+    "Komponente: Link",
+    "Komponente: Link2",
+    "Komponente: Mail",
+    "Komponente: Record",
+    "Komponente: SectionTitle"
+   ],
+   "fields": [
+    {
+     "tag": "select",
+     "name": "category",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "performedAt",
+     "type": "date"
+    },
+    {
+     "tag": "input",
+     "name": "title",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "companyName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "cost",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "contactName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "contactEmail",
+     "type": "email"
+    },
+    {
+     "tag": "input",
+     "name": "contactPhone",
+     "type": "tel"
+    },
+    {
+     "tag": "input",
+     "name": "guaranteeUntil",
+     "type": "date"
+    },
+    {
+     "tag": "input",
+     "name": "maintenanceDue",
+     "type": "date"
+    },
+    {
+     "tag": "textarea",
+     "name": "notes",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "beforePhoto",
+     "type": "file"
+    },
+    {
+     "tag": "input",
+     "name": "afterPhoto",
+     "type": "file"
+    },
+    {
+     "tag": "input",
+     "name": "document",
+     "type": "file"
+    },
+    {
+     "tag": "input",
+     "name": "documentTitle",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "targetEmail",
+     "type": "email"
+    }
+   ],
+   "actions": [
+    "addHouseHistoryAction",
+    "createHouseTransferAction"
+   ],
+   "states": [
+    "Marken statisch: length===0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Historienliste mit Kosten/Garantie/Wartung/Dokumenten (SQL-Join + Dateien-Links)",
+    "Historieneintrag-Anlage (addHouseHistoryAction)",
+    "Transfer-Anstoß (createHouseTransferAction)",
+    "Datei-Inputs (3, Fortschritt ungeprüft)",
+    "Partner-Verknüpfungsstatus"
+   ],
+   "missingPatterns": [
+    "Bewertungs-/Maklertreffer-Darstellung",
+    "Freigabe-/Widerruf-Quittung",
+    "Übergabelink-Lebenszyklus",
+    "Eigentümerwechsel-Prozess",
+    "Wartung-Erledigen-Button aus Historie",
+    "Druckansicht der Historie"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/home",
+   "file": "src/app/app/home/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/home\" title=\"Mein Haus\" subtitle=\"Deine digitale H)",
+   "evidence": [
+    "src/app/app/home/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/home\" title=\"Mein Haus\" subtitle=\"Deine digitale Hausakte\" :: Rollen-Shell belegt",
+    "src/app/app/home/page.tsx :: Aufruf addHouseAssetAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/home/page.tsx :: Aufruf completeMaintenanceTaskAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/home/page.tsx :: Aufruf saveHouseProfileAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell,SectionTitle (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Mein Haus",
+    "Komponente: AppShell",
+    "Komponente: Building2",
+    "Komponente: CalendarDays",
+    "Komponente: CheckCircle2",
+    "Komponente: ChevronRight",
+    "Komponente: FileText",
+    "Komponente: History",
+    "Komponente: House",
+    "Komponente: Link",
+    "Komponente: NotebookPen"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "address",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "postcode",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "houseType",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "buildYear",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "livingArea",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "plotArea",
+     "type": "number"
+    },
+    {
+     "tag": "select",
+     "name": "kind",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "name",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "installedYear",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "details",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "addHouseAssetAction",
+    "completeMaintenanceTaskAction",
+    "saveHouseProfileAction"
+   ],
+   "states": [
+    "Marken statisch: length===0",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHOwnerPage"
+   ],
+   "belegte_Muster": [
+    "Hausprofil-Formular (address/postcode/houseType/buildYear/livingArea/plotArea + saveHouseProfileAction)",
+    "Technik-Erfassung (kind/name/installedYear + addHouseAssetAction)",
+    "Wartungs-Abschluss (completeMaintenanceTaskAction)"
+   ],
+   "missingPatterns": [
+    "Hausprofil-Bearbeitung mit Validierung",
+    "Technik-Hinzufügen",
+    "Wartung-Erledigen mit Nachweis",
+    "Jahresplan-Ansicht",
+    "Historie mit Kosten/Garantie/Dateien",
+    "Validierungs-Fehlermeldungen (statisch nicht belegt)",
+    "Jahresplan-Verknüpfung",
+    "Kosten-/Garantie-Erfassung am Eintrag"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/home/passport",
+   "file": "src/app/app/home/passport/page.tsx",
+   "role": "homeowner",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/app/home/passport/page.tsx :: Layout src/app/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/logo.tsx :: export Logo :: verschachtelt via Logo (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Deine Hausakte ist noch nicht eingerichtet.",
+    "H1/H2: {property.address||'Mein Zuhause'}",
+    "H1/H2: Technik & Ausstattung",
+    "H1/H2: Historie",
+    "Komponente: House",
+    "Komponente: Link",
+    "Komponente: Logo"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Rollennachweis requireUser(hauptwohnung→homeowner)",
+    "Leerzustand mit Einrichtungs-CTA",
+    "Technik- + Historie mit Kosten/Garantie",
+    "Druck-Hinweis (print-hint, CSS-Regel ungeprüft)"
+   ],
+   "missingPatterns": [
+    "Druck-CSS mit Seitenumbrüchen",
+    "Druck-Hierarchie mit Original-Logo",
+    "Fachhinweise für Ausdruck",
+    "Druck-CSS mit Seitenumbrüchen (statisch nicht belegt)",
+    "Freigabe-/Übergabe-Hinweis im Pass"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/home/sale",
+   "file": "src/app/app/home/sale/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/home\")",
+   "evidence": [
+    "src/app/app/home/sale/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/home\" :: Rollen-Shell belegt",
+    "src/app/app/home/sale/page.tsx :: Aufruf approveBrokerShareAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/home/sale/page.tsx :: Aufruf requestPropertyValuationAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/home/sale/page.tsx :: Aufruf revokeBrokerShareAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/home/sale/page.tsx :: Aufruf startSaleProcessAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/home/sale/page.tsx :: Aufruf storeExistingValuationAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell,SectionTitle (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Bewerten, verkaufen, passende Makler finden.",
+    "Komponente: AppShell",
+    "Komponente: Building2",
+    "Komponente: CheckCircle2",
+    "Komponente: ChevronRight",
+    "Komponente: KeyRound",
+    "Komponente: Link",
+    "Komponente: LockKeyhole",
+    "Komponente: MessageCircle",
+    "Komponente: RefreshCw",
+    "Komponente: SectionTitle"
+   ],
+   "fields": [
+    {
+     "tag": "select",
+     "name": "valuationType",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "notes",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "estimatedMin",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "estimatedMax",
+     "type": "number"
+    },
+    {
+     "tag": "select",
+     "name": "valuationType",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "notes",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "confirmShare",
+     "type": "checkbox"
+    }
+   ],
+   "actions": [
+    "approveBrokerShareAction",
+    "requestPropertyValuationAction",
+    "revokeBrokerShareAction",
+    "startSaleProcessAction",
+    "storeExistingValuationAction"
+   ],
+   "states": [
+    "Marken statisch: length === 0",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHSensitiveServicePage"
+   ],
+   "belegte_Muster": [
+    "Bewertung anfragen/speichern (requestPropertyValuationAction/storeExistingValuationAction, Beträge/Typ/Notizen)",
+    "Maklersuche-Anstoß (Button belegt, Trefferdarstellung ungeprüft)",
+    "Freigabe erteilen/widerrufen (approveBrokerShareAction/revokeBrokerShareAction)"
+   ],
+   "missingPatterns": [
+    "Bewertungs-/Maklertreffer-Darstellung",
+    "Freigabe-/Widerruf-Quittung",
+    "Übergabelink-Lebenszyklus",
+    "Eigentümerwechsel-Prozess",
+    "Maklertreffer-Darstellung",
+    "Freigabe-Quittung mit Verlauf",
+    "Übergabelink-Lebenszyklus",
+    "Eigentümerwechsel-Prozess"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/insurance",
+   "file": "src/app/app/insurance/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app\" title=\"Versicherungsunterstützung\" subtitle=\"Scha)",
+   "evidence": [
+    "src/app/app/insurance/page.tsx :: <AppShell role=\"homeowner\" active=\"/app\" title=\"Versicherungsunterstützung\" subtitle=\"Schadenfall sauber vorbe :: Rollen-Shell belegt",
+    "src/app/app/insurance/page.tsx :: Aufruf createInsuranceSupportAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/homeowner/hausmeister-assistant.tsx :: export HausmeisterAssistant :: verschachtelt via HausmeisterAssistant (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Unterstützung bei einem Schadenfall.",
+    "Komponente: AppShell",
+    "Komponente: FileWarning",
+    "Komponente: HausmeisterAssistant",
+    "Komponente: Link",
+    "Komponente: Record",
+    "Komponente: ShieldCheck"
+   ],
+   "fields": [
+    {
+     "tag": "textarea",
+     "name": "description",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "createInsuranceSupportAction"
+   ],
+   "states": [
+    "Marken statisch: length === 0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHSensitiveServicePage"
+   ],
+   "belegte_Muster": [
+    "Schadenfall-Anfrage (createInsuranceSupportAction, description)",
+    "HausmeisterAssistant-Einbettung"
+   ],
+   "missingPatterns": [
+    "Anhang-Upload mit Fortschritt/Fehler (wo kein file-Input belegt)",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Schadenfall an bestehenden Vorgang binden",
+    "Erfolgs-/Fehlerquittung",
+    "Anhang-Upload",
+    "Vorgangsbindung",
+    "Erfolgsquittung",
+    "Versicherungs-Meldestatus"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/invoices/[id]",
+   "file": "src/app/app/invoices/[id]/page.tsx",
+   "role": "homeowner",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/app/invoices/[id]/page.tsx :: Layout src/app/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/app/invoices/[id]/page.tsx :: Aufruf createInvoiceCheckoutAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/invoices/[id]/page.tsx :: notFound() :: Bedingung: !invoice||invoice.homeowner_id!==user.id",
+    "src/components/invoice-view.tsx :: export InvoiceView :: verschachtelt via InvoiceView (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: CreditCard",
+    "Komponente: FileText",
+    "Komponente: InvoiceView",
+    "Komponente: Link",
+    "Komponente: Record"
+   ],
+   "fields": [],
+   "actions": [
+    "createInvoiceCheckoutAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHBillingPage"
+   ],
+   "belegte_Muster": [
+    "Rechnungsansicht (InvoiceView, verschachtelt)",
+    "Checkout-Anstoß (createInvoiceCheckoutAction)"
+   ],
+   "missingPatterns": [
+    "Upload-Dialog mit Fortschritt/Fehler",
+    "Dokumentdetail-Ansicht",
+    "Rechnungspositionen-Aufschlüsselung",
+    "Checkout-/Zahlungsstatus-Anzeige",
+    "Storno-Ablauf",
+    "Druckansicht",
+    "Positionen-Aufschlüsselung (InvoiceView-Inhalt ungeprüft)",
+    "Zahlungsstatus-Anzeige nach Checkout",
+    "Storno-Ablauf",
+    "Druckansicht"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/jobs/[id]",
+   "file": "src/app/app/jobs/[id]/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/jobs\" title=\"Ansprechpartner\" subtitle={job.catego)",
+   "evidence": [
+    "src/app/app/jobs/[id]/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/jobs\" title=\"Ansprechpartner\" subtitle={job.category} :: Rollen-Shell belegt",
+    "src/app/app/jobs/[id]/page.tsx :: Aufruf acceptQuoteAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/jobs/[id]/page.tsx :: Aufruf cancelJobAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/jobs/[id]/page.tsx :: Aufruf createCheckoutAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/jobs/[id]/page.tsx :: Aufruf createClaimAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/jobs/[id]/page.tsx :: Aufruf reviewAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/jobs/[id]/page.tsx :: Aufruf sendMessageAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/jobs/[id]/page.tsx :: Aufruf sendSavedContactMessageAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/jobs/[id]/page.tsx :: Aufruf turnContactIntoServiceAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/jobs/[id]/page.tsx :: notFound() :: Bedingung: !job",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell,SectionTitle (0 Formulare, keine benannten Felder)",
+    "src/components/job-media.tsx :: export JobMedia :: verschachtelt via JobMedia (0 Formulare, keine benannten Felder)",
+    "src/components/ui/submit-button.tsx :: export SubmitButton :: verschachtelt via SubmitButton (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: {job.title.replace(/^Ansprechpartner:\\s*/,'')}",
+    "H1/H2: {job.title}",
+    "Komponente: AlertTriangle",
+    "Komponente: AppShell",
+    "Komponente: CalendarDays",
+    "Komponente: CheckCircle2",
+    "Komponente: Clock3",
+    "Komponente: JobMedia",
+    "Komponente: Link",
+    "Komponente: MapPin",
+    "Komponente: MessageCircle",
+    "Komponente: MessageSquare"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "body",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "body",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "description",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "rating",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "comment",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "acceptQuoteAction",
+    "cancelJobAction",
+    "createCheckoutAction",
+    "createClaimAction",
+    "reviewAction",
+    "sendMessageAction",
+    "sendSavedContactMessageAction",
+    "turnContactIntoServiceAction"
+   ],
+   "states": [
+    "Marken statisch: length===0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHJobDetailPage"
+   ],
+   "belegte_Muster": [
+    "Angebots-Annahme Owner-seitig (acceptQuoteAction)",
+    "Storno Owner-seitig (cancelJobAction)",
+    "Reklamation einreichen (createClaimAction + description)",
+    "Bewertung einreichen (rating/comment + reviewAction)",
+    "Checkout-Anstoß (createCheckoutAction)",
+    "Nachrichten (sendMessageAction/sendSavedContactMessageAction)",
+    "Kontakt-zu-Auftrag (turnContactIntoServiceAction)",
+    "notFound bei !job"
+   ],
+   "missingPatterns": [
+    "Angebot-Schreiben je Rolle (Gegenrolle prüfen)",
+    "Disposition/Zuweisung (Owner-seitig)",
+    "Start/Abschluss-Bestätigung je Rolle",
+    "Storno-Variante je Rolle",
+    "Reklamations-Verlauf nach Einreichung",
+    "Disposition/Zuweisung Owner-seitig (nur Pro-Route)",
+    "Start-/Abschluss-Bestätigung Owner-seitig",
+    "Reklamations-Verlauf nach Einreichung"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/jobs",
+   "file": "src/app/app/jobs/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/jobs\" title=\"Meine Aufträge\" subtitle=\"Alles, was )",
+   "evidence": [
+    "src/app/app/jobs/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/jobs\" title=\"Meine Aufträge\" subtitle=\"Alles, was geplant oder in Arbe :: Rollen-Shell belegt",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Meine Aufträge",
+    "Komponente: AppShell",
+    "Komponente: CalendarDays",
+    "Komponente: ChevronRight",
+    "Komponente: Link",
+    "Komponente: MapPin",
+    "Komponente: MessageCircle",
+    "Komponente: Record",
+    "Komponente: Wrench"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Marken statisch: length===0; searchParams",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Auftragsliste mit Leerzustand",
+    "Suchparameter-Anbindung"
+   ],
+   "missingPatterns": [
+    "Angebot-Schreiben je Rolle (Gegenrolle prüfen)",
+    "Disposition/Zuweisung (Owner-seitig)",
+    "Start/Abschluss-Bestätigung je Rolle",
+    "Storno-Variante je Rolle",
+    "Reklamations-Verlauf nach Einreichung",
+    "Filter-Steuerung (Parameter vorhanden, UI ungeprüft)",
+    "Status-Filter"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/messages",
+   "file": "src/app/app/messages/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/messages\" title=\"Ansprechpartner\" subtitle=\"Dein p)",
+   "evidence": [
+    "src/app/app/messages/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/messages\" title=\"Ansprechpartner\" subtitle=\"Dein persönliches Netzwerk :: Rollen-Shell belegt",
+    "src/app/app/messages/page.tsx :: Aufruf updateContactCategoryAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/messages/thread-client.tsx :: export OwnerMessageComposer :: verschachtelt via OwnerMessageComposer (1 Formulare, 1 Felder (Detail ungeprüft))",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell,SectionTitle (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Meine Ansprechpartner",
+    "Komponente: AppShell",
+    "Komponente: ChevronDown",
+    "Komponente: Layers3",
+    "Komponente: Link",
+    "Komponente: MessageCircle",
+    "Komponente: MessageSquare",
+    "Komponente: OwnerMessageComposer",
+    "Komponente: Phone",
+    "Komponente: Record",
+    "Komponente: SectionTitle"
+   ],
+   "fields": [
+    {
+     "tag": "select",
+     "name": "category",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "customCategory",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "updateContactCategoryAction"
+   ],
+   "states": [
+    "Marken statisch: length === 0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Kontaktkategorie-Verwaltung (category/customCategory + updateContactCategoryAction)",
+    "Composer mit Kontaktbezug (OwnerMessageComposer: contactUserId/peerName/unreadCount)",
+    "Kontaktliste mit .map + Leerzustand"
+   ],
+   "missingPatterns": [
+    "Gesprächsliste mit ungelesen/gelesen",
+    "Thread-Verlaufsansicht",
+    "Pagination/Suche im Verlauf",
+    "Partnerprofil-Vollständigkeit je Rolle",
+    "Thread-Verlaufsansicht (kein Nachrichtenverlauf belegt)",
+    "Pagination/Suche im Verlauf",
+    "Lesebestätigungs-Anzeige (nur unreadCount-Prop)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/more",
+   "file": "src/app/app/more/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/more\" title=\"Mehr\" subtitle=\"Alles Weitere rund um)",
+   "evidence": [
+    "src/app/app/more/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/more\" title=\"Mehr\" subtitle=\"Alles Weitere rund um dein Zuhause\" :: Rollen-Shell belegt",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Mehr",
+    "Komponente: AppShell",
+    "Komponente: ChevronRight",
+    "Komponente: Icon",
+    "Komponente: Link",
+    "Komponente: Settings"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Link-Hub (Mehr-Bereich)"
+   ],
+   "missingPatterns": [
+    "Rollen-Shell/Navigation als EH-Komposition fehlt (nur AppShell-Produktcode, kein Rezept)",
+    "Betrieb-/Verifizierung-/Vertrag-Prozess fehlt",
+    "Fachmaske (reine Navigation)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/onboarding",
+   "file": "src/app/app/onboarding/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app\" title=\"Einrichtung\" subtitle={`Schritt ${state.st)",
+   "evidence": [
+    "src/app/app/onboarding/page.tsx :: <AppShell role=\"homeowner\" active=\"/app\" title=\"Einrichtung\" subtitle={`Schritt ${state.stepIndex} von ${state :: Rollen-Shell belegt",
+    "src/app/app/onboarding/page.tsx :: Aufruf saveOnboardingContactAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/onboarding/page.tsx :: Aufruf saveOnboardingInterestsAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/onboarding/page.tsx :: Aufruf saveOnboardingProfileAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Dein Zuhause",
+    "H1/H2: Worum geht es bei deinem Haus?",
+    "H1/H2: Wie dürfen wir dich erreichen?",
+    "Komponente: AppShell"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "address",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "postcode",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "interest",
+     "type": "checkbox"
+    },
+    {
+     "tag": "select",
+     "name": "preferredChannel",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "saveOnboardingContactAction",
+    "saveOnboardingInterestsAction",
+    "saveOnboardingProfileAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "3-Schritt-Ablauf (Zuhause/Interessen/Kontakt + Save-Actions)",
+    "Weiter/Überspringen/Fertig"
+   ],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Zurück-Navigation",
+    "Schritt-Fehlerdarstellung"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app",
+   "file": "src/app/app/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app\" title=\"Mein Zuhause\" subtitle=\"Dein Haus-Copilot\")",
+   "evidence": [
+    "src/app/app/page.tsx :: <AppShell role=\"homeowner\" active=\"/app\" title=\"Mein Zuhause\" subtitle=\"Dein Haus-Copilot\" :: Rollen-Shell belegt",
+    "src/components/homeowner/homeowner-hausmeister-composer.tsx :: export HomeownerHausmeisterComposer :: verschachtelt via HomeownerHausmeisterComposer (1 Formulare, description,photo)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via ArrowRightThin,BookThinIcon (0 Formulare, keine benannten Felder)",
+    "src/app/app/page.tsx :: Geschwister loading.tsx,error.tsx :: Lade-/Fehlerzustand belegt"
+   ],
+   "sections": [
+    "H1/H2: Mein Zuhause",
+    "H1/H2: Hallo {user.first_name}.",
+    "H1/H2: Frag einfachhausen",
+    "Komponente: AppShell",
+    "Komponente: ArrowRightThin",
+    "Komponente: BookThinIcon",
+    "Komponente: CalendarCheckThinIcon",
+    "Komponente: ChatRoundIcon",
+    "Komponente: HomeownerHausmeisterComposer",
+    "Komponente: Link",
+    "Komponente: NotfallSirenIcon",
+    "Komponente: PersonSmallIcon",
+    "Komponente: RobotIcon"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Lade-/Fehlerzustand je Geschwisterdatei (loading.tsx,error.tsx)",
+    "Marken statisch: length === 0",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Dashboard mit Composer-Einstieg (HomeownerHausmeisterComposer)",
+    "Bereichs-Links"
+   ],
+   "missingPatterns": [
+    "Rollen-Shell/Navigation als EH-Komposition fehlt (nur AppShell-Produktcode, kein Rezept)",
+    "Betrieb-/Verifizierung-/Vertrag-Prozess fehlt",
+    "Status-Übersicht als Rezept (keine EH-Komposition)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/partners/[id]",
+   "file": "src/app/app/partners/[id]/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/jobs\" title=\"Partnerprofil\" subtitle=\"Geprüfter Ei)",
+   "evidence": [
+    "src/app/app/partners/[id]/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/jobs\" title=\"Partnerprofil\" subtitle=\"Geprüfter Einfach-Hausen-Partner :: Rollen-Shell belegt",
+    "src/app/app/partners/[id]/page.tsx :: Aufruf reportReviewAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/partners/[id]/page.tsx :: notFound() :: Bedingung: !providerId",
+    "src/app/app/partners/[id]/page.tsx :: notFound() :: Bedingung: !provider",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: {provider.business_name}",
+    "Komponente: AppShell",
+    "Komponente: ArrowLeft",
+    "Komponente: BadgeCheck",
+    "Komponente: ChevronRight",
+    "Komponente: Link",
+    "Komponente: MapPin",
+    "Komponente: Record",
+    "Komponente: ShieldCheck",
+    "Komponente: Star",
+    "Komponente: Wrench"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "reason",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "reportReviewAction"
+   ],
+   "states": [
+    "Marken statisch: length===0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Profildarstellung (business_name, Badges, Kategorie)",
+    "Bewertung-melden (reason + reportReviewAction)",
+    "notFound bei fehlendem Provider"
+   ],
+   "missingPatterns": [
+    "Gesprächsliste mit ungelesen/gelesen",
+    "Thread-Verlaufsansicht",
+    "Pagination/Suche im Verlauf",
+    "Partnerprofil-Vollständigkeit je Rolle",
+    "Leistungs-/Preisdetail des Partners",
+    "Direkt-Kontakt aus Profil (Weiche fehlt)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/partners",
+   "file": "src/app/app/partners/page.tsx",
+   "role": "homeowner",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/app/partners/page.tsx :: Layout src/app/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/app/partners/page.tsx :: redirect() :: Bedingung: unbedingt"
+   ],
+   "sections": [],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Weiterleitung nach /app/messages (unbedingt)"
+   ],
+   "missingPatterns": [
+    "Gesprächsliste mit ungelesen/gelesen",
+    "Thread-Verlaufsansicht",
+    "Pagination/Suche im Verlauf",
+    "Partnerprofil-Vollständigkeit je Rolle",
+    "Weiterleitungs-Bedingung fehlt (immer aktiv)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/plans",
+   "file": "src/app/app/plans/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/plans\")",
+   "evidence": [
+    "src/app/app/plans/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/plans\" :: Rollen-Shell belegt",
+    "src/app/app/plans/page.tsx :: Aufruf purchasePackageAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/plans/page.tsx :: Aufruf startMembershipCheckoutAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell,SectionTitle (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Unsere Pakete",
+    "H1/H2: {p.title}",
+    "Komponente: AppShell",
+    "Komponente: CheckCircle2",
+    "Komponente: Crown",
+    "Komponente: Leaf",
+    "Komponente: Record",
+    "Komponente: SectionTitle",
+    "Komponente: ShieldCheck",
+    "Komponente: Sparkles",
+    "Komponente: Wrench"
+   ],
+   "fields": [],
+   "actions": [
+    "purchasePackageAction",
+    "startMembershipCheckoutAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHPricingPage"
+   ],
+   "belegte_Muster": [
+    "Tarifstatus-Anzeige (current-plan aktiv)",
+    "Pilot-Vorteil-Hinweis",
+    "Mitgliedschafts- + Paketkauf (Checkout-Actions)",
+    "Bestellübersicht (Meine Pakete)"
+   ],
+   "missingPatterns": [
+    "Tarifstatus-Anzeige und Wechsel-Ablauf",
+    "Zahlungsbestätigung/nicht-verfügbar-Zustand",
+    "Nachweis-Upload mit Prüfstatus",
+    "Partnervertrags-Ansicht",
+    "Stripe-Onboarding-/Auszahlungsstatus",
+    "Wechsel-/Kündigungs-Ablauf",
+    "Zahlungsbestätigungs-Ansicht (Checkout-Ziel ungeprüft)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/profile",
+   "file": "src/app/app/profile/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/profile\" title=\"Profil\" subtitle=\"Konto und Einste)",
+   "evidence": [
+    "src/app/app/profile/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/profile\" title=\"Profil\" subtitle=\"Konto und Einstellungen\" :: Rollen-Shell belegt",
+    "src/app/app/profile/page.tsx :: Aufruf logoutAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/app/profile/page.tsx :: Aufruf saveProfileAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/install-app-card.tsx :: export InstallAppCard :: verschachtelt via InstallAppCard (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: {u.first_name} {u.last_name}",
+    "Komponente: AppShell",
+    "Komponente: Bell",
+    "Komponente: ChevronRight",
+    "Komponente: CreditCard",
+    "Komponente: HelpCircle",
+    "Komponente: InstallAppCard",
+    "Komponente: Link",
+    "Komponente: LockKeyhole",
+    "Komponente: MessageCircle",
+    "Komponente: Settings"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "firstName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "lastName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "phone",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "postcode",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "address",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "logoutAction",
+    "saveProfileAction"
+   ],
+   "states": [
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHSettingsPage"
+   ],
+   "belegte_Muster": [
+    "Profil-Speicherung (saveProfileAction)",
+    "Logout (logoutAction)",
+    "InstallAppCard-Einbettung"
+   ],
+   "missingPatterns": [
+    "Hausprofil-Bearbeitung mit Validierung",
+    "Technik-Hinzufügen",
+    "Wartung-Erledigen mit Nachweis",
+    "Jahresplan-Ansicht",
+    "Historie mit Kosten/Garantie/Dateien",
+    "Validierungs-Fehlerdarstellung",
+    "Erfolgsquittung nach Speichern"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/settings",
+   "file": "src/app/app/settings/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/profile\" title=\"App-Einstellungen\" subtitle=\"Insta)",
+   "evidence": [
+    "src/app/app/settings/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/profile\" title=\"App-Einstellungen\" subtitle=\"Installation, Offline-Mod :: Rollen-Shell belegt",
+    "src/app/app/settings/pwa-settings-status.tsx :: export PwaSettingsStatus :: verschachtelt via PwaSettingsStatus (0 Formulare, 0 Felder (Detail ungeprüft))",
+    "src/app/app/settings/ai-settings.tsx :: export AiSettings :: verschachtelt via AiSettings (0 Formulare, 3 Felder (Detail ungeprüft))",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/install-app-card.tsx :: export InstallAppCard :: verschachtelt via InstallAppCard (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: App-Einstellungen",
+    "H1/H2: Installation & Offline",
+    "H1/H2: Benachrichtigungen",
+    "H1/H2: KI-Assistent",
+    "H1/H2: Konto & Daten",
+    "Komponente: AccountActions",
+    "Komponente: AiSettings",
+    "Komponente: AppShell",
+    "Komponente: Bell",
+    "Komponente: BellOff",
+    "Komponente: ChevronLeft",
+    "Komponente: InstallAppCard",
+    "Komponente: Link",
+    "Komponente: PwaSettingsStatus",
+    "Komponente: RefreshCw"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": "checkbox"
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [
+    "EHSettingsPage"
+   ],
+   "belegte_Muster": [
+    "PWA-/KI-Einstellungsmodule (PwaSettingsStatus/AiSettings, verschachtelt)",
+    "InstallAppCard",
+    "Checkbox-Einstellungen"
+   ],
+   "missingPatterns": [
+    "Hausprofil-Bearbeitung mit Validierung",
+    "Technik-Hinzufügen",
+    "Wartung-Erledigen mit Nachweis",
+    "Jahresplan-Ansicht",
+    "Historie mit Kosten/Garantie/Dateien",
+    "Fehler-/Erfolgsquittung (Rezept-Anspruch)",
+    "Sensible Aktion getrennt (Logout liegt in /app/profile)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/app/year",
+   "file": "src/app/app/year/page.tsx",
+   "role": "homeowner",
+   "shell": "AppShell (role=\"homeowner\" active=\"/app/home\" title=\"Mein Jahr\" subtitle=\"Wartung, Termine)",
+   "evidence": [
+    "src/app/app/year/page.tsx :: <AppShell role=\"homeowner\" active=\"/app/home\" title=\"Mein Jahr\" subtitle=\"Wartung, Termine und Hausaufgaben\" :: Rollen-Shell belegt",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Mein Jahr",
+    "Komponente: AppShell",
+    "Komponente: CalendarCheck",
+    "Komponente: CheckCircle2",
+    "Komponente: ChevronRight",
+    "Komponente: Clock3",
+    "Komponente: Link",
+    "Komponente: Plus",
+    "Komponente: Record"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Marken statisch: length===0; searchParams",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Jahres-Ansicht mit Suchparameter"
+   ],
+   "missingPatterns": [
+    "Hausprofil-Bearbeitung mit Validierung",
+    "Technik-Hinzufügen",
+    "Wartung-Erledigen mit Nachweis",
+    "Jahresplan-Ansicht",
+    "Historie mit Kosten/Garantie/Dateien",
+    "Jahresplan-Interaktion (keine Action belegt)",
+    "Wartungs-Erledigung aus Jahresansicht"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/chat/[anfrageId]",
+   "file": "src/app/chat/[anfrageId]/page.tsx",
+   "role": "public/gemischt (Berechtigung ungeprüft)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/chat/[anfrageId]/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/AuthContext.tsx :: export AuthProvider,useAuth :: verschachtelt via useAuth (0 Formulare, keine benannten Felder)",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via BackIcon,ArrowRightWhite (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: ArrowRightWhite",
+    "Komponente: BackIcon",
+    "Komponente: HTMLDivElement",
+    "Komponente: Msg"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Marken statisch: useState(\"\"; useState(\"Chat\"; useState<Msg[]>([]; useState<string | null>(null",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Chat-Verlauf (Msg[]-State)",
+    "Texteingabe"
+   ],
+   "missingPatterns": [
+    "Anhang-Upload mit Fortschritt/Fehler (wo kein file-Input belegt)",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Schadenfall an bestehenden Vorgang binden",
+    "Erfolgs-/Fehlerquittung",
+    "Backend-Anbindung (Sende-Pfad ungeprüft)",
+    "Anhänge/Spracheingabe (Icons ohne Beleg)",
+    "Lesebestätigung"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/check-email",
+   "file": "src/app/check-email/page.tsx",
+   "role": "public (Auth-/Registrierungsfluss)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/check-email/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via BackIcon (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Fast fertig!",
+    "Komponente: BackIcon"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Bestätigungs-Hinweis + Rück-/Login-Navigation"
+   ],
+   "missingPatterns": [
+    "Rollen-Shell/Navigation als EH-Komposition fehlt (nur AppShell-Produktcode, kein Rezept)",
+    "Betrieb-/Verifizierung-/Vertrag-Prozess fehlt",
+    "Erneut-senden-Aktion"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/ki-chat",
+   "file": "src/app/ki-chat/page.tsx",
+   "role": "public/gemischt (Berechtigung ungeprüft)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/ki-chat/page.tsx :: Layout src/app/ki-chat/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/ki-chat/page.tsx :: role === \"ai\" :: Auth-Hinweis (Rollenmodell ungeprüft)",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via BackIcon,ArrowRightWhite (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: ArrowRightWhite",
+    "Komponente: BackIcon",
+    "Komponente: CameraIcon",
+    "Komponente: HTMLDivElement",
+    "Komponente: MicIcon",
+    "Komponente: Msg"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Marken statisch: useSearchParams; useState(false; useState(sp.get(\"prompt\"; useState<Msg[]>([{ role: \"ai\", text: \"Hi! Ich bin dein einfachhausen-A",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "KI-Dialog mit Prompt-Übernahme (?prompt)",
+    "Texteingabe"
+   ],
+   "missingPatterns": [
+    "Anhang-Upload mit Fortschritt/Fehler (wo kein file-Input belegt)",
+    "Antwort-/Auswahlzustände nach Submit",
+    "Beratung/Kontakt/Auftrag-Weiche",
+    "Schadenfall an bestehenden Vorgang binden",
+    "Erfolgs-/Fehlerquittung",
+    "Backend-Anbindung (ungeprüft)",
+    "Verlauf-Speicherung",
+    "Anhänge/Spracheingabe (Icons ohne Beleg)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/login",
+   "file": "src/app/login/page.tsx",
+   "role": "public (Auth-/Registrierungsfluss)",
+   "shell": "AuthShell (auth-v2, Tiefe 2: LoginForm/RegisterForm/LegalModal)",
+   "evidence": [
+    "src/app/login/page.tsx :: Layout src/app/login/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/login/page.tsx :: role === \"provider\" :: Auth-Hinweis (Rollenmodell ungeprüft)",
+    "src/components/auth-v2/AuthShell.tsx :: export AuthShell :: verschachtelt via AuthShell (0 Formulare, keine benannten Felder)",
+    "src/components/auth-v2/LoginForm.tsx :: export LoginForm :: Tiefe 2 via AuthShell (2 Formulare: handleLoginSubmit/handleRegisterSubmit; Felder loginPassword/fullName/trades/contactName/email/postcode/password; Aufruf registerAction)",
+    "src/components/auth-v2/AuthShell.tsx :: useState<agb|datenschutz|impressum|sicherheit|partnerkriterien|null> + <LegalModal isOpen> :: Rechtstext-Dialoge belegt (5 Texte)"
+   ],
+   "sections": [
+    "Komponente: AuthShell",
+    "Komponente: Record"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [
+    "EHAccessPage"
+   ],
+   "belegte_Muster": [
+    "Auth-Gehäuse (AuthShell: login/register-Modi, Rollen kunde/handwerker, next-Pfad)",
+    "Rechtstexte-Dialoge (LegalModal: AGB/Datenschutz/Impressum/Sicherheit/Partnerkriterien)",
+    "Login-/Registrier-Formulare (LoginForm, Tiefe 2: loginPassword/fullName/trades/contactName/email/postcode/password + registerAction)"
+   ],
+   "missingPatterns": [
+    "Wiederherstellungs-Ablauf (ForgotPasswordModal existiert global, Einbindung hier ungeprüft)",
+    "Social-Login (hier nicht belegt)",
+    "Sperr-/MFA-Zustände (ungeprüft)",
+    "Registrier-Modus aus login heraus (AuthMode-Weiche belegt, Abschluss ungeprüft)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/mein-haus",
+   "file": "src/app/mein-haus/page.tsx",
+   "role": "ungeprüft",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/mein-haus/page.tsx :: Layout src/app/mein-haus/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/mein-haus/page.tsx :: redirect() :: Bedingung: unbedingt"
+   ],
+   "sections": [],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Weiterleitung nach /app/home (unbedingt)"
+   ],
+   "missingPatterns": [
+    "Rollen-Shell/Navigation als EH-Komposition fehlt (nur AppShell-Produktcode, kein Rezept)",
+    "Betrieb-/Verifizierung-/Vertrag-Prozess fehlt",
+    "Weiterleitungs-Bedingung fehlt (immer aktiv)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/notifications",
+   "file": "src/app/notifications/page.tsx",
+   "role": "rollenübergreifend (u.role dynamisch)",
+   "shell": "AppShell (role={u.role} active={u.role === 'provider' ? '/notifications' : ''} title=\"Upda)",
+   "evidence": [
+    "src/app/notifications/page.tsx :: <AppShell role={u.role} active={u.role === 'provider' ? '/notifications' : ''} title=\"Updates\" subtitle={unrea :: Rollen-Shell belegt",
+    "src/app/notifications/page.tsx :: Aufruf markAllNotificationsReadForCurrentUserAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/notifications/page.tsx :: Aufruf setNotificationReadStateAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/notifications/page.tsx :: role === 'provider' :: Auth-Hinweis (Rollenmodell ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Updates",
+    "Komponente: AppShell",
+    "Komponente: Bell",
+    "Komponente: CheckCheck",
+    "Komponente: Link"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "id",
+     "type": "hidden"
+    }
+   ],
+   "actions": [
+    "markAllNotificationsReadForCurrentUserAction",
+    "setNotificationReadStateAction"
+   ],
+   "states": [
+    "Marken statisch: length === 0; searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Gelesen/Ungelesen-Aktionen (setNotificationReadStateAction, markAll...)",
+    "Rollen-dynamische Shell (role={u.role})"
+   ],
+   "missingPatterns": [
+    "Gesprächsliste mit ungelesen/gelesen",
+    "Thread-Verlaufsansicht",
+    "Pagination/Suche im Verlauf",
+    "Partnerprofil-Vollständigkeit je Rolle",
+    "Pagination bei vielen Updates",
+    "Kategorie-Filter"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/onboarding/pro/[schritt]",
+   "file": "src/app/onboarding/pro/[schritt]/page.tsx",
+   "role": "partner (Onboarding/Registrierung, Abschluss ungeprüft)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/onboarding/pro/[schritt]/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/AuthContext.tsx :: export AuthProvider,useAuth :: verschachtelt via useAuth (0 Formulare, keine benannten Felder)",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via BackIcon (0 Formulare, keine benannten Felder)",
+    "src/components/onboard-visuals.tsx :: export VisualAuftraege,VisualGebiet,VisualFertig :: verschachtelt via VisualAuftraege,VisualGebiet (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: {head.h}",
+    "Komponente: BackIcon",
+    "Komponente: VisualAuftraege",
+    "Komponente: VisualFertig",
+    "Komponente: VisualGebiet"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": "range"
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Marken statisch: length === 0; useState(\"\"; useState(25; useState(false; useState<string[]>([]",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Schritt-Parametrisierung ([schritt], Auswahl-States)"
+   ],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Schritt-Validierung je slug",
+    "Unbekannter-Schritt-Fall (notFound ungeprüft)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/onboarding/pro/gebiet",
+   "file": "src/app/onboarding/pro/gebiet/page.tsx",
+   "role": "partner (Onboarding/Registrierung, Abschluss ungeprüft)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/onboarding/pro/gebiet/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/Stepper.tsx :: export  :: verschachtelt via Stepper (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Geschafft!",
+    "H1/H2: 3. Arbeitsgebiet",
+    "Komponente: ReturnType",
+    "Komponente: Stepper"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": "range"
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Marken statisch: useState(\"\"; useState(30; useState(false; useState<\"radius\" | \"plz\">(\"radius\"; useState<string[]>([]",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Gebiets-Auswahl (Stepper, PLZ/Umkreis-States)"
+   ],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Submit-Anbindung",
+    "Kategorien-Verknüpfung"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/onboarding/pro",
+   "file": "src/app/onboarding/pro/page.tsx",
+   "role": "partner (Onboarding/Registrierung, Abschluss ungeprüft)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/onboarding/pro/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/Stepper.tsx :: export  :: verschachtelt via Stepper (0 Formulare, keine benannten Felder)",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via BuildingIcon,ShieldSmallIcon (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: 1. Firmendaten",
+    "H1/H2: 2. Leistungen",
+    "Komponente: BuildingIcon",
+    "Komponente: CalendarIcon",
+    "Komponente: CatDachIcon",
+    "Komponente: CatElektroIcon",
+    "Komponente: CatFensterIcon",
+    "Komponente: CatGartenIcon",
+    "Komponente: CatInnenIcon",
+    "Komponente: CatMalerIcon",
+    "Komponente: CatMehrIcon",
+    "Komponente: CatPoolIcon"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Marken statisch: useState(\"\"; useState(\"2–7\"; useState(\"GmbH\"; useState(1; useState(false; useState(true; useState<string | null>(null; useState<string[]>([]",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Client-Wizard Firma (Stepper, Firmenfelder, useState)"
+   ],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Submit-Anbindung (Action ungeprüft)",
+    "Validierungs-Fehler"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/partner-invite/[token]",
+   "file": "src/app/partner-invite/[token]/page.tsx",
+   "role": "token-eingeladen (Rolle erst nach Token-Prüfung)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/partner-invite/[token]/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/partner-invite/[token]/page.tsx :: notFound() :: Bedingung: !invite",
+    "src/components/logo.tsx :: export Logo :: verschachtelt via Logo (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Als Ansprechpartner fürs Haus verbinden",
+    "Komponente: Home",
+    "Komponente: Link",
+    "Komponente: Link2",
+    "Komponente: Logo",
+    "Komponente: ShieldCheck"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Einladungszustände pending/linked/inaktiv (status-Weiche + notFound)",
+    "Registrierungs-Weiterführung mit Invite-Token"
+   ],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Ansprechpartner-Rechte nach Verknüpfung",
+    "Ablehnungs-Pfad"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/calendar",
+   "file": "src/app/pro/calendar/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\" active=\"/pro/calendar\" title=\"Termine\" subtitle={ctx.canManageJo)",
+   "evidence": [
+    "src/app/pro/calendar/page.tsx :: <AppShell role=\"provider\" active=\"/pro/calendar\" title=\"Termine\" subtitle={ctx.canManageJobs ? 'Betriebstermin :: Rollen-Shell belegt",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderAccessBoundary,ProviderPageIntro (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: AppShell",
+    "Komponente: ArrowRight",
+    "Komponente: CalendarDays",
+    "Komponente: Link",
+    "Komponente: ProviderAccessBoundary",
+    "Komponente: ProviderPageIntro",
+    "Komponente: ProviderSectionHeader",
+    "Komponente: ProviderState",
+    "Komponente: UserRound"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Marken statisch: length === 0",
+    "Kein Dialog belegt",
+    "Zugangs-Gating (ProviderAccessBoundary/ProviderState, Ergebnis ungeprüft)",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [
+    "EHAppointmentsPage"
+   ],
+   "belegte_Muster": [
+    "Rollen-Titelvariante (canManageJobs-Weiche)",
+    "Zugangs-Gating (Boundary/State)"
+   ],
+   "missingPatterns": [
+    "Zeitraumsteuerung",
+    "Termin-Detail mit Statuswechsel",
+    "Monatsübersicht (Rezept sieht Tagesagenda vor)",
+    "Zeitraumsteuerung",
+    "Termin-Detail mit Statuswechsel"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/invoices/[id]",
+   "file": "src/app/pro/invoices/[id]/page.tsx",
+   "role": "partner",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/pro/invoices/[id]/page.tsx :: Layout src/app/pro/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/pro/invoices/[id]/page.tsx :: Aufruf cancelInvoiceAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/invoices/[id]/page.tsx :: notFound() :: Bedingung: !invoice",
+    "src/app/pro/invoices/[id]/page.tsx :: notFound() :: Bedingung: !ctx || invoice.provider_id !== ctx.providerId",
+    "src/components/invoice-view.tsx :: export InvoiceView :: verschachtelt via InvoiceView (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderAccessBoundary (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: FileText",
+    "Komponente: InvoiceView",
+    "Komponente: Link",
+    "Komponente: ProviderAccessBoundary",
+    "Komponente: Record",
+    "Komponente: XCircle"
+   ],
+   "fields": [],
+   "actions": [
+    "cancelInvoiceAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt",
+    "Zugangs-Gating (ProviderAccessBoundary/ProviderState, Ergebnis ungeprüft)"
+   ],
+   "existingRecipes": [
+    "EHBillingPage"
+   ],
+   "belegte_Muster": [
+    "Rechnungsansicht (InvoiceView)",
+    "Rechnungsstorno (cancelInvoiceAction)",
+    "Zugangs-Gating (Boundary, permission:4)"
+   ],
+   "missingPatterns": [
+    "Upload-Dialog mit Fortschritt/Fehler",
+    "Dokumentdetail-Ansicht",
+    "Rechnungspositionen-Aufschlüsselung",
+    "Checkout-/Zahlungsstatus-Anzeige",
+    "Storno-Ablauf",
+    "Druckansicht",
+    "Positionen-Aufschlüsselung (ungeprüft)",
+    "Zahlungsstatus-Anzeige",
+    "Druckansicht"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/jobs/[id]",
+   "file": "src/app/pro/jobs/[id]/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\"\n      active={isAccepted ? '/pro/orders' : '/pro'}\n      title={)",
+   "evidence": [
+    "src/app/pro/jobs/[id]/page.tsx :: <AppShell role=\"provider\"\n      active={isAccepted ? '/pro/orders' : '/pro'}\n      title={isContact ? 'Kontakt :: Rollen-Shell belegt",
+    "src/app/pro/jobs/[id]/page.tsx :: Aufruf acceptContactRequestAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/jobs/[id]/page.tsx :: Aufruf assignJobContactAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/jobs/[id]/page.tsx :: Aufruf declineDispatchAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/jobs/[id]/page.tsx :: Aufruf markCompleteAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/jobs/[id]/page.tsx :: Aufruf markInProgressAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/jobs/[id]/page.tsx :: Aufruf sendMessageAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/jobs/[id]/page.tsx :: Aufruf sendSavedContactMessageAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/jobs/[id]/page.tsx :: Aufruf submitQuoteAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/jobs/[id]/page.tsx :: notFound() :: Bedingung: !ctx",
+    "src/app/pro/jobs/[id]/page.tsx :: notFound() :: Bedingung: !access",
+    "src/app/pro/jobs/[id]/page.tsx :: notFound() :: Bedingung: !ctx.canManageJobs && !isAccepted",
+    "src/app/pro/jobs/[id]/page.tsx :: notFound() :: Bedingung: !ctx.canManageJobs && assignment?.contact_user_id !== u.id",
+    "src/app/pro/jobs/[id]/document-form.tsx :: export DocumentForm :: verschachtelt via DocumentForm (1 Formulare, 3 Felder (Detail ungeprüft))",
+    "src/app/pro/jobs/[id]/invoice-form.tsx :: export InvoiceForm :: verschachtelt via InvoiceForm (1 Formulare, 14 Felder (Detail ungeprüft))",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderAccessBoundary,ProviderNextStep (0 Formulare, keine benannten Felder)",
+    "src/components/job-media.tsx :: export JobMedia :: verschachtelt via JobMedia (0 Formulare, keine benannten Felder)",
+    "src/components/ui/submit-button.tsx :: export SubmitButton :: verschachtelt via SubmitButton (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: {access.title.replace(/^Ansprechpartner:\\s*/, '')}",
+    "Komponente: AppShell",
+    "Komponente: CalendarDays",
+    "Komponente: DocumentForm",
+    "Komponente: FileText",
+    "Komponente: InvoiceForm",
+    "Komponente: JobMedia",
+    "Komponente: MapPin",
+    "Komponente: MessageCircle",
+    "Komponente: MessageSquare",
+    "Komponente: Phone"
+   ],
+   "fields": [
+    {
+     "tag": "select",
+     "name": "contactUserId",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "amount",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "availableAt",
+     "type": "datetime-local"
+    },
+    {
+     "tag": "textarea",
+     "name": "message",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "contactUserId",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "contactUserId",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "body",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "acceptContactRequestAction",
+    "assignJobContactAction",
+    "declineDispatchAction",
+    "markCompleteAction",
+    "markInProgressAction",
+    "sendMessageAction",
+    "sendSavedContactMessageAction",
+    "submitQuoteAction"
+   ],
+   "states": [
+    "Marken statisch: length === 0; searchParams",
+    "Kein Dialog belegt",
+    "Zugangs-Gating (ProviderAccessBoundary/ProviderState, Ergebnis ungeprüft)"
+   ],
+   "existingRecipes": [
+    "EHJobDetailPage"
+   ],
+   "belegte_Muster": [
+    "Angebot schreiben (submitQuoteAction)",
+    "Kontakt-Annahme/-Ablehnung (acceptContactRequestAction/declineDispatchAction)",
+    "Zuweisung (assignJobContactAction)",
+    "Start/Abschluss (markInProgressAction/markCompleteAction)",
+    "Nachrichtenversand beidseitig"
+   ],
+   "missingPatterns": [
+    "Angebot-Schreiben je Rolle (Gegenrolle prüfen)",
+    "Disposition/Zuweisung (Owner-seitig)",
+    "Start/Abschluss-Bestätigung je Rolle",
+    "Storno-Variante je Rolle",
+    "Reklamations-Verlauf nach Einreichung",
+    "Angebots-Annahme Pro-seitig (nur Kontaktannahme)",
+    "Storno nach Arbeitsstart",
+    "Bewertung Pro-seitig",
+    "Reklamations-Behandlung Pro-seitig"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/leads",
+   "file": "src/app/pro/leads/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\" active=\"/pro\" title=\"Immobilien-Leads\" subtitle=\"Nur für passend)",
+   "evidence": [
+    "src/app/pro/leads/page.tsx :: <AppShell role=\"provider\" active=\"/pro\" title=\"Immobilien-Leads\" subtitle=\"Nur für passende Anbieter\" :: Rollen-Shell belegt",
+    "src/app/pro/leads/page.tsx :: Aufruf updateBrokerLeadStatusAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderPageIntro,ProviderSectionHeader (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: AppShell",
+    "Komponente: Building2",
+    "Komponente: LockKeyhole",
+    "Komponente: MapPin",
+    "Komponente: ProviderPageIntro",
+    "Komponente: ProviderSectionHeader",
+    "Komponente: ProviderState",
+    "Komponente: UserRound"
+   ],
+   "fields": [
+    {
+     "tag": "select",
+     "name": "status",
+     "type": ""
+    }
+   ],
+   "actions": [
+    "updateBrokerLeadStatusAction"
+   ],
+   "states": [
+    "Marken statisch: length === 0",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Lead-Statuspflege (status-Select + updateBrokerLeadStatusAction)",
+    "Zugangs-Gating"
+   ],
+   "missingPatterns": [
+    "Angebot-Schreiben je Rolle (Gegenrolle prüfen)",
+    "Disposition/Zuweisung (Owner-seitig)",
+    "Start/Abschluss-Bestätigung je Rolle",
+    "Storno-Variante je Rolle",
+    "Reklamations-Verlauf nach Einreichung",
+    "Lead-Detail mit Verlauf",
+    "Filter über Status hinaus"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/messages",
+   "file": "src/app/pro/messages/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\" active=\"/pro/messages\" title=\"Nachrichten\" subtitle=\"Direkter Ku)",
+   "evidence": [
+    "src/app/pro/messages/page.tsx :: <AppShell role=\"provider\" active=\"/pro/messages\" title=\"Nachrichten\" subtitle=\"Direkter Kundenkontakt\" :: Rollen-Shell belegt",
+    "src/app/pro/messages/thread-client.tsx :: export ProviderMessageComposer :: verschachtelt via ProviderMessageComposer (1 Formulare, 1 Felder (Detail ungeprüft))",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderAccessBoundary,ProviderPageIntro (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: AppShell",
+    "Komponente: Link",
+    "Komponente: MessageSquare",
+    "Komponente: Phone",
+    "Komponente: ProviderAccessBoundary",
+    "Komponente: ProviderMessageComposer",
+    "Komponente: ProviderPageIntro",
+    "Komponente: ProviderSectionHeader",
+    "Komponente: ProviderState",
+    "Komponente: Record"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Marken statisch: length === 0; searchParams",
+    "Kein Dialog belegt",
+    "Zugangs-Gating (ProviderAccessBoundary/ProviderState, Ergebnis ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Composer mit Kontaktbezug (ProviderMessageComposer)",
+    "Berechtigungs-Gating (ProviderAccessBoundary/ProviderState)",
+    "Kontaktliste mit Leerzustand"
+   ],
+   "missingPatterns": [
+    "Gesprächsliste mit ungelesen/gelesen",
+    "Thread-Verlaufsansicht",
+    "Pagination/Suche im Verlauf",
+    "Partnerprofil-Vollständigkeit je Rolle",
+    "Thread-Verlaufsansicht",
+    "Pagination/Suche im Verlauf"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/onboarding",
+   "file": "src/app/pro/onboarding/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\" active=\"/pro\" title=\"Einrichtung\")",
+   "evidence": [
+    "src/app/pro/onboarding/page.tsx :: <AppShell role=\"provider\" active=\"/pro\" title=\"Einrichtung\" :: Rollen-Shell belegt",
+    "src/app/pro/onboarding/page.tsx :: Aufruf saveWizardStepAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/onboarding/wizard-steps.ts :: export WIZARD_STEPS,STEP_LABELS :: verschachtelt via WIZARD_STEPS,STEP_LABELS (0 Formulare, 0 Felder (Detail ungeprüft))",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: 1. Firmendaten",
+    "H1/H2: 2. Leistungen",
+    "H1/H2: 3. Arbeitsgebiet",
+    "H1/H2: 4. Abschluss",
+    "Komponente: AppShell",
+    "Komponente: ArrowRight",
+    "Komponente: Building2",
+    "Komponente: CalendarDays",
+    "Komponente: CheckCircle2",
+    "Komponente: Globe",
+    "Komponente: Link",
+    "Komponente: MapPin",
+    "Komponente: Phone",
+    "Komponente: Record"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "step",
+     "type": "hidden"
+    },
+    {
+     "tag": "input",
+     "name": "businessName",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "legalForm",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "foundedYear",
+     "type": "number"
+    },
+    {
+     "tag": "select",
+     "name": "employees",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "phoneDisplay",
+     "type": "tel"
+    },
+    {
+     "tag": "input",
+     "name": "website",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "streetAddress",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "description",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "masterCompany",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "step",
+     "type": "hidden"
+    },
+    {
+     "tag": "input",
+     "name": "serviceSlug",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "serviceSlug",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "otherServices",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "step",
+     "type": "hidden"
+    },
+    {
+     "tag": "input",
+     "name": "postcode",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "radius",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "step",
+     "type": "hidden"
+    }
+   ],
+   "actions": [
+    "saveWizardStepAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "4-Schritt-Wizard (Firma/Leistungen/Gebiet/Abschluss + saveWizardStepAction)",
+    "Weiter/Abschließen-Buttons"
+   ],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Zurück-Navigation (statisch nicht belegt)",
+    "Schritt-Fehlerdarstellung",
+    "Prüfungs-Einreichungs-Quittung"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/orders",
+   "file": "src/app/pro/orders/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\" active=\"/pro/orders\" title=\"Aufträge\" subtitle={ctx.canManageJob)",
+   "evidence": [
+    "src/app/pro/orders/page.tsx :: <AppShell role=\"provider\" active=\"/pro/orders\" title=\"Aufträge\" subtitle={ctx.canManageJobs ? 'Betrieb · Konta :: Rollen-Shell belegt",
+    "src/app/pro/orders/page.tsx :: Aufruf nextAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderAccessBoundary,ProviderPageIntro (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: AppShell",
+    "Komponente: ArrowRight",
+    "Komponente: ClipboardList",
+    "Komponente: Link",
+    "Komponente: MessageCircle",
+    "Komponente: ProviderAccessBoundary",
+    "Komponente: ProviderPageIntro",
+    "Komponente: ProviderSectionHeader",
+    "Komponente: ProviderState",
+    "Komponente: UserRound"
+   ],
+   "fields": [],
+   "actions": [
+    "nextAction"
+   ],
+   "states": [
+    "Marken statisch: length === 0",
+    "Kein Dialog belegt",
+    "Zugangs-Gating (ProviderAccessBoundary/ProviderState, Ergebnis ungeprüft)",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Auftragsübersicht mit Gating (nextAction als Weiterleitungs-Action)"
+   ],
+   "missingPatterns": [
+    "Angebot-Schreiben je Rolle (Gegenrolle prüfen)",
+    "Disposition/Zuweisung (Owner-seitig)",
+    "Start/Abschluss-Bestätigung je Rolle",
+    "Storno-Variante je Rolle",
+    "Reklamations-Verlauf nach Einreichung",
+    "Dispositions-Detail (Auftragsumfang ungeprüft)",
+    "Filter/Suche"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro",
+   "file": "src/app/pro/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\" active=\"/pro\" title=\"Partnerbereich\" subtitle=\"Zugang prüfen\")",
+   "evidence": [
+    "src/app/pro/page.tsx :: <AppShell role=\"provider\" active=\"/pro\" title=\"Partnerbereich\" subtitle=\"Zugang prüfen\" :: Rollen-Shell belegt",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderAccessBoundary,ProviderState (0 Formulare, keine benannten Felder)",
+    "src/app/pro/page.tsx :: Geschwister loading.tsx,error.tsx :: Lade-/Fehlerzustand belegt"
+   ],
+   "sections": [
+    "H1/H2: {greeting()}, {u.first_name}!",
+    "H1/H2: Passende Kundenanfragen",
+    "H1/H2: Kommende Vor-Ort-Termine",
+    "Komponente: AppShell",
+    "Komponente: ArrowRight",
+    "Komponente: BadgeCheck",
+    "Komponente: BadgeIcon",
+    "Komponente: ClipboardList",
+    "Komponente: FileText",
+    "Komponente: Link",
+    "Komponente: MapPin",
+    "Komponente: ProviderAccessBoundary",
+    "Komponente: ProviderState"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Lade-/Fehlerzustand je Geschwisterdatei (loading.tsx,error.tsx)",
+    "Marken statisch: length === 0",
+    "Kein Dialog belegt",
+    "Zugangs-Gating (ProviderAccessBoundary/ProviderState, Ergebnis ungeprüft)",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Zugangs-Gating (Boundary/State)",
+    "Anfragen-/Termin-Teaser"
+   ],
+   "missingPatterns": [
+    "Rollen-Shell/Navigation als EH-Komposition fehlt (nur AppShell-Produktcode, kein Rezept)",
+    "Betrieb-/Verifizierung-/Vertrag-Prozess fehlt",
+    "Status-Übersicht als Rezept"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/plans",
+   "file": "src/app/pro/plans/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\" active=\"/pro/profile\" title=\"Partner-Tarife\" subtitle=\"0 % Provi)",
+   "evidence": [
+    "src/app/pro/plans/page.tsx :: <AppShell role=\"provider\" active=\"/pro/profile\" title=\"Partner-Tarife\" subtitle=\"0 % Provision · keine Gebühr  :: Rollen-Shell belegt",
+    "src/app/pro/plans/page.tsx :: Aufruf startPartnerPlanCheckoutAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell,SectionTitle (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderPageIntro,ProviderState (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: {p.title}",
+    "Komponente: AppShell",
+    "Komponente: BadgeCheck",
+    "Komponente: CircleAlert",
+    "Komponente: Crown",
+    "Komponente: Handshake",
+    "Komponente: ProviderPageIntro",
+    "Komponente: ProviderState",
+    "Komponente: Record",
+    "Komponente: SectionTitle",
+    "Komponente: ShieldCheck"
+   ],
+   "fields": [],
+   "actions": [
+    "startPartnerPlanCheckoutAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHPricingPage"
+   ],
+   "belegte_Muster": [
+    "Partner-Tarifkauf (startPartnerPlanCheckoutAction)"
+   ],
+   "missingPatterns": [
+    "Tarifstatus-Anzeige und Wechsel-Ablauf",
+    "Zahlungsbestätigung/nicht-verfügbar-Zustand",
+    "Nachweis-Upload mit Prüfstatus",
+    "Partnervertrags-Ansicht",
+    "Stripe-Onboarding-/Auszahlungsstatus",
+    "Tarifstatus-Anzeige",
+    "Wechsel-/Kündigungs-Ablauf",
+    "Zahlungsbestätigung"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/profile",
+   "file": "src/app/pro/profile/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\" active=\"/pro/profile\" title=\"Profil & Vertrauen\" subtitle={p?.bu)",
+   "evidence": [
+    "src/app/pro/profile/page.tsx :: <AppShell role=\"provider\" active=\"/pro/profile\" title=\"Profil & Vertrauen\" subtitle={p?.business_name||ctx.bus :: Rollen-Shell belegt",
+    "src/app/pro/profile/page.tsx :: Aufruf createStripeOnboardingAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/profile/page.tsx :: Aufruf logoutAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/profile/page.tsx :: Aufruf saveProviderProfileLifecycleAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/profile/page.tsx :: Aufruf submitProviderVerificationAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell,SectionTitle (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderAccessBoundary,ProviderPageIntro (0 Formulare, keine benannten Felder)",
+    "src/components/install-app-card.tsx :: export InstallAppCard :: verschachtelt via InstallAppCard (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: AppShell",
+    "Komponente: BadgeCheck",
+    "Komponente: Building2",
+    "Komponente: CreditCard",
+    "Komponente: FileCheck2",
+    "Komponente: InstallAppCard",
+    "Komponente: Link",
+    "Komponente: ProviderAccessBoundary",
+    "Komponente: ProviderPageIntro",
+    "Komponente: ProviderState"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "document",
+     "type": "file"
+    },
+    {
+     "tag": "textarea",
+     "name": "note",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "firstName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "lastName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "phone",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "businessName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "logo",
+     "type": "file"
+    },
+    {
+     "tag": "input",
+     "name": "providerCategoriesPresent",
+     "type": "hidden"
+    },
+    {
+     "tag": "input",
+     "name": "providerCategory",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "trades",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "serviceProfilePresent",
+     "type": "hidden"
+    },
+    {
+     "tag": "input",
+     "name": "serviceSlug",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "streetAddress",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "postcode",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "radius",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "taxId",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "vatId",
+     "type": ""
+    },
+    {
+     "tag": "textarea",
+     "name": "description",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "acceptsNormalJobs",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "acceptsShortNotice",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "acceptsConsultation",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "acceptsEmergencies",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "openingHours",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "bookableHours",
+     "type": ""
+    },
+    {
+     "tag": "select",
+     "name": "emergencyMode",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "emergencyStart",
+     "type": "time"
+    },
+    {
+     "tag": "input",
+     "name": "emergencyEnd",
+     "type": "time"
+    },
+    {
+     "tag": "input",
+     "name": "emergencyDay",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "emergencyMarkup",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "instantBooking",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "weeklyCapacity",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "brokerProfilePresent",
+     "type": "hidden"
+    },
+    {
+     "tag": "input",
+     "name": "brokerRegions",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "brokerPropertyTypes",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "brokerMinPrice",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "brokerMaxPrice",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "brokerMinLivingArea",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "brokerMaxLivingArea",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "brokerMinPlotArea",
+     "type": "number"
+    },
+    {
+     "tag": "input",
+     "name": "brokerMaxPlotArea",
+     "type": "number"
+    }
+   ],
+   "actions": [
+    "createStripeOnboardingAction",
+    "logoutAction",
+    "saveProviderProfileLifecycleAction",
+    "submitProviderVerificationAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt",
+    "Zugangs-Gating (ProviderAccessBoundary/ProviderState, Ergebnis ungeprüft)"
+   ],
+   "existingRecipes": [
+    "EHSettingsPage"
+   ],
+   "belegte_Muster": [
+    "Verifizierungs-Einreichung (submitProviderVerificationAction, Nachweise document/note)",
+    "Logo-/Dokument-Uploads (file-Inputs, Fortschritt ungeprüft)",
+    "Stripe-Onboarding-Start (createStripeOnboardingAction)",
+    "Profil-Lebenszyklus-Speicherung",
+    "Kategorie-Rechte (providerCategory-Checkboxen)"
+   ],
+   "missingPatterns": [
+    "Tarifstatus-Anzeige und Wechsel-Ablauf",
+    "Zahlungsbestätigung/nicht-verfügbar-Zustand",
+    "Nachweis-Upload mit Prüfstatus",
+    "Partnervertrags-Ansicht",
+    "Stripe-Onboarding-/Auszahlungsstatus",
+    "Prüfstatus-Anzeige nach Einreichung",
+    "Auszahlungsstatus-Ansicht",
+    "Partnervertrags-Ansicht"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/pro/team",
+   "file": "src/app/pro/team/page.tsx",
+   "role": "partner",
+   "shell": "AppShell (role=\"provider\" active=\"/pro/team\" title=\"Team\" subtitle={ctx.businessName})",
+   "evidence": [
+    "src/app/pro/team/page.tsx :: <AppShell role=\"provider\" active=\"/pro/team\" title=\"Team\" subtitle={ctx.businessName} :: Rollen-Shell belegt",
+    "src/app/pro/team/page.tsx :: Aufruf addProviderMemberAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/pro/team/page.tsx :: Aufruf updateProviderMemberAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/components/shell.tsx :: export AppShell,SectionTitle :: verschachtelt via AppShell (0 Formulare, keine benannten Felder)",
+    "src/components/provider/workspace.tsx :: export ProviderPageIntro,ProviderAccessBoundary,ProviderNextStep :: verschachtelt via ProviderAccessBoundary,ProviderPageIntro (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: AppShell",
+    "Komponente: CheckCircle2",
+    "Komponente: ProviderAccessBoundary",
+    "Komponente: ProviderPageIntro",
+    "Komponente: ProviderSectionHeader",
+    "Komponente: ProviderState",
+    "Komponente: Record",
+    "Komponente: ShieldCheck",
+    "Komponente: UserPlus",
+    "Komponente: Users"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "jobTitle",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "canManageJobs",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "active",
+     "type": "checkbox"
+    },
+    {
+     "tag": "input",
+     "name": "firstName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "lastName",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "jobTitle",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "email",
+     "type": "email"
+    },
+    {
+     "tag": "input",
+     "name": "phone",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "password",
+     "type": "password"
+    },
+    {
+     "tag": "input",
+     "name": "canManageJobs",
+     "type": "checkbox"
+    }
+   ],
+   "actions": [
+    "addProviderMemberAction",
+    "updateProviderMemberAction"
+   ],
+   "states": [
+    "Marken statisch: length === 0; searchParams",
+    "Kein Dialog belegt",
+    "Zugangs-Gating (ProviderAccessBoundary/ProviderState, Ergebnis ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Mitglieder-Anlage/-Pflege mit Rechten (canManageJobs/active + add/update-Actions)",
+    "Zugangs-Gating (Boundary/State)"
+   ],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Einladungs-Mail-Status",
+    "Rollenänderung mit Quittung",
+    "Passwort-Feld im Formular vorhanden — Vergabeprozess ungeprüft"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/register-owner",
+   "file": "src/app/register-owner/page.tsx",
+   "role": "public (Auth-/Registrierungsfluss)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/register-owner/page.tsx :: Layout src/app/register-owner/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via PersonIcon,MailIcon (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Willkommen,",
+    "H1/H2: Los geht&apos;s – in wenigen Schritten",
+    "Komponente: AppleIcon",
+    "Komponente: ChatFaceIcon",
+    "Komponente: ClipboardSmallIcon",
+    "Komponente: EyeIcon",
+    "Komponente: EyeOffIcon",
+    "Komponente: FlagDeIcon",
+    "Komponente: GoogleIcon",
+    "Komponente: HeartIcon",
+    "Komponente: HomeOutlineIcon",
+    "Komponente: Image"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "",
+     "type": "text"
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": "email"
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Marken statisch: useState(\"\"; useState(false; useState<string | null>(null",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHAccessPage"
+   ],
+   "belegte_Muster": [
+    "Client-Registrierung (name/email/passwort-Bestätigung, error/loading-States)"
+   ],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Server-Anbindung (Submit-Ziel ungeprüft)",
+    "AGB-Bindung im Flow (ungeprüft)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/register-pro",
+   "file": "src/app/register-pro/page.tsx",
+   "role": "partner (Onboarding/Registrierung, Abschluss ungeprüft)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/register-pro/page.tsx :: Layout src/app/register-pro/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via StoreIcon,PersonIcon (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Willkommen,",
+    "H1/H2: Los geht&apos;s – in wenigen Schritten",
+    "Komponente: AppleIcon",
+    "Komponente: CalendarBigIcon",
+    "Komponente: ChatIcon",
+    "Komponente: CheckCircleIcon",
+    "Komponente: EyeIcon",
+    "Komponente: GoogleIcon",
+    "Komponente: Image",
+    "Komponente: Link",
+    "Komponente: LockSmallIcon",
+    "Komponente: MailIcon"
+   ],
+   "fields": [
+    {
+     "tag": "input",
+     "name": "",
+     "type": "text"
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": "text"
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": "email"
+    },
+    {
+     "tag": "input",
+     "name": "",
+     "type": ""
+    }
+   ],
+   "actions": [],
+   "states": [
+    "Marken statisch: useState(\"\"; useState(false; useState<string | null>(null",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [
+    "EHAccessPage"
+   ],
+   "belegte_Muster": [
+    "Social-Buttons (Apple/Google-Icons) + Marketing-Sektionen"
+   ],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Formular-Anbindung (Feldliste ungeprüft, Parser fand keine inputs)",
+    "Berechtigungsumfang nach Registrierung"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/register",
+   "file": "src/app/register/page.tsx",
+   "role": "public (Auth-/Registrierungsfluss)",
+   "shell": "AuthShell (auth-v2, Tiefe 2: LoginForm/RegisterForm/LegalModal)",
+   "evidence": [
+    "src/app/register/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/register/page.tsx :: role === \"provider\" :: Auth-Hinweis (Rollenmodell ungeprüft)",
+    "src/components/auth-v2/AuthShell.tsx :: export AuthShell :: verschachtelt via AuthShell (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "Komponente: AuthShell",
+    "Komponente: Record"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [
+    "EHAccessPage"
+   ],
+   "belegte_Muster": [],
+   "missingPatterns": [
+    "Mehrschritt-Formularmaske mit Zurück/Speichern/Fehler",
+    "Kategorien-/Arbeitsgebiet-Auswahl",
+    "Ansprechpartner-/Rechte-Verwaltung",
+    "Einladungszustände (ausstehend/angenommen/abgelaufen)",
+    "Inhalt ungeprüft (leere Merkmalsmenge statisch)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/role",
+   "file": "src/app/role/page.tsx",
+   "role": "public (Auth-/Registrierungsfluss)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/role/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via ArrowRightThin,BriefcaseIcon (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Schön,",
+    "H1/H2: Ich bin",
+    "Komponente: ArrowRightThin",
+    "Komponente: BriefcaseIcon",
+    "Komponente: ClipboardIcon",
+    "Komponente: HomeOutlineIcon",
+    "Komponente: HomeSmallIcon",
+    "Komponente: LockIcon",
+    "Komponente: PersonSearchIcon",
+    "Komponente: ShieldSmallIcon"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Rollenwahl per Client-Navigation (register-owner/register-pro)"
+   ],
+   "missingPatterns": [
+    "Rollen-Shell/Navigation als EH-Komposition fehlt (nur AppShell-Produktcode, kein Rezept)",
+    "Betrieb-/Verifizierung-/Vertrag-Prozess fehlt",
+    "Formular-/Berechtigungsbindung (reine Navigation)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/transfer/[token]",
+   "file": "src/app/transfer/[token]/page.tsx",
+   "role": "token-eingeladen (Rolle erst nach Token-Prüfung)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/transfer/[token]/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/app/transfer/[token]/page.tsx :: Aufruf acceptHouseTransferAction(...) :: Server-Action angebunden (Ziel-Implementierung ungeprüft)",
+    "src/app/transfer/[token]/page.tsx :: notFound() :: Bedingung: !transfer",
+    "src/components/logo.tsx :: export Logo :: verschachtelt via Logo (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Hausakte übernehmen",
+    "Komponente: Home",
+    "Komponente: Link",
+    "Komponente: Logo",
+    "Komponente: Record",
+    "Komponente: ShieldCheck"
+   ],
+   "fields": [],
+   "actions": [
+    "acceptHouseTransferAction"
+   ],
+   "states": [
+    "Marken statisch: searchParams",
+    "Kein Dialog belegt"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Token-Annahme per Submit (acceptHouseTransferAction, kein Feld nötig)",
+    "Einladungskontext-Darstellung"
+   ],
+   "missingPatterns": [
+    "Bewertungs-/Maklertreffer-Darstellung",
+    "Freigabe-/Widerruf-Quittung",
+    "Übergabelink-Lebenszyklus",
+    "Eigentümerwechsel-Prozess",
+    "Einladungs-Lebenszyklus (erstellt/abgelaufen/widerrufen)",
+    "Annahme-Quittung mit Hausbezug"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  },
+  {
+   "route": "/welcome",
+   "file": "src/app/welcome/page.tsx",
+   "role": "public (Auth-/Registrierungsfluss)",
+   "shell": "Layout ohne explizite Shell-Komponente",
+   "evidence": [
+    "src/app/welcome/page.tsx :: Layout src/app/layout.tsx :: Layout ohne explizite Shell-Komponente",
+    "src/components/icons.tsx :: export Chevron,LoginIcon,UserPlusIcon :: verschachtelt via ArrowRightThin,HeadsetIcon (0 Formulare, keine benannten Felder)",
+    "src/components/AuthContext.tsx :: export AuthProvider,useAuth :: verschachtelt via useAuth (0 Formulare, keine benannten Felder)"
+   ],
+   "sections": [
+    "H1/H2: Willkommen bei einfachhausen 👋",
+    "Komponente: ArrowRightThin",
+    "Komponente: HeadsetIcon",
+    "Komponente: HeartIcon",
+    "Komponente: Link",
+    "Komponente: LoginIcon",
+    "Komponente: PinIcon",
+    "Komponente: ShieldIcon",
+    "Komponente: UserPlusIcon"
+   ],
+   "fields": [],
+   "actions": [],
+   "states": [
+    "Kein Dialog belegt",
+    "Kein <form> auf Route belegt (Aktionen ggf. in Client-Komponenten → ungeprüft)"
+   ],
+   "existingRecipes": [],
+   "belegte_Muster": [
+    "Begrüßungs-Hub mit Bereichs-Links"
+   ],
+   "missingPatterns": [
+    "Rollen-Shell/Navigation als EH-Komposition fehlt (nur AppShell-Produktcode, kein Rezept)",
+    "Betrieb-/Verifizierung-/Vertrag-Prozess fehlt",
+    "Personalisierung (statisch)"
+   ],
+   "unverified": [
+    "Laufzeit-Rollenprüfung mit echter Session (keine Test-Anmeldung)",
+    "mobiles Realgerät (nur statische Hinweise)",
+    "leere/fehlerhafte API-Antworten zur Laufzeit",
+    "Offline-Verhalten zur Laufzeit (nur NetworkStatus statisch, /app+/pro-Layout)"
+   ]
+  }
+ ]
+}
