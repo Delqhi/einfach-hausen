@@ -1,31 +1,49 @@
-# EH-BRAND — Prime Agent Handoff
-Execution host: sinsupabase / OCI-VM.
-Workspace: /home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906
-Branch: design/einfachhausen-brand-system-20260906
-Base: 3d7d84ed100c21ecfe6a27074d7a22aa7ff92c04
-Canonical operational task repository: /home/ubuntu/dev/einfach-hausen
-Runtime PATH: /home/ubuntu/.nvm/versions/node/v22.23.0/bin:/home/ubuntu/.local/bin:/usr/local/bin:/usr/bin:/bin
-Exact provider/model: bai / glm-5.3-flash. Never substitute.
-Design lead: original ChatGPT agent. Executor: this Prime session.
+# EH-BRAND — aktueller Handoff: Atelier 02
+Stand 2026-09-06. Root Codex übernimmt Gestaltung und Umsetzung persönlich.
+Task EH-BRAND-03: in progress, gestalterische Nutzerabnahme offen.
+Issue: https://github.com/Delqhi/einfach-hausen/issues/39
 
-## Read order
-1. docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md — original requests, all F01–F19 findings, exact files, host/worktree inventory, boundaries and recommended brand.
-2. docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md — every task, command, output and next-decision boundary.
-3. docs/brand/SOURCE_PACKET.md — complete target texts and hashes for all primary files of this wave.
-4. docs/brand/source/BASE_SNAPSHOT.md — full unchanged baseline sources and binary asset hashes.
-5. docs/brand/source/implementation.json — machine-readable exact study/handback source.
-6. Current AGENTS.md and owning product docs, canonical task records, existing issue #33.
+## Sofort verstehen
+Die drei Stilproben in Draft-PR #40 wurden vom Nutzer ausdrücklich verworfen. 27/27 technische Prüfungen bleiben historische Evidenz, sind keine Designfreigabe. Nicht erneut zur Auswahl stellen und nicht erneut ausführen.
+Die neue Richtung heißt "Ein Zuhause mit Gedächtnis". Sie ist ein neuer Vorschlag, noch nicht vom Nutzer angenommen oder abgelehnt.
+Kein weiterer Prime/bai-Dispatch. Root Codex hat sämtliche neue Gestaltung und Code selbst geschrieben.
+Das frühere vollständige Paket und alle früheren Erkenntnisse bleiben unter docs/brand/source und in den ursprünglichen Spec-/Plan-Dateien erhalten.
 
-## Execute
-Run source/apply_package.py, syntax checks and the 27-shot verification; fix actual issues, re-export complete sources. Store technical conventions in the existing SIN-Brain, project facts through OpenViking-backed sin-memory-write, and delegation preference through configured Honcho where available. Each write needs positive receipt and readback. Never call a stub write durable success.
-Use existing gh authentication for the unique brand issue and draft PR if needed. The connected GitHub integration currently cannot create an issue (403); gh identifies as Delqhi.
-Own paths are the study, brand docs/evidence, spec/plan, and additive handoff sections in AGENTS/README/NEXT_AGENT/PRODUCTION_HANDOVER/ARCHITECTURE. Never overwrite foreign working copies or merge/deploy an unselected style.
-No message to a human third party is requested. Issue/task documentation and this AI delegation are explicitly authorized.
+## Exakte Orte
+- Host: sinsupabase / OCI-VM.
+- Workspace: /home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906
+- Branch: design/einfachhausen-brand-atelier-20260906
+- Baseline: 1239f7c469007ca5dd9895a8a0f44100c2b8b583 (enthält die verworfene Studie)
+- Task-Autorität: /home/ubuntu/dev/einfach-hausen/.sin-gpt-web/taskplan.sqlite3, ausschließlich sin-gpt-web-state --repo /home/ubuntu/dev/einfach-hausen verwenden.
+- Produktquelltext dieser Welle: design/brand-atelier/index.html, atelier.css, atelier.js.
+- Laufzeit/Prüfung: design/brand-atelier/server.mjs, verify.mjs, build-preview.py.
+- Vollständige Quelltextblöcke: docs/brand/ATELIER_02_SOURCE.md.
+- Manifest mit SHA256, inklusive generierter Vorschau und Bildern: docs/brand/evidence/atelier/manifest.json.
+- Portabler Entwurf: design/brand-atelier/preview.html (eine vollständige HTML-Datei, alle vier Original-Assets eingebettet).
+- Vollformat-Screenshots und Berichte: docs/brand/evidence/atelier/.
+- Mac-i9-Review-Kopie nach GitHub-Transfer: /Users/jeremyschulze/orca/workspaces/einfach-hausen-brand-atelier-20260906 (detached review checkout; Startdatei design/brand-atelier/preview.html).
+- Diese Vorschau hat ausschließlich lokale Beispieldaten. Formulare versenden nichts. Produkt-Backend nicht implementiert oder verändert.
 
-## Required return
-Write docs/brand/evidence/WORKER_REPORT.md and docs/brand/evidence/persistence.json. Include exact model/session, real command exits, own commits, issue/PR URLs, 27 screenshots, storage receipt IDs/readbacks, and any blocked step with a retry command. Final short answer: status, own HEAD, report path, exact next action.
-Do not claim all brand migration is complete: the next step after this wave is visual choice among the three alternatives.
+## Lesen
+1. docs/brand/ATELIER_02.md: Nutzerkorrektur wörtlich, R01–R08, Gestaltungsrationale, Abgrenzung, Akzeptanz und Plan.
+2. docs/brand/evidence/atelier/VISUAL_REVIEW.md: persönlich geprüfte Ansichten, erkannte Fehler und tatsächliche Korrekturen.
+3. docs/brand/evidence/atelier/verification.json und persistence.json: echte technische und Speicher-Nachweise.
+4. Aktuellen EH-BRAND-03-Datensatz zeigen, danach PRODUCT_VISION.md / PRODUCT_POSITIONING.md / DESIGN.md.
 
-## Registered coordination
-GitHub issue: https://github.com/Delqhi/einfach-hausen/issues/39
-Canonical tasks EH-BRAND-01 and EH-BRAND-02 are claimed by worker/prime-agent; EH-BRAND-03..06 remain backlog. Both active tasks are independently executable so persistence-service unavailability cannot prevent study verification. T-0151 remains unchanged backlog.
+## Reproduzieren auf OCI
+```bash
+cd /home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906
+export PATH=/home/ubuntu/.nvm/versions/node/v22.23.0/bin:/home/ubuntu/.local/bin:$PATH
+python3 design/brand-atelier/build-preview.py
+EH_VERIFY_DEPENDENCIES=/home/ubuntu/dev/einfach-hausen EH_CHROMIUM_PATH=/home/ubuntu/.local/share/eh-brand-browser/chromium-1234/chrome-linux/chrome node design/brand-atelier/verify.mjs
+node design/brand-atelier/server.mjs
+# Letzter Befehl: nur Loopback http://127.0.0.1:4182/
+# Alternative ohne Server: preview.html direkt im Browser öffnen.
+python3 design/brand-atelier/export-source.py
+```
+
+Die frühere Chromium-1228-Cacheinstallation war beim neuen Lauf nicht mehr verfügbar. Die bereits vorhandene Playwright-Version hat einen eigenen, projektbezogenen Browsercache installiert; kein System-Node, kein anderes Browserprofil und keine laufende Agentensitzung wurden verändert.
+Node-Syntax, responsive Darstellung, Funktionen, axe und Server-Allowlist sind Prototyp-Verifikation, keine Produktions-Release-Gates. Vor produktiver Migration bleiben vollständige Repo-Gates und echte Flächenintegration erforderlich.
+
+## Genau eine nächste Aktion
+Den neuen Atelier-02-Entwurf in Originalgröße mit dem Nutzer besprechen und sein tatsächliches Feedback in EH-BRAND-03 festhalten. Daraus Refinements ableiten; erst nach einer realen Richtungsentscheidung EH-BRAND-04 (zentraler Komponenten-/Markenvertrag) fortsetzen. EH-BRAND-05/06 bleiben abhängig. Kein Merge oder Deploy des ungewählten Entwurfs.

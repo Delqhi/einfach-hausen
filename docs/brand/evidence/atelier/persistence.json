@@ -1,0 +1,33 @@
+{
+  "openviking": {
+    "exit": 0,
+    "stdout": "STORED mem-448a31e447df8e7746a2 provider=openviking receipt=828b2815-3dd5-4632-872c-46d07eec87fa backend_ref=session:09e2a426-e9a1-4129-84a9-dc43a5256380;task:b84f0060-8a50-45d6-8dec-c09a2cde3762\n",
+    "stderr": ""
+  },
+  "sin_brain": {
+    "exit": 0,
+    "stdout": "6d24e92d-81e2-45a7-9948-9da8a512c065\n",
+    "stderr": ""
+  },
+  "readback": {
+    "openviking": {
+      "exit": 0,
+      "contains_rejection": true,
+      "output": "{\"ok\":true,\"result\":{\"latest_archive_overview\":\"# Working Memory\\n\\n## Session Title\\nEH-BRAND Correction 2026-09-06: Atelier 02 Visuals Rejected\\n\\n## Current State\\nThe EH-BRAND project's Atelier 02 (\\\"Ein Zuhause mit Gedächtnis\\\") is currently being implemented by Root Codex after the Operator explicitly rejected all three PR #40 visual studies. The new proposal for EH-BRAND-03 is in progress but requires actual user feedback before any merge or deployment. Old 27/27 technical checks are not considered visual approval.\\n\\n## Task & Goals\\nThe primary task is to store a verified statement as durable long-term memory, specifically regarding a correction to the EH-BRAND project's status and design process. The goal is to update the system's understanding of the EH-BRAND project, particularly Atelier 02 and EH-BRAND-03, reflecting the latest decisions and progress.\\n\\n## Key Facts & Decisions\\n*   **Event Date**: 2026-09-06 (EH-BRAND correction date).\\n*   **Project**: EH-BRAND.\\n*   **Sub-project/Atelier**: Atelier 02, named \\\"Ein Zuhause mit Gedächtnis\\\".\\n*   **Visual Studies Rejection**: Operator explicitly rejected all three PR #40 visual studies shown in the comparison screenshot.\\n*   **Approval Clarification**: Old 27/27 technical checks are not considered visual approval.\\n*   **Implementation Ownership (Atelier 02)**: Root Codex authored the original source package and is personally implementing Atelier 02.\\n*   **Design Delegation**: No additional Prime/bai design delegation for Atelier 02.\\n*   **EH-BRAND-03 Status**: EH-BRAND-03 is in progress.\\n*   **Feedback Requirement**: The new proposal for EH-BRAND-03 still needs actual user feedback.\\n*   **Deployment Status**: No merge/deploy for the new proposal yet.\\n*   **Superseded Record**: `mem-f4b51fa5ecfc06e518f8` is superseded by this record.\\n\\n## Files & Context\\n*   `docs/brand/ATELIER_02.md`: Contains verbatim user steering and R01-R08 findings for Atelier 02.\\n*   `design/einfachhausen-brand-atelier-20260906`: Design location for Atelier 02.\\n*   `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`: Workspace path for Atelier 02 implementation.\\n\\n## Errors & Corrections\\n*   **Correction Identified**: The statement itself is an \\\"EH-BRAND correction\\\" dated 2026-09-06.\\n*   **Previous Misunderstanding**: It was previously assumed that 27/27 technical checks constituted visual approval, which is incorrect.\\n*   **Visual Studies Status**: The three PR #40 visual studies were explicitly rejected by the Operator, correcting any prior assumption of their acceptance.\\n\\n## Open Issues\\n*   The new proposal for EH-BRAND-03 requires actual user feedback.\\n*   The new proposal is not yet ready for merge or deployment.\",\"pre_archive_abstracts\":[],\"messages\":[],\"estimatedTokens\":663,\"stats\":{\"totalArchives\":1,\"includedArchives\":0,\"droppedArchives\":1,\"failedArchives\":0,\"activeTokens\":0,\"archiveTokens\":663}}}\n"
+    },
+    "brain": {
+      "id": "6d24e92d-81e2-45a7-9948-9da8a512c065",
+      "recall_exit": 0,
+      "found": true
+    },
+    "honcho": {
+      "status": "previously-unavailable",
+      "note": "Not deployed or claimed as saved. New correction saved to configured OpenViking and SIN-Brain."
+    }
+  },
+  "archive_title_correction": {
+    "status": "pending",
+    "reason": "Generated first archive title incorrectly says Atelier 02 rejected, while its body correctly says old PR #40 studies rejected. Exact source and task clarify that the new Atelier 02 has not been reviewed by the user. Retried through supported gateway; no direct store mutation.",
+    "log": ""
+  }
+}

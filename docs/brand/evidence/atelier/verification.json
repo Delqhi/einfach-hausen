@@ -1,0 +1,107 @@
+{
+  "status": "pass",
+  "screenshots": [
+    {
+      "view": "home",
+      "width": 320,
+      "file": "home-320.png"
+    },
+    {
+      "view": "hausakte",
+      "width": 320,
+      "file": "hausakte-320.png"
+    },
+    {
+      "view": "kontakt",
+      "width": 320,
+      "file": "kontakt-320.png"
+    },
+    {
+      "view": "home",
+      "width": 390,
+      "file": "home-390.png"
+    },
+    {
+      "view": "hausakte",
+      "width": 390,
+      "file": "hausakte-390.png"
+    },
+    {
+      "view": "kontakt",
+      "width": 390,
+      "file": "kontakt-390.png"
+    },
+    {
+      "view": "home",
+      "width": 736,
+      "file": "home-736.png"
+    },
+    {
+      "view": "hausakte",
+      "width": 736,
+      "file": "hausakte-736.png"
+    },
+    {
+      "view": "kontakt",
+      "width": 736,
+      "file": "kontakt-736.png"
+    },
+    {
+      "view": "home",
+      "width": 1440,
+      "file": "home-1440.png"
+    },
+    {
+      "view": "hausakte",
+      "width": 1440,
+      "file": "hausakte-1440.png"
+    },
+    {
+      "view": "kontakt",
+      "width": 1440,
+      "file": "kontakt-1440.png"
+    }
+  ],
+  "accessibility": [
+    {
+      "view": "home",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "view": "hausakte",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "view": "kontakt",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "view": "home",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "view": "hausakte",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "view": "kontakt",
+      "width": 1440,
+      "violations": []
+    }
+  ],
+  "functional": [
+    "Explicit route allowlist; private paths 404; POST 405",
+    "width 320: house areas, keyboard, registers/search/empty, local composer choice, contact validation, zero submit requests",
+    "width 390: house areas, keyboard, registers/search/empty, local composer choice, contact validation, zero submit requests",
+    "width 736: house areas, keyboard, registers/search/empty, local composer choice, contact validation, zero submit requests",
+    "width 1440: house areas, keyboard, registers/search/empty, local composer choice, contact validation, zero submit requests",
+    "Portable file:// preview loads local assets and navigates between screens"
+  ],
+  "errors": [],
+  "visualApproval": false
+}

@@ -1,0 +1,8 @@
+{
+  "exit": 0,
+  "output": "Changes: 23 files, 67 symbols\nAffected processes: 0\nRisk level: low\n\nChanged symbols:\n  Section GitNexus \u2014 Code Intelligence \u2192 AGENTS.md\n  Section EH-BRAND \u2014 Operator-Auftrag vom 06.09.2026 \u2192 AGENTS.md\n  Section Alternativ wird OMNIROUTE_MASTER_KEY gelesen. \u2192 README.md\n  Section EH-BRAND \u2014 Operator-Auftrag vom 06.09.2026 \u2192 README.md\n  Const allowedViews \u2192 design/brand-atelier/atelier.js\n  Const requestedView \u2192 design/brand-atelier/atelier.js\n  Const activeView \u2192 design/brand-atelier/atelier.js\n  Const menuButton \u2192 design/brand-atelier/atelier.js\n  Const houseRecords \u2192 design/brand-atelier/atelier.js\n  Property heat \u2192 design/brand-atelier/atelier.js\n  Property roof \u2192 design/brand-atelier/atelier.js\n  Property garden \u2192 design/brand-atelier/atelier.js\n  Variable root \u2192 design/brand-atelier/build-preview.py\n  Variable folder \u2192 design/brand-atelier/build-preview.py\n  Variable assets \u2192 design/brand-atelier/build-preview.py\n... and 52 more\n",
+  "stderr": "",
+  "scope": "all",
+  "indexed_worktree": "/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906",
+  "limitations": "Graph tracing is bounded; new standalone study does not import production code. Preview HTML is generated >512KB and excluded from graph indexing."
+}

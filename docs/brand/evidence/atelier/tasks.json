@@ -1,0 +1,204 @@
+{
+  "EH-BRAND-01": {
+    "id": "EH-BRAND-01",
+    "sequence": 129,
+    "title": "Markenbefunde, vollständige Quellen und dauerhafte Prime-Übergabe",
+    "description": "Operator 2026-09-06; design/einfachhausen-brand-system-20260906; vollständige Spezifikation/Plan unter docs/superpowers; Ausführung Prime Agent bai/glm-5.3-flash auf sinsupabase.",
+    "kind": "plan",
+    "status": "done",
+    "priority": 3,
+    "owner": "worker",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:14+00:00",
+    "updated_at": "2026-09-06T00:46:30+00:00",
+    "started_at": "2026-09-05T23:16:17+00:00",
+    "completed_at": "2026-09-06T00:46:30+00:00",
+    "evidence": "verify pass 27/27; commit 4a33e4ccd75cb914e7da5056426372dcd869f56a; PR #40 draft; issue #39 comment 5555874381; mem a70c844b/f4b51fa5/14f3c1aa/1c844836; report docs/brand/evidence/WORKER_REPORT.md",
+    "completion_report": "verify pass 27/27; commit 4a33e4ccd75cb914e7da5056426372dcd869f56a; PR #40 draft; issue #39 comment 5555874381; mem a70c844b/f4b51fa5/14f3c1aa/1c844836; report docs/brand/evidence/WORKER_REPORT.md",
+    "blocked_reason": "",
+    "revision": 3,
+    "completion_contract_version": 1,
+    "handover_json": "{\"contract\": \"v1\", \"docs\": {\"AGENTS.md\": {\"marker_sha256\": \"96e498f8e1de1063baf092d9f041ef598584e3e5df580e5b9922ad5eb4038964\", \"bound_task\": \"EH-BRAND-01\"}, \"README.md\": {\"marker_sha256\": \"96e498f8e1de1063baf092d9f041ef598584e3e5df580e5b9922ad5eb4038964\", \"bound_task\": \"EH-BRAND-01\"}, \"docs/NEXT_AGENT.md\": {\"marker_sha256\": \"96e498f8e1de1063baf092d9f041ef598584e3e5df580e5b9922ad5eb4038964\", \"bound_task\": \"EH-BRAND-01\"}, \"docs/PRODUCTION_HANDOVER.md\": {\"marker_sha256\": \"96e498f8e1de1063baf092d9f041ef598584e3e5df580e5b9922ad5eb4038964\", \"bound_task\": \"EH-BRAND-01\"}, \"docs/ARCHITECTURE.md\": {\"marker_sha256\": \"96e498f8e1de1063baf092d9f041ef598584e3e5df580e5b9922ad5eb4038964\", \"bound_task\": \"EH-BRAND-01\"}}}",
+    "priority_name": "high",
+    "acceptance": [
+      "Alle F01–F19, Originalanweisungen, Pfade, vollständiger Quelltext, Aufgaben, Issues und Handoffs dokumentiert. Brain/OpenViking/Honcho nur mit echter Receipt-/Readback-Evidenz als gespeichert melden."
+    ],
+    "allowed_paths": [
+      "docs/brand/",
+      "docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md",
+      "docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md",
+      "design/brand-study/",
+      "AGENTS.md",
+      "README.md",
+      "docs/NEXT_AGENT.md",
+      "docs/PRODUCTION_HANDOVER.md",
+      "docs/ARCHITECTURE.md"
+    ],
+    "depends_on": [],
+    "dependency_blockers": []
+  },
+  "EH-BRAND-02": {
+    "id": "EH-BRAND-02",
+    "sequence": 130,
+    "title": "Drei einfachhausen-Stilproben vollständig ausführen und prüfen",
+    "description": "Operator 2026-09-06; design/einfachhausen-brand-system-20260906; vollständige Spezifikation/Plan unter docs/superpowers; Ausführung Prime Agent bai/glm-5.3-flash auf sinsupabase.",
+    "kind": "implement",
+    "status": "done",
+    "priority": 3,
+    "owner": "worker",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:15+00:00",
+    "updated_at": "2026-09-06T00:46:30+00:00",
+    "started_at": "2026-09-05T23:16:18+00:00",
+    "completed_at": "2026-09-06T00:46:30+00:00",
+    "evidence": "verify pass 27/27; commit 4a33e4ccd75cb914e7da5056426372dcd869f56a; PR #40 draft; issue #39 comment 5555874381; mem a70c844b/f4b51fa5/14f3c1aa/1c844836; report docs/brand/evidence/WORKER_REPORT.md",
+    "completion_report": "verify pass 27/27; commit 4a33e4ccd75cb914e7da5056426372dcd869f56a; PR #40 draft; issue #39 comment 5555874381; mem a70c844b/f4b51fa5/14f3c1aa/1c844836; report docs/brand/evidence/WORKER_REPORT.md",
+    "blocked_reason": "",
+    "revision": 3,
+    "completion_contract_version": 1,
+    "handover_json": "{\"contract\": \"v1\", \"docs\": {\"AGENTS.md\": {\"marker_sha256\": \"41cfdc4958c68dc03776c5014737f57aa5311c2319ba5c1bc880bd80b82bf46e\", \"bound_task\": \"EH-BRAND-02\"}, \"README.md\": {\"marker_sha256\": \"41cfdc4958c68dc03776c5014737f57aa5311c2319ba5c1bc880bd80b82bf46e\", \"bound_task\": \"EH-BRAND-02\"}, \"docs/NEXT_AGENT.md\": {\"marker_sha256\": \"41cfdc4958c68dc03776c5014737f57aa5311c2319ba5c1bc880bd80b82bf46e\", \"bound_task\": \"EH-BRAND-02\"}, \"docs/PRODUCTION_HANDOVER.md\": {\"marker_sha256\": \"41cfdc4958c68dc03776c5014737f57aa5311c2319ba5c1bc880bd80b82bf46e\", \"bound_task\": \"EH-BRAND-02\"}, \"docs/ARCHITECTURE.md\": {\"marker_sha256\": \"41cfdc4958c68dc03776c5014737f57aa5311c2319ba5c1bc880bd80b82bf46e\", \"bound_task\": \"EH-BRAND-02\"}}}",
+    "priority_name": "high",
+    "acceptance": [
+      "Warme Architektur, Persönlicher Hausbegleiter und Hausjournal mit identischer Startseite/Hausakte/Kontakt; 27 Screenshots und funktionierende lokale Interaktionen; Original-Logo; keine Produktionsänderung."
+    ],
+    "allowed_paths": [
+      "docs/brand/",
+      "docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md",
+      "docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md",
+      "design/brand-study/",
+      "AGENTS.md",
+      "README.md",
+      "docs/NEXT_AGENT.md",
+      "docs/PRODUCTION_HANDOVER.md",
+      "docs/ARCHITECTURE.md"
+    ],
+    "depends_on": [],
+    "dependency_blockers": []
+  },
+  "EH-BRAND-03": {
+    "id": "EH-BRAND-03",
+    "sequence": 131,
+    "title": "Visuelle Markenentscheidung und Refinements dokumentieren",
+    "description": "2026-09-06: Nutzer hat die drei PR-40-Studien verworfen. Root Codex gestaltet Atelier 02 selbst, kein weiterer Prime/bai-Dispatch. Workspace /home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906; Branch design/einfachhausen-brand-atelier-20260906. Konzept/R01-R08/vollständiges Feedback in docs/brand/ATELIER_02.md. Neue Vollansicht design/brand-atelier/preview.html. 12 Responsive-Ansichten und 6 axe-Prüfungen bestanden. Neue Richtung noch nicht vom Nutzer bewertet; kein Merge/Deploy.",
+    "kind": "review",
+    "status": "in_progress",
+    "priority": 3,
+    "owner": "chatgpt-web",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:15+00:00",
+    "updated_at": "2026-09-06T03:32:59+00:00",
+    "started_at": "2026-09-06T03:02:09+00:00",
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 3,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Tatsächliche Entscheidung nach sichtbaren Alternativen dokumentiert; Empfehlung nicht als Nutzerfreigabe ausgeben."
+    ],
+    "allowed_paths": [],
+    "depends_on": [
+      "EH-BRAND-02"
+    ],
+    "dependency_blockers": []
+  },
+  "EH-BRAND-04": {
+    "id": "EH-BRAND-04",
+    "sequence": 132,
+    "title": "Zentraler Marken- und Komponentenvertrag aus gewählter Richtung",
+    "description": "Operator 2026-09-06; design/einfachhausen-brand-system-20260906; vollständige Spezifikation/Plan unter docs/superpowers; Ausführung Prime Agent bai/glm-5.3-flash auf sinsupabase.",
+    "kind": "implement",
+    "status": "backlog",
+    "priority": 3,
+    "owner": "unassigned",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:16+00:00",
+    "updated_at": "2026-09-05T23:16:16+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 1,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Logonutzung, Tokens, Typo, Bilder, Motion, Zustände, Agentenregeln; vollständige aktuelle Quellpakete und Impact-Evidenz vor produktiven Änderungen."
+    ],
+    "allowed_paths": [],
+    "depends_on": [
+      "EH-BRAND-03"
+    ],
+    "dependency_blockers": [
+      "EH-BRAND-03"
+    ]
+  },
+  "EH-BRAND-05": {
+    "id": "EH-BRAND-05",
+    "sequence": 133,
+    "title": "Website und Apps schrittweise auf ausgewählte Marke konvergieren",
+    "description": "Operator 2026-09-06; design/einfachhausen-brand-system-20260906; vollständige Spezifikation/Plan unter docs/superpowers; Ausführung Prime Agent bai/glm-5.3-flash auf sinsupabase.",
+    "kind": "implement",
+    "status": "backlog",
+    "priority": 3,
+    "owner": "unassigned",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:16+00:00",
+    "updated_at": "2026-09-05T23:16:16+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 1,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Hero/Lexikon/Kontakt/Footer-Parallel-Arbeit und alle Produktflüsse/Navigation/Auth/Daten erhalten; pro Oberfläche visuelle Abnahme."
+    ],
+    "allowed_paths": [],
+    "depends_on": [
+      "EH-BRAND-04"
+    ],
+    "dependency_blockers": [
+      "EH-BRAND-04"
+    ]
+  },
+  "EH-BRAND-06": {
+    "id": "EH-BRAND-06",
+    "sequence": 134,
+    "title": "Markenregression und belastbare Release-Evidenz",
+    "description": "Operator 2026-09-06; design/einfachhausen-brand-system-20260906; vollständige Spezifikation/Plan unter docs/superpowers; Ausführung Prime Agent bai/glm-5.3-flash auf sinsupabase.",
+    "kind": "test",
+    "status": "backlog",
+    "priority": 3,
+    "owner": "unassigned",
+    "created_by": "chatgpt-web",
+    "created_at": "2026-09-05T23:16:17+00:00",
+    "updated_at": "2026-09-05T23:16:17+00:00",
+    "started_at": null,
+    "completed_at": null,
+    "evidence": "",
+    "completion_report": "",
+    "blocked_reason": "",
+    "revision": 1,
+    "completion_contract_version": 0,
+    "handover_json": "{}",
+    "priority_name": "high",
+    "acceptance": [
+      "Aktuelle funktionale/visuelle/A11y/Responsive-Gates, T-0151 und Issue #33 verknüpft, keine unbewiesenen Baseline- oder Deploy-Erfolgsaussagen."
+    ],
+    "allowed_paths": [],
+    "depends_on": [
+      "EH-BRAND-05"
+    ],
+    "dependency_blockers": [
+      "EH-BRAND-05"
+    ]
+  }
+}
