@@ -1,0 +1,49 @@
+{
+  "pr": "https://github.com/Delqhi/einfach-hausen/pull/41",
+  "issue": "https://github.com/Delqhi/einfach-hausen/issues/39",
+  "design_commit": "baea585e9de24c6d6bada491ac61c4537f2a5e4d",
+  "base": "1239f7c469007ca5dd9895a8a0f44100c2b8b583",
+  "status": "draft; user review pending; old PR40 studies rejected",
+  "host": "sinsupabase",
+  "executor": "Root Codex personally; no additional design agent",
+  "mac_preview": "/Users/jeremyschulze/orca/workspaces/einfach-hausen-brand-atelier-20260906/design/brand-atelier/preview.html",
+  "issue_comment": "https://github.com/Delqhi/einfach-hausen/issues/39#issuecomment-5556667430",
+  "issue_comment_exit": 0,
+  "old_pr_comment": "https://github.com/Delqhi/einfach-hausen/pull/40#issuecomment-5556667518",
+  "old_pr_comment_exit": 0,
+  "mac_review": {
+    "device": "MacBook-Pro-von-Jeremy-3.local",
+    "cpu": "Intel Core i9-9980HK",
+    "transport": "GitHub fetch -> isolated detached worktree -> Google Chrome file open",
+    "design_commit": "baea585e9de24c6d6bada491ac61c4537f2a5e4d",
+    "fetch_exit": 0,
+    "worktree_exit": 0,
+    "chrome_open_exit": 0
+  },
+  "verification": {
+    "status": "pass",
+    "responsive_views": 12,
+    "widths": [
+      320,
+      390,
+      736,
+      1440
+    ],
+    "axe_runs": 6,
+    "axe_violations": 0,
+    "browser_errors": 0,
+    "visual_review_by": "Root Codex; desktop, mobile, tablet; actual screenshots inspected and corrected",
+    "user_approval": false,
+    "production_sources_unchanged": true
+  },
+  "source_sha256": {
+    "design/brand-atelier/atelier.js": "686b400f608ee9d842594b524e5b1cc3e77673dc90e1a40939427901648b6ee5",
+    "design/brand-atelier/index.html": "fd89e94a41a0aed1e23db8f28788075cc0710b1c79e228ac42b3a7bc2cd8cff5",
+    "design/brand-atelier/build-preview.py": "dc69e61551f4f3938ee1a2ee7456ab13ea2c8c46f4564a5a73ae6b89973fe077",
+    "design/brand-atelier/export-source.py": "bc14289d766e5f0a1085aef44cbcf081463c931302fe84dee44ca8ce6ca8ed46",
+    "design/brand-atelier/server.mjs": "461b0e6e723797834c9d42b49b73ed77f89738546ede8691ddd41f40dd333330",
+    "design/brand-atelier/verify.mjs": "eb90097d220d11508b7c464574a192bcc5ab79ce9ec30c98b3c2ad30d698b0fc",
+    "design/brand-atelier/preview.html": "a8b3bbaa9755fd6c14222713d7cf12c4d44ea21b0672625efc65331a821a9be5",
+    "design/brand-atelier/atelier.css": "799b7fbcaa5b945b6a3fbefd956553befc56ba7e52000b441137782e9b85567f"
+  }
+}

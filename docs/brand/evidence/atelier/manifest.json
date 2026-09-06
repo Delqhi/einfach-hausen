@@ -1,7 +1,7 @@
 {
   "base": "1239f7c469007ca5dd9895a8a0f44100c2b8b583",
   "workspace": "/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906",
-  "capsule_sha256": "19c50ff3ca9090dcbb0d9d1fb9b931db01c55e8a8ce5c85c0495ce8e3cc5f3bf",
+  "capsule_sha256": "aedf9b6ff79dacdb24632543d225ddfe5116a152636723964bba3b8afb560e8d",
   "files": [
     {
       "path": "AGENTS.md",
@@ -95,8 +95,14 @@
     },
     {
       "path": "docs/brand/HANDOFF.md",
-      "bytes": 4223,
-      "sha256": "99a236240992f00126e7551a78386058bd8de7bdc7ccd5fedd5daefca9b8015c",
+      "bytes": 4885,
+      "sha256": "f7de35a70e9ad456d46fcf57a141d7c9dfcb6ac099e99076c3bdb14a118d412c",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/ISSUE_UPDATE.md",
+      "bytes": 1007,
+      "sha256": "09e8a7f5106123d1c4103941c9641f9419b23bf8658d8c48f71bf9054c5512a4",
       "kind": "complete-text"
     },
     {
@@ -109,6 +115,12 @@
       "path": "docs/brand/evidence/atelier/assets.json",
       "bytes": 600,
       "sha256": "68078fd090fbe179446b19c87741bd48f733334eb3a01a500ac1c6785f483181",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/delivery.json",
+      "bytes": 2398,
+      "sha256": "02bbf0181d390d9669ebc6d0981ae499e5506ff826c5927cc577e12984f79c5d",
       "kind": "complete-text"
     },
     {
@@ -221,8 +233,8 @@
     },
     {
       "path": "docs/brand/evidence/atelier/persistence.json",
-      "bytes": 4176,
-      "sha256": "5288a75d7c94b93014d4c6df8eba15b9069de3d14803e8df306ef34606ec41dc",
+      "bytes": 6770,
+      "sha256": "1db10ccd3f4b5b1e2445dfd1da61ce160d4688e3ca0c037008d137b6b4c93d52",
       "kind": "complete-text"
     },
     {

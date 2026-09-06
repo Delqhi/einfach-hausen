@@ -2,6 +2,7 @@
 Stand 2026-09-06. Root Codex übernimmt Gestaltung und Umsetzung persönlich.
 Task EH-BRAND-03: in progress, gestalterische Nutzerabnahme offen.
 Issue: https://github.com/Delqhi/einfach-hausen/issues/39
+Aktueller Draft-PR: https://github.com/Delqhi/einfach-hausen/pull/41
 
 ## Sofort verstehen
 Die drei Stilproben in Draft-PR #40 wurden vom Nutzer ausdrücklich verworfen. 27/27 technische Prüfungen bleiben historische Evidenz, sind keine Designfreigabe. Nicht erneut zur Auswahl stellen und nicht erneut ausführen.
@@ -47,3 +48,6 @@ Node-Syntax, responsive Darstellung, Funktionen, axe und Server-Allowlist sind P
 
 ## Genau eine nächste Aktion
 Den neuen Atelier-02-Entwurf in Originalgröße mit dem Nutzer besprechen und sein tatsächliches Feedback in EH-BRAND-03 festhalten. Daraus Refinements ableiten; erst nach einer realen Richtungsentscheidung EH-BRAND-04 (zentraler Komponenten-/Markenvertrag) fortsetzen. EH-BRAND-05/06 bleiben abhängig. Kein Merge oder Deploy des ungewählten Entwurfs.
+
+## Verifizierte Bereitstellung
+Design-Commit baea585e9de24c6d6bada491ac61c4537f2a5e4d ist gepusht. Die eigenständige Vorschau wurde über GitHub auf den Intel-i9-Mac übertragen und per Google Chrome geöffnet (open exit 0); keine andere Mac-Arbeitskopie geändert. Empfangs- und Speicher-Nachweise: evidence/atelier/delivery.json und persistence.json. OpenViking-Korrektur mem-b823c53eeb3ad68261bc wurde gespeichert und korrekt zurückgelesen; Brain-Konvention 6d24e92d-81e2-45a7-9948-9da8a512c065 ebenfalls. Honcho bleibt wie zuvor nicht verfügbar; dort wird keine Speicherung behauptet.

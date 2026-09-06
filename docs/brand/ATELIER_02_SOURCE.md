@@ -4971,13 +4971,14 @@ Refs #39. Diese Welle ersetzt die visuellen Vorschläge aus #40; die alte Eviden
 
 ## docs/brand/HANDOFF.md
 
-SHA256: 99a236240992f00126e7551a78386058bd8de7bdc7ccd5fedd5daefca9b8015c
+SHA256: f7de35a70e9ad456d46fcf57a141d7c9dfcb6ac099e99076c3bdb14a118d412c
 
 ````markdown
 # EH-BRAND — aktueller Handoff: Atelier 02
 Stand 2026-09-06. Root Codex übernimmt Gestaltung und Umsetzung persönlich.
 Task EH-BRAND-03: in progress, gestalterische Nutzerabnahme offen.
 Issue: https://github.com/Delqhi/einfach-hausen/issues/39
+Aktueller Draft-PR: https://github.com/Delqhi/einfach-hausen/pull/41
 
 ## Sofort verstehen
 Die drei Stilproben in Draft-PR #40 wurden vom Nutzer ausdrücklich verworfen. 27/27 technische Prüfungen bleiben historische Evidenz, sind keine Designfreigabe. Nicht erneut zur Auswahl stellen und nicht erneut ausführen.
@@ -5024,7 +5025,26 @@ Node-Syntax, responsive Darstellung, Funktionen, axe und Server-Allowlist sind P
 ## Genau eine nächste Aktion
 Den neuen Atelier-02-Entwurf in Originalgröße mit dem Nutzer besprechen und sein tatsächliches Feedback in EH-BRAND-03 festhalten. Daraus Refinements ableiten; erst nach einer realen Richtungsentscheidung EH-BRAND-04 (zentraler Komponenten-/Markenvertrag) fortsetzen. EH-BRAND-05/06 bleiben abhängig. Kein Merge oder Deploy des ungewählten Entwurfs.
 
+## Verifizierte Bereitstellung
+Design-Commit baea585e9de24c6d6bada491ac61c4537f2a5e4d ist gepusht. Die eigenständige Vorschau wurde über GitHub auf den Intel-i9-Mac übertragen und per Google Chrome geöffnet (open exit 0); keine andere Mac-Arbeitskopie geändert. Empfangs- und Speicher-Nachweise: evidence/atelier/delivery.json und persistence.json. OpenViking-Korrektur mem-b823c53eeb3ad68261bc wurde gespeichert und korrekt zurückgelesen; Brain-Konvention 6d24e92d-81e2-45a7-9948-9da8a512c065 ebenfalls. Honcho bleibt wie zuvor nicht verfügbar; dort wird keine Speicherung behauptet.
+
 ````
+
+
+## docs/brand/evidence/atelier/ISSUE_UPDATE.md
+
+SHA256: 09e8a7f5106123d1c4103941c9641f9419b23bf8658d8c48f71bf9054c5512a4
+
+```markdown
+Die drei alten Studien aus PR #40 sind nach ausdrücklicher Nutzerkritik verworfen. Root Codex hat die Gestaltung selbst übernommen und einen neuen, vollformatigen interaktiven Entwurf umgesetzt: https://github.com/Delqhi/einfach-hausen/pull/41.
+
+Atelier 02: Ein Zuhause mit Gedächtnis — große Wortbilder, Hausecke, Hauschronik, verbundenes Hauswissen. Startseite, Hausakte und Kontakt sind bedienbar. Zwölf Responsive-Ansichten, sechs axe-Prüfungen ohne Verstöße und lokale Interaktionsprüfungen bestanden; Desktop/Mobil/Tablet wurden persönlich angesehen und korrigiert.
+
+Alles ist unter docs/brand/ATELIER_02.md, HANDOFF.md, ATELIER_02_SOURCE.md sowie evidence/atelier dokumentiert, inklusive vollständiger Quellen, SHA256, ursprünglicher Ablehnung, Tasks und Speicher-Nachweisen. EH-BRAND-03 bleibt in Arbeit: Der neue Entwurf ist noch nicht vom Nutzer bewertet. Kein Merge/Deploy.
+
+Vollansicht: design/brand-atelier/preview.html herunterladen und öffnen. Keine winzige Vergleichstabelle.
+
+```
 
 
 ## docs/brand/evidence/atelier/VISUAL_REVIEW.md
@@ -5095,6 +5115,64 @@ SHA256: 68078fd090fbe179446b19c87741bd48f733334eb3a01a500ac1c6785f483181
 ```
 
 
+## docs/brand/evidence/atelier/delivery.json
+
+SHA256: 02bbf0181d390d9669ebc6d0981ae499e5506ff826c5927cc577e12984f79c5d
+
+```json
+{
+  "pr": "https://github.com/Delqhi/einfach-hausen/pull/41",
+  "issue": "https://github.com/Delqhi/einfach-hausen/issues/39",
+  "design_commit": "baea585e9de24c6d6bada491ac61c4537f2a5e4d",
+  "base": "1239f7c469007ca5dd9895a8a0f44100c2b8b583",
+  "status": "draft; user review pending; old PR40 studies rejected",
+  "host": "sinsupabase",
+  "executor": "Root Codex personally; no additional design agent",
+  "mac_preview": "/Users/jeremyschulze/orca/workspaces/einfach-hausen-brand-atelier-20260906/design/brand-atelier/preview.html",
+  "issue_comment": "https://github.com/Delqhi/einfach-hausen/issues/39#issuecomment-5556667430",
+  "issue_comment_exit": 0,
+  "old_pr_comment": "https://github.com/Delqhi/einfach-hausen/pull/40#issuecomment-5556667518",
+  "old_pr_comment_exit": 0,
+  "mac_review": {
+    "device": "MacBook-Pro-von-Jeremy-3.local",
+    "cpu": "Intel Core i9-9980HK",
+    "transport": "GitHub fetch -> isolated detached worktree -> Google Chrome file open",
+    "design_commit": "baea585e9de24c6d6bada491ac61c4537f2a5e4d",
+    "fetch_exit": 0,
+    "worktree_exit": 0,
+    "chrome_open_exit": 0
+  },
+  "verification": {
+    "status": "pass",
+    "responsive_views": 12,
+    "widths": [
+      320,
+      390,
+      736,
+      1440
+    ],
+    "axe_runs": 6,
+    "axe_violations": 0,
+    "browser_errors": 0,
+    "visual_review_by": "Root Codex; desktop, mobile, tablet; actual screenshots inspected and corrected",
+    "user_approval": false,
+    "production_sources_unchanged": true
+  },
+  "source_sha256": {
+    "design/brand-atelier/atelier.js": "686b400f608ee9d842594b524e5b1cc3e77673dc90e1a40939427901648b6ee5",
+    "design/brand-atelier/index.html": "fd89e94a41a0aed1e23db8f28788075cc0710b1c79e228ac42b3a7bc2cd8cff5",
+    "design/brand-atelier/build-preview.py": "dc69e61551f4f3938ee1a2ee7456ab13ea2c8c46f4564a5a73ae6b89973fe077",
+    "design/brand-atelier/export-source.py": "bc14289d766e5f0a1085aef44cbcf081463c931302fe84dee44ca8ce6ca8ed46",
+    "design/brand-atelier/server.mjs": "461b0e6e723797834c9d42b49b73ed77f89738546ede8691ddd41f40dd333330",
+    "design/brand-atelier/verify.mjs": "eb90097d220d11508b7c464574a192bcc5ab79ce9ec30c98b3c2ad30d698b0fc",
+    "design/brand-atelier/preview.html": "a8b3bbaa9755fd6c14222713d7cf12c4d44ea21b0672625efc65331a821a9be5",
+    "design/brand-atelier/atelier.css": "799b7fbcaa5b945b6a3fbefd956553befc56ba7e52000b441137782e9b85567f"
+  }
+}
+
+```
+
+
 ## docs/brand/evidence/atelier/gitnexus.json
 
 SHA256: a8ff6aa3a28eb3c5fb66e6c9aa001c888bab813bd42373c6b9e217ac71455512
@@ -5114,7 +5192,7 @@ SHA256: a8ff6aa3a28eb3c5fb66e6c9aa001c888bab813bd42373c6b9e217ac71455512
 
 ## docs/brand/evidence/atelier/persistence.json
 
-SHA256: 5288a75d7c94b93014d4c6df8eba15b9069de3d14803e8df306ef34606ec41dc
+SHA256: 1db10ccd3f4b5b1e2445dfd1da61ce160d4688e3ca0c037008d137b6b4c93d52
 
 ```json
 {
@@ -5145,9 +5223,13 @@ SHA256: 5288a75d7c94b93014d4c6df8eba15b9069de3d14803e8df306ef34606ec41dc
     }
   },
   "archive_title_correction": {
-    "status": "pending",
-    "reason": "Generated first archive title incorrectly says Atelier 02 rejected, while its body correctly says old PR #40 studies rejected. Exact source and task clarify that the new Atelier 02 has not been reviewed by the user. Retried through supported gateway; no direct store mutation.",
-    "log": ""
+    "status": "stored",
+    "record": "mem-b823c53eeb3ad68261bc",
+    "receipt": "65bbdf32-540e-43ce-980f-161fade94c0b",
+    "backend_ref": "session:9066847f-2a17-4298-9597-90b2c60c33b0;task:da1262c5-3a94-46e8-a946-2e43808d3feb",
+    "readback_exit": 0,
+    "readback": "{\"ok\":true,\"result\":{\"latest_archive_overview\":\"# Working Memory\\n\\n## Session Title\\nDesign/Brand Atelier 02 Status, Review, and Memory Correction\\n\\n## Current State\\nAtelier 02, a new design/brand prototype authored by Root Codex, is awaiting user review and feedback; it has not yet been approved or rejected. Previous rejections applied only to earlier PR #40 variants, not Atelier 02. EH-BRAND-03 is still in progress, and there will be no further Prime/bai design dispatches or merges/deploys until Atelier 02 is reviewed.\\n\\n## Task & Goals\\nThe primary goal is to update the status of design/brand-atelier prototypes, clarify the review status of Atelier 02, and ensure accurate historical record-keeping. A key task is to correct a misleading archive title for a previous memory record.\\n\\n## Key Facts & Decisions\\n*   Atelier 02 is a new design/brand-atelier prototype.\\n*   Atelier 02 has not yet been user-reviewed, approved, or rejected.\\n*   Earlier three PR #40 / design/brand-study variants were rejected.\\n*   Root Codex is the personal author of the new design/brand-atelier prototype (Atelier 02).\\n*   EH-BRAND-03 is currently in progress.\\n*   Decision: No further Prime/bai design dispatch will occur.\\n*   Decision: No merge/deploy will occur until Atelier 02 is reviewed.\\n\\n## Files & Context\\n*   `design/einfachhausen-brand-atelier-20260906`: Path to the new design/brand-atelier prototype (Atelier 02) authored by Root Codex.\\n*   `mem-448a31e447df8e7746a2`: A superseded memory record whose archive title needs correction. Its body correctly distinguishes old rejected studies from the new proposal.\\n*   `PR #40`: Refers to earlier design/brand-study variants that were rejected.\\n\\n## Errors & Corrections\\n*   Correction: The previous understanding that \\\"REJECTED\\\" applied to Atelier 02 was incorrect; rejection applied exclusively to earlier three PR #40 / design/brand-study variants.\\n*   Correction Task: The generated archive title of `mem-448a31e447df8e7746a2` is misleading and needs to be corrected, although its body content is accurate.\\n\\n## Open Issues\\n*   Latest user feedback is required for Atelier 02.\\n*   The archive title for `mem-448a31e447df8e7746a2` needs to be corrected.\",\"pre_archive_abstracts\":[],\"messages\":[],\"estimatedTokens\":538,\"stats\":{\"totalArchives\":1,\"includedArchives\":0,\"droppedArchives\":1,\"failedArchives\":0,\"activeTokens\":0,\"archiveTokens\":538}}}\n",
+    "reason": "Previous generated archive title wrongly associated rejection with Atelier 02. Correction: old PR40 studies rejected; new Atelier02 not yet reviewed."
   }
 }
 
