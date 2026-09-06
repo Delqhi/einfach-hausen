@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
-import { Building2, CircleAlert, HelpCircle, LogIn, MessageCircle, ShieldCheck } from 'lucide-react';
+import { CircleAlert, ShieldCheck } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, InfoPanel, LinkButton, PageHero, Section, Statement, TextLink, mkt as styles } from '@/components/marketing/ui';
 import { MiniContact } from '@/components/marketing/app-frames';
+import { mkt as styles } from '@/components/marketing/ui';
+import { EHScope, EHSection, EHPageHero, EHServiceIndex, EHProse, EHPanel, EHCallout, EHClosing, EHActions, EHButton, EHText, EHTextLink } from '@/design-system';
 
 export const metadata: Metadata = {
   title: 'Kontakt',
@@ -12,62 +13,64 @@ export const metadata: Metadata = {
 };
 
 const ROUTES = [
-  { icon: MessageCircle, title: 'Neues Anliegen starten', text: 'Beschreibe kurz, was ansteht. Wir finden die passenden Partner vor Ort.', href: '/register?role=homeowner', label: 'Anliegen starten' },
-  { icon: LogIn, title: 'Bestehender Vorgang', text: 'Ansprechpartner, Angebote, Termine und Dokumente im Hauskonto einsehen.', href: '/login', label: 'Zum Login' },
-  { icon: HelpCircle, title: 'Fragen & Antworten', text: 'Kosten, Hausakte und Sicherheit detailliert im Hilfebereich nachlesen.', href: '/hilfe', label: 'Hilfe & FAQ öffnen' },
-  { icon: Building2, title: 'Für Handwerksbetriebe', text: 'Informationen für Partnerbetriebe, Konditionen und Partner-Registrierung.', href: '/partner', label: 'Partnerbereich' },
+  { title: 'Neues Anliegen starten', text: 'Beschreibe kurz, was ansteht. Wir finden die passenden Partner vor Ort.', href: '/register?role=homeowner', label: 'Anliegen starten' },
+  { title: 'Bestehender Vorgang', text: 'Ansprechpartner, Angebote, Termine und Dokumente im Hauskonto einsehen.', href: '/login', label: 'Zum Login' },
+  { title: 'Fragen & Antworten', text: 'Kosten, Hausakte und Sicherheit detailliert im Hilfebereich nachlesen.', href: '/hilfe', label: 'Hilfe & FAQ öffnen' },
+  { title: 'Für Handwerksbetriebe', text: 'Informationen für Partnerbetriebe, Konditionen und Partner-Registrierung.', href: '/partner', label: 'Partnerbereich' },
 ] as const;
 
 export default function Page() {
   return (
     <MarketingShell>
-      <PageHero
-        eyebrow="Kontakt & Support"
-        title="Sag uns, worum es geht. Wir leiten dich direkt an die richtige Stelle."
-        text="Hausanliegen, laufende Reparaturen und Partneranfragen bleiben dort gebündelt, wo der Kontext liegt. Kein Anliegen verliert den Faden."
-        aside={<MiniContact />}
-      />
+      <EHScope>
+        <EHPageHero
+          eyebrow="Kontakt & Support"
+          title="Sag uns, worum es geht. Wir leiten dich direkt an die richtige Stelle."
+          text="Hausanliegen, laufende Reparaturen und Partneranfragen bleiben dort gebündelt, wo der Kontext liegt. Kein Anliegen verliert den Faden."
+          media={<MiniContact />}
+        />
 
-      <Section tone="surface" eyebrow="Wegweiser" title="Vier direkte Wege zu deinem Anliegen.">
-        <div className={styles.cardGrid} data-cols="4">
-          {ROUTES.map(({ icon: Icon, title, text, href, label }) => (
-            <article key={title} className={styles.card}>
-              <span className={styles.cardIcon}><Icon size={20} /></span>
-              <h3 className={styles.cardTitle}>{title}</h3>
-              <p className={styles.cardText}>{text}</p>
-              <span className={styles.cardFoot}><TextLink href={href}>{label}</TextLink></span>
-            </article>
-          ))}
-        </div>
-      </Section>
+        <EHSection compact>
+          <EHServiceIndex items={ROUTES.map(({ title, text, href, label }) => ({ title, text, href, label }))} />
+        </EHSection>
 
-      <Statement kicker="Unser Grundsatz">Kein Anliegen verliert seinen Kontext. <mark>Kein Kontakt läuft ins Leere.</mark></Statement>
+        <EHSection compact>
+          <EHProse>
+            <p><strong>Unser Grundsatz.</strong> Kein Anliegen verliert seinen Kontext. <mark>Kein Kontakt läuft ins Leere.</mark></p>
+          </EHProse>
+        </EHSection>
 
-      <Section eyebrow="Datenschutz & Sicherheit" title="Offizieller Kontakt für rechtliche und vertrauliche Anliegen.">
-        <InfoPanel label="Betreiberkontakt">
-          <p>Für Datenschutzanfragen, rechtliche Mitteilungen oder Sicherheitsmeldungen stehen verifizierte Kanäle im Impressum und in der Datenschutzerklärung zur Verfügung. Plattformanfragen werden strukturiert über dein verifiziertes Nutzerkonto abgewickelt.</p>
-        </InfoPanel>
-        <div className={styles.linkRow}>
-          <LinkButton href="/datenschutz" secondary>Datenschutzerklärung</LinkButton>
-          <LinkButton href="/sicherheit" secondary>Sicherheitsprinzipien</LinkButton>
-          <LinkButton href="/impressum" secondary>Impressum</LinkButton>
-        </div>
-      </Section>
+        <EHSection compact>
+          <EHPanel title="Offizieller Kontakt für rechtliche und vertrauliche Anliegen.">
+            <EHText>Für Datenschutzanfragen, rechtliche Mitteilungen oder Sicherheitsmeldungen stehen verifizierte Kanäle im Impressum und in der Datenschutzerklärung zur Verfügung. Plattformanfragen werden strukturiert über dein verifiziertes Nutzerkonto abgewickelt.</EHText>
+            <EHActions>
+              <EHButton href="/datenschutz" variant="secondary">Datenschutzerklärung</EHButton>
+              <EHButton href="/sicherheit" variant="secondary">Sicherheitsprinzipien</EHButton>
+              <EHButton href="/impressum" variant="secondary">Impressum</EHButton>
+            </EHActions>
+            <EHText size="meta">Weiterführend: <EHTextLink href="/datenschutz">Datenschutz</EHTextLink>, <EHTextLink href="/hilfe">Hilfe & FAQ</EHTextLink>.</EHText>
+          </EHPanel>
+        </EHSection>
 
-      <Section eyebrow="Notfall-Hinweis" title="Einfach Hausen ersetzt keinen behördlichen Notruf.">
-        <div className={styles.cardGrid} data-cols="2">
-          <div className={styles.panelWarn}>
-            <strong className={styles.panelTitleWarn}><CircleAlert size={20} /> Akute Gefahr für Leib &amp; Leben</strong>
-            <p className={styles.panelText}>Bei Feuer, Gasgeruch, Einbruch oder akuter Einsturzgefahr wähle immer umgehend die 112 bzw. 110.</p>
+        <EHSection compact>
+          <EHCallout title="Einfach Hausen ersetzt keinen behördlichen Notruf.">
+            <EHText>Bei Rohrbruch oder Heizungsausfall im Winter steht dir in deinem Hauskonto der direkte Notfall-Modus zur Verfügung.</EHText>
+          </EHCallout>
+          {/* Ausnahme 05-WEB-01: 112-Warnpanel bleibt im Bestand (panelWarn), kein Rezept vorhanden. Inhalt unverändert. */}
+          <div className={styles.cardGrid} data-cols="2">
+            <div className={styles.panelWarn}>
+              <strong className={styles.panelTitleWarn}><CircleAlert size={20} /> Akute Gefahr für Leib &amp; Leben</strong>
+              <p className={styles.panelText}>Bei Feuer, Gasgeruch, Einbruch oder akuter Einsturzgefahr wähle immer umgehend die 112 bzw. 110.</p>
+            </div>
+            <div className={styles.panel}>
+              <strong className={styles.panelTitleAccent}><ShieldCheck size={20} /> Dringende Hausschäden</strong>
+              <p className={styles.panelText}>Bei Rohrbruch oder Heizungsausfall im Winter steht dir in deinem Hauskonto der direkte Notfall-Modus zur Verfügung.</p>
+            </div>
           </div>
-          <div className={styles.panel}>
-            <strong className={styles.panelTitleAccent}><ShieldCheck size={20} /> Dringende Hausschäden</strong>
-            <p className={styles.panelText}>Bei Rohrbruch oder Heizungsausfall im Winter steht dir in deinem Hauskonto der direkte Notfall-Modus zur Verfügung.</p>
-          </div>
-        </div>
-      </Section>
+        </EHSection>
 
-      <CtaBand title="Brauchst du Hilfe bei deinem Eigenheim?" text="Kostenlos anmelden und direkt mit dem Hausmeister-Assistenten starten." />
+        <EHClosing title="Brauchst du Hilfe bei deinem Eigenheim?" text="Kostenlos anmelden und direkt mit dem Hausmeister-Assistenten starten." href="/register?role=homeowner" label="Anliegen starten" />
+      </EHScope>
     </MarketingShell>
   );
 }
