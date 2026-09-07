@@ -241,3 +241,14 @@ Einfache, transparente monatliche Kostenbasis ohne FinOps-Overhead (Stand: Septe
 - Bis 1.000 aktive Nutzer/Monat verbleiben die Infrastrukturkosten stabil unter 10,00 €/Monat.
 - Bei Überschreiten der OCI Free-Tier-Grenzen (z. B. Backup-Speicher > 100 GB) skaliert Block-Storage mit ~0,025 €/GB/Monat.
 - Transaktionskosten tragen sich über die gebuchten Partner-Tarife und Mitgliedschaften selbst.
+
+## Feature-Flag lifecycle (T-0139)
+
+Flags are defined in `src/lib/feature-flags.ts` (`FLAG_DEFAULTS`) and each definition carries `owner` (role from `docs/COMPANY_IDENTITY.md`) and `expiresAt` (ISO date). `scripts/feature-flag-lifecycle.mjs` (`npm run test:flags`, release-gate Layer 1) fails the release when:
+
+1. a definition lacks `owner` or a parseable `expiresAt`,
+2. a flag's expiry passed while it is still enabled in the DB,
+3. the DB contains rows for a flag that is no longer defined (orphaned rows),
+4. a non-production-toggleable flag is enabled.
+
+**Removal after rollout** is part of the release process: delete the flag gates in code, remove the definition, delete the DB row (`DELETE FROM feature_flags WHERE key = '...'`), note the removal in the release PR — the lifecycle check verifies no rows remain. `--simulate-expired` exercises the expired-enabled branch without waiting for real dates.
