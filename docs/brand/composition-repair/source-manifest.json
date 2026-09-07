@@ -1,0 +1,101 @@
+{
+  "base": "dc70cd6",
+  "files": {
+    ".gitattributes": {
+      "sha256": "63e9cd18f27a506a2b27de1d128ff158888d4b2395c50cffacdbdaa67e549219",
+      "bytes": 201,
+      "kind": "text"
+    },
+    "AGENTS.md": {
+      "sha256": "6960768838e7e4d7529f5ef083ff7ec924cc17a9edb2b43882dde5f8f3946b48",
+      "bytes": 32427,
+      "kind": "text"
+    },
+    "DESIGN.md": {
+      "sha256": "432a672329521a54456d6ba4173ea40bea81cf0a7d22ec7fc69b9beb03254eac",
+      "bytes": 15136,
+      "kind": "text"
+    },
+    "design/design-lock.json": {
+      "sha256": "da3736af23eaa3e125e47c4834125e133ebef4656419454178a502baf362d3a7",
+      "bytes": 4240,
+      "kind": "text"
+    },
+    "docs/NEXT_AGENT.md": {
+      "sha256": "88d1b85c74dfaf107a01005a5b3c6420ab06e12c0a0251498e64e400234efda7",
+      "bytes": 9394,
+      "kind": "text"
+    },
+    "docs/brand/SIN-EH-DESIGN-SKILL.md": {
+      "sha256": "d959a31b30e2d6d6140e5d84dc2e81baf79f98730ef814e8bcc533bdf0459498",
+      "bytes": 783,
+      "kind": "text"
+    },
+    "docs/brand/composition-repair/HANDOFF.md": {
+      "sha256": "7f37d37ea31a14170f4d86a603bb14387af15f851ee22903f05f33382e1498cf",
+      "bytes": 4690,
+      "kind": "text"
+    },
+    "docs/brand/system/COMPOSITION.md": {
+      "sha256": "fd41f484acf251d487c560d2dcd0520dd65689d43723890754d1fed1d74f9dcf",
+      "bytes": 5316,
+      "kind": "text"
+    },
+    "packages/eh-design/src/composition.tsx": {
+      "sha256": "b81e331888eeceb4d1af3d5da8abb989129f869c78562101d0e2f977b8ce9829",
+      "bytes": 3712,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html-style.mjs": {
+      "sha256": "63e1b4717c5591728625824be46fa87296c959354d1af54e9adb07323bc66555",
+      "bytes": 271913,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html.css": {
+      "sha256": "468298c0016ca5ee786d5e4febc1ee80f0e8c3a0a24307afb87a2c1be873e1bb",
+      "bytes": 25679,
+      "kind": "text"
+    },
+    "packages/eh-design/src/index.ts": {
+      "sha256": "cf214d3af12718f8f5e9a16b180f6c2291824a724dc64172f99aec8bb477c5b8",
+      "bytes": 202,
+      "kind": "text"
+    },
+    "packages/eh-design/src/request-form.tsx": {
+      "sha256": "efaa49e4d8a8329f350e26c75e85b1d5d61c910eae78a70222486229114d8002",
+      "bytes": 1686,
+      "kind": "text"
+    },
+    "packages/eh-design/src/styles.module.css": {
+      "sha256": "235ac8de099390ed7f2a6048ec32d520eab02e60dc68d7e3edf65f4b6c6a4e48",
+      "bytes": 24758,
+      "kind": "text"
+    },
+    "src/app/so-funktionierts/page.tsx": {
+      "sha256": "eff93eacf5af2d5dc18a43a5b3f9fffde14658ee79f89eedf8582625f71f59b0",
+      "bytes": 9439,
+      "kind": "text"
+    },
+    "src/components/home/intake-form.tsx": {
+      "sha256": "1c15ef0065615f1b497cf016750e514b1d99d26f3018cf5fc09fd8d1c1a724e8",
+      "bytes": 584,
+      "kind": "text"
+    },
+    "src/components/marketing/home-hero.tsx": {
+      "sha256": "8fef8ff8fa9624a178635222a5ff21864ee5685d6bf0ea961735f16fa4ed6532",
+      "bytes": 1912,
+      "kind": "text"
+    },
+    "src/components/marketing/home-sections.tsx": {
+      "sha256": "3748c38fc299592e3d0db88c27028ae6215a7c75bff452cad9812dc52d763890",
+      "bytes": 8545,
+      "kind": "text"
+    },
+    "src/components/marketing/ui.tsx": {
+      "sha256": "a8a03cf1d32ecbc80fd5205d90cbcce48afcdd9b9721f5f7583cb2cce040012b",
+      "bytes": 6342,
+      "kind": "text"
+    }
+  },
+  "deleted": []
+}

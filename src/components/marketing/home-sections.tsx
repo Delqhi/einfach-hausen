@@ -1,213 +1,114 @@
-import Image from 'next/image';
-import { ArrowRight, Check, CircleAlert, ShieldCheck } from 'lucide-react';
-import { IntakeForm } from '@/components/home/intake-form';
-import { Reveal } from './motion';
-import { AppFrame, ContactScreen, MiniContact, MiniCosts, MiniHausakte, MiniReminder, OrderStatusScreen, ReminderScreen } from './app-frames';
-import { FACTS, HOME_FAQ, PRINCIPLES } from './content';
-import { SERVICE_CATEGORIES } from './service-catalog';
-import { Eyebrow, Facts, Faq, LinkButton, ProofRow, Section, Statement, Steps, TextLink } from './ui';
-import styles from './mkt.module.css';
-import Link from 'next/link';
-
-export { HomeHero } from './home-hero';
-
-/* 2 · Problem mirror: the reader recognizes themselves before we talk product */
-const MIRROR = [
-  { tag: 'Seit Monaten aufgeschoben', quote: 'Die Dachrinne müsste mal … aber wen ruf ich da eigentlich an?' },
-  { tag: 'Verlorenes Wissen', quote: 'Wie hieß der Heizungsmensch von damals nochmal? Und war da nicht noch Garantie drauf?' },
-  { tag: 'Zettelwirtschaft', quote: 'Die Rechnung von 2022 liegt irgendwo im Ordner. Oder in einer Mail. Oder gar nicht.' },
-] as const;
+import {
+  EHSection, EHSectionHeading, EHProblemNotes, EHComparison, EHProcess,
+  EHProductExcerpt, EHBenefitStories, EHSplitStory, EHImageFrame,
+  EHFeatureRows, EHServiceIndex, EHFAQ, EHText, EHTextLink, EHButton,
+  EHActions, EHCallout,
+} from "@/design-system";
+import { IntakeForm } from "@/components/home/intake-form";
+import { HOME_FAQ, PRINCIPLES } from "./content";
+import { SERVICE_CATEGORIES } from "./service-catalog";
+export { HomeHero } from "./home-hero";
+export { Statement } from "./ui";
 
 export function ProblemMirror() {
-  return (
-    <Section eyebrow="Kennst du das?" title="Ein Haus ist wunderbar. Und ein Job, den niemand dir beigebracht hat." text="Nicht die Reparatur ist anstrengend. Anstrengend ist das Drumherum: wissen, wen man braucht, jemanden erreichen, dranbleiben, und am Ende nichts wiederfinden.">
-      <div className={styles.cardGrid} data-cols="3">
-        {MIRROR.map((m, i) => (
-          <Reveal key={m.tag} delay={i * 0.07} className={styles.mirrorCard}>
-            <span className={styles.mirrorTag}>{m.tag}</span>
-            <p className={styles.mirrorQuote}>{m.quote}</p>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
-  );
+  return <EHSection><EHSectionHeading eyebrow="Kennst du das?"
+    title="Ein Haus ist wunderbar. Und ein Job, den niemand dir beigebracht hat."
+    text="Nicht die Reparatur ist anstrengend. Anstrengend ist das Drumherum: wissen, wen man braucht, jemanden erreichen, dranbleiben, und am Ende nichts wiederfinden."/>
+    <EHProblemNotes items={[
+      {title:"Seit Monaten aufgeschoben",text:"Die Dachrinne müsste mal … aber wen ruf ich da eigentlich an?"},
+      {title:"Verlorenes Wissen",text:"Wie hieß der Heizungsmensch von damals nochmal? Und war da nicht noch Garantie drauf?"},
+      {title:"Zettelwirtschaft",text:"Die Rechnung von 2022 liegt irgendwo im Ordner. Oder in einer Mail. Oder gar nicht."},
+    ]}/>
+  </EHSection>;
 }
 
-/* 3 · The switch: one sentence + before/after */
 export function TheSwitch() {
-  return (
-    <section className={`${styles.statement} ${styles.toneSand}`}>
-      <div className={styles.statementInner}>
-        <Reveal><Eyebrow terra>Der Unterschied</Eyebrow></Reveal>
-        <Reveal delay={0.08}><p className={styles.statementText}>Du musst nicht wissen, welches Gewerk. <mark>Du musst es nur sagen.</mark></p></Reveal>
-      </div>
-      <div className={`${styles.container} ${styles.beforeAfter}`}>
-        <Reveal className={styles.baBefore}>
-          <span className={styles.baLabel}>Bisher</span>
-          <ul className={styles.baList}>
-            <li><CircleAlert size={18} /> Googeln, drei Betriebe anrufen, zwei rufen nie zurück</li>
-            <li><CircleAlert size={18} /> Termine per WhatsApp, Angebote per Mail, Rechnung auf Papier</li>
-            <li><CircleAlert size={18} /> Nach zwei Jahren weiß niemand mehr, was gemacht wurde</li>
-          </ul>
-        </Reveal>
-        <Reveal delay={0.1} className={styles.baAfter}>
-          <span className={styles.baLabel}>Mit Einfach Hausen</span>
-          <ul className={styles.baList}>
-            <li><Check size={18} /> Ein Satz reicht: „Heizung macht Geräusche“</li>
-            <li><Check size={18} /> Ein geprüfter Partner, ein Ansprechpartner, ein Kostenrahmen vorab</li>
-            <li><Check size={18} /> Alles landet automatisch in deiner Hausakte</li>
-          </ul>
-        </Reveal>
-      </div>
-    </section>
-  );
+  return <EHSection tone="white"><EHSectionHeading eyebrow="Der Unterschied"
+    title="Du musst nicht wissen, welches Gewerk. Du musst es nur sagen."/>
+    <EHComparison left={{title:"Bisher",items:[
+      "Googeln, drei Betriebe anrufen, zwei rufen nie zurück",
+      "Termine per WhatsApp, Angebote per Mail, Rechnung auf Papier",
+      "Nach zwei Jahren weiß niemand mehr, was gemacht wurde",
+    ]}} right={{title:"Mit Einfach Hausen",items:[
+      "Ein Satz reicht: „Heizung macht Geräusche“",
+      "Ein geprüfter Partner, ein Ansprechpartner, ein Kostenrahmen vorab",
+      "Alles landet automatisch in deiner Hausakte",
+    ]}}/>
+  </EHSection>;
 }
 
-/* 4 · How it works: three steps with real screens */
 export function HowItWorks() {
-  return (
-    <Section tone="surface" eyebrow="So funktioniert's" title="Drei Schritte. Danach kümmert sich ein Mensch." text="Kein Formular-Marathon, kein Vergleichsportal. Du sagst, was los ist. Der Rest ist unsere Arbeit." id="so-funktionierts">
-      <Steps
-        items={[
-          { title: 'Du beschreibst, was ansteht', text: 'In deinen Worten, per Text, Foto oder Sprachnachricht. Wir ordnen ein, was dahintersteckt.', visual: <AppFrame size="sm"><ReminderScreen /></AppFrame> },
-          { title: 'Wir organisieren', text: 'Passender Partnerbetrieb aus deiner Region, Kostenrahmen, Terminvorschlag. Du bestätigst oder lehnst ab.', visual: <AppFrame size="sm"><OrderStatusScreen /></AppFrame> },
-          { title: 'Ein Mensch übernimmt', text: 'Dein Ansprechpartner hat Namen, Betrieb und Telefonnummer. Er meldet sich, kommt, erledigt. Fertig ist es erst, wenn du zufrieden bist.', visual: <AppFrame size="sm"><ContactScreen /></AppFrame> },
-        ]}
-      />
-      <div className={`${styles.mt} ${styles.center} ${styles.centerRow}`}>
-        <TextLink href="/so-funktionierts">Den ganzen Ablauf ansehen</TextLink>
-      </div>
-    </Section>
-  );
+  return <EHSection id="so-funktionierts"><EHSectionHeading eyebrow="So funktioniert's"
+    title="Drei Schritte. Danach kümmert sich ein Mensch."
+    text="Kein Formular-Marathon, kein Vergleichsportal. Du sagst, was los ist. Der Rest ist unsere Arbeit."/>
+    <EHProcess items={[
+      {title:"Du beschreibst, was ansteht",text:"In deinen Worten, per Text, Foto oder Sprachnachricht. Wir ordnen ein.",
+        media:<EHProductExcerpt label="Anliegen" title="Die Dachrinne läuft über." rows={[{title:"Deine Beschreibung",text:"Bei Regen läuft das Wasser neben der Haustür herunter."},{title:"Hilfreich, wenn vorhanden",text:"Ein Foto von der betroffenen Stelle."}]}/>},
+      {title:"Wir organisieren",text:"Passender Partnerbetrieb aus deiner Region, Kostenrahmen, Terminvorschlag. Du bestätigst oder lehnst ab.",
+        media:<EHProductExcerpt label="Vorschlag" title="Alles vor deiner Entscheidung." rows={[{title:"Leistung und Kostenrahmen",text:"Dachrinne reinigen · 160–200 €"},{title:"Terminvorschlag",text:"Donnerstag, 14 Uhr"}]}/>},
+      {title:"Ein Mensch übernimmt",text:"Dein Ansprechpartner hat Namen, Betrieb und Telefonnummer. Rechnung und Dokumente bleiben beim Vorgang.",
+        media:<EHProductExcerpt label="Hausakte" title="Auch danach nachvollziehbar." rows={[{title:"Dein Ansprechpartner",text:"Der ausführende Partnerbetrieb bleibt am Vorgang gespeichert."},{title:"Deine Unterlagen",text:"Rechnung, Leistungsnachweis und Verlauf an einem Ort."}]}/>},
+    ]}/>
+    <EHTextLink href="/so-funktionierts">Den ganzen Ablauf ansehen</EHTextLink>
+  </EHSection>;
 }
-
-/* 5 · Benefits: what you actually get */
-const BENEFITS = [
-  { title: 'Eine Hausakte, die mitdenkt', text: 'Jede Reparatur, jede Rechnung, jede Garantie an einem Ort. Nicht weil du sie abheftest, sondern weil sie nach jedem Vorgang automatisch dort landet. Beim Verkauf ist das bares Geld.', visual: <MiniHausakte />, href: '/hausakte', label: 'Zur Hausakte' },
-  { title: 'Erinnerungen, bevor es teuer wird', text: 'Heizungswartung, Dachrinnen vor dem Winter, Rauchmelder-Pflicht. Du bekommst rechtzeitig Bescheid und kannst mit einem Tipp organisieren lassen.', visual: <MiniReminder />, href: '/so-funktionierts', label: 'Wie das funktioniert' },
-  { title: 'Ein Mensch, kein Ticket', text: 'Du sprichst nicht mit einer Hotline, sondern mit Markus, der am Donnerstag kommt. Du kennst seinen Namen, seinen Betrieb, seine Nummer, bevor er klingelt.', visual: <MiniContact />, href: '/so-funktionierts#ansprechpartner', label: 'Dein Ansprechpartner' },
-  { title: 'Kostenrahmen vor dem Termin', text: 'Keine Überraschung auf der Rechnung. Du siehst vorher, womit du rechnen musst, und gibst erst dann frei.', visual: <MiniCosts />, href: '/preise', label: 'Zu den Preisen' },
-] as const;
 
 export function Benefits() {
-  return (
-    <Section eyebrow="Was du bekommst" title="Weniger im Kopf. Mehr im Griff." text="Einfach Hausen ist kein Handwerker-Portal. Es ist der Ort, an dem dein Haus verwaltet wird, damit du es nicht tun musst.">
-      <div className={styles.benefitList}>
-        {BENEFITS.map((b, i) => (
-          <Reveal key={b.title} className={styles.benefit} {...({ 'data-flip': i % 2 === 1 ? 'true' : 'false' } as Record<string, string>)}>
-            <div className={styles.benefitCopy}>
-              <h3>{b.title}</h3>
-              <p>{b.text}</p>
-              <TextLink href={b.href}>{b.label}</TextLink>
-            </div>
-            <div className={styles.benefitVisual}>{b.visual}</div>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
-  );
+  return <EHSection tone="white"><EHSectionHeading eyebrow="Was du bekommst" title="Weniger im Kopf. Mehr im Griff."
+    text="Einfach Hausen ist der Ort, an dem dein Haus verwaltet wird, damit du es nicht tun musst."/>
+    <EHBenefitStories items={[
+      {title:"Eine Hausakte, die mitdenkt",text:"Jede Reparatur, jede Rechnung, jede Garantie an einem Ort. Die Geschichte deines Hauses bleibt nachvollziehbar.",
+       action:<EHTextLink href="/hausakte">Zur Hausakte</EHTextLink>,
+       media:<EHProductExcerpt label="Unterlagen" title="Dein Haus hat ein Gedächtnis." rows={[{title:"Wärmepumpe",text:"Garantie, Wartungsprotokoll und Rechnung gehören zusammen."},{title:"Dach",text:"Ausgeführte Arbeiten und zuständiger Betrieb bleiben auffindbar."}]}/>},
+      {title:"Erinnerungen, bevor es teuer wird",text:"Heizungswartung, Dachrinnen vor dem Winter, Rauchmelder. Behalte anstehende Aufgaben im Blick und lass dir bei der Organisation helfen.",
+       action:<EHTextLink href="/so-funktionierts">Wie das funktioniert</EHTextLink>,
+       media:<EHProductExcerpt label="Erinnerungen" title="Was als Nächstes ansteht." rows={[{title:"Heizungswartung",text:"Den nächsten Wartungstermin planen."},{title:"Dachrinnen",text:"Vor dem Winter prüfen und bei Bedarf reinigen lassen."}]}/>},
+      {title:"Ein Mensch, kein Ticket",text:"Du kennst Namen, Betrieb und Nummer deines Ansprechpartners. Der Kontakt bleibt auch für das nächste Anliegen erhalten.",
+       action:<EHTextLink href="/so-funktionierts#ansprechpartner">Dein Ansprechpartner</EHTextLink>,
+       media:<EHProductExcerpt label="Kontakt" title="Der Mensch hinter dem Auftrag." rows={[{title:"Direkter Kontakt",text:"Kontaktdaten des ausführenden Betriebs am Vorgang."},{title:"Gemeinsamer Verlauf",text:"Absprachen und Unterlagen im selben Zusammenhang."}]}/>},
+      {title:"Kostenrahmen vor dem Termin",text:"Du siehst vorher, womit du rechnen musst, und entscheidest, ob du den Auftrag freigibst.",
+       action:<EHTextLink href="/preise">Zu den Preisen</EHTextLink>,
+       media:<EHProductExcerpt label="Kosten" title="Du gibst den Auftrag frei." rows={[{title:"Vorgeschlagener Umfang",text:"Dachrinne reinigen"},{title:"Kostenrahmen im Beispiel",text:"160–200 €"}]} note="Illustratives Beispiel, kein verbindliches Angebot."/>},
+    ]}/>
+  </EHSection>;
 }
 
-/* 6 · Trust: honest facts + principles + a real face */
 export function Trust() {
-  return (
-    <Section tone="soft" eyebrow="Warum du uns vertrauen kannst" title="Keine Marktplatz-Logik. Klare Regeln." text="Wir verdienen nicht daran, deine Anfrage möglichst oft zu verkaufen. Wir verdienen daran, dass dein Haus gut läuft.">
-      <Facts items={FACTS} />
-      <div className={`${styles.split} ${styles.mt}`}>
-        <Reveal className={styles.photo} data-ratio="4:3">
-          <Image src="/images/marketing/partner-doorstep.jpg" alt="Ein Partnerbetrieb im Gespräch mit Hausbesitzern an der Haustür" width={1024} height={1024} sizes="(min-width: 900px) 560px, 100vw" />
-          <span className={styles.photoCaption}><ShieldCheck size={18} aria-hidden="true" /> Persönlich geprüfte Partnerbetriebe aus deiner Region</span>
-        </Reveal>
-        <div className={styles.stack}>
-          {PRINCIPLES.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.06}>
-              <div className={styles.numberedRow} data-pad="m">
-                <span className={styles.numberedNum}><Check size={16} strokeWidth={3} /></span>
-                <div className={styles.numberedBody}><h3>{p.title}</h3><p>{p.text}</p></div>
-              </div>
-            </Reveal>
-          ))}
-          <TextLink href="/partner">Für Betriebe: Partner werden</TextLink>
-          <TextLink href="/sicherheit">Unsere Sicherheits- und Datenprinzipien</TextLink>
-        </div>
-      </div>
-    </Section>
-  );
+  return <EHSection><EHSectionHeading eyebrow="Warum du uns vertrauen kannst" title="Klare Regeln. Ein konkreter Ansprechpartner."/>
+    <EHSplitStory title="Persönlich verbunden. Nachvollziehbar organisiert."
+      media={<EHImageFrame src="/images/marketing/partner-doorstep.jpg" alt="Gespräch an einer Haustür" caption="Illustrative Bildwelt: persönliche Zusammenarbeit."/>}>
+      <EHFeatureRows items={PRINCIPLES.map(p=>({title:p.title,text:p.text}))}/>
+      <EHActions><EHTextLink href="/partner">Für Betriebe: Partner werden</EHTextLink><EHTextLink href="/sicherheit">Sicherheit und Daten</EHTextLink></EHActions>
+    </EHSplitStory>
+  </EHSection>;
 }
 
-/* 7 · Categories as compact chips */
 export function CategoriesCompact() {
-  return (
-    <Section tone="surface" eyebrow="Wofür du uns fragen kannst" title="Alles, was ein Haus so braucht." text="Du musst dein Anliegen keiner Kategorie zuordnen. Das übernehmen wir. Zur Orientierung: so breit ist das Netz." tight>
-      <div className={styles.catGrid}>
-        {SERVICE_CATEGORIES.slice(0, 11).map(({ icon: Icon, title, slug }) => (
-          <Link key={slug} className={styles.cat} href={`/leistungen/${slug}`}><Icon size={20} aria-hidden="true" /> {title}</Link>
-        ))}
-        <Link className={styles.catMore} href="/leistungen">Alle Leistungen <ArrowRight size={18} aria-hidden="true" /></Link>
-      </div>
-    </Section>
-  );
+  return <EHSection tone="white"><EHSectionHeading eyebrow="Wofür du uns fragen kannst" title="Alles, was ein Haus so braucht."
+    text="Du musst dein Anliegen keiner Kategorie zuordnen. Zur Orientierung: so breit ist das Netz."/>
+    <EHServiceIndex items={SERVICE_CATEGORIES.slice(0,11).map(c=>({title:c.title,href:`/leistungen/${c.slug}`}))}/>
+    <EHTextLink href="/leistungen">Alle Leistungen ansehen</EHTextLink>
+  </EHSection>;
 }
 
-/* 8 · Pilot: real scarcity from the actual pilot phase */
 export function PilotBand() {
-  return (
-    <section className={styles.sectionTight}>
-      <Reveal className={styles.pilotBand}>
-        <div className={styles.pilotCopy}>
-          <span className={styles.pilotBadge}>Pilotphase</span>
-          <h2>Die ersten 1.000 Haushalte zahlen dauerhaft 15 % weniger.</h2>
-          <p>Wir bauen Einfach Hausen regional auf und starten mit einer begrenzten Zahl an Haushalten. Wer jetzt sein kostenloses Hauskonto anlegt, bekommt den Pilot-Status automatisch. Das FREE-Konto bleibt dabei immer 0 €.</p>
-          <div className={styles.pilotActions}>
-            <LinkButton href="/register?role=homeowner" variant="terra">Platz sichern, kostenlos</LinkButton>
-            <TextLink href="/preise">Preise ansehen</TextLink>
-            <TextLink href="/pilotphase">Bedingungen ansehen</TextLink>
-          </div>
-        </div>
-        <ul className={`${styles.pilotPerks} ${styles.pilotSide}`}>
-          <li><Check size={18} /> 15 % Dauer-Vorteil auf alle bezahlten Pakete, solange dein Konto besteht</li>
-          <li><Check size={18} /> Direkter Draht zum Team, dein Feedback prägt das Produkt</li>
-          <li><Check size={18} /> Keine Frist, kein Kleingedrucktes, jederzeit kündbar</li>
-        </ul>
-      </Reveal>
-    </section>
-  );
+  return <EHSection tone="sand"><EHSectionHeading eyebrow="Pilotphase" title="Die ersten 1.000 Haushalte zahlen dauerhaft 15 % weniger."
+    text="Wir bauen Einfach Hausen regional auf. Wer jetzt sein kostenloses Hauskonto anlegt, bekommt den Pilot-Status. Das FREE-Konto bleibt bei 0 €."/>
+    <EHCallout tone="paper" title="Dein Pilot-Vorteil"><EHText>15 % auf bezahlte Pakete, solange dein Konto besteht. Direkter Draht zum Team – dein Feedback prägt das Produkt.</EHText></EHCallout>
+    <EHActions><EHButton href="/register?role=homeowner" arrow>Hauskonto kostenlos anlegen</EHButton><EHTextLink href="/preise">Preise</EHTextLink><EHTextLink href="/pilotphase">Bedingungen</EHTextLink></EHActions>
+  </EHSection>;
 }
 
-/* 9 · FAQ */
 export function HomeFaq() {
-  return (
-    <Section eyebrow="Häufige Fragen" title="Was du vorher wissen willst." center>
-      <div className={styles.centerRow}>
-        <Faq items={HOME_FAQ} />
-      </div>
-      <div className={`${styles.mt} ${styles.centerRow}`}>
-        <TextLink href="/hilfe">Alle Fragen und Antworten</TextLink>
-      </div>
-    </Section>
-  );
+  return <EHSection><EHSectionHeading eyebrow="Häufige Fragen" title="Was du vorher wissen willst."/>
+    <EHFAQ items={[...HOME_FAQ]}/><EHTextLink href="/hilfe">Alle Fragen und Antworten</EHTextLink>
+  </EHSection>;
 }
 
-/* 10 · Final CTA */
 export function FinalCta() {
-  return (
-    <section className={styles.finalCta} id="final-cta">
-      <div className={styles.finalCtaInner}>
-        <Reveal><Eyebrow>Dein nächster Schritt</Eyebrow></Reveal>
-        <Reveal delay={0.06}><h2>Sag uns, was ansteht. Den Rest übernehmen wir.</h2></Reveal>
-        <Reveal delay={0.1}><p className={styles.lead}>Unverbindlich, kostenlos und in deinen Worten. Ein Satz reicht.</p></Reveal>
-        <Reveal delay={0.14} className={styles.container} data-pad="none">
-          <IntakeForm variant="band" />
-        </Reveal>
-        <Reveal delay={0.18} className={styles.finalCtaSecondary}>
-          <span>Noch kein konkretes Anliegen?</span>
-          <a href="/register?role=homeowner">Hauskonto kostenlos anlegen</a>
-          <span aria-hidden="true">·</span>
-          <ProofRow items={['kein Auftrag ohne deine Entscheidung']} />
-        </Reveal>
-      </div>
-    </section>
-  );
+  return <EHSection tone="sand" id="final-cta"><EHSectionHeading eyebrow="Dein nächster Schritt"
+    title="Sag uns, was ansteht." text="Unverbindlich und in deinen Worten. Ein Satz reicht."/>
+    <IntakeForm variant="band"/>
+    <EHTextLink href="/register?role=homeowner">Noch kein konkretes Anliegen? Hauskonto anlegen</EHTextLink>
+  </EHSection>;
 }
-
-export { Statement };

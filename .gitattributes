@@ -1,3 +1,5 @@
 
 # Generated verbatim source packet preserves inherited Markdown/code whitespace.
 docs/brand/system/SOURCE.md whitespace=-blank-at-eol
+
+docs/brand/composition-repair/SOURCE.md whitespace=-blank-at-eol
