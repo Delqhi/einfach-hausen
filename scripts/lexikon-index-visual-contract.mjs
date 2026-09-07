@@ -5,6 +5,7 @@ const { chromium } = await import(modulePath);
 const base = (process.env.BASE_URL || 'http://127.0.0.1:3000').replace(/\/$/, '');
 const candidates = [
   process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
+  (() => { try { const p = chromium.executablePath(); return fs.existsSync(p) ? p : ''; } catch { return ''; } })(),
   '/home/ubuntu/.cache/ms-playwright/chromium-1228/chrome-linux/chrome',
   '/home/ubuntu/.cache/ms-playwright/chromium-1223/chrome-linux/chrome',
   '/usr/bin/chromium',
