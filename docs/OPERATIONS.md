@@ -252,3 +252,7 @@ Flags are defined in `src/lib/feature-flags.ts` (`FLAG_DEFAULTS`) and each defin
 4. a non-production-toggleable flag is enabled.
 
 **Removal after rollout** is part of the release process: delete the flag gates in code, remove the definition, delete the DB row (`DELETE FROM feature_flags WHERE key = '...'`), note the removal in the release PR — the lifecycle check verifies no rows remain. `--simulate-expired` exercises the expired-enabled branch without waiting for real dates.
+
+## Data inventory (T-0146)
+
+`docs/privacy/DATA_INVENTORY.json` is the machine-readable record of every table (purpose, retention key, personal flag). `npm run test:inventory` (release-gate Layer 1) keeps it in sync: every table must be classified, personal tables need purpose + retention from the legend, and any new column matching sensitive patterns inside a **non-personal** table fails the gate until classified. Retention execution lives in T-0145 (`src/lib/retention.ts`, dispatcher) and the deletion workflow in T-0144.
