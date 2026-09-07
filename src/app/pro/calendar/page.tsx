@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import { ArrowRight, CalendarDays, UserRound } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
 import { AppShell } from '@/components/shell';
-import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
+import { ProviderAccessBoundary, ProviderPageIntro, ProviderState } from '@/components/provider/workspace';
+import { EHPanel, EHList, EHStatus } from '@/design-system';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel, statusLabel } from '@/lib/format';
@@ -25,23 +25,14 @@ export default async function ProCalendar() {
       />
       <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
-      <ProviderSectionHeader title="Bevorstehend" description={`${rows.length} ${rows.length === 1 ? 'Termin' : 'Termine'}`} />
-      <div className="stack">
-        {rows.map((row) => (
-          <Link href={`/pro/jobs/${row.job_id}`} className="appointment pro-appointment" key={row.id}>
-            <CalendarDays />
-            <div className="grow">
-              <strong>{row.title}</strong>
-              <p>{row.first_name} {row.last_name}{ctx.canManageJobs && row.contact_first ? ` · ${row.contact_first} ${row.contact_last}` : ''}</p>
-              <div className="provider-row-meta">
-                <span><CalendarDays /> {dateLabel(row.start_at)}</span>
-                {row.contact_first && <span><UserRound /> {row.contact_first} {row.contact_last}</span>}
-              </div>
-              <span className="provider-next-action">Auftrag öffnen <ArrowRight size={14} /></span>
-            </div>
-            <span className={`status ${row.status}`}>{statusLabel(row.status)}</span>
-          </Link>
-        ))}
+      <EHPanel title={`Bevorstehend · ${rows.length} ${rows.length === 1 ? 'Termin' : 'Termine'}`}>
+        <EHList label="Bevorstehende Termine" items={rows.map((row) => ({
+          id: String(row.id),
+          title: row.title,
+          text: `${row.first_name} ${row.last_name}${ctx.canManageJobs && row.contact_first ? ` · ${row.contact_first} ${row.contact_last}` : ''} — ${dateLabel(row.start_at)}${row.contact_first ? ` · ${row.contact_first} ${row.contact_last}` : ''}`,
+          href: `/pro/jobs/${row.job_id}`,
+          meta: <EHStatus>{statusLabel(row.status)}</EHStatus>,
+        }))} />
         {rows.length === 0 && (
           <ProviderState
             icon={<CalendarDays size={21} />}
@@ -49,7 +40,14 @@ export default async function ProCalendar() {
             description="Sobald ein bestätigter Kundentermin hinterlegt ist, erscheint er hier zusammen mit Auftrag und Ansprechpartner."
           />
         )}
-      </div>
+      </EHPanel>
+        {rows.length === 0 && (
+          <ProviderState
+            icon={<CalendarDays size={21} />}
+            title="Noch keine Termine"
+            description="Sobald ein bestätigter Kundentermin hinterlegt ist, erscheint er hier zusammen mit Auftrag und Ansprechpartner."
+          />
+        )}
     </AppShell>
   );
 }
