@@ -56,7 +56,7 @@ export default function Page() {
             <p><strong>Unser Anspruch.</strong> Verständlich bleiben. <mark>Bei jeder Frage, in jedem Schritt.</mark></p>
           </EHProse>
         </EHSection>
-        <EHClosing title="Deine konkrete Frage ist ein guter Startpunkt." text="Leg kostenlos ein Hauskonto an und beschreib dein Anliegen in normalen Worten. Ein Auftrag entsteht daraus nur, wenn du es willst." href="/#anliegen" label="Anliegen starten" />
+        <EHClosing title="Deine konkrete Frage ist ein guter Startpunkt." text="Leg kostenlos ein Hauskonto an und beschreib dein Anliegen in normalen Worten. Ein Auftrag entsteht daraus nur, wenn du es willst." href="/register?role=homeowner" label="Hauskonto kostenlos anlegen" secondary={<EHButton href="/#anliegen" variant="secondary">Anliegen starten</EHButton>} />
       </EHScope>
     </MarketingShell>
   );
