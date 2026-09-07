@@ -1,5 +1,11 @@
 # NEXT AGENT — Start here
 
+> **Stand 2026-09-07 (Welle 3 — TASKPLAN KONVERGIERT):** 130/130 Tasks done/abgeschlossen, 0 backlog, 0 in_progress, 0 blocked.
+> - **EH-BRAND-05-CRM:** PR #5 (einfach-hausen-crm) gemerged — native UI auf kanonischem Markenframe (Original-Logo/Inter/Atelier-02), npm check/test/cf:dry-run + Browser-Render verifiziert. Die ChatGPT-web-Vendor-WIP wurde vorher faithful committiert (91a6451).
+> - **EH-BRAND-06:** completed — vollstaendige Regression auf OCI mit echtem Chromium 151: Release-Gate 15/15, Website-Visual 72/72, Hub 24 Shots, CRM 390/1440, A11y PASS, Responsive 390/640/1440 (640: kein user-sichtbarer Overflow, nur content-visibility-Quirk), Keyboard geprueft.
+> - **Verbleibend (extern, EXTERNAL-BLOCKERS.md):** (1) GitHub-Actions-Billing auf Delqhi (Jerry) — CI laeuft seit 2026-09-06 nicht; (2) Production-Deploy der gemergten Welle (root: bash deploy/update-on-oci.sh in /srv); (3) T-0151-CI-Teil folgt aus (1).
+> - **Naechste Aktion (genau eine):** Deploy ausfuehren (root), dann `gh run rerun` der offenen Checks nach Billing-Freigabe.
+
 **Status 2026-09-03 ~15:21 UTC · main = e414cec (Produktion = 3fbe3c9, Deploy-Rückstand: T-0143-Export + DR-Runbook-Doku) · T-0120..T-0134, T-0137, T-0143 abgeschlossen**
 
 ## Wichtigste Betriebsänderungen dieser Welle (2026-09-03)
