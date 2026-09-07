@@ -3,6 +3,7 @@ import { ArrowLeft, CalendarClock, CheckCircle2, Database, Mail, MessageCircle, 
 import { requireAdmin } from '@/lib/admin-auth';
 import { CRM_LEAD_TYPES, CRM_PERMISSIONS, CRM_SOURCES, CRM_STATUSES, crmCategories, crmStats, listCrmLeads, syncCrmLifecycle } from '@/lib/crm';
 import { addCrmLeadAction, syncBusinessResearchAction, updateCrmLeadAction } from './actions';
+import { EHAppHeader } from '@/design-system';
 
 const labels: Record<string, string> = {
   collected: 'Gesammelt',
@@ -51,20 +52,23 @@ export default async function CrmPage({ searchParams }: { searchParams: Promise<
   return (
     <main className="min-h-screen bg-[#faf8f4] px-4 py-8 text-[#10222a] md:px-8">
       <div className="mx-auto max-w-[1440px]">
-        <header className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between border-b border-[#e4e2dc] pb-6">
-          <div>
-            <Link href="/admin" className="mb-2.5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#105258] hover:text-[#0b3a3f]">
-              <ArrowLeft size={14} /> Zurück zur Betriebsverwaltung
-            </Link>
-            <h1 className="text-3xl font-black tracking-[-0.03em] text-[#10222a]">Leads &amp; Outreach CRM</h1>
-            <p className="mt-1 text-sm text-[#4b5b60]">Pipeline für Handwerkspartner, Eigentümer-Anfragen und Marktpotenziale.</p>
-          </div>
-          <form action={syncBusinessResearchAction}>
-            <button className="inline-flex items-center gap-2 rounded-xl bg-[#105258] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#0d474d] transition-colors">
-              <Database size={16} /> Research-Daten synchronisieren
-            </button>
-          </form>
-        </header>
+        <Link href="/admin" className="mb-2.5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#105258] hover:text-[#0b3a3f]">
+          <ArrowLeft size={14} /> Zurück zur Betriebsverwaltung
+        </Link>
+        <div className="mb-8 border-b border-[#e4e2dc] pb-6">
+          <EHAppHeader
+            eyebrow="Betriebsverwaltung"
+            title="Leads & Outreach CRM"
+            text="Pipeline für Handwerkspartner, Eigentümer-Anfragen und Marktpotenziale."
+            actions={
+              <form action={syncBusinessResearchAction}>
+                <button className="inline-flex items-center gap-2 rounded-xl bg-[#105258] px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#0d474d] transition-colors">
+                  <Database size={16} /> Research-Daten synchronisieren
+                </button>
+              </form>
+            }
+          />
+        </div>
 
         {(sp.sync || sp.created || sp.updated || sp.error) && (
           <div className={`mb-6 rounded-xl border px-5 py-3.5 text-sm ${sp.error ? 'border-red-200 bg-red-50 text-red-800' : 'border-emerald-200 bg-emerald-50 text-emerald-800'}`}>

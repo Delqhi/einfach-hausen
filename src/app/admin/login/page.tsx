@@ -1,4 +1,24 @@
-import Link from 'next/link';
-import { Logo } from '@/components/logo';
+import { EHAccessPage, EHField, EHInput, EHFormFeedback } from '@/design-system';
 import { adminLoginAction } from '@/app/actions';
-export default async function AdminLogin({searchParams}:{searchParams:Promise<Record<string,string>>}){const sp=await searchParams;return <main className="auth-page"><form action={adminLoginAction} className="auth-card"><Logo/><h1>Plattform-Administration</h1><p>Partnerprüfung und Problemfälle verwalten.</p>{sp.error&&<div className="alert error">{sp.error}</div>}<label>Admin-Passwort<input type="password" name="password" required autoComplete="current-password"/></label><button className="btn primary wide">Admin anmelden</button><small><Link href="/">Zurück zur App</Link></small></form></main>}
+
+export default async function AdminLogin({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
+  const sp = await searchParams;
+  return (
+    <EHAccessPage
+      eyebrow="Administration"
+      title="Plattform-Administration"
+      text="Partnerprüfung und Problemfälle verwalten. Zugang nur für das Einfach-Hausen-Operationsteam."
+      form={
+        <form action={adminLoginAction} className="grid gap-4">
+          {sp.error ? <EHFormFeedback kind="error">{sp.error}</EHFormFeedback> : null}
+          <EHField id="password" label="Admin-Passwort" required>
+            <EHInput type="password" name="password" id="password" required autoComplete="current-password" />
+          </EHField>
+          <button type="submit" className="btn primary wide">Admin anmelden</button>
+        </form>
+      }
+      help={[{ href: '/', label: 'Zurück zur App' }]}
+      legal={<small>Zugriffe werden im Admin-Audit-Log protokolliert.</small>}
+    />
+  );
+}

@@ -31,6 +31,8 @@
 .eh-eyebrow { display: flex; gap: 12px; align-items: baseline; font-size: var(--eh-font-eyebrow); font-weight: 750; line-height: 1.5; letter-spacing: .09em; text-transform: uppercase; }
 .eh-register { color: var(--eh-color-terra); font-variant-numeric: tabular-nums; }
 [data-tone="deep"] .eh-register, .eh-recordCover .eh-register { color: var(--eh-color-sand); }
+/* T-0146 contrast follow-up (DECISION 2026-09-07): terra text on sand fails 4.5:1 — register digits on emphasis (sand) render ink like all sand-cover text. */
+[data-emphasis="true"] .eh-register { color: var(--eh-color-ink); }
 .eh-heading { color: inherit; font-family: inherit; font-weight: 760; line-height: 1.05; letter-spacing: -.045em; text-wrap: balance; }
 .eh-heading[data-scale="display"] { font-size: var(--eh-font-display); line-height: .99; letter-spacing: -.052em; }
 .eh-heading[data-scale="page"] { font-size: var(--eh-font-page); }

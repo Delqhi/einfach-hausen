@@ -4,10 +4,24 @@
 
 # NEXT AGENT — Handoff & Handback
 
+> **Stand 2026-09-07 (Welle 2, nach Dispatcher-Fix + Browser-Durchbruch):**
+> - **Produktions-Fix:** PR #55 (`75bca45`) repariert `einfach-hausen-dispatch.service` (Zustellung + Retention-Sweep standen seit 2026-09-06 19:47 UTC still). Timer seit 15:37 UTC grün.
+> - **Neu abgeschlossen:** T-0133 (Produktmetriken & SLOs — PR #57, live 7/7 Probes ok, Business-Raten in Kestra-Zeitreihe), T-0139 (Feature-Flag Lifecycle Gate — PR #58, in Release-Gate Layer 1), T-0146 (Datenschutz-Dateninventar + Gate — PR #59), **EH-BRAND-05-HUB** (portalhub PR #1, inkl. echter 390/736/1440-Abnahme: 24 Shots, 3 Overflow-Bugs gefunden+behoben, `b779122`), EH-BRAND-05-WEB.
+> - **Browser-Durchbruch:** Playwright-Chromium 151 läuft auf OCI (`playwright-core` install → ~/.cache). test:visual 72/72 PASS gegen Produktions-Build. Der frühere „kein Browser"-Blocker ist entfallen.
+> - **Weiterhin extern blockiert:** GitHub-CI auf `Delqhi/einfach-hausen` (Actions-Billing, Issue #33 — nur Jerry), 05-CRM (ChatGPT web, Mac i9). T-0151 bleibt solange blockiert (CI-Teil; Runner+Baselines laufen lokal/Deploy im Release-Gate).
+> - **Nächste Aktion (genau eine):** EH-BRAND-05-CRM, sobald ChatGPT web Zugang hat — oder auf Operator-Anweisung hin durch lokalen Agenten übernehmen (CRM-Worktree enthält unveröffentlichte Vendor-Sync-Änderungen von ChatGPT web; vorher abstimmen, nicht überschreiben).
+
+
 **Stand:** 2026-09-05 (Abend)
 **Kanonischer Abschlussstand:** Public Website Finish auf `main`; EH-01..EH-05 abgeschlossen. **Offen: Branch `feat/lexikon-enterprise-redesign` → PR → Merge nach Repo-Verifikation auf OCI-VM.**
 
 ## 0. Aktueller Kontinuationspunkt (zuerst lesen)
+
+**Stand 2026-09-07 (Admin-Familie / 05-HUB Welle):**
+
+- **EH-BRAND-05-HUB (portalphub):** Code-Migration abgeschlossen — PR https://github.com/einfachhausen-de/portalhub/pull/1 (CI grün). Siegel auf Edition-2-Vendor (`0efea86`) konsolidiert; `/brand`-Assets byte-identisch ausgeliefert. Offen: visuelle Abnahme 390/736/1440 (blockiert, kein funktionsfähiger Browser auf OCI — identisch zu `docs/brand/live-audit`).
+- **Admin-Familie (dieses Repo):** Branch `design/eh-admin-family-20260907` → PR #53. Login via `EHAccessPage`, Ops/Admin/CRM-Köpfe via `EHAppHeader`, Status-Chips via `EHStatus`. Typecheck/Lint/Build/Design-Gate grün; E2E-Smoke gegen Prod-Build mit echter DB (Probezeile, entfernt). Gleiche Browser-Blockade für Screenshots.
+- **Rest:** EH-BRAND-05-CRM (ChatGPT web, Mac i9-Zugang), EH-BRAND-06 Final-Gates (nach 05 komplett), Lexikon-Branch-Finish (unten).
 
 Operator-Anforderung (2026-09-05): „Lexikon-Seite und Unterseiten wirken nicht enterprise/überzeugend; Pro-Designer-Modus, kräftiges Motion-Design, fehlende Seiten ergänzen, Docs + Handoff.“
 

@@ -52,7 +52,9 @@
     "test:health-regression": "node scripts/t0134-health-regression.mjs",
     "test:export-regression": "node scripts/t0143-export-regression.mjs",
     "test:deletion-regression": "node scripts/t0144-deletion-regression.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:flags": "node scripts/feature-flag-lifecycle.mjs",
+    "test:inventory": "node scripts/data-inventory-check.mjs"
   },
   "dependencies": {
     "@capacitor/keyboard": "^8.0.5",

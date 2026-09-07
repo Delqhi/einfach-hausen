@@ -13,9 +13,11 @@ import { stripTypeScriptTypes } from 'node:module';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'eh-dispatch-src-'));
 fs.symlinkSync(path.join(root, 'node_modules'), path.join(scratch, 'node_modules'), 'dir');
-for (const rel of ['src/lib/db.ts', 'src/lib/mailer.ts', 'src/lib/notifications.ts', 'src/lib/retention.ts']) {
+for (const rel of ['src/lib/db.ts', 'src/lib/mailer.ts', 'src/lib/notifications.ts', 'src/lib/observability.ts', 'src/lib/security/redact.ts', 'src/lib/retention.ts']) {
   const src = fs.readFileSync(path.join(root, rel), 'utf8');
-  const stripped = stripTypeScriptTypes(src).replace(/(from\s*['"])(\.\.?\/[^'"]+)(['"])/g, (_m, a, s, b) => `${a}${s}.mjs${b}`);
+  const stripped = stripTypeScriptTypes(src)
+    .replace(/(from\s*['"])(\.\.?\/[^'"]+)(['"])/g, (_m, a, s, b) => `${a}${s}.mjs${b}`)
+    .replace(/(import\(\s*['"])(\.\.?\/[^'"]+)(['"])/g, (_m, a, s, b) => `${a}${s}.mjs${b}`);
   const dest = path.join(scratch, rel.replace(/\.ts$/, '.mjs'));
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   fs.writeFileSync(dest, stripped);
