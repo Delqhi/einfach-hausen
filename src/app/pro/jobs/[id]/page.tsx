@@ -37,7 +37,7 @@ import { DocumentForm } from './document-form';
 import { InvoiceForm } from './invoice-form';
 import { invoiceStatusLabel } from '@/lib/invoices';
 import { SubmitButton } from '@/components/ui/submit-button';
-import { EHAppHeader, EHErrorState, EHPanel, EHList, EHCallout, EHStatus } from '@/design-system';
+import { EHAppHeader, EHErrorState, EHPanel, EHList, EHCallout, EHStatus, EHQuoteForm, EHAssignmentForm, EHJobMessageForm } from '@/design-system';
 
 export default async function ProJob({
   params,
@@ -136,19 +136,13 @@ export default async function ProJob({
             <p>Der Eigentümer möchte zunächst einen fachlichen Menschen sprechen. Es wird noch kein Auftrag und kein Preis vereinbart.</p>
           </EHCallout>
           <ProviderNextStep description="Konkreten Ansprechpartner auswählen und den Kontakt übernehmen.">
-            <form action={acceptContactRequestAction.bind(null, access.id)} className="assign-form provider-primary-form">
-              <label>
-                Ansprechpartner
-                <select name="contactUserId" defaultValue={u.id}>
-                  {members.map((member) => (
-                    <option key={member.user_id} value={member.user_id}>
-                      {member.first_name} {member.last_name}{member.user_id === u.id ? ' · Ich' : ''} · {member.job_title || 'Ansprechpartner'}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <SubmitButton className="btn light" pendingLabel="Wird übernommen…">Kontakt übernehmen</SubmitButton>
-            </form>
+            <EHAssignmentForm
+              id="provider-accept-contact"
+              action={acceptContactRequestAction.bind(null, access.id)}
+              mode="accept-contact"
+              contacts={members.map((member) => ({ id: member.user_id, label: `${member.first_name} ${member.last_name}${member.user_id === u.id ? ' · Ich' : ''} · ${member.job_title || 'Ansprechpartner'}` }))}
+              selectedId={u.id}
+            />
           </ProviderNextStep>
           <form action={declineDispatchAction.bind(null, access.id)} className="decline-form">
             <SubmitButton className="btn ghost pro-ghost wide" pendingLabel="Wird abgelehnt…"><XCircle size={16} />Kontaktanfrage ablehnen</SubmitButton>
@@ -173,12 +167,14 @@ export default async function ProJob({
             title={access.urgency === 'emergency' ? 'Notfall beantworten' : 'Nächster Schritt'}
             description="Preis, frühesten realistischen Termin und Leistungsumfang als Angebot senden."
           >
-            <form action={submitQuoteAction.bind(null, access.id)} className="quote-form provider-primary-form">
-              <label>Gesamtpreis (€)<input name="amount" type="number" min="1" required defaultValue={quote ? quote.amount / 100 : ''} /></label>
-              <label>Verfügbar ab<input name="availableAt" type="datetime-local" defaultValue={quote?.available_at?.slice(0, 16) || ''} /></label>
-              <label>Leistungsumfang<textarea name="message" rows={4} defaultValue={quote?.message || ''} placeholder="Leistung, Material, Entsorgung, Gewährleistung/Ausschlüsse …" required /></label>
-              <SubmitButton className="btn light wide" pendingLabel="Angebot wird gesendet…">{quote ? 'Angebot aktualisieren' : 'Angebot senden'}</SubmitButton>
-            </form>
+            <EHQuoteForm
+              id="provider-quote"
+              action={submitQuoteAction.bind(null, access.id)}
+              amountCents={quote?.amount}
+              availableAt={quote?.available_at || ''}
+              message={quote?.message || ''}
+              updating={Boolean(quote)}
+            />
           </ProviderNextStep>
           {!quote && (
             <form action={declineDispatchAction.bind(null, access.id)} className="decline-form">
@@ -216,38 +212,26 @@ export default async function ProJob({
 
           {ctx.canManageJobs && !assignment && (
             <ProviderNextStep description="Einen konkreten Ansprechpartner festlegen, damit die weitere Bearbeitung eindeutig ist.">
-              <form action={assignJobContactAction.bind(null, access.id)} className="assign-form provider-primary-form">
-                <label>
-                  {isContact ? 'Kontakt zuweisen' : 'Auftrag zuweisen'}
-                  <select name="contactUserId" defaultValue={u.id}>
-                    {members.map((member) => (
-                      <option key={member.user_id} value={member.user_id}>
-                        {member.first_name} {member.last_name}{member.user_id === u.id ? ' · Ich' : ''} · {member.job_title || 'Ansprechpartner'}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <SubmitButton className="btn light" pendingLabel="Wird festgelegt…">Ansprechpartner festlegen</SubmitButton>
-              </form>
+              <EHAssignmentForm
+                id="provider-assign-contact"
+                action={assignJobContactAction.bind(null, access.id)}
+                mode="assign"
+                contacts={members.map((member) => ({ id: member.user_id, label: `${member.first_name} ${member.last_name}${member.user_id === u.id ? ' · Ich' : ''} · ${member.job_title || 'Ansprechpartner'}` }))}
+                selectedId={u.id}
+              />
             </ProviderNextStep>
           )}
 
           {ctx.canManageJobs && assignment && (
             <details className="provider-disclosure">
               <summary>Ansprechpartner ändern</summary>
-              <form action={assignJobContactAction.bind(null, access.id)} className="assign-form">
-                <label>
-                  {isContact ? 'Kontakt zuweisen' : 'Auftrag zuweisen'}
-                  <select name="contactUserId" defaultValue={assignment.contact_user_id}>
-                    {members.map((member) => (
-                      <option key={member.user_id} value={member.user_id}>
-                        {member.first_name} {member.last_name}{member.user_id === u.id ? ' · Ich' : ''} · {member.job_title || 'Ansprechpartner'}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <SubmitButton className="btn ghost pro-ghost" pendingLabel="Wird gespeichert…">Zuweisung speichern</SubmitButton>
-              </form>
+              <EHAssignmentForm
+                id="provider-reassign-contact"
+                action={assignJobContactAction.bind(null, access.id)}
+                mode="reassign"
+                contacts={members.map((member) => ({ id: member.user_id, label: `${member.first_name} ${member.last_name}${member.user_id === u.id ? ' · Ich' : ''} · ${member.job_title || 'Ansprechpartner'}` }))}
+                selectedId={assignment.contact_user_id}
+              />
             </details>
           )}
 
@@ -326,16 +310,12 @@ export default async function ProJob({
                     <p>{message.body}</p>
                   </div>
                 ))}
-                <form
+                <EHJobMessageForm
+                  id="provider-job-message"
                   action={isContact
                     ? sendSavedContactMessageAction.bind(null, u.id, access.homeowner_id)
                     : sendMessageAction.bind(null, access.id, access.homeowner_id)}
-                  className="chat-form"
-                >
-                  <label className="sr-only" htmlFor="provider-job-message">Nachricht</label>
-                  <input id="provider-job-message" name="body" placeholder="Nachricht an Kunden …" required />
-                  <SubmitButton pendingLabel="…"><span aria-hidden="true">↗</span><span className="provider-visually-hidden">Nachricht senden</span></SubmitButton>
-                </form>
+                />
               </div>
             </>
           )}
