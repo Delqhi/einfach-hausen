@@ -33,7 +33,7 @@ export function ServiceDetailPage({ service }: { service: ServiceCategory }) {
         <EHEyebrow>Häufige Fragen</EHEyebrow>
         <EHFAQ items={service.faq.map((f) => ({ q: f.q, a: f.a }))} />
       </EHSection>
-      <EHClosing title={service.cta} text="Kostenlos und unverbindlich starten. Wir ordnen ein, du entscheidest über jeden nächsten Schritt." href="/#anliegen" label="Anliegen beschreiben" />
+      <EHClosing title={service.cta} text="Kostenlos und unverbindlich starten. Wir ordnen ein, du entscheidest über jeden nächsten Schritt." href="/register?role=homeowner" label="Hauskonto kostenlos anlegen" secondary={<EHButton href="/#anliegen" variant="secondary">Anliegen starten</EHButton>} />
     </EHScope>
   </MarketingShell>;
 }

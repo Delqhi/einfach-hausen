@@ -62,7 +62,7 @@ export default function Page() {
             { q: 'Gibt es Einfach Hausen in meiner Region?', a: 'Wir starten regional und bauen das Partnernetz Schritt für Schritt aus. Leg dein kostenloses Hauskonto an, dann siehst du, was bei dir schon möglich ist.' },
           ]} />
         </EHSection>
-        <EHClosing title="Beschreib einfach, was ansteht." text="Kostenlos, unverbindlich, in deinen Worten. Die Zuordnung ist unser Job." href="/#anliegen" label="Anliegen starten" />
+        <EHClosing title="Beschreib einfach, was ansteht." text="Kostenlos, unverbindlich, in deinen Worten. Die Zuordnung ist unser Job." href="/register?role=homeowner" label="Hauskonto kostenlos anlegen" secondary={<EHButton href="/#anliegen" variant="secondary">Anliegen starten</EHButton>} />
       </EHScope>
     </MarketingShell>
   );

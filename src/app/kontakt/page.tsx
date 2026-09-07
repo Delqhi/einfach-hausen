@@ -69,7 +69,7 @@ export default function Page() {
           </div>
         </EHSection>
 
-        <EHClosing title="Brauchst du Hilfe bei deinem Eigenheim?" text="Kostenlos anmelden und direkt mit dem Hausmeister-Assistenten starten." href="/register?role=homeowner" label="Anliegen starten" />
+        <EHClosing title="Brauchst du Hilfe bei deinem Eigenheim?" text="Kostenlos anmelden und direkt mit dem Hausmeister-Assistenten starten." href="/register?role=homeowner" label="Hauskonto kostenlos anlegen" secondary={<EHButton href="/#anliegen" variant="secondary">Anliegen starten</EHButton>} />
       </EHScope>
     </MarketingShell>
   );

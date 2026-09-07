@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { BulletList, InfoPanel, LegalNotice, LinkButton, PageHero, Section, mkt as styles } from '@/components/marketing/ui';
+import { EHScope, EHSection, EHPageHero, EHList, EHCallout, EHPanel, EHButton, EHActions, EHEyebrow, EHHeading, EHText } from '@/design-system';
+import { LegalNotice } from '@/components/marketing/ui';
 
 export const metadata: Metadata = {
   title: 'AGB',
@@ -12,64 +13,76 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <MarketingShell>
-      <PageHero
+      <EHScope>
+      <EHPageHero
         eyebrow="Rechtliches"
         title="Allgemeine Geschäftsbedingungen"
         text="Diese Seite macht das Produkt- und Vertragsmodell nachvollziehbar. Die finalen AGB bilden Betreiber, Rollen sowie reale Zahlungs- und Leistungsabläufe verbindlich ab."
       />
 
-      <Section eyebrow="Stand" title="Rechtlicher Veröffentlichungsstatus.">
+      <EHSection compact>
+        <EHEyebrow>Stand</EHEyebrow>
+        <EHHeading>Rechtlicher Veröffentlichungsstatus.</EHHeading>
         <LegalNotice title="Vertrags- und Verbraucherbedingungen in externer Freigabe">
           <p>
             Vertragspartner, Plattformrolle, Vertragsschluss, Entgelte, Abonnements, Kündigung, Widerruf, Haftung, Gewährleistung, Partnerbedingungen und Streitbeilegung werden vor dem finalen Rollout juristisch auditiert.
           </p>
         </LegalNotice>
-      </Section>
+      </EHSection>
 
-      <Section eyebrow="Produktwahrheiten" title="Was im Produkt bereits bewusst getrennt ist" tone="green">
-        <BulletList items={[
+      <EHSection compact>
+        <EHEyebrow>Produktwahrheiten</EHEyebrow>
+        <EHHeading>Was im Produkt bereits bewusst getrennt ist</EHHeading>
+        <EHList label="Produktwahrheiten" items={[
           'Eine normale Frage erzeugt niemals automatisch einen kostenpflichtigen Auftrag.',
           '„Ansprechpartner finden“ und „Auftrag organisieren“ sind zwei getrennte, bewusste Entscheidungen.',
           'Ausführende Partnerbetriebe sind eigenständige Meister- und Fachbetriebe, keine Angestellten.',
           'Das Plattformmodell sieht 0 % Vermittlungsprovision auf das Auftragsvolumen vor.',
           'Ein bezahlter Partnertarif beeinflusst nicht das fachliche Matching für Kunden.',
-        ]} />
-        <p className={`${styles.cardText} ${styles.onDarkSoft}`}>
+        ].map((b, k) => ({ id: "agb-0-" + k, title: b }))} />
+        <EHText>
           Diese Produktregeln bilden das Fundament für die finalen Vertragsbedingungen.
-        </p>
-      </Section>
+        </EHText>
+      </EHSection>
 
-      <Section eyebrow="Kundenverhältnis" title="Wesentliche Regelungspunkte für Eigentümer.">
-        <BulletList items={[
+      <EHSection compact>
+        <EHEyebrow>Kundenverhältnis</EHEyebrow>
+        <EHHeading>Wesentliche Regelungspunkte für Eigentümer.</EHHeading>
+        <EHList label="Kundenverhältnis" items={[
           'Rolle von Einfach Hausen als vermittelnde und organisierende Software-Plattform.',
           'Klarer Zeitpunkt des Vertragsschlusses bei Anfragen, Angeboten und Terminvereinbarungen.',
           'Kostenloses Basiskonto (FREE) sowie optionale Premium-Pakete ohne versteckte Bindungen.',
           'Fristen für Kündigung, Stornierung und gesetzliche Widerrufsrechte.',
           'Haftungs- und Gewährleistungsabgrenzung zwischen Plattform und ausführendem Partnerbetrieb.',
-        ]} />
-      </Section>
+        ].map((b, k) => ({ id: "agb-1-" + k, title: b }))} />
+      </EHSection>
 
-      <Section eyebrow="Partnerverhältnis" title="Verbindliche Standards für Handwerksbetriebe." tone="soft">
-        <BulletList items={[
+      <EHSection compact>
+        <EHEyebrow>Partnerverhältnis</EHEyebrow>
+        <EHHeading>Verbindliche Standards für Handwerksbetriebe.</EHHeading>
+        <EHList label="Partnerverhältnis" items={[
           'Verifizierungsanforderungen: Gewerbeanmeldung, Betriebshaftpflicht und Qualifikationsnachweise.',
           'Regionale Zuteilung, Kapazitätssteuerung und Reaktionszeiten.',
           'Transparente monatliche Partnertarife ohne Provisionsabzüge.',
           'Klare Regelungen bei Gewährleistung, Angebotserstellung und Rechnungsstellung.',
-        ]} />
-        <InfoPanel label="Operative Verifizierung">
+        ].map((b, k) => ({ id: "agb-2-" + k, title: b }))} />
+        <EHPanel title="Operative Verifizierung">
           <p>
             Jeder Betrieb im Netzwerk durchläuft vor der Freigabe eine Dokumenten- und Qualitätsprüfung.
           </p>
-        </InfoPanel>
-      </Section>
+        </EHPanel>
+      </EHSection>
 
-      <Section eyebrow="Rechtliche Navigation" title="Zugehörige Pflichtangaben und Dokumente.">
-<div className={styles.linkRow}>
-          <LinkButton href="/impressum">Impressum</LinkButton>
-          <LinkButton href="/datenschutz" secondary>Datenschutzerklärung</LinkButton>
-          <LinkButton href="/kontakt" secondary>Kontakt &amp; Support</LinkButton>
-        </div>
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Rechtliche Navigation</EHEyebrow>
+        <EHHeading>Zugehörige Pflichtangaben und Dokumente.</EHHeading>
+<EHActions>
+          <EHButton href="/impressum">Impressum</EHButton>
+          <EHButton href="/datenschutz" variant="secondary">Datenschutzerklärung</EHButton>
+          <EHButton href="/kontakt" variant="secondary">Kontakt & Support</EHButton>
+        </EHActions>
+      </EHSection>
+    </EHScope>
     </MarketingShell>
   );
 }
