@@ -5,6 +5,7 @@ import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { getProviderContext } from '@/lib/provider';
 import { saveWizardStepAction } from './actions';
+import { EHAppHeader } from '@/design-system';
 import { WIZARD_STEPS, STEP_LABELS } from './wizard-steps';
 
 // T-0206 B4: 4-step provider onboarding wizard, Notion reference
@@ -39,6 +40,7 @@ export default async function ProviderOnboardingWizard({ searchParams }: { searc
 
   return (
     <AppShell role="provider" active="/pro" title="Einrichtung" subtitle={ctx.businessName}>
+      <EHAppHeader eyebrow="Firmenkonto" title="Einrichtung" text="Vier Schritte zu deinem geprüften Partnereintrag. Änderungen jederzeit speicherbar." />
       <div className="wz-wrap">
         {/* Stepper */}
         <ol className="wz-stepper" aria-label="Fortschritt">
