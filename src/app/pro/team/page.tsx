@@ -1,92 +1,56 @@
-import { CheckCircle2, ShieldCheck, UserPlus, Users } from 'lucide-react';
 import { AppShell } from '@/components/shell';
-import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
+import { EHAppHeader, EHPanel, EHField, EHInput, EHCheckbox, EHWorkflowStack, EHWorkflowForm, EHFormSection, EHFieldGrid, EHFormFeedback, EHSubmitButton, EHText, EHEmptyState } from '@/design-system';
 import { addProviderMemberAction, updateProviderMemberAction } from '@/app/actions';
 import { getProviderContext, getProviderMembers } from '@/lib/provider';
 
 export default async function Team({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
   const u = await requireUser('provider');
   const ctx = getProviderContext(u.id);
-  if (!ctx) return null;
+  if (!ctx) return <AppShell role="provider" active="/pro/team" title="Team"><EHEmptyState title="Kein Betrieb zugeordnet" text="Für die Teamverwaltung ist ein zugeordneter Betrieb erforderlich." /></AppShell>;
   const sp = await searchParams;
   const members = getProviderMembers(ctx.providerId);
-
-  return (
-    <AppShell role="provider" active="/pro/team" title="Team" subtitle={ctx.businessName}>
-      <ProviderPageIntro
-        eyebrow="Unternehmen"
-        title="Menschen statt Rollenmatrix"
-        description="Ein Unternehmen. Ein Team. Ein Schalter: Aufträge verwalten AN oder AUS. Jeder Ansprechpartner hat einen eigenen App-Zugang."
-      />
-
-      <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
-
-      {sp.error && <div className="alert error" role="alert">{sp.error}</div>}
-      {sp.member === 'created' && <div className="alert success" role="status"><CheckCircle2 /> Ansprechpartner wurde angelegt und kann sich direkt einloggen.</div>}
-
-      <div className="simple-role-principle">
-        <ShieldCheck />
-        <div>
-          <strong>Aufträge verwalten AN</strong>
-          <p>Neue passende Anfragen sehen, Angebote senden und gebuchte Aufträge einem Ansprechpartner zuweisen.</p>
-        </div>
-        <div>
-          <strong>Aufträge verwalten AUS</strong>
-          <p>Nur eigene zugewiesene Aufträge sehen, Kunden kontaktieren, Status pflegen, dokumentieren und abrechnen.</p>
-        </div>
-      </div>
-
-      <ProviderSectionHeader title="Ansprechpartner" description={`${members.length} ${members.length === 1 ? 'Person' : 'Personen'} mit eigenem Zugang.`} />
-      <div className="stack">
-        {members.map((member) => (
-          <form action={updateProviderMemberAction.bind(null, member.user_id)} className="member-card" key={member.user_id}>
-            <div className="member-head">
-              <div className="contact-avatar">{member.first_name?.[0]}{member.last_name?.[0]}</div>
-              <div className="grow">
-                <strong>{member.first_name} {member.last_name}{member.user_id === ctx.providerId ? ' · Firmenkonto' : ''}</strong>
-                <small>{member.email}{member.phone ? ` · ${member.phone}` : ''}</small>
-              </div>
-              <span className={`status ${member.active ? 'active' : 'pending'}`}>{member.active ? 'App aktiv' : 'App aus'}</span>
-            </div>
-            <label>
-              Bezeichnung
-              <input name="jobTitle" defaultValue={member.job_title || ''} placeholder="z. B. Kundendienst, Techniker, Disposition" disabled={!ctx.canManageJobs} />
-            </label>
-            <div className="member-switches">
-              <label><input type="checkbox" name="canManageJobs" defaultChecked={!!member.can_manage_jobs} disabled={!ctx.canManageJobs} /> Aufträge verwalten {member.can_manage_jobs ? 'AN' : 'AUS'}</label>
-              <label><input type="checkbox" name="active" defaultChecked={!!member.active} disabled={!ctx.canManageJobs} /> App-Zugang {member.active ? 'AN' : 'AUS'}</label>
-            </div>
-            <small className="member-explain">{member.can_manage_jobs ? 'Kann neue Anfragen bearbeiten und Aufträge verteilen.' : 'Sieht nur eigene zugewiesene Arbeit und die dazugehörigen Kunden.'}</small>
-            {ctx.canManageJobs && <button className="btn light">Änderungen speichern</button>}
-          </form>
-        ))}
-        {members.length === 0 && (
-          <ProviderState
-            icon={<Users size={21} />}
-            title="Noch kein Ansprechpartner angelegt"
-            description="Lege die Menschen an, die Kunden betreuen oder Aufträge ausführen."
-          />
-        )}
-      </div>
-
-      {ctx.canManageJobs && (
-        <>
-          <ProviderSectionHeader title="Ansprechpartner hinzufügen" description="Ein eigener Zugang, eine klare Auftragsberechtigung." />
-          <form action={addProviderMemberAction} className="team-add-form">
-            <div className="two">
-              <label>Vorname<input name="firstName" required /></label>
-              <label>Nachname<input name="lastName" required /></label>
-            </div>
-            <label>Funktion<input name="jobTitle" placeholder="z. B. Techniker" /></label>
-            <label>E-Mail<input name="email" type="email" required /></label>
-            <label>Telefon<input name="phone" /></label>
-            <label>Startpasswort<input name="password" type="password" minLength={8} required /><small>Der Ansprechpartner kann sich damit direkt in der Partner-App anmelden.</small></label>
-            <label className="team-manage-toggle"><input type="checkbox" name="canManageJobs" /> Aufträge verwalten AN</label>
-            <button className="btn light wide"><UserPlus size={16} /> Ansprechpartner anlegen</button>
-          </form>
-        </>
-      )}
-    </AppShell>
-  );
+  return <AppShell role="provider" active="/pro/team" title="Team" subtitle={ctx.businessName}>
+    <EHWorkflowStack>
+      <EHAppHeader title="Dein Team. Klare Zuständigkeiten." text="Jeder Ansprechpartner hat einen eigenen Zugang. Hier siehst du, wer Aufträge verwaltet und wer zugewiesene Arbeit übernimmt." />
+      {!ctx.canManageJobs && <EHFormFeedback kind="info">Du kannst die Teamübersicht ansehen. Änderungen sind Personen mit der Berechtigung „Aufträge verwalten“ vorbehalten.</EHFormFeedback>}
+      {sp.error && <EHFormFeedback kind="error">{sp.error}</EHFormFeedback>}
+      {sp.member === 'created' && <EHFormFeedback kind="success">Ansprechpartner wurde angelegt und kann sich direkt einloggen.</EHFormFeedback>}
+      <EHPanel title="Was die Berechtigung bedeutet"><EHWorkflowStack>
+        <EHText>Mit „Aufträge verwalten“: passende Anfragen bearbeiten, Angebote senden und gebuchte Aufträge zuweisen.</EHText>
+        <EHText>Ohne diese Berechtigung: eigene zugewiesene Aufträge betreuen, Kunden kontaktieren, Status pflegen, dokumentieren und abrechnen.</EHText>
+      </EHWorkflowStack></EHPanel>
+      <EHText>{members.length} {members.length === 1 ? 'Person mit eigenem Zugang' : 'Personen mit eigenem Zugang'}.</EHText>
+      {members.map(member => {
+        const firmAccount = member.user_id === ctx.providerId;
+        return <EHWorkflowForm key={member.user_id} action={updateProviderMemberAction.bind(null, member.user_id)}>
+          <EHFormSection title={member.first_name + ' ' + member.last_name + (firmAccount ? ' · Firmenkonto' : '')}>
+            <EHText>{member.email}{member.phone ? ' · ' + member.phone : ''} — {member.active ? 'App-Zugang aktiv' : 'App-Zugang deaktiviert'}</EHText>
+            <EHField id={'member-title-' + member.user_id} label="Bezeichnung">
+              <EHInput id={'member-title-' + member.user_id} name="jobTitle" defaultValue={member.job_title || ''} placeholder="z. B. Kundendienst, Techniker, Disposition" disabled={!ctx.canManageJobs} />
+            </EHField>
+            <EHCheckbox label="Aufträge verwalten" name="canManageJobs" defaultChecked={!!member.can_manage_jobs} disabled={!ctx.canManageJobs || firmAccount} />
+            <EHCheckbox label="App-Zugang aktiv" name="active" defaultChecked={!!member.active} disabled={!ctx.canManageJobs || firmAccount} />
+            {firmAccount && <EHText>Beim Firmenkonto bleiben Auftragsverwaltung und App-Zugang aktiv.</EHText>}
+            {ctx.canManageJobs && <EHSubmitButton>Änderungen speichern</EHSubmitButton>}
+          </EHFormSection>
+        </EHWorkflowForm>;
+      })}
+      {members.length === 0 && <EHEmptyState title="Noch kein Ansprechpartner angelegt" text="Hier erscheinen die Menschen, die Kunden betreuen oder Aufträge ausführen." />}
+      {ctx.canManageJobs && <EHWorkflowForm action={addProviderMemberAction}>
+        <EHFormSection title="Ansprechpartner hinzufügen" description="Ein eigener Zugang mit klarer Auftragsberechtigung.">
+          <EHFieldGrid>
+            <EHField id="team-first" label="Vorname" required><EHInput id="team-first" name="firstName" autoComplete="given-name" required /></EHField>
+            <EHField id="team-last" label="Nachname" required><EHInput id="team-last" name="lastName" autoComplete="family-name" required /></EHField>
+            <EHField id="team-job" label="Funktion"><EHInput id="team-job" name="jobTitle" placeholder="z. B. Techniker" /></EHField>
+            <EHField id="team-email" label="E-Mail" required><EHInput id="team-email" name="email" type="email" autoComplete="email" required /></EHField>
+            <EHField id="team-phone" label="Telefon"><EHInput id="team-phone" name="phone" type="tel" autoComplete="tel" /></EHField>
+            <EHField id="team-pass" label="Startpasswort" required hint="Mindestens 8 Zeichen. Damit kann sich der Ansprechpartner direkt anmelden."><EHInput id="team-pass" name="password" type="password" autoComplete="new-password" minLength={8} aria-describedby="team-pass-hint" required /></EHField>
+          </EHFieldGrid>
+          <EHCheckbox label="Aufträge verwalten" name="canManageJobs" />
+          <EHSubmitButton pendingLabel="Zugang wird angelegt …">Ansprechpartner anlegen</EHSubmitButton>
+        </EHFormSection>
+      </EHWorkflowForm>}
+    </EHWorkflowStack>
+  </AppShell>;
 }
