@@ -1,5 +1,5 @@
 {
-  "base": "origin/main",
+  "base": "d86a7e6",
   "files": {
     ".gitattributes": {
       "sha256": "2fba6020e33cb485ad07b794e0962d8fd3141b65ed6beb135198d13f0e87e6b5",
@@ -9,6 +9,11 @@
     "DESIGN.md": {
       "sha256": "3dc5c76fa259cc0dcdf93a5f8d1a3db2e25e22170161e4c9b32b288d4ca84223",
       "bytes": 15369,
+      "kind": "text"
+    },
+    "design/design-lock.json": {
+      "sha256": "7963fc448e0fd74d7d02ae57506249ef0c8ea1e790f454d496a70d35a0c6c9b6",
+      "bytes": 4239,
       "kind": "text"
     },
     "docs/brand/contrast/DECISION.md": {

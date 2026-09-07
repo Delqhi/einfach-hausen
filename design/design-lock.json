@@ -1,10 +1,10 @@
 {
   "version": "1.0.0",
-  "authority": "Jerry explicitly commissioned the Atelier 02 composition correction on 2026-09-07.",
+  "authority": "Jerry explicitly accepted Atelier 02 and commissioned this release on 2026-09-06.",
   "files": {
     ".github/CODEOWNERS": "344048476ff047355aa71baf270bf7ebe41f418ad90195a32009424cc0670e79",
     ".github/workflows/eh-design.yml": "79881db9c76ed3111d37017ea987cb4561d0758d401a1f64a4e2e756183730e1",
-    "DESIGN.md": "432a672329521a54456d6ba4173ea40bea81cf0a7d22ec7fc69b9beb03254eac",
+    "DESIGN.md": "3dc5c76fa259cc0dcdf93a5f8d1a3db2e25e22170161e4c9b32b288d4ca84223",
     "design/design-debt.json": "272c062b8fedf63def95c347adf45242336ff4667955649c4f4c5e3302de093b",
     "design/design-policy.json": "8858aec4e3d565827a8b744fd8591b1aeaa433cd3dc3ce8bac8447e0dae37881",
     "packages/eh-design/assets/inter-variable.woff2": "0de3908cf5ef213ab1404cc5da94a976faaa886c3479a274a7d66ad80b37c64a",

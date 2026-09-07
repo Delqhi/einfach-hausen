@@ -1,6 +1,6 @@
 # Vollständige Quelldateien der Lieferung
 
-Basiscommit: origin/main. Pfade relativ zu diesem Repository. Dateien vollständig, keine Auslassungszeichen. Binärdateien werden im Manifest mit SHA256 referenziert. Dieses Dokument ist ein Nachschlagewerk; implementiert wird aus den versionierten Quelldateien.
+Basiscommit: d86a7e6. Pfade relativ zu diesem Repository. Dateien vollständig, keine Auslassungszeichen. Binärdateien werden im Manifest mit SHA256 referenziert. Dieses Dokument ist ein Nachschlagewerk; implementiert wird aus den versionierten Quelldateien.
 
 ## .gitattributes
 
@@ -186,6 +186,56 @@ Siehe `docs/brand/system/COMPOSITION.md` und `packages/eh-design/src/composition
 
 ## Kontrastentscheidung 2026-09-07
 Badge-Text auf Sand nutzt Ink; Terra nur als ergänzender Icon-Akzent. Verbindlicher Umfang und Nachweis: docs/brand/contrast/DECISION.md. Kein offener Brand-Blocker für pillTerra/Lexikon-Badges.
+
+`````
+
+## design/design-lock.json
+
+`````json
+{
+  "version": "1.0.0",
+  "authority": "Jerry explicitly accepted Atelier 02 and commissioned this release on 2026-09-06.",
+  "files": {
+    ".github/CODEOWNERS": "344048476ff047355aa71baf270bf7ebe41f418ad90195a32009424cc0670e79",
+    ".github/workflows/eh-design.yml": "79881db9c76ed3111d37017ea987cb4561d0758d401a1f64a4e2e756183730e1",
+    "DESIGN.md": "3dc5c76fa259cc0dcdf93a5f8d1a3db2e25e22170161e4c9b32b288d4ca84223",
+    "design/design-debt.json": "272c062b8fedf63def95c347adf45242336ff4667955649c4f4c5e3302de093b",
+    "design/design-policy.json": "8858aec4e3d565827a8b744fd8591b1aeaa433cd3dc3ce8bac8447e0dae37881",
+    "packages/eh-design/assets/inter-variable.woff2": "0de3908cf5ef213ab1404cc5da94a976faaa886c3479a274a7d66ad80b37c64a",
+    "packages/eh-design/assets/logo-full.png": "ca128f0ecfcffc93853f5271453f318be28ed4462850b06072c33afbeb1353cd",
+    "packages/eh-design/package.json": "46fdcc913d21cca9abdb515caa916494f6568fddd2a66f32e724c59c8fa79b24",
+    "packages/eh-design/src/app.tsx": "e0fd056724bfeb4f6244264c2daba68df73709cb7645bfc7ba2db9a531d8376d",
+    "packages/eh-design/src/blocks.tsx": "5f2d07e6883c8958410150192631dc03283d05a31fad164796d48a1cba82935d",
+    "packages/eh-design/src/composition.tsx": "b81e331888eeceb4d1af3d5da8abb989129f869c78562101d0e2f977b8ce9829",
+    "packages/eh-design/src/domain-recipes.tsx": "4ab6bc03926690539761d73b55a18ed08da43688cb04c907b80429226d1876a7",
+    "packages/eh-design/src/html-style.mjs": "63e1b4717c5591728625824be46fa87296c959354d1af54e9adb07323bc66555",
+    "packages/eh-design/src/html.css": "468298c0016ca5ee786d5e4febc1ee80f0e8c3a0a24307afb87a2c1be873e1bb",
+    "packages/eh-design/src/html.mjs": "7dde2a71e7eccbe9ddd7888bfb7b8d96a0a91c74e6fd07a2501070abf72d6033",
+    "packages/eh-design/src/index.ts": "cf214d3af12718f8f5e9a16b180f6c2291824a724dc64172f99aec8bb477c5b8",
+    "packages/eh-design/src/primitives.tsx": "d90af74e98fc45c3af3acb90134621b226902b6aaa0b3d74c9ab558a2fde6edb",
+    "packages/eh-design/src/recipes.tsx": "0b56b2c76d10f031aedc5375922495711e61759a57cda1a99a63ecfbc563931f",
+    "packages/eh-design/src/request-form.tsx": "efaa49e4d8a8329f350e26c75e85b1d5d61c910eae78a70222486229114d8002",
+    "packages/eh-design/src/styles.module.css": "235ac8de099390ed7f2a6048ec32d520eab02e60dc68d7e3edf65f4b6c6a4e48",
+    "packages/eh-design/src/tokens.css": "4358aae0a1bcb0de84b2e97415b4c6f0356212dbdf67b901590f9dc90cbfc191",
+    "packages/eh-design/src/tokens.json": "b399d3041129b93605a0b0a3541424b7ca251032f1b07dbd2bee59289c417e35",
+    "packages/eh-design/src/tokens.ts": "afc13c9121be6bf738635eaad8faa17150d27fb12984de9e964047a7e403a5f0",
+    "scripts/eh-design-check.mjs": "2d4920188c4e961087b75543b5165c48d5d46ef2faa8f11dc33a598f2ac4aade",
+    "scripts/eh-design-check.test.mjs": "dbfe6716678ecbad9bf3b1466326f21e8083a78a567fe467e3a21ea32a5b4287",
+    "scripts/eh-design-generate.mjs": "55fd71312a134e475c25043da10d11f93ad0ae310310261f153750593dc543f3",
+    "scripts/eh-design-seal.mjs": "7be13b011f7cf28530e46d65089b514b4158d036471f768400e5b824e5214024",
+    "scripts/eh-design-sync.mjs": "b33e7f99b92b7a717dd6a8794a78ac7d4d2e962553888783c9e416daa1674629",
+    "src/app/app/homeowner.module.css": "a483bea8f8ae24cd74dddf79da6fd556217559aa659e532961d972c695877d80",
+    "src/app/design-system.css": "234971f6eeb51a6f6c96fb4e3b73190e159944d7a7ed9d371a5d38874e45c9bd",
+    "src/app/globals.css": "4721b8a3af2685c2fbd629be5b2916d643fd0b09f1907f205df791d51818841a",
+    "src/app/pro/provider-workspace.module.css": "7b718c05d6a19d7dcb8bdb5b773267538ca0ca0a34645f8228587329adfb706d",
+    "src/components/marketing/home-hero.tsx": "8fef8ff8fa9624a178635222a5ff21864ee5685d6bf0ea961735f16fa4ed6532",
+    "src/components/marketing/mkt.module.css": "58a850da9f437dd328fca9b5780abcbcde574829ee006ff3d4cd261127adcf7c",
+    "src/components/marketing/site-shell.tsx": "fa9bf21cc77ba7da421b493ef72c555547317bd40e800c4dce5a12b0bc9aa0b4",
+    "src/components/marketing/tokens.css": "7cd827cb75fceabf3222b1420dce2524cf1e22789d799be55eb001d3bb4da88b",
+    "src/components/marketing/ui.tsx": "a8a03cf1d32ecbc80fd5205d90cbcce48afcdd9b9721f5f7583cb2cce040012b",
+    "src/design-system/index.ts": "c5880f7f92770415c9a60609a9c6bd927e44217893bb16f81469b0231d2f9ab7"
+  }
+}
 
 `````
 
