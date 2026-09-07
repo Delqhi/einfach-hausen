@@ -191,6 +191,19 @@ Check-Mode periodisch eine Browser-Auth erzwang und Deployments blockierte.
 
 Exit code is non-zero when any probe breaches. `SLO_BASE_URL` retargets the run (default `http://127.0.0.1:3010`).
 
+### Business SLOs (T-0133)
+
+Since 2026-09-07 the probe suite additionally measures the product SLOs from real rows (read-only SQLite aggregate over a rolling 30-day window, same SQL as `src/lib/metrics.ts`):
+
+| Probe | Definition | Target | Window |
+|---|---|---|---|
+| `api_latency` | observed latency of the health and homepage probes | both within their probe targets | per run |
+| `business_metrics.booking` | confirmed/completed appointments vs all appointments | ≥ 0.60 | 30 days |
+| `business_metrics.matching` | dispatches reaching quote/acceptance vs all dispatches | ≥ 0.40 | 30 days |
+| `business_metrics.notif_delivery` | `sent` receipts vs all finalized receipts | ≥ 0.95 | 30 days |
+
+A window with zero eligible rows reports the rate as `no-data` and does not fail the probe — an empty platform must never look like a perfect one. Below a minimum sample of 10 rows per window the rate is reported with a `(low-sample)` marker instead of alerting; thresholds enforce only from n ≥ 10. Denominators and rates are printed in the probe JSON line, so the Kestra/journald history is the time series. In-process reuse of the same aggregates: `computeBusinessMetrics()` in `src/lib/metrics.ts`.
+
 Alert path without a new platform: `deploy/kestra/einfach-hausen-slo*.yml` schedules the probes every 15 minutes through the existing Kestra instance; a breach fails the Kestra execution (visible in execution history/API) and the probe JSON lines land in the Kestra task logs with the failing component name and correlation id. On the host, the same evidence is in journald, so `journalctl -u einfach-hausen-dispatch` and probe lines share correlation ids.
 
 ## Backup/restore drill (T-0124)
