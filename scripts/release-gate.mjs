@@ -107,7 +107,10 @@ function staticGates() {
   record('fixture factory', fixtures.ok, fixtures.ok ? '' : (fixtures.output || '').slice(-400));
   const flags = run('node', ['scripts/feature-flag-lifecycle.mjs']);
   record('feature-flag lifecycle (T-0139)', flags.ok, flags.ok ? '' : (flags.output || '').slice(-400));
-  return lint.ok && types.ok && security.ok && fixtures.ok && flags.ok;
+  const invEnv = { DATABASE_PATH: process.env.GATE_DATABASE_PATH || process.env.DATABASE_PATH || '' };
+  const inventory = run('node', ['scripts/data-inventory-check.mjs'], invEnv);
+  record('data-inventory (T-0146)', inventory.ok, inventory.ok ? '' : (inventory.output || '').slice(-400));
+  return lint.ok && types.ok && security.ok && fixtures.ok && flags.ok && inventory.ok;
 }
 
 // ---- Production build (shared by layers 2-4) --------------------------------
