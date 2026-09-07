@@ -17,3 +17,8 @@ Nur noch vier offene Tasks. Alle vier hängen an externen Autoritäten; keine ka
 
 ## Erledigt in dieser Welle (Kontext)
 Dispatcher-Hotfix PR#55 (Produktion läuft), T-0133 PR#57, T-0139 PR#58, T-0146 PR#59, EH-BRAND-05-HUB (portalhub PR#1 inkl. echter visueller 390/736/1440-Abnahme), EH-BRAND-05-WEB, Docs PR#56/#60. Vollständige Evidenz im Taskplan (`sin-gpt-web-state show <TASK>`).
+
+## 4. Production-Ausspielung der Welle `47d9790` (PR #62: a11y-Kontrast-Fixes)
+- **Wer muss handeln:** Root-faehige Instanz (Operator oder bestehender Deploy-Mechanismus): `bash deploy/update-on-oci.sh` in /srv.
+- **Beleg:** Release-Gate 15/15 lokal gruen; /srv steht auf `3a5113c` (09:40 Build); `systemctl restart einfach-hausen.service` verlangt interaktive Auth aus der Agent-Sandbox (no-new-privileges).
+- **Umfang der Ausrollung:** a11y-Kontrastfixes (Register auf Sand, Footer onDark-FG), generierte Artefakte, neuer Siegelstand. Kein Datenbank-/Schema-Change.
