@@ -1,0 +1,81 @@
+{
+  "base": "a90d411",
+  "files": {
+    ".gitattributes": {
+      "sha256": "c7b15ccdb02556c1c77c6346347f1bf9c00577d101aebb7a6640c7ab5a5f7a98",
+      "bytes": 197,
+      "kind": "text"
+    },
+    "AGENTS.md": {
+      "sha256": "9b6043007f849299f0d4d5afc36f609e252c00bcbee4231b0a27e0c32a4b4546",
+      "bytes": 32275,
+      "kind": "text"
+    },
+    "DESIGN.md": {
+      "sha256": "335971db496fe6762bfdcd823843cb23825c205fa4509c91d8ada6f17a2c5e1a",
+      "bytes": 14964,
+      "kind": "text"
+    },
+    "design/design-lock.json": {
+      "sha256": "23ccae1f8d8324758be78923502318ade829844c56d2bcd4862f565ec1316d60",
+      "bytes": 4245,
+      "kind": "text"
+    },
+    "docs/brand/app-foundation/NEXT_AGENT.md": {
+      "sha256": "871add8539e8cea7b28ba93d2b1c7ad14d21ae55a88ae7b858d21af10e6894b8",
+      "bytes": 5467,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html-style.mjs": {
+      "sha256": "f125fcbd2bdb1c6de36a3e7b1fba8566b2c64f569e3896cf1b31048298dd99b6",
+      "bytes": 268795,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html.css": {
+      "sha256": "c001b6524463cf241edf93c32d309b7bd896cdbc3e666088d0d45c0f7e98f7d1",
+      "bytes": 22597,
+      "kind": "text"
+    },
+    "packages/eh-design/src/index.ts": {
+      "sha256": "3b85a8cfb9d19bf4c06df793596ac3e357f9aff9b2c208d0e836d60a231258a6",
+      "bytes": 208,
+      "kind": "text"
+    },
+    "packages/eh-design/src/styles.module.css": {
+      "sha256": "fe40c33bce9b6731c99812c19ea0ba645169be912671cad1331dad6b31c78adf",
+      "bytes": 21817,
+      "kind": "text"
+    },
+    "packages/eh-design/src/submit-button.tsx": {
+      "sha256": "022785d7044b1e19760d26f9fed643f835c4d3da640692288ef9e3bcfdb52e30",
+      "bytes": 452,
+      "kind": "text"
+    },
+    "packages/eh-design/src/workflow-layouts.tsx": {
+      "sha256": "66b6bbeacd6d9c0fbd35825b8565a351ad3def4e967af879baa7bb1e4b1c8cb1",
+      "bytes": 2043,
+      "kind": "text"
+    },
+    "src/app/pro/onboarding/page.tsx": {
+      "sha256": "eb3773fd7abe23bb1be259f86184a6c3e87310440c512f301f9cd242ae1df712",
+      "bytes": 8136,
+      "kind": "text"
+    },
+    "src/app/pro/team/page.tsx": {
+      "sha256": "2d239c66ede5a3480b20223bfa0f1d9790ff0148156740a1d9f880d99e6e5719",
+      "bytes": 5291,
+      "kind": "text"
+    },
+    "src/components/owner-menu.tsx": {
+      "sha256": "499d734093c069c4470ca0d68b8af1b21c5a5e3dbb61c36cf9829d468a24a80c",
+      "bytes": 7772,
+      "kind": "text"
+    },
+    "src/components/shell.tsx": {
+      "sha256": "a9e55d67916c5604b94664d817c9e034f4ea468e4db01fa0bc27ebfb3897f1ca",
+      "bytes": 4504,
+      "kind": "text"
+    }
+  },
+  "deleted": []
+}

@@ -159,3 +159,6 @@ CRM verwendet denselben Vertrag ohne React-Umbau: packages/eh-design/src/html.mj
 ## Fachliche Kompositionen · Edition 2
 
 Acht weitere festgelegte Seitenkompositionen in packages/eh-design/src/domain-recipes.tsx ergänzen die acht Grundrezepte. Verbindliche Auswahl, Daten-/Formularslots, vollständiger Code und lokaler Übernahmeauftrag: docs/brand/system/DOMAIN_RECIPES_HANDOFF.md. Keine neuen Farben, Styles oder Grundkomponenten; 49 Basisbausteine, insgesamt 16 Seitenkompositionen. Neue Rendering-/Verhaltensprüfung und Verteilung sind an lokale Agenten delegiert.
+
+## App-Formularvorlagen
+Verbindlicher Stand und Zustandsverträge: docs/brand/app-foundation/NEXT_AGENT.md. Implementierung: packages/eh-design/src/workflow-layouts.tsx und submit-button.tsx. Visuelle Rollenabnahme steht aus.
