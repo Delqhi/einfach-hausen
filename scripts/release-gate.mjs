@@ -105,7 +105,9 @@ function staticGates() {
   record('security regressions', security.ok, security.ok ? '' : (security.output || '').slice(-400));
   const fixtures = run('npm', ['run', 'test:fixtures']);
   record('fixture factory', fixtures.ok, fixtures.ok ? '' : (fixtures.output || '').slice(-400));
-  return lint.ok && types.ok && security.ok && fixtures.ok;
+  const flags = run('node', ['scripts/feature-flag-lifecycle.mjs']);
+  record('feature-flag lifecycle (T-0139)', flags.ok, flags.ok ? '' : (flags.output || '').slice(-400));
+  return lint.ok && types.ok && security.ok && fixtures.ok && flags.ok;
 }
 
 // ---- Production build (shared by layers 2-4) --------------------------------
