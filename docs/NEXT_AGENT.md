@@ -4,6 +4,12 @@
 
 # NEXT AGENT — Handoff & Handback
 
+> **Stand 2026-09-07 (nach Dispatcher-Fix):**
+> - **Produktions-Fix:** PR #55 (`75bca45`) repariert `einfach-hausen-dispatch.service` (Zustellung + Retention-Sweep standen seit 2026-09-06 19:47 UTC still). Timer seit 15:37 UTC grün (journalctl belegt).
+> - **T-0145 Data-Retention Engine:** completed (Engine + Dispatcher + Audit + E2E 6/6 + Produktionsnachweis).
+> - **CI-Blocker:** alle GitHub-Actions-Runs auf `Delqhi/einfach-hausen` scheitern seit 2026-09-06 ohne Steps — Billing-Sperre, siehe Issue #33. Löst Jerry im GitHub-Billing; danach re-run.
+> - **Offen:** PR #53 (Admin-Familie, lokal grün), PR #54 (generierte Artefakte + Siegel, lokal grün), 05-HUB visuelle Abnahme (Browser auf OCI fehlt), 05-CRM (ChatGPT web), EH-BRAND-06.
+
 **Stand:** 2026-09-05 (Abend)
 **Kanonischer Abschlussstand:** Public Website Finish auf `main`; EH-01..EH-05 abgeschlossen. **Offen: Branch `feat/lexikon-enterprise-redesign` → PR → Merge nach Repo-Verifikation auf OCI-VM.**
 
