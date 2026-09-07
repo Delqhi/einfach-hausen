@@ -1,7 +1,8 @@
-import { Building2, LockKeyhole, MapPin, UserRound } from 'lucide-react';
+import { Building2, UserRound } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import { ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
+import { EHPanel, EHCallout, EHField, EHSelect } from '@/design-system';
 import { db } from '@/lib/db';
 import { getProviderContext } from '@/lib/provider';
 import { providerHasCategory } from '@/lib/provider-categories';
@@ -37,42 +38,24 @@ export default async function ProLeads() {
         title="Freigegebene Kontakte"
         description="Hier erscheint nur, was ein Eigentümer für diesen Verkaufszweck ausdrücklich freigegeben hat."
       />
-      <div className="privacy-banner pro-privacy">
-        <LockKeyhole />
-        <div><strong>Nur freigegebene Daten</strong><p>Private Dokumente und vollständige Hausakten bleiben gesperrt. Die Freigabe ist zweckgebunden.</p></div>
-      </div>
+      <EHCallout title="Nur freigegebene Daten"><p>Private Dokumente und vollständige Hausakten bleiben gesperrt. Die Freigabe ist zweckgebunden.</p></EHCallout>
 
       <ProviderSectionHeader title="Anfragen" description={`${matches.length} ${matches.length === 1 ? 'freigegebener Kontakt' : 'freigegebene Kontakte'}`} />
-      <div className="broker-leads">
-        {matches.map((match: any) => (
-          <article key={match.id}>
-            <div className="broker-lead-head">
-              <span className="broker-score"><b>{Math.round(match.match_score)}%</b><small>Passung</small></span>
-              <div className="grow">
-                <strong>{match.property_type || 'Immobilie'} in {match.postcode}</strong>
-                <p><MapPin /> {match.address || match.postcode}</p>
-              </div>
-              <span className={`status ${match.status}`}>{match.status}</span>
-            </div>
-            <div className="broker-lead-grid">
-              <div><small>Eigentümer</small><strong>{match.first_name} {match.last_name}</strong><span>{match.email}</span>{match.phone && <span>{match.phone}</span>}</div>
-              <div><small>Objekt</small><strong>{match.living_area ? `${match.living_area} m² Wohnfläche` : 'Fläche offen'}</strong><span>{match.plot_area ? `${match.plot_area} m² Grundstück` : ''}</span></div>
-              <div><small>Wert</small><strong>{match.estimated_value_min != null && match.estimated_value_max != null ? `${euro(match.estimated_value_min)} – ${euro(match.estimated_value_max)}` : 'Noch nicht bewertet'}</strong></div>
-            </div>
-            <form action={updateBrokerLeadStatusAction.bind(null, match.id)} className="broker-lead-status">
-              <label>Nächster Schritt
-                <select name="status" defaultValue={match.status === 'contact_released' ? 'interested' : match.status}>
-                  <option value="interested">Interesse bestätigt</option>
-                  <option value="inspection">Besichtigung</option>
-                  <option value="mandate">Auftrag erhalten</option>
-                  <option value="sold">Verkauft</option>
-                  <option value="rejected">Nicht passend</option>
-                </select>
-              </label>
-              <button className="btn light">Status speichern</button>
-            </form>
-          </article>
-        ))}
+      {matches.map((match: any) => (
+        <EHPanel key={match.id} title={`${match.property_type || 'Immobilie'} in ${match.postcode} — Passung ${Math.round(match.match_score)} % · Status ${match.status}`}>
+          <p>{match.address || match.postcode} · {match.first_name} {match.last_name}{match.phone ? ` · ${match.phone}` : ''} · {match.living_area ? `${match.living_area} m² Wohnfläche` : 'Fläche offen'} · {match.estimated_value_min != null && match.estimated_value_max != null ? `${euro(match.estimated_value_min)} – ${euro(match.estimated_value_max)}` : 'Noch nicht bewertet'}</p>
+          <form action={updateBrokerLeadStatusAction.bind(null, match.id)}>
+            <EHField id={`lead-status-${match.id}`} label="Nächster Schritt"><EHSelect id={`lead-status-${match.id}`} name="status" defaultValue={match.status === 'contact_released' ? 'interested' : match.status}>
+              <option value="interested">Interesse bestätigt</option>
+              <option value="inspection">Besichtigung</option>
+              <option value="mandate">Auftrag erhalten</option>
+              <option value="sold">Verkauft</option>
+              <option value="rejected">Nicht passend</option>
+            </EHSelect></EHField>
+            <button>Status speichern</button>
+          </form>
+        </EHPanel>
+      ))}
         {matches.length === 0 && (
           <ProviderState
             icon={<UserRound size={21} />}
@@ -80,7 +63,6 @@ export default async function ProLeads() {
             description="Passende Eigentümer sehen dein Unternehmen zunächst als Vorschlag. Erst nach deren ausdrücklicher Freigabe erscheint der Kontakt hier."
           />
         )}
-      </div>
     </AppShell>
   );
 }
