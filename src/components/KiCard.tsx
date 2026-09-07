@@ -6,6 +6,7 @@ import { ArrowRightThin, ArrowRightWhite } from "@/components/icons";
 
 const quickChips = ["Heizung", "Badezimmer", "Garten", "Dach", "Elektro"];
 
+import styles from "./ki-card.module.css";
 export default function KiCard() {
   const router = useRouter();
   const [frage, setFrage] = useState("");
@@ -25,11 +26,11 @@ export default function KiCard() {
         <div className="ki-head-text"><span className="ki-badge">KI</span><strong>Frag einfachhausen</strong><p>Dein Assistent rund ums Haus.</p></div>
         <div className="ki-arrow"><ArrowRightThin /></div>
       </div>
-      <div className="ki-input-row" style={{ margin: "0 14px 10px" }}>
+      <div className={`ki-input-row ${styles.inputRow}`}>
         <input value={frage} onChange={(e) => setFrage(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()} placeholder="Frag mich etwas…" />
         <button className="ki-send" onClick={send}><ArrowRightWhite /></button>
       </div>
-      <div className="chips" style={{ padding: "0 14px 14px", margin: 0 }}>
+      <div className={`chips ${styles.chipRow}`}>
         {quickChips.map((c) => (<button key={c} className="chip" onClick={() => router.push(`/ki-chat?q=${c}`)}>{c}</button>))}
       </div>
     </div>

@@ -1,4 +1,14 @@
+> **Aktueller Designvertrag · 2026-09-06:** Jerry hat Atelier 02 ausdrücklich freigegeben. Verbindlich sind DESIGN.md, packages/eh-design und der Skill SIN-EH-design. Eigenständige Änderungen am Markenstil sind verboten. Vollständige Übergabe: docs/brand/system/HANDOFF.md; kompletter Quelltext: docs/brand/system/SOURCE.md. Frühere Statusangaben zu noch offenen Stilentscheidungen sind historisch. Restmigration: EH-BRAND-05-WEB, -APPS, -CRM, -HUB. Unternehmensidentität bleibt docs/COMPANY_IDENTITY.md (Gina Inhaberin/Geschäftsführerin, Jeremy Entwickler).
+
 # Einfach Hausen — Production Handover and Continuation Runbook
+
+**Canonical company identity:** `docs/COMPANY_IDENTITY.md` — **Gina Schulze** ist Inhaberin und Geschäftsführerin. **Jeremy Schulze** ist ausschließlich Developer / technische Entwicklung. Diese Rollen gelten für Impressum, Legal-Modals, Dokumentation und generierte Inhalte. Keine unbestätigten Rechts-/Registerdaten erfinden.
+
+## Repository checkpoint — Public Website Finish (2026-09-05)
+
+Der lokale `main` enthält den operator-freigegebenen Public-Website-Finish. Er ändert **nicht** die Produktionsinfrastruktur und **nicht** die App-Informationsarchitektur; er vertieft die öffentliche Website innerhalb des bestehenden Design-Systems. Enthalten sind das Leistungen-Megamenü, 12 echte Service-Unterseiten, `/beratung`, `/notfall`, `/versicherung`, `/immobilienverkauf`, Discovery-/SEO-Finish und erweiterte Browser-/Visual-Gates.
+
+Lokale Release-Evidence vor Push/Deploy: Next.js Production Build **115/115**, `test:public-site` PASS, `test:public-nav` PASS, Full E2E PASS, Visual **72/72**, Lint 0 Fehler und `git diff --check` PASS. Diese Evidence ersetzt **keine** OCI-Live-Verifikation. Vor Deployment weiterhin den kanonischen OCI-Deploypfad und anschließend Public Smoke/Health ausführen; niemals lokale `.next`-Artefakte auf Produktion kopieren.
 
 **Status snapshot:** 2026-08-31 — **Production runs `b74876a` on OCI (`/srv/einfach-hausen`), deployed through the mandatory unified release gate (T-0157, 10/10 green) with live smoke 200 on `/`, `/preise`, `/login`, `/admin/login`, `/api/health`. Product Final Acceptance Website/Homeowner/Partner (T-0160/T-0161/T-0162) passed with evidence on 2026-08-31 (evidence dir `.sin-gpt-web/evidence/acceptance-20260831/`). SIN Supabase OSS on OCI remains the production auth/data authority. Self-hosted HA/PITR/failover must be re-proven on the actual OCI stack before being described as active.**
 
@@ -1028,3 +1038,4 @@ updated: 2026-09-07T19:04:42+00:00
 actor: local-agent
 evidence-sha256: 5f22e53b7db61e188b5dc47f904485e0d6871007582380be638be5b78ce4a5ab
 -->
+

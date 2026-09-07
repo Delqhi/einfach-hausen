@@ -6,6 +6,7 @@ import { useAuth } from "@/components/AuthContext";
 import { getSupabase } from "@/lib/supabase";
 import { BackIcon } from "@/components/icons";
 import { VisualAuftraege, VisualGebiet, VisualFertig } from "@/components/onboard-visuals";
+import styles from "../onboarding-pro.module.css";
 
 const leistungen = [
   { id: "bad", emoji: "🛁", titel: "Badezimmer", sub: "Fliesen, Sanitär, Umbau" },
@@ -47,15 +48,15 @@ export default function OnboardingProSchrittPage() {
   const head = heads[step] ?? heads.auftraege;
 
   return (
-    <div className="safe-top page ob-page" style={{ paddingBottom: 40 }}>
+    <div className={`safe-top page ob-page ${styles.bottomPad}`}>
       <header className="ob-header"><button className="back-btn" onClick={() => router.back()}><BackIcon /></button></header>
       {step === "auftraege" && <VisualAuftraege />}
       {step === "gebiet" && <VisualGebiet />}
       {step === "fertig" && <VisualFertig />}
-      <div className="ob-head" style={{ textAlign: "center" }}><h1>{head.h}</h1><p style={{ margin: "8px auto 0", maxWidth: 290 }}>{head.p}</p></div>
+      <div className={`ob-head ${styles.headCenter}`}><h1>{head.h}</h1><p className={styles.leadNarrow}>{head.p}</p></div>
       {step === "auftraege" && (
         <>
-          <div className="subcat-section" style={{ paddingTop: 12 }}>
+          <div className={`subcat-section ${styles.subcatPad}`}>
             <div className="subcat-list">
               {leistungen.map((l) => (
                 <button key={l.id} className={`subcat-item ${sel.includes(l.id) ? "sel" : ""}`} onClick={() => setSel((s) => (s.includes(l.id) ? s.filter((x) => x !== l.id) : [...s, l.id]))}>
@@ -73,13 +74,13 @@ export default function OnboardingProSchrittPage() {
         <>
           <div className="ob-form">
             <div className="if-wrap"><span className="if-label">Postleitzahl (Einsatzgebiet)</span><input inputMode="numeric" maxLength={5} value={plz} onChange={(e) => setPlz(e.target.value)} placeholder="z. B. 22587" /></div>
-            <div style={{ padding: "6px 4px" }}><div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}><strong style={{ fontSize: 14 }}>Umkreis: {umkreis} km</strong></div><input type="range" min={5} max={100} step={5} value={umkreis} onChange={(e) => setUmkreis(Number(e.target.value))} style={{ width: "100%", accentColor: "#105258" }} /></div>
+            <div className={styles.rangeBlock}><div className={styles.rangeHead}><strong className={styles.rangeLabel}>Umkreis: {umkreis} km</strong></div><input className={styles.rangeInput} type="range" min={5} max={100} step={5} value={umkreis} onChange={(e) => setUmkreis(Number(e.target.value))} /></div>
           </div>
           <div className="ob-actions"><button className="btn-primary btn-full" disabled={plz.length !== 5} onClick={async () => { await saveMeta({ plz_liste: [plz], umkreis_km: umkreis }); router.push("/onboarding/pro/fertig"); }}>Weiter</button></div>
         </>
       )}
       {step === "fertig" && (
-        <div className="ob-actions"><div className="success-circle" style={{ margin: "10px auto" }}>✓</div><button className="btn-primary btn-full" disabled={busy} onClick={finish}>{busy ? "Speichere…" : "Zum Dashboard"}</button></div>
+        <div className="ob-actions"><div className={`success-circle ${styles.successMargin}`}>✓</div><button className="btn-primary btn-full" disabled={busy} onClick={finish}>{busy ? "Speichere…" : "Zum Dashboard"}</button></div>
       )}
       <div className="home-indicator" />
     </div>

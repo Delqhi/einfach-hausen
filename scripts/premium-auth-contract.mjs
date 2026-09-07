@@ -4,6 +4,7 @@ import path from 'node:path';
 
 const root = process.cwd();
 const routes = [
+  ['src/app/login/page.tsx', 'loginPage'],
   ['src/app/register/page.tsx', 'registerPage'],
   ['src/app/register-owner/page.tsx', 'ownerRegister'],
   ['src/app/register-pro/page.tsx', 'proRegister'],
@@ -25,12 +26,28 @@ if (!fs.existsSync(cssPath)) {
   failures.push('src/components/marketing/auth-convergence.module.css: missing shared convergence layer');
 } else {
   const css = fs.readFileSync(cssPath, 'utf8');
-  for (const token of ['.authConverged', '.registerPage', '.ownerRegister', '.proRegister', '.rolePage', '.welcomePage', '.checkEmail']) {
+  for (const token of ['.authConverged', '.authV2Page', '.loginPage', '.registerPage', '.ownerRegister', '.proRegister', '.rolePage', '.welcomePage', '.checkEmail']) {
     if (!css.includes(token)) failures.push('auth convergence css: missing ' + token);
   }
   if (!css.includes('@media (max-width: 880px)')) failures.push('auth convergence css: missing deliberate mobile recomposition');
 
   const visualContracts = [
+    {
+      pattern: /\.authV2Page\s+:global\(\.eh-auth-grid\)[^{]*\{[^}]*max-width:\s*1520px;/s,
+      failure: 'auth convergence css: v2 auth shell needs the shared 1520px desktop composition',
+    },
+    {
+      pattern: /\.authV2Page\s+:global\(#login-card-container\)[^{]*\{[^}]*max-width:\s*5[2-9]0px;/s,
+      failure: 'auth convergence css: v2 auth form must use a premium 520px+ card width',
+    },
+    {
+      pattern: /\.authV2Page\s+:global\(#btn-submit-login\),[\s\S]*?background:\s*var\(--auth-petrol\);/s,
+      failure: 'auth convergence css: v2 auth primary actions must use canonical petrol',
+    },
+    {
+      pattern: /\.authV2Page\s+:global\(\.eh-auth-topbar-role-switch\),[\s\S]*?display:\s*none;/s,
+      failure: 'auth convergence css: v2 auth topbar must remove duplicate portal chrome',
+    },
     {
       pattern: /\.authConverged\s+:global\(\.pill-field\)[^{]*\{[^}]*flex-direction:\s*row;/s,
       failure: 'auth convergence css: auth fields must override the global column label layout',

@@ -1,4 +1,4 @@
-import { CalendarCheck2, Hammer, HardHat, House, Leaf, Paintbrush, ThumbsUp, Wrench } from 'lucide-react';
+import { CalendarCheck2, Hammer, House, Leaf, Paintbrush, ThumbsUp, Wrench } from 'lucide-react';
 import { Reveal, GatewayLinesAnimation } from './motion';
 import styles from './marketing.module.css';
 

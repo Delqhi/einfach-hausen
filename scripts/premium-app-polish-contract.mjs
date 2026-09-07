@@ -14,7 +14,7 @@ for (const [label, source, checks] of [
   for (const check of checks) if (!source.includes(check)) failures.push(`${label} CSS missing ${check}`);
 }
 
-for (const label of ['Auftrag', 'Beratung', 'Notfall', 'Mein Zuhause im Überblick']) {
+for (const label of ['Auftrag', 'Beratung', 'Notfall', 'Als Nächstes']) {
   if (!ownerPage.includes(label)) failures.push(`owner structure lost ${label}`);
 }
 for (const label of ['Anfragen in deiner Nähe', 'Nächste Termine', '/pro/orders', '/pro/calendar']) {

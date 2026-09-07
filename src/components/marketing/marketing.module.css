@@ -336,7 +336,7 @@ details[open] .faqSummary svg { transform: rotate(180deg); }
 
 /* --- Header: calm glass over the hero wash --- */
 .headerInner { min-height: 80px; }
-.header { background: rgba(247,248,247,.86); backdrop-filter: saturate(1.5) blur(10px); -webkit-backdrop-filter: saturate(1.5) blur(10px); }
+.header { background: rgb(247,248,247); } /* solid, no glass (DESIGN.md §2) */
 .header[data-scrolled='true'] { background: rgba(255,255,255,.94); }
 
 /* --- Hero: atmosphere, editorial scale, signature underline --- */
@@ -726,10 +726,9 @@ details.faq[open] .faqBody { grid-template-rows: 1fr; }
 /* Hero badge row above H1 */
 .heroBadgeRow { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
 .heroBadge { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px 8px 10px;
-  background: rgba(255,255,255,.85); border: 1px solid var(--eh-border-strong); border-radius: 999px;
+  background: #fff; border: 1px solid var(--eh-border-strong); border-radius: 999px;
   font-size: 12.5px; font-weight: 640; color: var(--eh-text); letter-spacing: -.005em;
-  box-shadow: 0 8px 20px -14px rgba(10,53,57,.35);
-  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  box-shadow: 0 8px 20px -14px rgba(10,53,57,.35); }
 .heroBadge svg { color: var(--eh-green-700); }
 
 /* Mini Hausakte strip under the composer */

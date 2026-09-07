@@ -1,0 +1,15 @@
+{
+  "status": "EH_SKILLS_INSTALLED",
+  "commit": "8ffb067167c72c22a42dbb4fb1e7270956fdb1db",
+  "backup": "/Users/jeremyschulze/.local/share/eh-design-backups/20260906T200623Z",
+  "paths": [
+    "/Users/jeremyschulze/.codex/skills/sin-eh-design",
+    "/Users/jeremyschulze/.codex/skills/sin-frontend-design",
+    "/Users/jeremyschulze/.config/opencode/skills/sin-eh-design",
+    "/Users/jeremyschulze/.config/opencode/skills/sin-frontend-design"
+  ],
+  "rules": {
+    "/Users/jeremyschulze/.codex/AGENTS.md": "c08d2d06b09ca16c7c38953483aeaaba374cb893fb854633e09e4d39838182e1",
+    "/Users/jeremyschulze/.config/opencode/AGENTS.md": "aeb3fcf3a55b53d04e7e31cf8f55bfec1bf51733fb71841ada31338b296cd8ca"
+  }
+}

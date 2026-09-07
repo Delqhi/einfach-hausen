@@ -165,7 +165,7 @@ async function clickAndWaitUrl(page,locator,matcher,timeout=30000){await Promise
 async function clickServerAction(page,locator,timeout=90000){let response;try{await Promise.all([page.waitForResponse(r=>r.request().method()==='POST',{timeout}),locator.click()]);}catch(error){throw new Error(`server action click failed: ${error.message.split('\n')[0]}\nserverLog tail:\n${serverLog.slice(-12).join('')}`,{cause:error});} await page.waitForLoadState('load').catch(()=>{}); await page.waitForTimeout(400);}
 // The production hydration window can briefly double-render a freshly navigated
 // document; register fields are filled only after the DOM settles to one input.
-async function fillRegisterField(page,name,value){await page.waitForFunction(n=>document.querySelectorAll(`input[name="${n}"]`).length===1,name,{timeout:20000});await page.locator(`input[name="${name}"]`).fill(value);}
+async function fillRegisterField(page,name,value){const field=page.locator(`input[name="${name}"]:visible`);await field.waitFor({timeout:20000});await field.fill(value);}
 async function sendHousemaster(page,text,matcher=null){const c=page.getByPlaceholder(/Beschreib kurz|Beantworte nur noch|Was soll draußen|Was ist kaputt|Was soll gereinigt|Wobei brauchst du/);await c.click();await c.pressSequentially(text,{delay:1});const button=page.locator('button.send-action:not([disabled])');if(matcher)await clickAndWaitUrl(page,button,matcher);else await clickServerAction(page,button);}
 
 createProjectCopy();
@@ -208,11 +208,15 @@ try {
 const publicCtx=await newE2EContext({viewport:{width:390,height:844}}); const publicPage=await publicCtx.newPage(); trackPage(publicPage,'public-mobile');
 await nav(publicPage, base+'/')
 // Canonical root is the public lead-magnet homepage (premium redesign spec §9, T-0210).
-await publicPage.getByRole('heading',{name:/Dein Zuhause/i}).waitFor();
-await waitText(publicPage,'Organisiert.');
-await waitText(publicPage,'Was steht bei deinem Haus an?');
-await waitText(publicPage,'Hauskonto kostenlos'); await waitText(publicPage,'kein Auftrag ohne deine Entscheidung');
-if(!(await publicPage.locator('form[action="/register"] input[name="request"]').count()))throw new Error('Landing intake composer missing');
+await publicPage.getByRole('heading',{name:/Die Betriebszentrale/i}).waitFor();
+await waitText(publicPage,'für dein Zuhause.');
+const hero=publicPage.locator('#anliegen');
+for(const removedText of ['Was steht bei deinem Haus an?','kostenlos & unverbindlich','Hauskonto kostenlos','unverbindlich starten','kein Auftrag ohne deine Entscheidung','Nichts wird ohne dich beauftragt']){
+  if(await hero.getByText(removedText,{exact:true}).count())throw new Error(`Landing hero still contains removed copy: ${removedText}`);
+}
+const heroRequest=publicPage.locator('form[action="/register"] input[name="request"]');
+if(!(await heroRequest.count()))throw new Error('Landing intake composer missing');
+if((await heroRequest.getAttribute('aria-label'))!=='Anliegen beschreiben')throw new Error('Landing intake composer missing neutral aria-label');
 if(/KI-Hausmeister/i.test(await publicPage.locator('body').innerText()))throw new Error('Landing page still foregrounds AI instead of customer benefit');
 await assertNoOverflow(publicPage,'Mobile landing');
 // T-0129 v2: every canonical public route (DESIGN.md §5.1, 16 routes incl.
@@ -256,13 +260,13 @@ await clickAndWaitUrl(publicPage,publicPage.locator('a[href="/role"]').first(),/
 await waitText(publicPage,'dass du da bist!'); await waitText(publicPage,'Als Eigentümer starten'); await waitText(publicPage,'Ich bin Dienstleister');
 // Owner registration (server action flow) stays the canonical owner onboarding entry.
 await nav(publicPage, base+'/register?role=homeowner')
-await waitText(publicPage,"Los geht's – in wenigen Schritten");
-if(!(await publicPage.getByLabel('Vorname').count()))throw new Error('Owner registration missing Vorname field');
-if(!(await publicPage.locator('a[href="/login"]').count()))throw new Error('Landing Log in card missing');
+await publicPage.getByRole('button',{name:'Kostenlos registrieren'}).first().waitFor();
+await publicPage.getByRole('button',{name:'Kostenlos registrieren'}).first().click();
+if(!(await publicPage.getByLabel('Vollständiger Name').count()))throw new Error('Owner registration missing Name field');
 if(!(await publicPage.locator('input[name="password"]').count()))throw new Error('Owner registration missing Passwort field');
-if(!(await publicPage.getByLabel('Telefon').count()))throw new Error('Owner registration missing Telefon field');
-if(!(await publicPage.getByLabel('PLZ').count()))throw new Error('Owner registration missing PLZ field');
-if(!(await publicPage.getByRole('button',{name:'Konto erstellen'}).count()))throw new Error('Owner registration missing Konto erstellen action');
+if(!(await publicPage.getByLabel('Postleitzahl').count()))throw new Error('Owner registration missing PLZ field');
+if(!(await publicPage.getByRole('button',{name:'Kostenlos registrieren'}).last().count()))throw new Error('Owner registration missing submit action');
+if(!(await publicPage.locator('#btn-demo-kunde').count()))throw new Error('Owner registration missing demo fill');
 await nav(publicPage, base+'/')
 const manifestResponse=await publicPage.request.get(base+'/manifest.webmanifest'); if(!manifestResponse.ok())throw new Error('PWA manifest unavailable');
 const manifest=await manifestResponse.json(); if(manifest.display!=='standalone'||!Array.isArray(manifest.icons)||manifest.icons.length<3)throw new Error('PWA manifest incomplete');
@@ -289,13 +293,20 @@ const pageErrors=[];
 manager.on('console',(m)=>{if(m.type()==='error')pageErrors.push(m.text());});
 manager.on('pageerror',(e)=>pageErrors.push('pageerror: '+e.message));
 await nav(manager, base+'/register?role=provider')
-await fillRegisterField(manager,'firstName','Daniel'); await fillRegisterField(manager,'lastName','Müller');
+await manager.getByRole('button',{name:'Kostenlos registrieren'}).first().click();
+await fillRegisterField(manager,'fullName','Gartenbau Müller'); await fillRegisterField(manager,'contactName','Daniel Müller');
 await fillRegisterField(manager,'email',providerEmail); await fillRegisterField(manager,'password',password);
-await fillRegisterField(manager,'businessName','Gartenbau Müller'); await fillRegisterField(manager,'trades','Garten, Grünpflege, Heckenschnitt, Hausmeister'); await fillRegisterField(manager,'postcode','46325'); await manager.getByLabel('Sofort buchbare Termine anbieten').check();
-await Promise.all([manager.waitForURL('**/pro'),manager.getByRole('button',{name:'Konto erstellen'}).click()]);
+await fillRegisterField(manager,'postcode','46325');
+await fillRegisterField(manager,'trades','Garten- und Landschaftsbau, Heckenschnitt, Hausmeisterservice');
+try{await Promise.all([manager.waitForURL('**/pro'),manager.getByRole('button',{name:'Kostenlos registrieren'}).last().click()]);}catch(navError){console.error('E2EDIAG register url=',manager.url());console.error('E2EDIAG register body=',(await manager.locator('body').innerText()).slice(0,500).replace(/\n+/g,' | '));throw navError;}
 await nav(manager, base+'/pro/profile')
 await manager.waitForLoadState('networkidle').catch(()=>{});
 await waitForDomStable(manager,'input[name="document"]',1);
+const preVerifyConsultationToggle=manager.getByLabel('Beratung / fachliche Fragen',{exact:true}); if(!(await preVerifyConsultationToggle.isChecked()))await preVerifyConsultationToggle.check();
+const preVerifyEmergencyToggle=manager.getByLabel('Notfälle',{exact:true}); if(!(await preVerifyEmergencyToggle.isChecked()))await preVerifyEmergencyToggle.check();
+try{await manager.locator('select[name="emergencyMode"]').waitFor({timeout:30000});await manager.locator('select[name="emergencyMode"]').selectOption('24_7');}catch(modeError){console.error('E2EDIAG emergencymode count=',await manager.locator('select[name="emergencyMode"]').count());console.error('E2EDIAG emergencymode body=',(await manager.locator('body').innerText()).slice(0,400).replace(/\n+/g,' | '));throw modeError;}
+try{await clickAndWaitUrl(manager,manager.getByRole('button',{name:'Profil speichern'}),/profile=(?:review|saved)/);}catch(saveError){console.error('E2EDIAG profilesave url=',manager.url());console.error('E2EDIAG profilesave body=',(await manager.locator('body').innerText()).slice(0,400).replace(/\n+/g,' | '));throw saveError;}
+await nav(manager, base+'/pro/profile'); await waitForDomStable(manager,'input[name="document"]',1);
 try{
   await manager.getByLabel('Nachweis').setInputFiles({name:'gewerbe.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n% Test\n')});
 }catch(uploadError){
@@ -314,7 +325,7 @@ await clickAndWaitUrl(manager,manager.getByRole('button',{name:'Zur Prüfung ein
 const adminCtx=await newE2EContext({viewport:{width:1180,height:1000}}); const admin=await adminCtx.newPage(); trackPage(admin,'admin');
 await nav(admin, base+'/admin/login'); await admin.getByLabel('Admin-Passwort').fill(adminPassword);
 await Promise.all([admin.waitForURL('**/admin'),admin.getByRole('button',{name:'Admin anmelden'}).click()]);
-await admin.getByRole('heading',{name:'Betriebsübersicht'}).waitFor(); await waitText(admin,'Nutzer'); await waitText(admin,'Anfragen'); await waitText(admin,'Bookings'); await waitText(admin,'Matching'); await waitText(admin,'Benachrichtigungen'); await admin.getByRole('heading',{name:'Bewertungen'}).waitFor();
+await admin.getByRole('heading',{name:'Betriebsübersicht'}).waitFor(); await waitText(admin,'Nutzer'); await waitText(admin,'Anfragen'); await waitText(admin,'Bookings'); await waitText(admin,'MATCHING'); await waitText(admin,'BENACHRICHTIGUNGEN'); await admin.getByRole('heading',{name:'Bewertungen'}).waitFor();
 let companyCard=admin.locator('.admin-card').filter({hasText:'Gartenbau Müller'}).first();
 await clickServerAction(admin,companyCard.getByRole('button',{name:'Unternehmen freigeben'}));
 try { await companyCard.locator('.status.approved').waitFor({timeout:30000}); } catch(e) {
@@ -396,8 +407,9 @@ await thomasCard.getByLabel('Aufträge verwalten').uncheck(); await clickServerA
 // 3) Kunde startet beim Hausmeisterservice und entscheidet danach bewusst: Mensch oder Auftrag.
 const ownerCtx=await newE2EContext({viewport:{width:390,height:844}}); const owner=await ownerCtx.newPage(); trackPage(owner,'homeowner');
 await nav(owner, base+'/register?role=homeowner')
-await fillRegisterField(owner,'firstName','Maria'); await fillRegisterField(owner,'lastName','Test'); await fillRegisterField(owner,'email',ownerEmail); await fillRegisterField(owner,'password',password); await fillRegisterField(owner,'postcode','46325');
-await Promise.all([owner.waitForURL('**/app/onboarding'),owner.getByRole('button',{name:'Konto erstellen'}).click()]);
+await owner.getByRole('button',{name:'Kostenlos registrieren'}).first().click();
+await fillRegisterField(owner,'fullName','Maria Test'); await fillRegisterField(owner,'email',ownerEmail); await fillRegisterField(owner,'password',password); await fillRegisterField(owner,'postcode','46325');
+await Promise.all([owner.waitForURL('**/app/onboarding'),owner.getByRole('button',{name:'Kostenlos registrieren'}).last().click()]);
 await waitText(owner,'Damit Partner in deiner Region arbeiten können');
 // Resume works: leaving mid-onboarding and returning keeps the saved step.
 await nav(owner, base+'/app'); await waitText(owner,'Jetzt weiter einrichten');
@@ -411,7 +423,7 @@ await strictRetry(owner,()=>owner.getByRole('button',{name:'Überspringen'}).cli
 await Promise.all([owner.waitForURL('**/app?onboarding=done'),owner.waitForLoadState('load')]);
 if(await owner.locator('.owner-onboarding-banner').count())throw new Error('Onboarding banner shown after completion');
 await assertNoOverflow(owner,'Mobile customer app');
-await nav(owner, base+'/app'); await waitText(owner,'Frag einfachhausen'); await waitText(owner,'Mein Zuhause im Überblick'); await waitText(owner,'Haus-Historie ansehen'); await waitText(owner,'Schnelle Hilfe in dringenden Fällen');
+await nav(owner, base+'/app'); await waitText(owner,'Frag einfachhausen'); await waitText(owner,'Als Nächstes'); await waitText(owner,'Soforthilfe bei Rohrbruch');
 // Owner mobile navigation is the Notion drawer; the bottom tab bar is gone on owner mobile.
 const ownerDrawer=owner.locator('.mobile-menu');
 await ownerDrawer.locator('summary').click();
@@ -427,7 +439,7 @@ await nav(owner, base+'/app/hausmeister'); await assertNoOverflow(owner,'Mobile 
 await sendHousemaster(owner,'Meine Hecke ist zu hoch. Dienstag ab 14 Uhr hätte ich Zeit. Wen kann ich dazu fragen?',/answered=1/);
 await waitText(owner,'Wie soll es weitergehen?'); await waitText(owner,'Ansprechpartner finden'); await waitText(owner,'Auftrag organisieren');
 // Eine normale Hausfrage darf noch keine Partneranfrage erzeugen.
-await nav(manager, base+'/pro'); await waitText(manager,'Keine neue passende Anfrage');
+await nav(manager, base+'/pro'); await waitText(manager,'Keine neuen Anfragen im Umkreis');
 
 // 3a) Zuerst nur einen Menschen verbinden — ausdrücklich noch kein Auftrag.
 await clickAndWaitUrl(owner,owner.getByRole('button',{name:/Ansprechpartner finden/}),/\/app\/jobs\/\d+/); const contactJobId=Number(owner.url().split('/').pop()); if(!contactJobId)throw new Error('contact job missing');
@@ -469,14 +481,14 @@ let supabaseTechUserId=null;
   else if(mk.status===422){const list=await (await fetch(`${supabaseAdminBase}/auth/v1/admin/users?email=${encodeURIComponent(techEmail)}`,{headers:{apikey:supabaseServiceKey,Authorization:`Bearer ${supabaseServiceKey}`}})).json();supabaseTechUserId=list.users?.[0]?.id||null;}
   else throw new Error(`Supabase identity creation failed: HTTP ${mk.status}`);
 }
-await nav(tech, base+'/login'); await tech.getByRole('heading',{name:/Willkommen zurück/}).waitFor(); const loginButton=tech.getByRole('button',{name:'Anmelden'}); const loginBox=await loginButton.boundingBox(); if(!loginBox || loginBox.height < 44)throw new Error('Login primary action must be at least 44px high');
+await nav(tech, base+'/login'); await tech.getByRole('heading',{name:/Willkommen zurück/}).waitFor(); const loginButton=tech.locator('#btn-submit-login:visible'); const loginBox=await loginButton.boundingBox(); if(!loginBox || loginBox.height < 44)throw new Error('Login primary action must be at least 44px high');
 let loggedIn=false;
 for(let attempt=0;attempt<3&&!loggedIn;attempt++){
   await tech.waitForLoadState('networkidle').catch(()=>{}); await tech.waitForTimeout(800*attempt);
-  await tech.locator('input[inputmode="email"]').fill(techEmail);
-  await tech.locator('input[type="password"]').fill(password);
+  await tech.locator('input[inputmode="email"]:visible').fill(techEmail);
+  await tech.locator('input[type="password"]:visible').fill(password);
   let enabled=false;
-  try{ await tech.waitForFunction(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('Anmelden'));return b&&!b.disabled;},{timeout:8000}); enabled=true; }catch{}
+  try{ await tech.waitForFunction(()=>{const b=[...document.querySelectorAll('button')].find(b=>b.textContent.trim().startsWith('Anmelden')&&b.getClientRects().length>0);return b&&!b.disabled;},{timeout:8000}); enabled=true; }catch{}
   if(enabled){
     await Promise.all([tech.waitForURL('**/pro',{timeout:60000}).catch(async(e)=>{ await tech.waitForTimeout(1500); const errbox=await tech.locator('[role="alert"]').textContent().catch(()=>'(no alert)'); throw new Error('post-click nav failed: '+tech.url()+' | errbox='+errbox); }),loginButton.click()]);
     loggedIn=true;
@@ -570,11 +582,11 @@ await nav(owner, base+`/app/jobs/${jobId}`); await waitText(owner,'Wenn etwas ni
 await nav(admin, base+'/admin'); const claimCard=admin.locator('.admin-card').filter({hasText:'Rückfrage zur Qualität'}).first(); await claimCard.getByLabel('Status').selectOption('resolved'); await claimCard.getByPlaceholder('Rückmeldung / Entscheidung').fill('Fall geprüft und mit Kunde und Ansprechpartner geklärt.'); await clickServerAction(admin,claimCard.getByRole('button',{name:'Fall aktualisieren'})); await claimCard.locator('.status.resolved').waitFor();
 
 // 11) CRM-Lifecycle ist im integrierten Produkt erreichbar und kennt den registrierten Partner.
-await nav(admin, base+`/admin/crm?q=${encodeURIComponent('Gartenbau Müller')}`); await waitText(admin,'Leads & CRM'); await waitText(admin,'Gartenbau Müller'); await assertNoOverflow(admin,'Admin CRM');
+await nav(admin, base+`/admin/crm?q=${encodeURIComponent('Gartenbau Müller')}`); await waitText(admin,'Leads & Outreach CRM'); await waitText(admin,'Gartenbau Müller'); await assertNoOverflow(admin,'Admin CRM');
 
 const buyerCtx=await newE2EContext({viewport:{width:390,height:844}}); const buyer=await buyerCtx.newPage(); trackPage(buyer,'homeowner-buyer');
 // 12a) First-run onboarding: guided steps, skippable optionals, resumable progress.
-await nav(buyer, base+'/register?role=homeowner'); await fillRegisterField(buyer,'firstName','Ben'); await fillRegisterField(buyer,'lastName','Käufer'); await fillRegisterField(buyer,'email',buyerEmail); await fillRegisterField(buyer,'password',password); await fillRegisterField(buyer,'postcode','46325'); await Promise.all([buyer.waitForURL('**/app/onboarding'),buyer.getByRole('button',{name:'Konto erstellen'}).click()]);
+await nav(buyer, base+'/register?role=homeowner'); await buyer.getByRole('button',{name:'Kostenlos registrieren'}).first().click(); await fillRegisterField(buyer,'fullName','Ben Käufer'); await fillRegisterField(buyer,'email',buyerEmail); await fillRegisterField(buyer,'password',password); await fillRegisterField(buyer,'postcode','46325'); await Promise.all([buyer.waitForURL('**/app/onboarding'),buyer.getByRole('button',{name:'Kostenlos registrieren'}).last().click()]);
 await waitText(buyer,'Damit Partner in deiner Region arbeiten können');
 await buyer.getByLabel('Straße und Hausnummer').fill('Kaistraße 7');
 await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Weiter'}),/\/app\/onboarding$/);

@@ -29,6 +29,7 @@ function check(name, condition, detail = '') {
 const SOURCES = [
   'src/lib/db.ts',
   'src/lib/auth.ts',
+  'src/lib/demo-accounts.ts',
   'src/lib/security/audit.ts',
   'src/lib/security/rate-limit.ts',
   'src/lib/security/schemas.ts',

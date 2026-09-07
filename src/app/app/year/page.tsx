@@ -1,19 +1,20 @@
 import Link from 'next/link';
-import { CalendarCheck,CheckCircle2,ChevronRight,Clock3,Plus } from 'lucide-react';
 import { AppShell } from '@/components/shell';
+import { EHAppHeader, EHPanel, EHList, EHEmptyState, EHButton, EHActions, EHStatus } from '@/design-system';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel } from '@/lib/format';
 import { primaryProperty } from '@/lib/properties';
 
 const monthFmt=new Intl.DateTimeFormat('de-DE',{month:'short'});
+const today=new Date().toISOString().slice(0,10);
 
 export default async function YearPage({searchParams}:{searchParams:Promise<Record<string,string>>}){
   const user=await requireUser('homeowner'); const property=primaryProperty(user.id); const sp=await searchParams; const view=sp.view==='history'?'history':'plan';
   const year=Number(sp.year)||new Date().getFullYear();
-  const tasks=view==='plan'
-    ? property?db.prepare(`SELECT * FROM maintenance_tasks WHERE property_id=? AND status='open' AND strftime('%Y',due_date)=? ORDER BY due_date`).all(property.id,String(year)):[] as any[]
-    : property?db.prepare(`SELECT * FROM maintenance_tasks WHERE property_id=? AND status='completed' ORDER BY due_date DESC LIMIT 40`).all(property.id):[] as any[];
+  const openTasks=property?db.prepare(`SELECT * FROM maintenance_tasks WHERE property_id=? AND status='open' ORDER BY due_date`).all(property.id) as any[]:[];
+  const overdue=view==='plan'?openTasks.filter((t:any)=>t.due_date&&String(t.due_date).slice(0,10)<today):[];
+  const tasks=view==='plan'?openTasks.filter((t:any)=>t.due_date&&String(t.due_date).slice(0,10).startsWith(String(year))):[] as any[];
   const jobs=view==='plan'
     ? db.prepare(`SELECT id,title,preferred_date,status FROM jobs WHERE homeowner_id=? AND request_kind='service' AND status IN ('accepted','in_progress') AND preferred_date IS NOT NULL ORDER BY preferred_date`).all(user.id) as any[]
     : db.prepare(`SELECT id,title,updated_at preferred_date,status FROM jobs WHERE homeowner_id=? AND request_kind='service' AND status='completed' ORDER BY updated_at DESC LIMIT 40`).all(user.id) as any[];
@@ -21,12 +22,17 @@ export default async function YearPage({searchParams}:{searchParams:Promise<Reco
   const items:YearItem[]=[...tasks.map((t:any):YearItem=>({kind:'task',id:`t-${t.id}`,date:t.due_date,title:t.title,meta:t.category,status:t.status})),...jobs.map((j:any):YearItem=>({kind:'job',id:`j-${j.id}`,jobId:j.id,date:j.preferred_date,title:j.title,meta:'Auftrag',status:j.status}))].filter(x=>Boolean(x.date)).sort((a,b)=>view==='plan'?String(a.date).localeCompare(String(b.date)):String(b.date).localeCompare(String(a.date)));
 
   return <AppShell role="homeowner" active="/app/home" title="Mein Jahr" subtitle="Wartung, Termine und Hausaufgaben">
-    <div className="year-head"><div><span className="soft-kicker">{year}</span><h1>Mein Jahr</h1><p>Alles, was an deinem Zuhause ansteht – übersichtlich über das Jahr.</p></div><Link href="/app/hausmeister" className="round-add" aria-label="Neue Aufgabe planen"><Plus/></Link></div>
+    <EHAppHeader eyebrow={String(year)} title="Mein Jahr" text="Alles, was an deinem Zuhause ansteht – übersichtlich über das Jahr." actions={<EHButton href="/app/hausmeister" arrow>Neue Aufgabe planen</EHButton>} />
     <div className="segmented-tabs" role="navigation" aria-label="Jahresansicht"><Link aria-current={view==='plan'?'page':undefined} className={view==='plan'?'active':''} href={`/app/year?view=plan&year=${year}`}>Plan</Link><Link aria-current={view==='history'?'page':undefined} className={view==='history'?'active':''} href={`/app/year?view=history&year=${year}`}>Historie</Link></div>
-    <div className="year-timeline">{items.map(item=>{
+    {overdue.length>0&&<EHPanel title={`Überfällig · ${overdue.length} ${overdue.length===1?'Aufgabe':'Aufgaben'} – fällig vor heute`}>
+      <EHList label="Überfällige Wartungen" items={overdue.slice(0,6).map((t:any)=>({ id: 'od-' + t.id, title: `${t.title} — fällig ${dateLabel(t.due_date)}`, text: t.category, meta: <EHStatus tone="error">überfällig</EHStatus> }))} />
+      {overdue.length>6&&<p>+{overdue.length-6} weitere überfällige Aufgaben.</p>}
+      <p>Plane sie über den <Link href="/app/hausmeister">Hausmeister</Link> oder erledige sie selbst.</p>
+    </EHPanel>}
+    {items.length===0?<EHEmptyState title={view==='plan'?'Noch nichts geplant':'Noch keine Historie'} text={view==='plan'?'Füge Technik in „Mein Haus“ hinzu oder plane etwas über den Hausservice.':'Erledigte Wartungen und Aufträge erscheinen hier.'} />:<EHList label={view==='plan'?'Jahresplan':'Jahreshistorie'} items={items.map(item=>{
       const d=new Date(String(item.date).length===10?`${item.date}T12:00:00`:item.date); const month=monthFmt.format(d).replace('.','').toUpperCase();
-      return <div className="year-row" key={item.id}><div className="year-month">{month}</div><span className={`timeline-dot ${item.status==='completed'?'done':''}`}>{item.status==='completed'?<CheckCircle2/>:<Clock3/>}</span>{item.kind==='job'?<Link href={`/app/jobs/${item.jobId!}`} className="year-item"><div><strong>{item.title}</strong><small>{dateLabel(item.date)} · {item.meta}</small></div><ChevronRight/></Link>:<div className="year-item"><div><strong>{item.title}</strong><small>{dateLabel(item.date)} · {item.meta}</small></div><CalendarCheck/></div>}</div>
-    })}{items.length===0&&<div className="empty"><CalendarCheck/><strong>{view==='plan'?'Noch nichts geplant':'Noch keine Historie'}</strong><p>{view==='plan'?'Füge Technik in „Mein Haus“ hinzu oder plane etwas über den Hausservice.':'Erledigte Wartungen und Aufträge erscheinen hier.'}</p></div>}</div>
-    <Link href="/app/hausmeister" className="btn primary wide year-cta"><Plus size={17}/> Neue Aufgabe planen</Link>
+      return { id: item.id, title: `${month} · ${item.title}${item.status==='completed'?' · erledigt':''}`, text: `${dateLabel(item.date)} · ${item.meta}`, ...(item.kind==='job'?{ href: `/app/jobs/${item.jobId!}` }:{}), meta: item.status==='completed'?<EHStatus tone="success">erledigt</EHStatus>:null };
+    })} />}
+    <EHActions><EHButton href="/app/hausmeister" arrow>Neue Aufgabe planen</EHButton></EHActions>
   </AppShell>;
 }

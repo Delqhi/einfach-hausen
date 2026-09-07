@@ -6,6 +6,7 @@ import { getSupabase } from "@/lib/supabase";
 import { categories } from "@/lib/categories";
 import Stepper from "@/components/Stepper";
 import { CameraIcon, MicIcon, ArrowRightWhite, CheckIcon, PinSmallIcon, BackIcon } from "@/components/icons";
+import styles from "../anfrage.module.css";
 
 export default function NeueAnfragePage() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function NeueAnfragePage() {
       <div className="page center-page safe-top safe-bottom">
         <div className="success-circle">✅</div>
         <h1>Anfrage gesendet!</h1>
-        <p style={{ color: "var(--muted)" }}>Dienstleister in deiner Umgebung werden benachrichtigt.</p>
+        <p className={styles.muted}>Dienstleister in deiner Umgebung werden benachrichtigt.</p>
         <div className="home-indicator" />
       </div>
     );
@@ -52,8 +53,8 @@ export default function NeueAnfragePage() {
       {step === 1 && (
         <>
           <section className="ob-head"><h1>Worum geht es?</h1><p>Wähle die passende Kategorie für dein Anliegen.</p></section>
-          <div className="cat-panel" style={{ marginTop: 20 }}><div className="cat-grid">{categories.slice(0, 9).map((c) => (<button key={c.id} className={`cat-tile ${cat === c.id ? "sel" : ""}`} onClick={() => { setCat(c.id); setSub(null); }}><span className="cat-tile-title">{c.title}</span><span className={`cat-check ${cat === c.id ? "on" : ""}`}>{cat === c.id && <CheckIcon size={12} />}</span></button>))}</div></div>
-          {selCat && (<div className="subcat-section"><h3>Was genau soll gemacht werden?</h3><div className="subcat-list" style={{ marginTop: 12 }}>{selCat.subs.map((s) => (<button key={s.id} className={`subcat-item ${sub === s.id ? "sel" : ""}`} onClick={() => setSub(s.id)}><span className={`checkbox-square ${sub === s.id ? "on" : ""}`}>{sub === s.id && <CheckIcon size={11} />}</span><span className="subcat-text"><strong>{s.title}</strong><span>{s.sub}</span></span></button>))}</div></div>)}
+          <div className={`cat-panel ${styles.panelSpaced}`}><div className="cat-grid">{categories.slice(0, 9).map((c) => (<button key={c.id} className={`cat-tile ${cat === c.id ? "sel" : ""}`} onClick={() => { setCat(c.id); setSub(null); }}><span className="cat-tile-title">{c.title}</span><span className={`cat-check ${cat === c.id ? "on" : ""}`}>{cat === c.id && <CheckIcon size={12} />}</span></button>))}</div></div>
+          {selCat && (<div className="subcat-section"><h3>Was genau soll gemacht werden?</h3><div className={`subcat-list ${styles.listSpaced}`}>{selCat.subs.map((s) => (<button key={s.id} className={`subcat-item ${sub === s.id ? "sel" : ""}`} onClick={() => setSub(s.id)}><span className={`checkbox-square ${sub === s.id ? "on" : ""}`}>{sub === s.id && <CheckIcon size={11} />}</span><span className="subcat-text"><strong>{s.title}</strong><span>{s.sub}</span></span></button>))}</div></div>)}
           <div className="ob-actions"><button className="btn-primary btn-full" disabled={!cat || !sub} onClick={() => setStep(2)}>Weiter</button></div>
         </>
       )}

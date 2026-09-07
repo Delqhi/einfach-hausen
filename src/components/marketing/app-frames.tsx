@@ -148,7 +148,7 @@ export function OrderStatusScreen() {
           <div className={s.tlRow}><div className={s.tlRail}><i className={s.tlDot} /><i className={s.tlLine} /></div><div className={s.tlBody}><small>Mo 09:12</small><strong>Anliegen beschrieben</strong></div></div>
           <div className={s.tlRow}><div className={s.tlRail}><i className={s.tlDot} /><i className={s.tlLine} /></div><div className={s.tlBody}><small>Mo 11:40</small><strong>Passender Partner gefunden</strong></div></div>
           <div className={s.tlRow}><div className={s.tlRail}><i className={s.tlDot} /><i className={s.tlLine} /></div><div className={s.tlBody}><small>Di 08:05</small><strong>Termin von dir bestätigt</strong></div></div>
-          <div className={s.tlRow}><div className={s.tlRail}><i className={s.tlDot} style={{ background: '#d9b98a' }} /><i className={s.tlLine} /></div><div className={s.tlBody}><small>offen</small><strong>Erledigt &amp; in der Hausakte</strong></div></div>
+          <div className={s.tlRow}><div className={s.tlRail}><i className={`${s.tlDot} ${s.tlDotSand}`} /><i className={s.tlLine} /></div><div className={s.tlBody}><small>offen</small><strong>Erledigt &amp; in der Hausakte</strong></div></div>
         </div>
         <div className={s.tile}><div className={s.tileRow}><span className={s.iconSand}><Receipt size={16} /></span><div><strong>Kostenrahmen 160–200 €</strong><span>Rechnung landet automatisch in der Akte</span></div></div></div>
       </div>

@@ -28,7 +28,7 @@ export function FaqExplorer({ entries }: { entries: ReadonlyArray<Entry> }) {
           </button>
         ))}
       </div>
-      <div className={styles.faq} style={{ maxWidth: "none" }}>
+      <div className={styles.faq} data-wide="true">
         {filtered.map((entry) => (
           <details className={styles.faqItem} key={entry.q}>
             <summary>{entry.q}<Plus size={20} aria-hidden="true" /></summary>

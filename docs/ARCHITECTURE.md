@@ -1,3 +1,5 @@
+> **Aktueller Designvertrag · 2026-09-06:** Jerry hat Atelier 02 ausdrücklich freigegeben. Verbindlich sind DESIGN.md, packages/eh-design und der Skill SIN-EH-design. Eigenständige Änderungen am Markenstil sind verboten. Vollständige Übergabe: docs/brand/system/HANDOFF.md; kompletter Quelltext: docs/brand/system/SOURCE.md. Frühere Statusangaben zu noch offenen Stilentscheidungen sind historisch. Restmigration: EH-BRAND-05-WEB, -APPS, -CRM, -HUB. Unternehmensidentität bleibt docs/COMPANY_IDENTITY.md (Gina Inhaberin/Geschäftsführerin, Jeremy Entwickler).
+
 # Einfach Hausen — Architektur-Grundsätze
 
 Diese Datei beschreibt die langlebigen Produktbeziehungen hinter der bewusst einfachen Oberfläche.
@@ -5,6 +7,18 @@ Diese Datei beschreibt die langlebigen Produktbeziehungen hinter der bewusst ein
 ## Oberstes Prinzip
 
 Komplexität gehört in die Technik, nicht in die Benutzeroberfläche. Ein Eigentümer soll immer in Alltagssprache starten können: **Was möchtest du erledigen?** Ein professioneller Anbieter hat **ein Konto** und erweitert darin seine Tätigkeiten und Leistungen.
+
+## Öffentliche Website-Architektur
+
+Die Marketing-Website ist keine zweite Produktarchitektur. Sie erklärt die vorhandenen Produktpfade und führt anschließend in dieselben Owner-/Provider-Flows. Die Top-Level-Navigation bleibt bewusst kompakt; fachliche Tiefe liegt darunter:
+
+- `Leistungen` → Megamenü / Mobile Disclosure → 12 kanonische Servicebereiche.
+- `src/components/marketing/service-catalog.tsx` hält Slugs, Titel, Kurztexte, typische Situationen und SEO-Copy als zentrale Quelle.
+- `src/app/leistungen/[slug]/page.tsx` und `ServiceDetailPage` bilden den gemeinsamen Service-Archetyp; `/leistungen/heizung` bleibt als kompatible statische Route im selben Archetyp.
+- `/beratung`, `/notfall`, `/versicherung` und `/immobilienverkauf` sind öffentliche Erklärschichten für existierende App-Funktionen, keine separaten Workflows.
+- Sitemap, Navigation und Visual Canonicals werden aus bzw. gegen diese öffentliche IA geprüft.
+
+Die visuelle Grenze bleibt `DESIGN.md` + `--eh-*`. Website-Optimierung darf Komposition, Hierarchie, Typografie, Spacing, responsive Verhalten und Accessibility verbessern, aber keine zweite Designsprache oder Rebrand-Tokens einführen.
 
 ### Visuelle / Präsentations-Source-of-Truth
 
@@ -740,6 +754,7 @@ evidence-sha256: 52a6748748dfe2d958322ba6584bcd9e8cd8284ed731054bf7f3d48948bf4d4
 -->
 
 <!-- SIN-GPT-WEB-HANDOVER
+<<<<<<< HEAD
 task: T-0132
 updated: 2026-09-03T13:48:49+00:00
 actor: local-agent
@@ -892,3 +907,54 @@ updated: 2026-09-07T19:04:42+00:00
 actor: local-agent
 evidence-sha256: 5f22e53b7db61e188b5dc47f904485e0d6871007582380be638be5b78ce4a5ab
 -->
+=======
+task: EH-01
+updated: 2026-09-05T02:00:41+00:00
+actor: chatgpt-web
+evidence-sha256: 223ddabf850fcb56047dafd0834c4648fe0356286d14630d790002d451660459
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-02
+updated: 2026-09-05T02:19:47+00:00
+actor: chatgpt-web
+evidence-sha256: d3169b9afa465be4ab22588b73903be33178b28010810633f5fb6546dc51f563
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-03
+updated: 2026-09-05T04:33:10+00:00
+actor: local-agent
+evidence-sha256: b9300da9b1e348fc386da08fda11e75c105f6db589d60a0f190ae0af25041437
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-04
+updated: 2026-09-05T06:26:03+00:00
+actor: chatgpt-web
+evidence-sha256: 0bf6db00102a87441e641b95f92d629df17ac5aa3144da80eeb67f83cab48460
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-05
+updated: 2026-09-05T09:09:00+00:00
+actor: chatgpt-web
+evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
+-->
+
+## EH-BRAND — Operator-Auftrag vom 06.09.2026
+
+Die Markenstudie liegt unter design/brand-study/ und ist unabhängig von Next-App-Routen, Auth und Backend. Ein Node-Server bindet nur 127.0.0.1 und liefert ausschließlich explizit erlaubte Studien-/Logo-/Font-/Bilddateien. Keine Freigabe des Repository-Verzeichnisses per allgemeinem Dateiserver. Kanonischer Taskplan bleibt die bestehende SIN-Datenbank in /home/ubuntu/dev/einfach-hausen; Dokumente und Issues sind Verweise, keine neuen Statusautoritäten.
+
+- Spezifikation: `docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md`
+- Ausführungsplan: `docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md`
+- Handoff: `docs/brand/HANDOFF.md`
+- Vollständiger Zielquelltext: `docs/brand/SOURCE_PACKET.md`
+- Tasks: EH-BRAND-01 bis EH-BRAND-06; vorhandenes T-0151 und Issue #33 berücksichtigen.
+- Ausführung: `/home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906`, Branch `design/einfachhausen-brand-system-20260906`, Node 22.23.0.
+
+
+## EH-BRAND — Korrektur: Atelier 02 (2026-09-06)
+
+Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren technische 27/27-Prüfung ist keine visuelle Freigabe. Root Codex gestaltet und implementiert die neue Richtung persönlich; keinen weiteren Prime/bai-Dispatch aus alten Abschnitten ableiten. Neuer Arbeitsstand: `design/einfachhausen-brand-atelier-20260906`, Workspace `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`. Konzept, vollständige Nutzerkorrektur und Plan: `docs/brand/ATELIER_02.md`; aktuelle Übergabe: `docs/brand/HANDOFF.md`; vollständige Quellen: `docs/brand/ATELIER_02_SOURCE.md`; bedienbare Vollansicht: `design/brand-atelier/preview.html`. EH-BRAND-03 bleibt in Arbeit, die neue Richtung wurde noch nicht vom Nutzer bewertet. Genau nächste Markenaktion: diese neue Vollansicht besprechen und tatsächliches Nutzerfeedback dokumentieren. EH-BRAND-04..06 folgen erst der Richtungsentscheidung; kein Merge/Deploy. Ältere Empfehlungen/Dispatch-Anweisungen sind für diese Markenwelle historisch. Andere laufende Arbeitswellen bleiben erhalten.
+>>>>>>> origin/main

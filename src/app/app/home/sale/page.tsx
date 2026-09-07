@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Building2, CheckCircle2, ChevronRight, KeyRound, LockKeyhole, MessageCircle, RefreshCw, ShieldCheck, TrendingUp, UserRound } from 'lucide-react';
 import { AppShell, SectionTitle } from '@/components/shell';
+import { EHAppHeader, EHPanel, EHList, EHEmptyState, EHCallout, EHField, EHSelect, EHTextarea, EHInput, EHStatus } from '@/design-system';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { primaryProperty } from '@/lib/properties';
@@ -69,33 +70,38 @@ export default async function Sale() {
   const currentStage = lead ? Math.max(0, saleStages.findIndex(([status]) => status === lead.status)) : -1;
 
   return <AppShell role="homeowner" active="/app/home" title="Verkauf & Bewertung" subtitle="Du entscheidest, was geteilt wird">
-    <div className="sale-hero"><KeyRound aria-hidden="true" /><div><span>Dein Haus bleibt dein Datensatz</span><h1>Bewerten, verkaufen, passende Makler finden.</h1><p>Hausdaten werden übernommen. Private Rechnungen, Dokumente, Zahlungen und Nachrichten bleiben außerhalb des Verkaufsprozesses.</p></div></div>
+    <EHAppHeader eyebrow="Dein Haus bleibt dein Datensatz" title="Bewerten, verkaufen, passende Makler finden." text="Hausdaten werden übernommen. Private Rechnungen, Dokumente, Zahlungen und Nachrichten bleiben außerhalb des Verkaufsprozesses." />
 
     <section className="property-sale-summary"><div><small>Immobilie</small><strong>{property.address || property.postcode || 'Mein Zuhause'}</strong><span>{property.property_type || 'Eigenheim'}{property.living_area ? ` · ${property.living_area} m²` : ''}</span></div><div><small>Orientierungswert</small><strong>{property.estimated_value_min != null && property.estimated_value_max != null ? `${euro(property.estimated_value_min)} – ${euro(property.estimated_value_max)}` : 'Noch nicht hinterlegt'}</strong></div></section>
 
     <SectionTitle>Immobilienbewertung</SectionTitle>
-    <div className={styles.valuationChoices}>
-      <form action={requestPropertyValuationAction} className={`valuation-form ${styles.valuationCard}`}>
-        <div><span className={styles.eyebrow}>Neue Bewertung</span><strong>Bewertung anfragen</strong><p>Lege einen offenen Bewertungsvorgang an. Dabei wird kein vorhandener Wert behauptet oder gespeichert.</p></div>
-        <label>Gewünschte Art<select name="valuationType" defaultValue="orientation"><option value="orientation">Orientierungswert</option><option value="expert">Sachverständigenbewertung</option><option value="market">Makler-Marktwert</option></select></label>
-        <label>Hinweis<textarea name="notes" rows={3} placeholder="Optional: Besonderheiten oder Modernisierungen" /></label>
-        <button className="btn primary">Bewertung anfragen</button>
+    <EHPanel title="Neue Bewertung">
+      <p>Lege einen offenen Bewertungsvorgang an. Dabei wird kein vorhandener Wert behauptet oder gespeichert.</p>
+      <form action={requestPropertyValuationAction}>
+        <EHField id="sale-type" label="Gewünschte Art"><EHSelect id="sale-type" name="valuationType" defaultValue="orientation"><option value="orientation">Orientierungswert</option><option value="expert">Sachverständigenbewertung</option><option value="market">Makler-Marktwert</option></EHSelect></EHField>
+        <EHField id="sale-notes" label="Hinweis"><EHTextarea id="sale-notes" name="notes" rows={3} placeholder="Optional: Besonderheiten oder Modernisierungen" /></EHField>
+        <button>Bewertung anfragen</button>
       </form>
+    </EHPanel>
+    <EHPanel title="Vorhandene Einschätzung">
+      <p>Nutze diesen Weg nur, wenn dir bereits eine konkrete Wertspanne vorliegt.</p>
 
-      <form action={storeExistingValuationAction} className={`valuation-form ${styles.valuationCard}`}>
-        <div><span className={styles.eyebrow}>Vorhandene Einschätzung</span><strong>Bestehende Bewertung speichern</strong><p>Nutze diesen Weg nur, wenn dir bereits eine konkrete Wertspanne vorliegt.</p></div>
-        <div className="two"><label>Von €<input name="estimatedMin" type="number" min="0" step="1000" required /></label><label>Bis €<input name="estimatedMax" type="number" min="0" step="1000" required /></label></div>
-        <label>Quelle / Art<select name="valuationType" defaultValue="market"><option value="orientation">Orientierungswert</option><option value="expert">Sachverständigenbewertung</option><option value="market">Makler-Marktwert</option></select></label>
-        <label>Hinweis<textarea name="notes" rows={3} placeholder="Optional: Quelle, Datum oder Besonderheiten" /></label>
-        <button className="btn ghost">Vorhandene Bewertung speichern</button>
+      <form action={storeExistingValuationAction}>
+        <EHField id="sale-min" label="Von €"><EHInput id="sale-min" name="estimatedMin" type="number" min="0" step="1000" required /></EHField>
+        <EHField id="sale-max" label="Bis €"><EHInput id="sale-max" name="estimatedMax" type="number" min="0" step="1000" required /></EHField>
+        <EHField id="sale-src" label="Quelle / Art"><EHSelect id="sale-src" name="valuationType" defaultValue="market"><option value="orientation">Orientierungswert</option><option value="expert">Sachverständigenbewertung</option><option value="market">Makler-Marktwert</option></EHSelect></EHField>
+        <EHField id="sale-note" label="Hinweis"><EHTextarea id="sale-note" name="notes" rows={3} placeholder="Optional: Quelle, Datum oder Besonderheiten" /></EHField>
+        <button>Vorhandene Bewertung speichern</button>
       </form>
-    </div>
+    </EHPanel>
 
-    <div className={styles.historyHeader}><strong>Bewertungsverlauf</strong><span>{valuations.length} {valuations.length === 1 ? 'Vorgang' : 'Vorgänge'}</span></div>
-    {valuations.length > 0 ? <div className="valuation-history">{valuations.map((valuation) => {
+    <EHPanel title={`Bewertungsverlauf · ${valuations.length} ${valuations.length === 1 ? 'Vorgang' : 'Vorgänge'}`}>
+    {valuations.length > 0 && <EHList label="Bewertungsverlauf" items={valuations.map((valuation) => {
       const completed = valuation.status === 'completed' && valuation.estimated_min != null && valuation.estimated_max != null;
-      return <div key={valuation.id}><TrendingUp aria-hidden="true" /><span className="grow"><strong>{completed ? `${euro(valuation.estimated_min)} – ${euro(valuation.estimated_max)}` : valuation.status === 'cancelled' ? 'Bewertung abgebrochen' : 'Bewertung angefragt'}</strong><small>{formatDate(valuation.created_at)} · {valuationTypeLabels[valuation.valuation_type] || valuation.valuation_type}{valuation.notes ? ` · ${valuation.notes}` : ''}</small></span><span className={`status ${valuation.status}`}>{completed ? 'Gespeichert' : valuation.status === 'cancelled' ? 'Abgebrochen' : 'Anfrage offen'}</span></div>;
-    })}</div> : <div className={styles.compactEmpty}><TrendingUp aria-hidden="true" /><div><strong>Noch keine Bewertung</strong><p>Eine Anfrage und eine bereits vorhandene Einschätzung werden getrennt im Verlauf dokumentiert.</p></div></div>}
+      return { id: String(valuation.id), title: completed ? `${euro(valuation.estimated_min)} – ${euro(valuation.estimated_max)}` : valuation.status === 'cancelled' ? 'Bewertung abgebrochen' : 'Bewertung angefragt', text: `${formatDate(valuation.created_at)} · ${valuationTypeLabels[valuation.valuation_type] || valuation.valuation_type}${valuation.notes ? ` · ${valuation.notes}` : ''}`, meta: <EHStatus>{completed ? 'Gespeichert' : valuation.status === 'cancelled' ? 'Abgebrochen' : 'Anfrage offen'}</EHStatus> };
+    })} />}
+    {valuations.length === 0 && <EHEmptyState title="Noch keine Bewertung" text="Eine Anfrage und eine bereits vorhandene Einschätzung werden getrennt im Verlauf dokumentiert." />}
+    </EHPanel>
 
     <SectionTitle>Ich möchte verkaufen</SectionTitle>
     {!lead ? <div className="sale-start-card"><Building2 aria-hidden="true" /><div className="grow"><strong>Passende Makler für dein Haus finden</strong><p>Wir vergleichen aktive, geprüfte Makler-Suchprofile mit Lage, Immobilientyp, Nutzung, Fläche und – falls vorhanden – Wert. Noch werden keine Kontaktdaten weitergegeben.</p></div><form action={startSaleProcessAction}><button className="btn primary">Makler finden</button></form></div> : <>

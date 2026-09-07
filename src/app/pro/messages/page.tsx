@@ -5,6 +5,7 @@ import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, Provi
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { getProviderContext } from '@/lib/provider';
+import { EHPanel, EHList, EHStatus } from '@/design-system';
 import { ProviderMessageComposer } from './thread-client';
 import styles from './messages.module.css';
 
@@ -88,25 +89,15 @@ export default async function Messages({ searchParams }: { searchParams: Promise
       ) : (
         <div className="provider-messages-layout">
           <section className="provider-message-list-pane" aria-label="Kundenkontakte">
-            <ProviderSectionHeader title="Kunden" description={`${customers.length} ${customers.length === 1 ? 'Kontakt' : 'Kontakte'}`} />
-            <div className="contact-list pro-contact-list">
-              {customers.map((customer) => (
-                <Link
-                  key={customer.homeowner_id}
-                  href={`/pro/messages?homeowner=${customer.homeowner_id}`}
-                  className={selectedId === customer.homeowner_id ? 'contact-row selected' : 'contact-row'}
-                  aria-current={selectedId === customer.homeowner_id ? 'page' : undefined}
-                >
-                  <div className="contact-avatar">{customer.first_name?.[0]}{customer.last_name?.[0]}</div>
-                  <div className="grow">
-                    <strong>{customer.first_name} {customer.last_name}</strong>
-                    <small>{customer.address || customer.postcode}</small>
-                    <p>{customer.last_job_title || customer.category || 'Hausservice'}</p>
-                  </div>
-                  {Number(customer.unread_count) > 0 && <span className={styles.unreadBadge} aria-label={`${customer.unread_count} ungelesene Nachrichten`}>{customer.unread_count > 99 ? '99+' : customer.unread_count}</span>}
-                </Link>
-              ))}
-            </div>
+            <EHPanel title={`Kunden · ${customers.length} ${customers.length === 1 ? 'Kontakt' : 'Kontakte'}`}>
+            <EHList label="Kundenkontakte" items={customers.map((customer) => ({
+              id: String(customer.homeowner_id),
+              title: `${customer.first_name} ${customer.last_name}`,
+              text: `${customer.address || customer.postcode} · ${customer.last_job_title || customer.category || 'Hausservice'}`,
+              href: `/pro/messages?homeowner=${customer.homeowner_id}`,
+              meta: Number(customer.unread_count) > 0 ? <EHStatus>{customer.unread_count > 99 ? '99+' : customer.unread_count} ungelesen</EHStatus> : null,
+            }))} />
+            </EHPanel>
           </section>
 
           <section className={`provider-message-thread ${styles.threadShell}`} aria-label={selected ? `Nachrichten mit ${selected.first_name} ${selected.last_name}` : 'Nachrichten'} data-message-thread="provider">

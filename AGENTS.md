@@ -1,3 +1,17 @@
+> **Designkorrektur 2026-09-07:** Vor jeder Seitenmigration `docs/brand/system/COMPOSITION.md` lesen und `packages/eh-design/src/composition.tsx` verwenden. Vollständiger Code: `docs/brand/composition-repair/SOURCE.md`. Keine Produktillustration in einen Text-Slot stecken; Abschnittsüberschrift genau einmal; echte App-Bedienung nicht durch Marketingbeispiele ersetzen. Technische Prüfungen ersetzen keine visuelle Begutachtung.
+
+<!-- EH-DESIGN-AUTHORITY-V1:BEGIN -->
+## Verbindliche Einfachhausen Gestaltung · 2026-09-06
+
+Jerry hat Atelier 02 ausdrücklich freigegeben. Für ALLES rund um Einfachhausen gilt Designsystem 1.0: Website und Unterseiten, Owner-/Handwerker-App, CRM, Portalhub, Präsentationen.
+
+**Andere Agenten dürfen das Design NICHT eigenständig verändern.** Pflicht: `sin-eh-design` laden, aktuelle `DESIGN.md` lesen, kanonische `packages/eh-design`-Komponenten bzw. versiegelte `vendor/eh-design`-Kopie verwenden. Neue Seiten werden aus vollständigen Recipes und vorhandenen Blöcken inhaltlich passend zusammengesetzt. Keine eigene Farbpalette, Schrift, Logo-Nachbildung, lokale Stilfamilie oder „kreative“ Neuinterpretation. Guard/Baseline/Workflow niemals zum Bestehen eines eigenen Checks abschwächen oder neu versiegeln.
+
+Original-Logo, selbst gehostete Inter, lesbare Typografie, Hauskante und funktionale Registerlinien sind festgelegt. Businesslogik, Navigation, Auth und Daten bleiben erhalten. Eine neue Seite ist keine Autorisierung zur Änderung des Markendesigns. Fehlende Bausteine als konkreten Bedarf an die Designautorität melden; sonst mit vorhandenen Bausteinen weiterarbeiten.
+
+Übergaben müssen sämtliche neuen/geänderten Quelldateien vollständig mit Pfaden, Asset-Hashes, tatsächlichen Befehlen und Ergebnissen enthalten. Keine Platzhalter oder „Rest analog“. Aktuelle Quellkapseln: `docs/brand/system/`. Historische PR40-Studien sind verworfen; alte „Atelier 02 noch nicht freigegeben“-Notizen sind überholt.
+<!-- EH-DESIGN-AUTHORITY-V1:END -->
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
@@ -9,6 +23,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 <!-- END:nextjs-agent-rules -->
 
 ## Einfach Hausen engineering workflow
+
+### Canonical company identity
+
+- **Gina Schulze = Inhaberin und Geschäftsführerin von Einfach Hausen.**
+- **Jeremy Schulze = Developer / technische Entwicklung; nicht Inhaber, Betreiber oder Geschäftsführer.**
+- Binding source: `docs/COMPANY_IDENTITY.md`. Public legal copy, docs and generated content must follow it. „Jerry-owned“ in task boards means engineering assignment only, never company ownership.
+- Never invent legal form, address, register, VAT-ID or phone data. Use only verified business data.
 
 ### Single-goal coordination contract
 
@@ -22,6 +43,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - `docs/PRODUCT_VISION.md` is the binding product definition. Preserve the core model: AI organizes, verified regional partners execute, and a concrete human contact takes over after booking.
 - `docs/PRODUCT_POSITIONING.md` is the binding strategic positioning layer. Product and UX choices must reinforce Einfach Hausen as the **personal house manager / operating system for the home**: reduce mental load, increase decision confidence, preserve house memory and value, and reduce fragmented tools/contacts. Do not foreground AI, lead-marketplace or generic portal positioning when a homeowner-facing benefit can express the same capability.
 - `DESIGN.md` is the binding visual/UX contract across the public website, homeowner app, and partner app. Read it before touching UI. During parallel surface-specific design waves, treat it and shared business logic as read-only and stay inside the task's allowed paths.
+
+### Public website finish contract (2026-09-05)
+
+- The public website now has a canonical information architecture: existing top-level navigation stays stable, while `Leistungen` exposes the 12 service areas through a desktop megamenu and mobile disclosure. Do not flatten this back into a single generic link list.
+- `src/components/marketing/service-catalog.tsx` is the public service source of truth; detail pages use the shared `ServiceDetailPage` archetype. Do not create divergent copy-paste service pages.
+- Public product explainers `/beratung`, `/notfall`, `/versicherung` and `/immobilienverkauf` describe existing app capabilities and their limits. Marketing copy must not promise automatic insurer contact, guaranteed 24/7 emergency coverage, or data sharing without explicit approval.
+- Website polish must stay inside the accepted design system. No rebrand, no alternate token set, no new visual language. Improvements are hierarchy, composition, spacing, typography, navigation, responsive behavior and accessibility using the existing `--eh-*` tokens/components.
+- Public website release evidence now includes `npm run test:public-site`, `npm run test:public-nav`, full `npm run test:e2e` and the 72-shot visual matrix.
 - For architecture, dependency flow, blast-radius questions, and unfamiliar code paths, use Graphify first: `graphify query`, `graphify explain`, or `graphify path`. If the graph is absent or stale, run `npm run graph:update`.
 - Graphify output is generated local state under `graphify-out/` and is intentionally not committed. Git hooks installed by Graphify refresh the graph after commit/checkout.
 - Before shipping application changes run `npm run lint`, `npm run build`, and the relevant E2E flow (`npm run test:e2e` for end-to-end product changes).
@@ -665,6 +694,7 @@ evidence-sha256: 52a6748748dfe2d958322ba6584bcd9e8cd8284ed731054bf7f3d48948bf4d4
 -->
 
 <!-- SIN-GPT-WEB-HANDOVER
+<<<<<<< HEAD
 task: T-0132
 updated: 2026-09-03T13:48:49+00:00
 actor: local-agent
@@ -817,3 +847,57 @@ updated: 2026-09-07T19:04:42+00:00
 actor: local-agent
 evidence-sha256: 5f22e53b7db61e188b5dc47f904485e0d6871007582380be638be5b78ce4a5ab
 -->
+=======
+task: EH-01
+updated: 2026-09-05T02:00:41+00:00
+actor: chatgpt-web
+evidence-sha256: 223ddabf850fcb56047dafd0834c4648fe0356286d14630d790002d451660459
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-02
+updated: 2026-09-05T02:19:47+00:00
+actor: chatgpt-web
+evidence-sha256: d3169b9afa465be4ab22588b73903be33178b28010810633f5fb6546dc51f563
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-03
+updated: 2026-09-05T04:33:10+00:00
+actor: local-agent
+evidence-sha256: b9300da9b1e348fc386da08fda11e75c105f6db589d60a0f190ae0af25041437
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-04
+updated: 2026-09-05T06:26:03+00:00
+actor: chatgpt-web
+evidence-sha256: 0bf6db00102a87441e641b95f92d629df17ac5aa3144da80eeb67f83cab48460
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-05
+updated: 2026-09-05T09:09:00+00:00
+actor: chatgpt-web
+evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
+-->
+
+## EH-BRAND — Operator-Auftrag vom 06.09.2026
+
+Der aktuelle Operator beauftragt die vollständige Markenstudie, Dokumentation und Delegation an Prime Agent bai/glm-5.3-flash auf sinsupabase. Die frühere Kein-Rebrand-Regel begrenzt die bestehenden Produktionsflächen; die neue isolierte Markenstudie ist ausdrücklich angefragt. Kein stiller Wechsel von Modell oder Host. Original-Logo, Produktlogik, Navigation und fremde Agentenarbeiten erhalten. Konkreter Umfang und vollständige Befunde stehen in der unten verlinkten Spezifikation.
+
+- Spezifikation: `docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md`
+- Ausführungsplan: `docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md`
+- Handoff: `docs/brand/HANDOFF.md`
+- Vollständiger Zielquelltext: `docs/brand/SOURCE_PACKET.md`
+- Tasks: EH-BRAND-01 bis EH-BRAND-06; vorhandenes T-0151 und Issue #33 berücksichtigen.
+- Ausführung: `/home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906`, Branch `design/einfachhausen-brand-system-20260906`, Node 22.23.0.
+
+
+## EH-BRAND — Korrektur: Atelier 02 (2026-09-06)
+
+Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren technische 27/27-Prüfung ist keine visuelle Freigabe. Root Codex gestaltet und implementiert die neue Richtung persönlich; keinen weiteren Prime/bai-Dispatch aus alten Abschnitten ableiten. Neuer Arbeitsstand: `design/einfachhausen-brand-atelier-20260906`, Workspace `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`. Konzept, vollständige Nutzerkorrektur und Plan: `docs/brand/ATELIER_02.md`; aktuelle Übergabe: `docs/brand/HANDOFF.md`; vollständige Quellen: `docs/brand/ATELIER_02_SOURCE.md`; bedienbare Vollansicht: `design/brand-atelier/preview.html`. EH-BRAND-03 bleibt in Arbeit, die neue Richtung wurde noch nicht vom Nutzer bewertet. Genau nächste Markenaktion: diese neue Vollansicht besprechen und tatsächliches Nutzerfeedback dokumentieren. EH-BRAND-04..06 folgen erst der Richtungsentscheidung; kein Merge/Deploy. Ältere Empfehlungen/Dispatch-Anweisungen sind für diese Markenwelle historisch. Andere laufende Arbeitswellen bleiben erhalten.
+
+## App-Vorlagen: verbindliche Ergänzung 2026-09-07
+Für Shell, Provider-Onboarding und Team zuerst docs/brand/app-foundation/NEXT_AGENT.md lesen. Bestehende Vorlagen wiederverwenden; fehlende Workflows nicht selbst gestalten. Edition 2 bedeutet nicht vollständige App-Abdeckung.
+>>>>>>> origin/main

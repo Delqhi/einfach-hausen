@@ -1,17 +1,17 @@
 .ownerScope {
-  --owner-green-900: #0e3d33;
-  --owner-green-700: #105258;
-  --owner-green-600: #1b8569;
-  --owner-green-100: #eaf5ee;
-  --owner-green-50: #f4faf6;
-  --owner-bg: #f7f8f7;
-  --owner-surface: #ffffff;
-  --owner-surface-subtle: #f2f4f2;
-  --owner-text: #171a18;
-  --owner-muted: #66706a;
-  --owner-border: #e4e8e5;
-  --owner-border-strong: #d5dcd7;
-  --owner-focus: #105258;
+  --owner-green-900: var(--eh-green-900);
+  --owner-green-700: var(--eh-green-700);
+  --owner-green-600: var(--eh-green-600);
+  --owner-green-100: var(--eh-green-100);
+  --owner-green-50: var(--eh-green-50);
+  --owner-bg: var(--eh-bg);
+  --owner-surface: var(--eh-surface);
+  --owner-surface-subtle: var(--eh-surface-subtle);
+  --owner-text: var(--eh-text);
+  --owner-muted: var(--eh-text-secondary);
+  --owner-border: var(--eh-border);
+  --owner-border-strong: var(--eh-border-strong);
+  --owner-focus: var(--eh-green-700);
   min-height: 100vh;
   background: var(--owner-bg);
   color: var(--owner-text);
@@ -24,7 +24,7 @@
   z-index: 1000;
   transform: translateY(-160%);
   padding: 10px 14px;
-  border-radius: 10px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-green-900);
   color: #fff;
   font-size: 14px;
@@ -66,7 +66,7 @@
 
 .ownerScope :global(.app-shell-v3 .sidebar-nav a) {
   min-height: 44px;
-  border-radius: 11px;
+  border-radius: var(--eh-shape-panel);
   padding: 9px 11px;
   color: #59635d;
   font-size: 13px;
@@ -87,7 +87,7 @@
   padding: 0 32px;
   border-color: var(--owner-border);
   background: rgba(247, 248, 247, 0.9);
-  backdrop-filter: blur(18px);
+  backdrop-filter: none;
 }
 
 .ownerScope :global(.app-shell-v3 .page-context strong) {
@@ -98,7 +98,7 @@
 .ownerScope :global(.app-shell-v3 .page-context small) {
   margin-top: 3px;
   color: var(--owner-muted);
-  font-size: 10px;
+  font-size: var(--eh-font-meta);
 }
 
 .ownerScope :global(.app-shell-v3 .top-actions > a),
@@ -145,7 +145,7 @@
 .ownerScope :global(.app-shell-v3 textarea),
 .ownerScope :global(.app-shell-v3 select) {
   border: 1px solid var(--owner-border-strong);
-  border-radius: 11px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-surface);
   color: var(--owner-text);
 }
@@ -173,9 +173,9 @@
   gap: 10px;
   min-height: 48px;
   padding: 10px 18px;
-  border-bottom: 1px solid #ecd9ac;
-  background: #fff8e8;
-  color: #674b14;
+  border-bottom: 1px solid var(--eh-warn-border);
+  background: var(--eh-warn-bg);
+  color: var(--eh-warn-text);
   font-size: 13px;
   line-height: 1.4;
 }
@@ -216,7 +216,7 @@
 
 .ownerScope :global(.owner-state-kicker) {
   color: var(--owner-green-700);
-  font-size: 12px;
+  font-size: var(--eh-font-meta);
   font-weight: 750;
   letter-spacing: 0.04em;
 }
@@ -239,7 +239,7 @@
   gap: 8px;
   padding: 0 16px;
   border: 0;
-  border-radius: 11px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-green-700);
   color: #fff;
   font: inherit;
@@ -266,7 +266,7 @@
 .ownerScope :global(.owner-skeleton) {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: var(--eh-shape-panel);
   background: #e9ece9;
 }
 
@@ -356,7 +356,7 @@
 .ownerScope :global(.owner-copilot-copy > span),
 .ownerScope :global(.owner-section-heading > div > span) {
   color: var(--owner-green-700);
-  font-size: 11px;
+  font-size: var(--eh-font-meta);
   font-weight: 750;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -385,7 +385,7 @@
   margin: 0;
   padding: 12px;
   border: 1px solid var(--owner-border-strong);
-  border-radius: 18px;
+  border-radius: var(--eh-shape-panel);
   background: #fbfcfb;
   box-shadow: none;
 }
@@ -411,11 +411,11 @@
 
 .ownerScope :global(.agent-composer .icon-action) {
   padding: 9px 11px;
-  border-radius: 10px;
+  border-radius: var(--eh-shape-panel);
 }
 
 .ownerScope :global(.agent-composer .send-action) {
-  border-radius: 11px;
+  border-radius: var(--eh-shape-panel);
   padding: 10px 14px;
 }
 
@@ -426,7 +426,7 @@
   gap: 16px;
   margin-top: 14px;
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: var(--eh-font-meta);
 }
 
 .ownerScope :global(.owner-copilot-meta > span),
@@ -482,7 +482,7 @@
   display: inline-flex;
   align-items: center;
   color: var(--owner-green-700);
-  font-size: 12px;
+  font-size: var(--eh-font-meta);
   font-weight: 700;
 }
 
@@ -509,7 +509,7 @@
   height: 42px;
   display: grid;
   place-items: center;
-  border-radius: 12px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-green-50);
   color: var(--owner-green-700);
 }
@@ -530,7 +530,7 @@
 
 .ownerScope :global(.owner-next-copy small) {
   color: var(--owner-green-700);
-  font-size: 10px;
+  font-size: var(--eh-font-meta);
   font-weight: 700;
 }
 
@@ -544,7 +544,7 @@
   margin-top: 3px;
   overflow: hidden;
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: var(--eh-font-meta);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -576,7 +576,7 @@
 .ownerScope :global(.owner-calm-state p) {
   margin: 4px 0 0;
   color: var(--owner-muted);
-  font-size: 12px;
+  font-size: var(--eh-font-meta);
   line-height: 1.5;
 }
 
@@ -600,7 +600,7 @@
 .ownerScope :global(.owner-house-link p) {
   margin: 4px 0 0;
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: var(--eh-font-meta);
   line-height: 1.45;
 }
 
@@ -610,7 +610,7 @@
   align-items: center;
   gap: 6px;
   color: var(--owner-green-700);
-  font-size: 12px;
+  font-size: var(--eh-font-meta);
   font-weight: 700;
 }
 
@@ -666,7 +666,7 @@
 .ownerScope :global(.housemaster-panel .agent-message.user) {
   max-width: 76%;
   padding: 11px 14px;
-  border-radius: 16px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-surface-subtle);
   color: var(--owner-text);
 }
@@ -694,7 +694,7 @@
 .ownerScope :global(.housemaster-panel .resolution-button) {
   min-height: 112px;
   border-color: var(--owner-border-strong);
-  border-radius: 16px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-surface);
   color: var(--owner-text);
 }
@@ -815,7 +815,7 @@
   min-height: 44px;
   padding: 11px 2px 12px;
   color: #5e6862;
-  font-size: 12px;
+  font-size: var(--eh-font-meta);
 }
 
 .ownerScope :global(.segmented-tabs a.active) {
@@ -854,7 +854,7 @@
 
 .ownerScope :global(.mobile-job-meta span),
 .ownerScope :global(.mobile-job-foot small) {
-  font-size: 11px;
+  font-size: var(--eh-font-meta);
 }
 
 .ownerScope :global(.mobile-job-foot) {
@@ -865,14 +865,14 @@
 .ownerScope :global(.job-type-icon) {
   width: 40px;
   height: 40px;
-  border-radius: 11px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-green-50);
   color: var(--owner-green-700);
 }
 
 .ownerScope :global(.status) {
   padding: 5px 8px;
-  font-size: 10px;
+  font-size: var(--eh-font-meta);
   font-weight: 700;
 }
 
@@ -921,8 +921,8 @@
 
 .ownerScope :global(.quote.accepted) {
   padding-inline: 16px;
-  border: 1px solid #b8d9c5;
-  border-radius: 16px;
+  border: 1px solid var(--eh-success-border);
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-green-50);
   box-shadow: none;
 }
@@ -938,7 +938,7 @@
 
 .ownerScope :global(.quote > p) {
   color: var(--owner-muted);
-  font-size: 12px;
+  font-size: var(--eh-font-meta);
   line-height: 1.55;
 }
 
@@ -978,13 +978,13 @@
 .ownerScope :global(.contact-row small),
 .ownerScope :global(.contact-row p) {
   color: var(--owner-muted);
-  font-size: 10px;
+  font-size: var(--eh-font-meta);
 }
 
 .ownerScope :global(.contact-row.selected) {
   margin-inline: -10px;
   padding-inline: 10px;
-  border-radius: 12px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-green-50);
   box-shadow: none;
 }
@@ -1024,7 +1024,7 @@
   width: 48px;
   min-width: 48px;
   min-height: 48px;
-  border-radius: 11px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-green-700);
 }
 
@@ -1035,7 +1035,7 @@
   align-items: flex-end;
   padding: 22px;
   border: 1px solid #dce9df;
-  border-radius: 18px;
+  border-radius: var(--eh-shape-panel);
   background: linear-gradient(135deg, #f8fbf9, #edf6f0);
   color: var(--owner-text);
 }
@@ -1081,7 +1081,7 @@
 
 .ownerScope :global(.house-cover-copy span) {
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: var(--eh-font-meta);
   opacity: 1;
 }
 
@@ -1121,7 +1121,7 @@
 .ownerScope :global(.more-icon) {
   width: 38px;
   height: 38px;
-  border-radius: 11px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-green-50);
   color: var(--owner-green-700);
 }
@@ -1136,7 +1136,7 @@
 .ownerScope :global(.settings-list small),
 .ownerScope :global(.more-menu small) {
   color: var(--owner-muted);
-  font-size: 10px;
+  font-size: var(--eh-font-meta);
   line-height: 1.4;
 }
 
@@ -1176,7 +1176,7 @@
 }
 
 .ownerScope :global(.year-item small) {
-  font-size: 10px;
+  font-size: var(--eh-font-meta);
 }
 
 .ownerScope :global(.asset-grid article),
@@ -1203,7 +1203,7 @@
   gap: 14px;
   padding: 20px;
   border: 1px solid var(--owner-border);
-  border-radius: 16px;
+  border-radius: var(--eh-shape-panel);
   background: #fff;
 }
 
@@ -1216,7 +1216,7 @@
   display: grid;
   gap: 7px;
   color: var(--owner-text);
-  font-size: 12px;
+  font-size: var(--eh-font-meta);
   font-weight: 650;
 }
 
@@ -1304,14 +1304,14 @@
 .ownerScope :global(.emergency-button) {
   min-height: 48px;
   border: 0;
-  border-radius: 11px;
+  border-radius: var(--eh-shape-panel);
   background: #9b3d2f;
   color: #fff;
 }
 
 .ownerScope :global(.emergency-disclaimer) {
   color: var(--owner-muted);
-  font-size: 11px;
+  font-size: var(--eh-font-meta);
   line-height: 1.55;
 }
 
@@ -1323,7 +1323,7 @@
 .ownerScope :global(.plan-card),
 .ownerScope :global(.package-card) {
   border-color: var(--owner-border);
-  border-radius: 16px;
+  border-radius: var(--eh-shape-panel);
   box-shadow: none;
 }
 
@@ -1377,7 +1377,7 @@
 .ownerScope :global(.house-passport) {
   max-width: 820px;
   border: 1px solid var(--owner-border);
-  border-radius: 18px;
+  border-radius: var(--eh-shape-panel);
   background: #fff;
   box-shadow: none;
 }
@@ -1387,7 +1387,7 @@
   justify-content: center;
   padding: 30px 22px;
   border: 1px dashed var(--owner-border-strong);
-  border-radius: 16px;
+  border-radius: var(--eh-shape-panel);
   background: #fafbfa;
   color: var(--owner-muted);
 }
@@ -1400,7 +1400,7 @@
 .ownerScope :global(.empty p) {
   max-width: 520px;
   margin-top: 6px;
-  font-size: 12px;
+  font-size: var(--eh-font-meta);
   line-height: 1.5;
 }
 
@@ -1436,7 +1436,7 @@
 
 .ownerScope :global(.alert) {
   min-height: 46px;
-  border-radius: 12px;
+  border-radius: var(--eh-shape-panel);
   font-size: 13px;
 }
 
@@ -1492,7 +1492,7 @@
     min-height: 60px;
     padding: 6px 2px 3px;
     color: #707a73;
-    font-size: 9px;
+    font-size: var(--eh-font-meta);
   }
 
   .ownerScope :global(.app-shell-v3 .bottom-nav a.active) {
@@ -1559,7 +1559,7 @@
 
   .ownerScope :global(.owner-copilot) {
     padding: 18px;
-    border-radius: 18px;
+    border-radius: var(--eh-shape-panel);
   }
 
   .ownerScope :global(.owner-copilot-copy h2) {
@@ -1699,7 +1699,7 @@
 }
 .ownerScope :global(.app-shell-v3 .app-menu summary) {
   min-height: 44px;
-  border-radius: 12px;
+  border-radius: var(--eh-shape-panel);
 }
 .ownerScope :global(.app-shell-v3 .app-menu[open] .sidebar-nav a) {
   min-height: 44px;
@@ -1719,7 +1719,7 @@
   gap: 44px;
 }
 .ownerScope :global(.app-shell-v3 .owner-copilot) {
-  border-radius: 24px;
+  border-radius: var(--eh-shape-panel);
   box-shadow: 0 12px 36px rgba(18, 60, 42, 0.06);
 }
 .ownerScope :global(.app-shell-v3 .owner-dashboard-composer .agent-composer textarea) {
@@ -1744,28 +1744,28 @@
   min-width: 0;
   padding: 18px;
   border: 1px solid var(--owner-border);
-  border-radius: 18px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-surface);
   box-shadow: 0 8px 24px rgba(18, 60, 42, 0.04);
   transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 .ownerScope :global(.mobile-job-card:hover) {
-  border-color: #b8d9c5;
+  border-color: var(--eh-success-border);
   box-shadow: 0 12px 30px rgba(18, 60, 42, 0.08);
   transform: translateY(-1px);
 }
 .ownerScope :global(.detail-head) {
   padding: 24px;
   border: 1px solid var(--owner-border);
-  border-radius: 20px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-surface);
 }
 .ownerScope :global(.detail-head + .ai-summary) {
   margin-top: 16px;
 }
 @media (max-width: 520px) {
-  .ownerScope :global(.mobile-job-card) { padding: 16px; border-radius: 16px; }
-  .ownerScope :global(.detail-head) { padding: 20px 16px; border-radius: 18px; }
+  .ownerScope :global(.mobile-job-card) { padding: 16px; border-radius: var(--eh-shape-panel); }
+  .ownerScope :global(.detail-head) { padding: 20px 16px; border-radius: var(--eh-shape-panel); }
 }
 
 /* Mein Haus: a durable house record, grouped by human concepts. */
@@ -1783,21 +1783,31 @@
   flex: 0 0 auto;
   width: 58px;
   height: 58px;
-  border-radius: 16px;
+  border-radius: var(--eh-shape-panel);
   background: var(--owner-green-100);
   color: var(--owner-green-700);
 }
 .ownerScope :global(.house-cover-copy) { min-width: 0; display: grid; gap: 4px; }
-.ownerScope :global(.house-cover-copy small) { color: var(--owner-green-700); font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .05em; }
+.ownerScope :global(.house-cover-copy small) { color: var(--owner-green-700); font-size: var(--eh-font-meta); font-weight: 750; text-transform: uppercase; letter-spacing: .05em; }
 .ownerScope :global(.house-cover-copy strong) { overflow: hidden; font-size: 16px; text-overflow: ellipsis; white-space: nowrap; }
 .ownerScope :global(.house-menu > a:hover),
-.ownerScope :global(.house-menu > details > summary:hover) { background: var(--owner-green-50); border-radius: 12px; }
-.ownerScope :global(.year-preview-card) { border-radius: 16px; padding-inline: 16px; background: var(--owner-green-50); border: 1px solid var(--owner-border); }
+.ownerScope :global(.house-menu > details > summary:hover) { background: var(--owner-green-50); border-radius: var(--eh-shape-panel); }
+.ownerScope :global(.year-preview-card) { border-radius: var(--eh-shape-panel); padding-inline: 16px; background: var(--owner-green-50); border: 1px solid var(--owner-border); }
 .ownerScope :global(.asset-grid article),
 .ownerScope :global(.maintenance-row) { min-height: 70px; }
 @media (max-width: 520px) {
-  .ownerScope :global(.house-cover-card) { padding: 18px; border-radius: 18px; }
+  .ownerScope :global(.house-cover-card) { padding: 18px; border-radius: var(--eh-shape-panel); }
   .ownerScope :global(.house-cover-art) { width: 50px; height: 50px; border-radius: 14px; }
+}
+
+/* Dashboard-Begrüßung (DESIGN.md §6): aligning mit qa-row-Raster. */
+.ownerScope :global(.own-dash .owner-dashboard-intro) {
+  padding: 22px 18px 0;
+}
+@media (max-width: 390px) {
+  .ownerScope :global(.own-dash .owner-dashboard-intro) {
+    padding: 18px 14px 0;
+  }
 }
 
 /* T-0210 premium app convergence: same structure, richer surface hierarchy. */
@@ -1860,3 +1870,6 @@
     transition: none;
   }
 }
+
+/* Accepted Atelier 02: shared, readable functional controls. */
+.ownerScope :global(input), .ownerScope :global(textarea), .ownerScope :global(select) { font-size: var(--eh-font-input); border-radius: var(--eh-shape-control); }

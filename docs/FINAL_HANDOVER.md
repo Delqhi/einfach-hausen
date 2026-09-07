@@ -55,3 +55,8 @@
 
 ## NEXT ACTION (genau eine)
 T-0100 Homeowner onboarding: first-session to first useful outcome (höchster eligible critical Task)
+
+## Fortschreibung 2026-09-04 (docs-only, Historie oben unverändert)
+- main-HEAD: `13496d7 feat(seo): GSC FILE verification token`; T-0131 Convergence done (`3fbe3c9`, 2026-09-03).
+- Gate 11/11 (`scripts/release-gate.mjs`), Visual 66 Baseline-Shots (`tests/visual-baselines`), E2E 15 Checks (`scripts/e2e.mjs`-Summary), Smoke 18 Routen (`scripts/production-smoke.mjs`).
+- Obige SHAs/Gate-Zahlen bleiben Stichtag 2026-08-30/31 und werden nicht überschrieben.

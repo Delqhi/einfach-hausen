@@ -1,0 +1,36 @@
+{
+  "base": "d86a7e6",
+  "files": {
+    ".gitattributes": {
+      "sha256": "2fba6020e33cb485ad07b794e0962d8fd3141b65ed6beb135198d13f0e87e6b5",
+      "bytes": 257,
+      "kind": "text"
+    },
+    "DESIGN.md": {
+      "sha256": "3dc5c76fa259cc0dcdf93a5f8d1a3db2e25e22170161e4c9b32b288d4ca84223",
+      "bytes": 15369,
+      "kind": "text"
+    },
+    "design/design-lock.json": {
+      "sha256": "7963fc448e0fd74d7d02ae57506249ef0c8ea1e790f454d496a70d35a0c6c9b6",
+      "bytes": 4239,
+      "kind": "text"
+    },
+    "docs/brand/contrast/DECISION.md": {
+      "sha256": "f4903d619cb9077ebd57171902c8f52e58deb1addaa14d71ab17dae98ac25221",
+      "bytes": 1303,
+      "kind": "text"
+    },
+    "src/components/marketing/app-frames.module.css": {
+      "sha256": "d54580dea511a5fa0eb7ae592345155627ad4f19d721c3349a5ef4cc715a23cb",
+      "bytes": 5695,
+      "kind": "text"
+    },
+    "src/components/marketing/lexikon/lexikon.module.css": {
+      "sha256": "072aa512c13815148e0cb4ab9c4696dc5e03052a785fe7b6d8fbdcfaf97f0c5b",
+      "bytes": 31943,
+      "kind": "text"
+    }
+  },
+  "deleted": []
+}

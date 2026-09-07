@@ -16,6 +16,15 @@ import { spawn } from 'node:child_process';
 import { chromium } from 'playwright-core';
 
 const root = process.cwd();
+// Hermetic runtime: every npm-spawned child (shebang #!/usr/bin/env node)
+// must resolve the SAME interpreter as this gate. OCI carries a Node 20
+// /usr/bin/node next to the validated Node 22 dir; without the prepend,
+// children silently run on v20 (e.g. security-regression import crash).
+if (Number(process.versions.node.split('.')[0]) !== 22) {
+  console.error(`release-gate requires Node 22, running on ${process.version} (${process.execPath})`);
+  process.exit(2);
+}
+const RUNTIME_BIN_DIR = path.dirname(process.execPath);
 const fast = process.argv.includes('--fast');
 // Stage selection: --only=static|a11y|visual|perf (comma list). Default: all.
 const onlyArg = (process.argv.find((arg) => arg.startsWith('--only=')) || '').replace('--only=', '');
@@ -32,7 +41,9 @@ function record(name, ok, detail = '') {
 function run(cmd, args, env = {}, label = cmd) {
   log(`  > ${label} ${args.join(' ')}`);
   try {
-    execFileSync(cmd, args, { cwd: root, env: { ...process.env, ...env }, stdio: ['ignore', 'pipe', 'pipe'], timeout: 600000 });
+    const childEnv = { ...process.env, ...env };
+    childEnv.PATH = `${RUNTIME_BIN_DIR}${path.delimiter}${childEnv.PATH || ''}`;
+    execFileSync(cmd, args, { cwd: root, env: childEnv, stdio: ['ignore', 'pipe', 'pipe'], timeout: 600000 });
     return { ok: true };
   } catch (error) {
     return { ok: false, output: String(error.stdout || '') + String(error.stderr || '') };
@@ -86,13 +97,20 @@ function staticGates() {
   log('\n== Layer 1: static gates ==');
   const lint = run('npm', ['run', 'lint']);
   record('lint', lint.ok, lint.ok ? '' : (lint.output || '').slice(-400));
-  const types = run('npx', ['tsc', '--noEmit']);
+  // tsc via direct .bin path: bare `npx` depends on the caller's PATH
+  // (macOS zsh hard-PATH has no npx -> ENOENT with empty output, T-0131).
+  const types = run(path.join(root, 'node_modules', '.bin', 'tsc'), ['--noEmit']);
   record('types (tsc --noEmit)', types.ok, types.ok ? '' : (types.output || '').slice(-400));
   const security = run('npm', ['run', 'test:security']);
   record('security regressions', security.ok, security.ok ? '' : (security.output || '').slice(-400));
   const fixtures = run('npm', ['run', 'test:fixtures']);
   record('fixture factory', fixtures.ok, fixtures.ok ? '' : (fixtures.output || '').slice(-400));
-  return lint.ok && types.ok && security.ok && fixtures.ok;
+  const flags = run('node', ['scripts/feature-flag-lifecycle.mjs']);
+  record('feature-flag lifecycle (T-0139)', flags.ok, flags.ok ? '' : (flags.output || '').slice(-400));
+  const invEnv = { DATABASE_PATH: process.env.GATE_DATABASE_PATH || process.env.DATABASE_PATH || '' };
+  const inventory = run('node', ['scripts/data-inventory-check.mjs'], invEnv);
+  record('data-inventory (T-0146)', inventory.ok, inventory.ok ? '' : (inventory.output || '').slice(-400));
+  return lint.ok && types.ok && security.ok && fixtures.ok && flags.ok && inventory.ok;
 }
 
 // ---- Production build (shared by layers 2-4) --------------------------------
@@ -150,13 +168,19 @@ async function liveGates() {
   try {
     await waitForServer(`${base}/`, 90000);
 
+    const lexikonHttp = run(process.execPath, [path.join(root, 'scripts/lexikon-http-semantics.mjs')], { BASE_URL: base }, 'lexikon HTTP semantics');
+    record('lexikon HTTP semantics', lexikonHttp.ok, lexikonHttp.ok ? 'known routes 200; unknown term/category routes 404' : (lexikonHttp.output || 'contract failed').trim().slice(0, 500));
+
+    const lexikonVisual = run(process.execPath, [path.join(root, 'scripts/lexikon-index-visual-contract.mjs')], { BASE_URL: base }, 'lexikon index visual contract');
+    record('lexikon index visual contract', lexikonVisual.ok, lexikonVisual.ok ? 'compact hero, tight handoff, categories visible, no horizontal overflow' : (lexikonVisual.output || 'contract failed').trim().slice(0, 500));
+
     // Public routes exercised by the gate (mobile-first landing + core pages).
-    const publicRoutes = ['/', '/so-funktionierts', '/leistungen', '/preise', '/partner', '/hilfe', '/kontakt', '/login', '/welcome'];
+    const publicRoutes = ['/', '/so-funktionierts', '/leistungen', '/preise', '/partner', '/hilfe', '/kontakt', '/lexikon', '/login', '/welcome'];
     browser = await chromium.launch({ headless: true, executablePath: browserExecutable() });
 
     // ---- Layer 2: axe a11y ----
     if (runA11y) log('\n== Layer 2: accessibility (axe-core) ==');
-    const ctx = runA11y ? await browser.newContext({ viewport: { width: 390, height: 844 } }) : null;
+    const ctx = runA11y ? await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' }) : null;
     const page = ctx ? await ctx.newPage() : null;
     let totalViolations = 0;
     const worst = [];
@@ -171,7 +195,7 @@ async function liveGates() {
         }
       }
       const critical = worst.filter((entry) => /critical|serious/.test(entry));
-      record('axe a11y (9 public routes, mobile)', critical.length === 0,
+      record(`axe a11y (${publicRoutes.length} public routes, mobile)`, critical.length === 0,
         critical.length === 0 ? `${totalViolations} non-blocking findings` : critical.slice(0, 6).join('; '));
     }
     if (ctx) await ctx.close();

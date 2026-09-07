@@ -6,6 +6,7 @@ import { getSupabase } from "@/lib/supabase";
 import Stepper from "@/components/Stepper";
 import { categories } from "@/lib/categories";
 import { BuildingIcon, ShieldSmallIcon, CalendarIcon, PhoneIcon, GlobeIcon, PinSmallIcon, GearIcon, ChevronDown, CatGartenIcon, CatElektroIcon, CatSanitaerIcon, CatDachIcon, CatFensterIcon, CatReinigungIcon, CatInnenIcon, CatMalerIcon, CatPoolIcon, CatMehrIcon, CheckIcon } from "@/components/icons";
+import styles from "./onboarding-pro.module.css";
 
 const catIcons: Record<string, React.ReactNode> = {
   garten: <CatGartenIcon />,
@@ -97,8 +98,8 @@ export default function ProOnboardingPage() {
         </button>
         <div className="ob-logo">
           <svg width="30" height="34" viewBox="0 0 72 78" fill="none"><path d="M10 34 L36 12 L62 34 V70 H30" stroke="#105258" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" /><rect x="30" y="22" width="5" height="5" rx="1" fill="#105258" /><rect x="39" y="22" width="5" height="5" rx="1" fill="#105258" /></svg>
-          <span className="logo-word green-word" style={{ fontSize: 22 }}>einfach</span>
-          <span className="logo-word ink-word" style={{ fontSize: 22 }}>hausen</span>
+          <span className={`logo-word green-word ${styles.wordSm}`}>einfach</span>
+          <span className={`logo-word ink-word ${styles.wordSm}`}>hausen</span>
         </div>
       </div>
       <Stepper current={step} />

@@ -159,6 +159,18 @@ export function consumeCloudAction(userId: number, action = 'chat', now = new Da
 }
 
 export function grantAdCredits(userId: number, amount = AD_CREDIT_GRANT, source = 'rewarded-ad'): number {
-  const info = db.prepare('INSERT INTO ai_credits(user_id,granted,mode,source) VALUES(?,?,?,?)').run(userId, amount, 'ad', source.slice(0, 60));
+  const info = db.prepare('INSERT INTO ai_credits(user_id,granted,mode,source) VALUES(?,?,?,?)').run(userId, amount, 'ad', source.slice(0, 200));
   return Number(info.lastInsertRowid);
+}
+
+// Idempotent grant for verified rewarded-ad receipts: the source embeds the
+// receipt nonce (`rewarded-ad:<provider>:<nonce>`), so a replayed receipt
+// grants exactly once. Returns the credit id, or null when already granted.
+export function grantAdCreditsOnce(userId: number, amount: number, source: string): number | null {
+  return db.transaction(() => {
+    const existing = db.prepare('SELECT id FROM ai_credits WHERE user_id=? AND source=?').get(userId, source) as { id: number } | undefined;
+    if (existing) return null;
+    const info = db.prepare('INSERT INTO ai_credits(user_id,granted,mode,source) VALUES(?,?,?,?)').run(userId, amount, 'ad', source.slice(0, 200));
+    return Number(info.lastInsertRowid);
+  })();
 }

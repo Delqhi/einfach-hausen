@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { ArrowRight, ClipboardList, MessageCircle, UserRound } from 'lucide-react';
+import { ClipboardList } from 'lucide-react';
+import { EHPanel, EHList, EHStatus } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
@@ -34,9 +34,8 @@ export default async function Orders() {
 
       <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
-      <ProviderSectionHeader title="Arbeitsliste" description={`${rows.length} ${rows.length === 1 ? 'Vorgang' : 'Vorgänge'} im aktuellen Zugriff.`} />
-      <div className="stack">
-        {rows.map((row) => {
+      <EHPanel title={`Arbeitsliste · ${rows.length} ${rows.length === 1 ? 'Vorgang' : 'Vorgänge'} im aktuellen Zugriff.`}>
+        <EHList label="Arbeitsliste" items={rows.map((row) => {
           const isContact = row.request_kind === 'contact';
           const nextAction = isContact
             ? 'Kundenkontakt öffnen'
@@ -45,25 +44,14 @@ export default async function Orders() {
               : row.status === 'in_progress'
                 ? 'Auftrag fortführen'
                 : 'Vorgang öffnen';
-
-          return (
-            <Link href={`/pro/jobs/${row.id}`} className="pro-request simple" key={row.id}>
-              {isContact ? <MessageCircle /> : <ClipboardList />}
-              <div className="grow">
-                <strong>{row.title.replace(/^Ansprechpartner:\s*/, '')}</strong>
-                <div className="provider-row-meta">
-                  <span>{isContact ? 'Persönlicher Ansprechpartner' : `Angebot ${statusLabel(row.quote_status)} · Auftrag ${statusLabel(row.status)}`}</span>
-                  {row.contact_first && <span><UserRound /> {row.contact_first} {row.contact_last}</span>}
-                </div>
-                <span className="provider-next-action">{nextAction} <ArrowRight size={14} /></span>
-              </div>
-              <div className="provider-row-side">
-                <span className={`status ${row.status}`}>{isContact ? 'Kontakt' : statusLabel(row.status)}</span>
-                <strong>{isContact ? 'Ohne Preis' : euro(row.amount)}</strong>
-              </div>
-            </Link>
-          );
-        })}
+          return {
+            id: String(row.id),
+            title: row.title.replace(/^Ansprechpartner:\s*/, ''),
+            text: `${isContact ? 'Persönlicher Ansprechpartner' : `Angebot ${statusLabel(row.quote_status)} · Auftrag ${statusLabel(row.status)}`}${row.contact_first ? ` · ${row.contact_first} ${row.contact_last}` : ''} · ${nextAction} · ${isContact ? 'Ohne Preis' : euro(row.amount)}`,
+            href: `/pro/jobs/${row.id}`,
+            meta: <EHStatus>{isContact ? 'Kontakt' : statusLabel(row.status)}</EHStatus>,
+          };
+        })} />
         {rows.length === 0 && (
           <ProviderState
             icon={<ClipboardList size={21} />}
@@ -71,7 +59,7 @@ export default async function Orders() {
             description={ctx.canManageJobs ? 'Sobald ein Kontakt übernommen oder ein Angebot gesendet wurde, bleibt der Vorgang hier bis zum Abschluss nachvollziehbar.' : 'Sobald dir ein Vorgang zugewiesen wurde, erscheint er hier.'}
           />
         )}
-      </div>
+      </EHPanel>
     </AppShell>
   );
 }

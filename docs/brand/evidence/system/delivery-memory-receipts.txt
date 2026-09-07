@@ -1,0 +1,2 @@
+STORED mem-eb68d5fe56e12d77a64e provider=openviking receipt=4eea7760-2e83-4e4a-b69b-8ce763ffdec5 backend_ref=session:8f522acd-41ec-427c-a7c3-52ec202a5666;task:36e73662-4711-4ddc-990b-7d797866c218
+MEMORY_EXIT 0

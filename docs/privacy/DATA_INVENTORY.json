@@ -1,0 +1,372 @@
+{
+  "_meta": {
+    "version": 1,
+    "updated": "2026-09-07",
+    "lawful_base": "Art. 6 Abs. 1 lit. b DSGVO (Vertragserfuellung) / lit. f (berechtigtes Interesse, soweit genannt)",
+    "retention_legend": {
+      "account": "bis Accountloeschung (T-0144 Workflow: Anonymisierung + Endloeschung nach RETENTION_YEARS)",
+      "short": "automatisch gekuerzt (Rate-Limit/Telemetrie-Caps, s. T-0145)",
+      "business": "10 Jahre Handels-/Steueraufbewahrung (RECHTSPFLICHT), danach Endloeschung (T-0145)",
+      "session": "Session-Ablauf (30 Tage) bzw. Ausloggen",
+      "audit": "Admin-Audit-Log, abloesbar nach internem Standard",
+      "ephemeral": "verarbeitet, nicht persistiert / nur Betriebs-Log"
+    }
+  },
+  "tables": {
+    "admin_audit_log": {
+      "personal": true,
+      "purpose": "Admin-Audit-Log (Actor, Aktion, Ziel) - T-0141",
+      "retention": "audit"
+    },
+    "admin_sessions": {
+      "personal": true,
+      "purpose": "Admin-Login-Sitzungen (T-0140/T-0141)",
+      "retention": "session"
+    },
+    "ai_credits": {
+      "personal": true,
+      "purpose": "AI-Guthaben pro User",
+      "retention": "account"
+    },
+    "ai_usage": {
+      "personal": true,
+      "purpose": "AI-Nutzung pro User (Abrechnung/Missbrauchsschutz)",
+      "retention": "account"
+    },
+    "appointments": {
+      "personal": true,
+      "purpose": "Terminbuchung zwischen Homeowner und Partner",
+      "retention": "account"
+    },
+    "assistant_drafts": {
+      "personal": true,
+      "purpose": "KI-Assistent Entwuerfe",
+      "retention": "account"
+    },
+    "assistant_messages": {
+      "personal": true,
+      "purpose": "KI-Assistent Nachrichten (Inhalte)",
+      "retention": "account"
+    },
+    "assistant_threads": {
+      "personal": true,
+      "purpose": "KI-Assistent Threads des Users",
+      "retention": "account"
+    },
+    "auth_rate_limits": {
+      "personal": true,
+      "purpose": "Brute-Force-/Missbrauchsschutz (Login/Rate-Limits)",
+      "retention": "short"
+    },
+    "broker_lead_matches": {
+      "personal": true,
+      "purpose": "Verkaufssignal-Matches an Partner",
+      "retention": "account"
+    },
+    "broker_search_profiles": {
+      "personal": true,
+      "purpose": "Suchprofile der Verkaufspartner (Kriterien, keine direkten Kontaktdaten)",
+      "retention": "account"
+    },
+    "claims": {
+      "personal": true,
+      "purpose": "Servicefaelle / Problemmeldungen",
+      "retention": "account"
+    },
+    "contact_messages": {
+      "personal": true,
+      "purpose": "Kontaktanfragen zwischen Homeowner und Partner",
+      "retention": "account"
+    },
+    "crm_events": {
+      "personal": true,
+      "purpose": "Lead-Historie (Notizen, Kanal, Richtung)",
+      "retention": "business"
+    },
+    "crm_leads": {
+      "personal": true,
+      "purpose": "B2B-Leadregister (Firmendaten; Kontakt nur mit dokumentierter Berechtigung)",
+      "retention": "business"
+    },
+    "crm_meta": {
+      "personal": false,
+      "purpose": "CRM-Betriebsmetadata (keine Personenbezogenen)",
+      "retention": "business"
+    },
+    "cwv_metrics": {
+      "personal": false,
+      "purpose": "Web-Vitals Messwerte anonym je Pfad",
+      "retention": "short"
+    },
+    "data_requests": {
+      "personal": true,
+      "purpose": "DSGVO-Antraege (Export/Loeschung) und deren Status",
+      "retention": "business"
+    },
+    "documents": {
+      "personal": true,
+      "purpose": "Auftrags-/Rechnungsdokumente (Pfad)",
+      "retention": "business"
+    },
+    "error_events": {
+      "personal": true,
+      "purpose": "Fehlerberichte (redacted, ohne Geheimnisse)",
+      "retention": "short"
+    },
+    "feature_flags": {
+      "personal": true,
+      "purpose": "Feature-Flags (T-0125/T-0139): Schluessel, Status, aktualisiert von",
+      "retention": "short"
+    },
+    "homeowner_contacts": {
+      "personal": true,
+      "purpose": "Gespeicherte Kontakte des Homeowners (Persoenliches Hausbuch)",
+      "retention": "account"
+    },
+    "homeowner_profiles": {
+      "personal": true,
+      "purpose": "Wohnumfeld-Profil (PLZ, Adresse, Haustyp, Baujahr ...) fuer Hausakte/Matching",
+      "retention": "account"
+    },
+    "house_assets": {
+      "personal": true,
+      "purpose": "Technische Anlagen/Geraete im Haus (Hausakte)",
+      "retention": "account"
+    },
+    "house_history_documents": {
+      "personal": true,
+      "purpose": "Dokumente zur Hausakte (Pfad)",
+      "retention": "account"
+    },
+    "house_history_entries": {
+      "personal": true,
+      "purpose": "Hausakte: durchgefuehrte Leistungen inkl. Kontakt-/Kostendaten",
+      "retention": "account"
+    },
+    "house_transfers": {
+      "personal": true,
+      "purpose": "Hausakte-uebergabe (E-Mail des Empfaengers, Token)",
+      "retention": "account"
+    },
+    "invoice_items": {
+      "personal": true,
+      "purpose": "Rechnungspositionen",
+      "retention": "business"
+    },
+    "invoices": {
+      "personal": true,
+      "purpose": "Rechnungen (gesetzliche Aufbewahrung; Rechnungssteller/-kaeuferdaten)",
+      "retention": "business"
+    },
+    "job_assignments": {
+      "personal": true,
+      "purpose": "Zuordnung Partner↔Anfrage inkl. Kontakt-User",
+      "retention": "account"
+    },
+    "job_dispatches": {
+      "personal": true,
+      "purpose": "Matching-Ausspielung an Partner (Status, Antwort)",
+      "retention": "account"
+    },
+    "job_photos": {
+      "personal": true,
+      "purpose": "Fotos der Anfrage (Pfad; Datei liegt unter /var/lib persistent storage)",
+      "retention": "account"
+    },
+    "jobs": {
+      "personal": true,
+      "purpose": "Anfragen der Homeowner (Titel, Beschreibung, Postleitzahl, Standort fuer Matching)",
+      "retention": "account"
+    },
+    "maintenance_tasks": {
+      "personal": true,
+      "purpose": "Wartungsaufgaben der Hausakte",
+      "retention": "account"
+    },
+    "match_decision_trace": {
+      "personal": true,
+      "purpose": "Nachvollziehbarkeit der Matching-Entscheidung (ohne personenbezogene Inhalte)",
+      "retention": "short"
+    },
+    "membership_plans": {
+      "personal": false,
+      "purpose": "Mitgliedschafts-Plaene (keine Personenbezogenen)",
+      "retention": "ephemeral"
+    },
+    "messages": {
+      "personal": true,
+      "purpose": "Nachrichten im Auftragskontext",
+      "retention": "account"
+    },
+    "notification_events": {
+      "personal": true,
+      "purpose": "Notification-Pipeline-Events (Payload-Referenz)",
+      "retention": "short"
+    },
+    "notification_receipts": {
+      "personal": true,
+      "purpose": "Zustellbelege pro Kanal (SLO notif_delivery)",
+      "retention": "short"
+    },
+    "notifications": {
+      "personal": true,
+      "purpose": "In-App-Benachrichtigungen an User",
+      "retention": "account"
+    },
+    "package_orders": {
+      "personal": true,
+      "purpose": "Paketbestellungen (Stripe-Referenz)",
+      "retention": "business"
+    },
+    "partner_contracts": {
+      "personal": true,
+      "purpose": "Partnervertrag: Status, gepruefte Nachweise, Konditionen",
+      "retention": "business"
+    },
+    "partner_plans": {
+      "personal": false,
+      "purpose": "Produktkatalog Partner-Tarife (keine Personenbezogenen)",
+      "retention": "business"
+    },
+    "partner_subscriptions": {
+      "personal": true,
+      "purpose": "Partner-Abos (Stripe-Referenz)",
+      "retention": "business"
+    },
+    "payments": {
+      "personal": true,
+      "purpose": "Zahlungen (Stripe-Session-Referenz, Betraege)",
+      "retention": "business"
+    },
+    "pilot_cohort": {
+      "personal": true,
+      "purpose": "Pilotkohorte-Zuordnung (Rabatt)",
+      "retention": "account"
+    },
+    "postcode_geo": {
+      "personal": false,
+      "purpose": "PLZ-Geokoordinaten (Referenzdaten, keine Personenbezug)",
+      "retention": "ephemeral"
+    },
+    "properties": {
+      "personal": true,
+      "purpose": "Objektdaten der erfassten Immobilien (Adresse fuer Hausakte/Service)",
+      "retention": "account"
+    },
+    "property_ownerships": {
+      "personal": true,
+      "purpose": "Eigentumszuordnung Objekt↔Homeowner",
+      "retention": "account"
+    },
+    "property_shares": {
+      "personal": true,
+      "purpose": "Freigaben von Objektansichten an Partner",
+      "retention": "account"
+    },
+    "property_valuations": {
+      "personal": true,
+      "purpose": "Wertschaetzungen des Objekts",
+      "retention": "account"
+    },
+    "provider_categories": {
+      "personal": false,
+      "purpose": "Gewerke-Katalog (keine Personenbezogenen)",
+      "retention": "ephemeral"
+    },
+    "provider_category_assignments": {
+      "personal": true,
+      "purpose": "Gewerke-Zuordnung des Partners",
+      "retention": "account"
+    },
+    "provider_invites": {
+      "personal": true,
+      "purpose": "Eingeladene Partner (E-Mail, Token)",
+      "retention": "short"
+    },
+    "provider_members": {
+      "personal": true,
+      "purpose": "Teammitglieder im Partnerkonto (Rollen)",
+      "retention": "account"
+    },
+    "provider_preferences": {
+      "personal": true,
+      "purpose": "Dispo-Einstellungen des Partners (Einsatzgebiete, Notfall-Fenster)",
+      "retention": "account"
+    },
+    "provider_profiles": {
+      "personal": true,
+      "purpose": "Partner-Stammdaten (Firmenname, Gewerke, Adresse, Steuernummern nach Freigabe, Kontakt)",
+      "retention": "account"
+    },
+    "provider_service_offerings": {
+      "personal": true,
+      "purpose": "Katalog-Zuordnung der Partnerleistungen",
+      "retention": "account"
+    },
+    "quotes": {
+      "personal": true,
+      "purpose": "Angebote der Partner zu Anfragen",
+      "retention": "account"
+    },
+    "review_reports": {
+      "personal": true,
+      "purpose": "Meldungen von Bewertungen (Grund, Status)",
+      "retention": "account"
+    },
+    "reviews": {
+      "personal": true,
+      "purpose": "Bewertungen von Partnern durch Homeowner",
+      "retention": "account"
+    },
+    "sale_leads": {
+      "personal": true,
+      "purpose": "Verkaufsanfrage-Signal zum Objekt (Verkaufsbegleitung)",
+      "retention": "account"
+    },
+    "security_events": {
+      "personal": true,
+      "purpose": "Sicherheitsrelevante Ereignisse (z. B. Retention-Sweep, Rate-Limit-Treffer), keine Geheimnisse (redacted)",
+      "retention": "short"
+    },
+    "service_catalog": {
+      "personal": false,
+      "purpose": "Leistungskatalog (keine Personenbezogenen)",
+      "retention": "ephemeral"
+    },
+    "service_packages": {
+      "personal": false,
+      "purpose": "Paketkatalog (keine Personenbezogenen)",
+      "retention": "ephemeral"
+    },
+    "sessions": {
+      "personal": true,
+      "purpose": "Login-Sitzungen (Auth)",
+      "retention": "session"
+    },
+    "subscriptions": {
+      "personal": true,
+      "purpose": "Homeowner-Abos (Stripe-Referenz)",
+      "retention": "business"
+    },
+    "user_settings": {
+      "personal": true,
+      "purpose": "Nutzer-Einstellungen inkl. BYOK-Schluessel (verschluesselt: ai_byok_key_enc)",
+      "retention": "account"
+    },
+    "users": {
+      "personal": true,
+      "purpose": "Kontofuehrung, Login, Zuordnung von Anfragen/Angeboten (Homeowner & Partner)",
+      "retention": "account"
+    },
+    "verification_requests": {
+      "personal": true,
+      "purpose": "Partnerpruefung (Dokumentpfad, Notizen)",
+      "retention": "business"
+    },
+    "webhook_events": {
+      "personal": true,
+      "purpose": "Stripe-/Externe-Webhook-Verarbeitung (Ids, Status)",
+      "retention": "short"
+    }
+  }
+}

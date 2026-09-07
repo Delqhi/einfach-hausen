@@ -1,0 +1,197 @@
+{
+ "errors": [],
+ "result": [
+  {
+   "view": "Auftrag",
+   "width": 390,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Termine",
+   "width": 390,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Gespraech",
+   "width": 390,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Rechnungen",
+   "width": 390,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Einstellungen",
+   "width": 390,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Anmeldung",
+   "width": 390,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Lexikon",
+   "width": 390,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Notfall",
+   "width": 390,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Auftrag",
+   "width": 736,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Termine",
+   "width": 736,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Gespraech",
+   "width": 736,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Rechnungen",
+   "width": 736,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Einstellungen",
+   "width": 736,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Anmeldung",
+   "width": 736,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Lexikon",
+   "width": 736,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Notfall",
+   "width": 736,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Auftrag",
+   "width": 1440,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Termine",
+   "width": 1440,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Gespraech",
+   "width": 1440,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Rechnungen",
+   "width": 1440,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Einstellungen",
+   "width": 1440,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Anmeldung",
+   "width": 1440,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Lexikon",
+   "width": 1440,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  },
+  {
+   "view": "Notfall",
+   "width": 1440,
+   "overflow": false,
+   "small": [],
+   "font": "Inter, interVariable, \"interVariable Fallback\", ui-sans-serif, system-ui, sans-serif, sans-serif",
+   "axe": []
+  }
+ ]
+}

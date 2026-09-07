@@ -1,0 +1,234 @@
+{
+  "results": [
+    {
+      "route": "/",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "h1": "Dein Haus.Einfachgeregelt.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/leistungen/heizung",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "h1": "Heizung, Klima & Energie: einfach anfangen, ohne das Gewerk kennen zu müssen.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/hilfe",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "h1": "Klare Antworten, bevor du irgendetwas beauftragst.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/hausakte",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "h1": "Dein Haus bekommt ein Gedächtnis.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/kontakt",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "h1": "Sag uns, worum es geht. Wir leiten dich direkt an die richtige Stelle.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/lexikon",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "h1": "Fachbegriffe, die dir Entscheidungen abnehmen.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/login",
+      "width": 390,
+      "status": 200,
+      "overflow": false,
+      "logo": []
+    },
+    {
+      "route": "/",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "h1": "Dein Haus.Einfachgeregelt.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/leistungen/heizung",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "h1": "Heizung, Klima & Energie: einfach anfangen, ohne das Gewerk kennen zu müssen.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/hilfe",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "h1": "Klare Antworten, bevor du irgendetwas beauftragst.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/hausakte",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "h1": "Dein Haus bekommt ein Gedächtnis.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/kontakt",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "h1": "Sag uns, worum es geht. Wir leiten dich direkt an die richtige Stelle.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/lexikon",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "h1": "Fachbegriffe, die dir Entscheidungen abnehmen.",
+      "logo": [
+        {
+          "loaded": true,
+          "width": 114
+        },
+        {
+          "loaded": false,
+          "width": 140
+        }
+      ]
+    },
+    {
+      "route": "/login",
+      "width": 1440,
+      "status": 200,
+      "overflow": false,
+      "h1": "Keine Marktplatz-Logik. Klare Regeln.",
+      "logo": []
+    },
+    {
+      "route": "/app",
+      "unauthenticatedURL": "http://127.0.0.1:4190/login?next=%2Fapp",
+      "status": 200
+    },
+    {
+      "route": "/pro",
+      "unauthenticatedURL": "http://127.0.0.1:4190/login?next=%2Fpro",
+      "status": 200
+    }
+  ],
+  "errors": []
+}

@@ -4,19 +4,17 @@ import path from 'node:path';
 import { PNG } from 'pngjs';
 
 const root = process.cwd();
-const assets = [
-  'digital-home-file',
-  'verified-partners',
-  'property-valuation',
-  'solar-energy',
-  'craftsmen-service',
-  'heat-pump',
-  'key-handover',
-  'property-matching',
-];
+// Asset list is manifest-driven (public/images/card-visuals/manifest.json),
+// so a file rename (e.g. the v4 renders) cannot silently orphan this gate.
+const manifest = JSON.parse(fs.readFileSync(path.join(root, 'public/images/card-visuals/manifest.json'), 'utf8'));
+const assets = manifest.assets;
+assert.ok(Array.isArray(assets) && assets.length > 0, 'manifest assets');
 
 const registry = fs.readFileSync(path.join(root, 'src/components/visuals/card-visuals.ts'), 'utf8');
 assert.match(registry, /CARD_VISUALS/);
+for (const asset of assets) {
+  assert.ok(registry.includes(`/images/card-visuals/${asset}.png`), asset + ' registered');
+}
 
 for (const asset of assets) {
   const pngPath = path.join(root, 'public/images/card-visuals', asset + '.png');

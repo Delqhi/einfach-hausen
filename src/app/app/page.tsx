@@ -1,86 +1,87 @@
 import Link from 'next/link';
 import { HomeownerHausmeisterComposer } from '@/components/homeowner/homeowner-hausmeister-composer';
+import { EHAppHeader, EHPanel, EHList, EHCallout, EHTextLink } from '@/design-system';
 import { AppShell } from '@/components/shell';
-import { ArrowRightThin, BookThinIcon, CalendarCheckThinIcon, ChatRoundIcon, NotfallSirenIcon, PersonSmallIcon, RobotIcon } from '@/components/icons';
+
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
+import { dateLabel } from '@/lib/format';
+import { primaryProperty } from '@/lib/properties';
 
 export default async function Dashboard() {
   const user = await requireUser('homeowner');
   const profile = db.prepare('SELECT address,postcode,onboarding_step FROM homeowner_profiles WHERE user_id=?').get(user.id) as any;
   const onboardingPending = profile?.onboarding_step && profile.onboarding_step !== 'done';
-  const activeJobs = (db.prepare(`SELECT COUNT(*) c FROM jobs WHERE homeowner_id=? AND status NOT IN ('completed','cancelled')`).get(user.id) as {c:number}).c;
-  const savedContacts = (db.prepare('SELECT COUNT(*) c FROM homeowner_contacts WHERE homeowner_id=?').get(user.id) as {c:number}).c;
+  const property = primaryProperty(user.id);
+  const houseAddress = property?.address || profile?.address || '';
+  const housePostcode = property?.postcode || profile?.postcode || '';
+  const houseContext = [houseAddress, housePostcode].filter(Boolean).join(', ');
+
+  const nextAppointment = db.prepare(
+    `SELECT a.*,j.title,p.business_name FROM appointments a JOIN jobs j ON j.id=a.job_id JOIN provider_profiles p ON p.user_id=a.provider_id WHERE a.homeowner_id=? AND a.status='confirmed' AND datetime(a.start_at) >= datetime('now') ORDER BY datetime(a.start_at) ASC LIMIT 1`
+  ).get(user.id) as any;
+
+  const openDecision = db.prepare(
+    `SELECT * FROM jobs WHERE homeowner_id=? AND status='quoted' ORDER BY updated_at DESC LIMIT 1`
+  ).get(user.id) as any;
+  const openDecisionQuotes = openDecision
+    ? (db.prepare(`SELECT COUNT(*) c FROM quotes WHERE job_id=? AND status='pending'`).get(openDecision.id) as {c:number}).c
+    : 0;
+
+  const dueMaintenance = property
+    ? db.prepare(`SELECT * FROM maintenance_tasks WHERE property_id=? AND status='open' ORDER BY date(due_date) ASC LIMIT 1`).get(property.id) as any
+    : null;
+
+  const nextSteps = [
+    nextAppointment ? 'appointment' : null,
+    openDecision ? 'decision' : null,
+    dueMaintenance ? 'maintenance' : null,
+  ].filter(Boolean) as string[];
 
   return (
     <AppShell role="homeowner" active="/app" title="Mein Zuhause" subtitle="Dein Haus-Copilot">
       <div className="own-dash ehn-dash">
-        <h1 className="owner-visually-hidden">Mein Zuhause</h1>
+        <EHAppHeader eyebrow="Übersicht" title={`Hallo ${user.first_name}.`} text={houseContext ? `${houseContext}` : 'Dein Zuhause im Überblick.'} />
+
         {onboardingPending && (
-          <section className="owner-onboarding-banner ehn-onboard-banner" aria-label="Einrichtung unvollständig">
+          <EHCallout title="Einrichtung unvollständig">
             <p>Du hast die Ersteinrichtung noch nicht abgeschlossen.</p>
-            <a href="/app/onboarding">Jetzt weiter einrichten</a>
-          </section>
+            <EHTextLink href="/app/onboarding">Jetzt weiter einrichten</EHTextLink>
+          </EHCallout>
         )}
 
-        <section className="qa-row" aria-label="Schnellaktionen">
-          <a className="qa-card" href="#dashboard-composer">
-            <div className="qa-icon qa-dark"><ChatRoundIcon variant="dark" /></div>
-            <strong>Auftrag</strong>
-            <span>Handwerker beauftragen und Angebote erhalten.</span>
-            <div className="qa-arrow"><ArrowRightThin /></div>
-          </a>
-          <Link className="qa-card" href="/app/consultation">
-            <div className="qa-icon"><ChatRoundIcon variant="light" /></div>
-            <strong>Beratung</strong>
-            <span>Fachliche Hilfe und Empfehlungen.</span>
-            <div className="qa-arrow"><ArrowRightThin /></div>
-          </Link>
-          <Link className="qa-card qa-alert" href="/app/emergency">
-            <div className="qa-icon"><NotfallSirenIcon /></div>
-            <strong>Notfall</strong>
-            <span>Schnelle Hilfe in dringenden Fällen.</span>
-            <div className="qa-arrow"><ArrowRightThin /></div>
-          </Link>
-        </section>
-
-        <section className="ki-card" aria-labelledby="owner-copilot-title">
-          <div className="ki-head">
-            <div className="ki-robot"><RobotIcon /></div>
-            <div className="ki-title-row">
-              <h2 id="owner-copilot-title">Frag einfachhausen</h2>
-              <span className="ki-badge">KI</span>
-            </div>
-            <Link className="ki-more" href="/app/hausmeister" aria-label="Hausmeister-Assistent öffnen"><ArrowRightThin /></Link>
+        {/* 1. Primärer Fokus: Hausmeister-Composer ganz oben */}
+        <EHPanel title="Frag einfachhausen">
+          <p>KI-Hausmeister — Schildere dein Anliegen oder Projekt. Wir finden den passenden Fachbetrieb oder organisieren sofortige Unterstützung. <Link href="/app/hausmeister" aria-label="Hausmeister-Assistent öffnen">Mehr</Link></p>
+          <div id="dashboard-composer">
+            <HomeownerHausmeisterComposer starterHint="Was gibt es an deinem Haus zu tun?" />
           </div>
-          <p className="ki-text">Schilder uns dein Problem. Wir bringen dich mit dem richtigen Ansprechpartner in Kontakt oder willst du direkt Angebote vergleichen?</p>
-          <div id="dashboard-composer" className="ki-input-row ehn-composer">
-            <HomeownerHausmeisterComposer starterHint="Was ist los bei dir?" />
+        </EHPanel>
+
+        {/* 2. Als Nächstes (Aufgaben, Termine, Entscheidungen) */}
+        <EHPanel title="Als Nächstes">
+        {nextSteps.length === 0 ? (
+          <div className="empty compact" role="status">
+            <p>Aktuell steht kein Termin an. Plane Wartungen über <Link href="/app/year">Mein Jahr</Link> oder starte oben eine Anfrage.</p>
           </div>
-        </section>
+        ) : (
+          <EHList label="Als Nächstes" items={[
+            ...(nextAppointment ? [{ id: 'appt-' + nextAppointment.job_id, title: 'Nächster Termin', text: `${nextAppointment.title} · ${nextAppointment.business_name} · ${dateLabel(nextAppointment.start_at)}`, href: `/app/jobs/${nextAppointment.job_id}` }] : []),
+            ...(openDecision ? [{ id: 'dec-' + openDecision.id, title: 'Offenes Angebot', text: `${openDecision.title}${openDecisionQuotes > 0 ? ` · ${openDecisionQuotes} ${openDecisionQuotes === 1 ? 'Angebot' : 'Angebote'} prüfen` : ''}`, href: `/app/jobs/${openDecision.id}` }] : []),
+            ...(dueMaintenance ? [{ id: 'maint', title: 'Fällige Wartung', text: `${dueMaintenance.title} · ${dateLabel(dueMaintenance.due_date)}`, href: '/app/year' }] : []),
+          ]} />
+        )}
+        </EHPanel>
 
-        <h3 className="own-section-title">Mein Zuhause im Überblick</h3>
-        <div className="overview-grid">
-          <Link className="ov-card" href="/app/jobs">
-            <div className="ov-icon"><CalendarCheckThinIcon /></div>
-            <div className="ov-text"><strong>Aktuelle Aufträge</strong><span>{activeJobs} aktiv</span></div>
-            <ArrowRightThin />
-          </Link>
-          <Link className="ov-card" href="/app/partners">
-            <div className="ov-icon"><PersonSmallIcon /></div>
-            <div className="ov-text"><strong>Ansprechpartner</strong><span>{savedContacts} gespeichert</span></div>
-            <ArrowRightThin />
-          </Link>
-        </div>
-        <Link className="ov-card ov-wide" href="/app/home/history">
-          <div className="ov-icon ov-icon-lg"><BookThinIcon /></div>
-          <div className="ov-text"><strong>Haus-Historie ansehen</strong><span>Alle Ereignisse, Maßnahmen und Dokumente rund um dein Zuhause.</span></div>
-          <ArrowRightThin />
-        </Link>
+        {/* 3. Schnellzugriff / Weitere Services: dezent untergeordnet */}
+        <EHPanel title="Weitere Services">
+          <EHList label="Weitere Services" items={[
+            { id: 'qa-beratung', title: 'Beratung', text: 'Fachliche Unterstützung & Modernisierung.', href: '/app/consultation' },
+            { id: 'qa-notfall', title: 'Notfall', text: 'Soforthilfe bei Rohrbruch, Heizausfall & Co.', href: '/app/emergency' },
+            { id: 'qa-dokumente', title: 'Dokumente', text: 'Pläne, Rechnungen & Hausakte einsehen.', href: '/app/documents' },
+          ]} />
+        </EHPanel>
 
-        <Link className="fab-plus" href="/app/hausmeister" aria-label="Neue Anfrage starten">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" /></svg>
-        </Link>
         <div className="home-indicator" aria-hidden="true" />
       </div>
     </AppShell>

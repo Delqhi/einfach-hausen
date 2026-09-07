@@ -1,0 +1,18 @@
+{
+  "public/brand/logo-full.png": {
+    "sha256": "ca128f0ecfcffc93853f5271453f318be28ed4462850b06072c33afbeb1353cd",
+    "bytes": 121939
+  },
+  "src/fonts/InterVariable.woff2": {
+    "sha256": "0de3908cf5ef213ab1404cc5da94a976faaa886c3479a274a7d66ad80b37c64a",
+    "bytes": 61284
+  },
+  "public/images/marketing/family-home.jpg": {
+    "sha256": "13b908f621d705d9adc6a9b30fc4f750265463d450d225dc2ab459215aa0b845",
+    "bytes": 202707
+  },
+  "public/images/marketing/partner-doorstep.jpg": {
+    "sha256": "fa67a64c89d44f716d5fb3b047dbfaed955391bd2e76e902eb9ef729028e9905",
+    "bytes": 155538
+  }
+}

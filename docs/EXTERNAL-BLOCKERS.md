@@ -1,8 +1,8 @@
 # Externe Blocker — verifizierte Fakten
 
-Stand: 2026-08-29 (T-0171 Final Convergence, OCI-VM)
+Stand: 2026-09-04 (T-0131 Convergence done, main `13496d7`)
 
-Technischer Abschluss (Taskplan T-0170/T-0169/T-0005/T-0171) ist durch diese Liste
+Technischer Abschluss (Wellen A-E, T-0129/T-0130/T-0131, Supabase-, Demo-, GSC-, Blog/Lexikon-Stände) ist durch diese Liste
 nicht blockiert. Die folgenden Punkte sind externe Betriebs-/Rechts-Faktoren, die
 der technische Abschluss weder erfinden noch erledigen kann:
 
@@ -45,7 +45,7 @@ Taskplans.
 
 Pflege-Regel: Nur verifizierte Fakten eintragen. Technische Abschlusswellen
 autorisiert keine Legal-/Business-Fakten.
-6. **Google/Apple-SSO in den App-Registrierungen (T-0206 B7)** — die
+8. **Google/Apple-SSO in den App-Registrierungen (T-0206 B7)** — die
    Notion-Referenz zeigt „Mit Google/Apple anmelden"-Buttons. Echte
    OAuth-Credentials (Google Cloud + Apple Developer, verifyte Domains) sind
    Betriebervollmacht; Fake-Buttons ohne funktionierendes Backend sind

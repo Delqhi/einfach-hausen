@@ -1,0 +1,15 @@
+{
+  "status": "EH_SKILLS_INSTALLED",
+  "commit": "8ffb067167c72c22a42dbb4fb1e7270956fdb1db",
+  "backup": "/home/ubuntu/.local/share/eh-design-backups/20260906T200459Z",
+  "paths": [
+    "/home/ubuntu/.codex/skills/sin-eh-design",
+    "/home/ubuntu/.codex/skills/sin-frontend-design",
+    "/home/ubuntu/.config/opencode/skills/sin-eh-design",
+    "/home/ubuntu/.config/opencode/skills/sin-frontend-design"
+  ],
+  "rules": {
+    "/home/ubuntu/.codex/AGENTS.md": "c97a015193565dea73e181180c2275de3341c1bd5fd2dcec14d24f0a8cd63060",
+    "/home/ubuntu/.config/opencode/AGENTS.md": "aeb3fcf3a55b53d04e7e31cf8f55bfec1bf51733fb71841ada31338b296cd8ca"
+  }
+}

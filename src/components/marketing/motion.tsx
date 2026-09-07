@@ -16,6 +16,7 @@ import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import styles from './motion.module.css';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 // T-0118 bundle remediation: Lenis and SplitText are feature-scoped addons and
@@ -148,7 +149,7 @@ export function ScrollShadow({ children }: { children: React.ReactNode }) {
     });
   }, { dependencies: [pathname] });
 
-  return <div ref={ref} style={{ display: 'contents' }}>{children}</div>;
+  return <div ref={ref} className={styles.contents}>{children}</div>;
 }
 
 /**
@@ -173,7 +174,7 @@ export function HeaderState() {
     return () => window.removeEventListener('scroll', update);
   });
 
-  return <span ref={ref} aria-hidden="true" style={{ display: 'none' }} />;
+  return <span ref={ref} aria-hidden="true" className={styles.hidden} />;
 }
 
 /**

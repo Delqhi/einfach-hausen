@@ -1,0 +1,3 @@
+/* Behavior-only display helpers for motion.tsx (DESIGN.md §2). */
+.contents { display: contents; }
+.hidden { display: none; }

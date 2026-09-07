@@ -1,0 +1,8 @@
+# Brand authority. Existing permissions still apply; never treat an agent as a separate owner.
+/packages/eh-design/ @Delqhi
+/DESIGN.md @Delqhi
+/design/design-*.json @Delqhi
+/scripts/eh-design-* @Delqhi
+/.github/workflows/eh-design.yml @Delqhi
+/.github/CODEOWNERS @Delqhi
+/src/design-system/ @Delqhi

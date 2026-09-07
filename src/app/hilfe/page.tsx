@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, LinkButton, PageHero, Section, Statement } from '@/components/marketing/ui';
+import { EHScope, EHSection, EHPageHero, EHServiceIndex, EHProse, EHClosing, EHButton, EHEyebrow, EHHeading, EHText } from '@/design-system';
 import { MiniContact } from '@/components/marketing/app-frames';
 import { FaqExplorer } from './faq-explorer';
 
@@ -26,18 +26,38 @@ const faq = [
 export default function Page() {
   return (
     <MarketingShell>
-      <PageHero
-        eyebrow="Hilfe & FAQ"
-        title="Klare Antworten, bevor du irgendetwas beauftragst."
-        text="Ablauf, Kosten, Partner, Hausakte. Wenn deine Frage fehlt, beschreib sie einfach als Anliegen. Auch eine Frage ist ein guter Start."
-        actions={<><LinkButton href="/#anliegen">Frage als Anliegen stellen</LinkButton><LinkButton href="/kontakt" secondary>Kontaktwege</LinkButton></>}
-        aside={<MiniContact />}
-      />
-      <Section tone="surface" eyebrow="Häufige Fragen" title="Was du über Einfach Hausen wissen solltest.">
-        <FaqExplorer entries={faq} />
-      </Section>
-      <Statement kicker="Unser Anspruch">Verständlich bleiben. <mark>Bei jeder Frage, in jedem Schritt.</mark></Statement>
-      <CtaBand title="Deine konkrete Frage ist ein guter Startpunkt." text="Leg kostenlos ein Hauskonto an und beschreib dein Anliegen in normalen Worten. Ein Auftrag entsteht daraus nur, wenn du es willst." />
+      <EHScope>
+        <EHPageHero
+          eyebrow="Hilfe & FAQ"
+          title="Klare Antworten, bevor du irgendetwas beauftragst."
+          text="Ablauf, Kosten, Partner, Hausakte. Wenn deine Frage fehlt, beschreib sie einfach als Anliegen. Auch eine Frage ist ein guter Start."
+          actions={<><EHButton href="/#anliegen" arrow>Frage als Anliegen stellen</EHButton><EHButton href="/kontakt" variant="secondary">Kontaktwege</EHButton></>}
+          media={<MiniContact />}
+        />
+        <EHSection compact>
+          <EHEyebrow>Häufige Fragen</EHEyebrow>
+          <EHHeading>Was du über Einfach Hausen wissen solltest.</EHHeading>
+          {/* Ausnahme 05-WEB-03: FaqExplorer mit Kategoriefilter bleibt Bestand (EHFAQ hat keine Filterfunktion). */}
+          <FaqExplorer entries={faq} />
+        </EHSection>
+        <EHSection compact>
+          <EHEyebrow>Weiterführend</EHEyebrow>
+          <EHHeading>Wenn du tiefer einsteigen willst.</EHHeading>
+          <EHText size="lead">Antworten, Sicherheit, Ratgeber und Kontakt bleiben bewusst getrennte Wege — damit du schnell dort landest, wo du hinwillst.</EHText>
+          <EHServiceIndex items={[
+            { title: 'Sicherheit & Daten', text: 'Wie Partnerprüfung, Datenfreigaben und deine Entscheidungen geschützt werden.', href: '/sicherheit' },
+            { title: 'Ratgeber', text: 'Konkrete Themen rund um Wartung, Sanierung und Entscheidungen am Haus.', href: '/blog' },
+            { title: 'Lexikon', text: 'Begriffe kurz und verständlich nachschlagen, ohne Fachchinesisch.', href: '/lexikon' },
+            { title: 'Kontakt', text: 'Wenn du lieber direkt mit uns klären möchtest, was als Nächstes sinnvoll ist.', href: '/kontakt' },
+          ]} />
+        </EHSection>
+        <EHSection compact>
+          <EHProse>
+            <p><strong>Unser Anspruch.</strong> Verständlich bleiben. <mark>Bei jeder Frage, in jedem Schritt.</mark></p>
+          </EHProse>
+        </EHSection>
+        <EHClosing title="Deine konkrete Frage ist ein guter Startpunkt." text="Leg kostenlos ein Hauskonto an und beschreib dein Anliegen in normalen Worten. Ein Auftrag entsteht daraus nur, wenn du es willst." href="/#anliegen" label="Anliegen starten" />
+      </EHScope>
     </MarketingShell>
   );
 }

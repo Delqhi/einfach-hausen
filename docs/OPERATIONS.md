@@ -86,6 +86,23 @@ Notification-Dispatcher: `einfach-hausen-dispatch.timer` (alle 5 Min) liefert f�
 
 Environment-Dateien (T-0200/T-0201): `/etc/einfach-hausen.env` enthält zusätzlich `AUTH_MODE`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SMTP_*`, `MAIL_FROM`. Build-Zeit-Variablen (`NEXT_PUBLIC_*`) liegen in `/etc/einfach-hausen-build.env` (ubuntu-lesbar) und werden von `deploy/update-on-oci.sh` vor `npm run build` gesourcet - ohne sie verliert der Client-Bundle die Supabase-Gateway-Origin und die CSP bricht den Login.
 
+## KI-Ad-Credits (T-0207, gehärtet 2026-09-03)
+
+`POST /api/ai/credits` und `PUT /api/ki` vergeben Bonus-KI-Aktionen nur noch
+gegen signierten Werbenachweis (`src/lib/ad-receipt.ts`): Body
+`{ receipt, signature }`, wobei `receipt` JSON `{ provider, nonce, ts }` ist
+und `signature` HMAC-SHA256 darüber (hex, optional `sha256=`-Präfix).
+Secret: `AD_RECEIPT_SECRET` (Fallback `WEBHOOK_SECRET`), 10-Minuten-Skew,
+Single-Use via `grantAdCreditsOnce()` (exakte `rewarded-ad:<provider>:<nonce>`-
+Quelle, Replay → 409). Ohne konfiguriertes Secret: Production fail-closed
+(503), außerhalb Production Dev-Bypass (`ALLOW_UNSIGNED_AD_CREDITS=1` oder
+Nicht-Production). Bis ein Rewarded-Ad-SDK verdrahtet ist, sendet die
+Einstellungs-UI nur `{}` — der Server lehnt in Produktion ehrlich ab.
+
+Legacy-Supabase-Hooks `POST /api/hooks/neue-anfrage` und
+`POST /api/hooks/neues-angebot` sind stillgelegt (410, Details in
+`docs/JOBS_VS_ANFRAGEN.md`); falsches `x-webhook-secret` antwortet weiter 401.
+
 ## Non-destructive restore proof (HA)
 
 Nie Prod-DB direkt ersetzen. Dry-run gegen Staging-DB:
@@ -137,8 +154,6 @@ sudo journalctl -u einfach-hausen.service -n 120 --no-pager
 
 Do not delete SQLite, WAL/SHM files, private media, or uploads as a troubleshooting step. Do not remove the old public fallback until the canonical domain/tunnel/Stripe/mail acceptance in `PRODUCTION_HANDOVER.md` is complete.
 
-Do not delete SQLite, WAL/SHM files, private media, or uploads as a troubleshooting step. Do not remove the old public fallback until the canonical domain/tunnel/Stripe/mail acceptance in `PRODUCTION_HANDOVER.md` is complete.
-
 ## Post-convergence production live check (2026-08-25, task T-0003)
 
 Verified live state after repository convergence to `f0198ee`:
@@ -176,6 +191,19 @@ Check-Mode periodisch eine Browser-Auth erzwang und Deployments blockierte.
 
 Exit code is non-zero when any probe breaches. `SLO_BASE_URL` retargets the run (default `http://127.0.0.1:3010`).
 
+### Business SLOs (T-0133)
+
+Since 2026-09-07 the probe suite additionally measures the product SLOs from real rows (read-only SQLite aggregate over a rolling 30-day window, same SQL as `src/lib/metrics.ts`):
+
+| Probe | Definition | Target | Window |
+|---|---|---|---|
+| `api_latency` | observed latency of the health and homepage probes | both within their probe targets | per run |
+| `business_metrics.booking` | confirmed/completed appointments vs all appointments | ≥ 0.60 | 30 days |
+| `business_metrics.matching` | dispatches reaching quote/acceptance vs all dispatches | ≥ 0.40 | 30 days |
+| `business_metrics.notif_delivery` | `sent` receipts vs all finalized receipts | ≥ 0.95 | 30 days |
+
+A window with zero eligible rows reports the rate as `no-data` and does not fail the probe — an empty platform must never look like a perfect one. Below a minimum sample of 10 rows per window the rate is reported with a `(low-sample)` marker instead of alerting; thresholds enforce only from n ≥ 10. Denominators and rates are printed in the probe JSON line, so the Kestra/journald history is the time series. In-process reuse of the same aggregates: `computeBusinessMetrics()` in `src/lib/metrics.ts`.
+
 Alert path without a new platform: `deploy/kestra/einfach-hausen-slo*.yml` schedules the probes every 15 minutes through the existing Kestra instance; a breach fails the Kestra execution (visible in execution history/API) and the probe JSON lines land in the Kestra task logs with the failing component name and correlation id. On the host, the same evidence is in journald, so `journalctl -u einfach-hausen-dispatch` and probe lines share correlation ids.
 
 ## Backup/restore drill (T-0124)
@@ -196,3 +224,35 @@ Einzelner 1033 im Log bei sonst 200-Antworten ist ein transienter Edge-Event (z.
 ## Disaster Recovery (T-0137)
 
 Reproduzierbare Wiederherstellungsabläufe für DB-Verlust, korrupte Releases und fehlerhafte Migrationen: **docs/DISASTER_RECOVERY_RUNBOOK.md**. Verifiziert gegen T-0136/T-0124 (gleicher Restore-Kern: Checksummen → integrity_check → Stage). Recovery-Ziele (Betriebsnachweis): RPO = Backup-Alter (stündliche Backups), RTO < 15 min produktiv (Drill misst 5s für Verify+Stage).
+
+## Infrastruktur-Kostenbasis & Forecast (2026-09)
+
+Einfache, transparente monatliche Kostenbasis ohne FinOps-Overhead (Stand: September 2026, Anforderung aus Issue #10):
+
+| Dienst / Komponente | Typ | Kosten / Monat | Anmerkung |
+|---|---|---|---|
+| **Oracle Cloud (OCI)** | VM (Always Free / Ampere A1) | 0,00 € | 4 OCPU, 24 GB RAM, persistent block storage |
+| **Cloudflare** | DNS & Argo Tunnel Ingress | 0,00 € | Free Tier / Standard Tunnel ausreichend |
+| **STRATO** | Domain & Mail-Routing (MX/SPF/DKIM) | ~4,00 € | Jährliche Abrechnung umgelegt |
+| **Stripe** | Zahlungsabwicklung / Connect | Variabel (~1,5 % + 0,25 €) | Nur bei Transaktionen; 0 % Plattformprovision |
+| **Gesamte Fixkosten** | | **~4,00 € / Monat** | Extrem schlanke, wartungsarme Kostenstruktur |
+
+**Forecast & Skalierungspfad:**
+- Bis 1.000 aktive Nutzer/Monat verbleiben die Infrastrukturkosten stabil unter 10,00 €/Monat.
+- Bei Überschreiten der OCI Free-Tier-Grenzen (z. B. Backup-Speicher > 100 GB) skaliert Block-Storage mit ~0,025 €/GB/Monat.
+- Transaktionskosten tragen sich über die gebuchten Partner-Tarife und Mitgliedschaften selbst.
+
+## Feature-Flag lifecycle (T-0139)
+
+Flags are defined in `src/lib/feature-flags.ts` (`FLAG_DEFAULTS`) and each definition carries `owner` (role from `docs/COMPANY_IDENTITY.md`) and `expiresAt` (ISO date). `scripts/feature-flag-lifecycle.mjs` (`npm run test:flags`, release-gate Layer 1) fails the release when:
+
+1. a definition lacks `owner` or a parseable `expiresAt`,
+2. a flag's expiry passed while it is still enabled in the DB,
+3. the DB contains rows for a flag that is no longer defined (orphaned rows),
+4. a non-production-toggleable flag is enabled.
+
+**Removal after rollout** is part of the release process: delete the flag gates in code, remove the definition, delete the DB row (`DELETE FROM feature_flags WHERE key = '...'`), note the removal in the release PR — the lifecycle check verifies no rows remain. `--simulate-expired` exercises the expired-enabled branch without waiting for real dates.
+
+## Data inventory (T-0146)
+
+`docs/privacy/DATA_INVENTORY.json` is the machine-readable record of every table (purpose, retention key, personal flag). `npm run test:inventory` (release-gate Layer 1) keeps it in sync: every table must be classified, personal tables need purpose + retention from the legend, and any new column matching sensitive patterns inside a **non-personal** table fails the gate until classified. Retention execution lives in T-0145 (`src/lib/retention.ts`, dispatcher) and the deletion workflow in T-0144.

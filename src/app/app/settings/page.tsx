@@ -1,45 +1,29 @@
-import Link from 'next/link';
-import { Bell, BellOff, ChevronLeft, RefreshCw, ShieldCheck } from 'lucide-react';
+import { BellOff, ShieldCheck } from 'lucide-react';
 import { AppShell } from '@/components/shell';
+import { EHAppHeader, EHPanel, EHList, EHButton } from '@/design-system';
 import { InstallAppCard } from '@/components/install-app-card';
 import { requireUser } from '@/lib/auth';
 import { PwaSettingsStatus } from './pwa-settings-status';
 import { AccountActions } from './account-actions';
-import { AiSettings } from './ai-settings';
 import styles from './settings.module.css';
+import { AiSettings } from './ai-settings';
 
 export default async function AppSettingsPage() {
   await requireUser('homeowner');
 
   return (
     <AppShell role="homeowner" active="/app/profile" title="App-Einstellungen" subtitle="Installation, Offline-Modus und Benachrichtigungen">
-      <div className={styles.header}>
-        <Link className={styles.backLink} href="/app/profile"><ChevronLeft aria-hidden="true" />Profil</Link>
-        <div>
-          <h1 className="page-title">App-Einstellungen</h1>
-          <p className="page-subtitle">Hier siehst du, was dein Browser wirklich unterstützt und welche Funktionen noch nicht aktiv sind.</p>
-        </div>
-      </div>
+      <EHAppHeader eyebrow="Konfiguration" title="App-Einstellungen" text="Hier siehst du, was dein Browser wirklich unterstützt und welche Funktionen noch nicht aktiv sind." actions={<EHButton href="/app/profile" variant="secondary">Profil</EHButton>} />
 
-      <section className={styles.section} aria-labelledby="installation-heading">
-        <div className={styles.sectionHeading}>
-          <RefreshCw aria-hidden="true" />
-          <div><h2 id="installation-heading">Installation & Offline</h2><p>Die App speichert keine privaten Seiten als Offline-Kopie.</p></div>
-        </div>
+      <EHPanel title="Installation & Offline">
+        <p>Die App speichert keine privaten Seiten als Offline-Kopie.</p>
         <InstallAppCard />
         <PwaSettingsStatus />
-      </section>
+      </EHPanel>
 
-      <section className={styles.section} aria-labelledby="notifications-heading">
-        <div className={styles.sectionHeading}>
-          <Bell aria-hidden="true" />
-          <div><h2 id="notifications-heading">Benachrichtigungen</h2><p>In-App-Updates sind aktiv; Browser-Push ist noch nicht freigeschaltet.</p></div>
-        </div>
-
-        <Link className={styles.notificationLink} href="/notifications">
-          <span><strong>In-App-Benachrichtigungen öffnen</strong><small>Auftragsstatus, Nachrichten und wichtige Plattform-Updates.</small></span>
-          <span aria-hidden="true">→</span>
-        </Link>
+      <EHPanel title="Benachrichtigungen">
+        <p>In-App-Updates sind aktiv; Browser-Push ist noch nicht freigeschaltet.</p>
+        <EHList label="Benachrichtigungen" items={[{ id: 'inapp', title: 'In-App-Benachrichtigungen öffnen', text: 'Auftragsstatus, Nachrichten und wichtige Plattform-Updates.', href: '/notifications' }]} />
 
         <div className={styles.disabledSetting} role="group" aria-labelledby="push-setting-title" aria-describedby="push-setting-help">
           <BellOff aria-hidden="true" />
@@ -58,23 +42,17 @@ export default async function AppSettingsPage() {
           </span>
           <input type="checkbox" disabled aria-label="Checklisten-Erinnerungen per Push noch nicht verfügbar" />
         </div>
-      </section>
+      </EHPanel>
 
-      <section className={styles.section} aria-labelledby="ai-heading">
-        <div className={styles.sectionHeading}>
-          <ShieldCheck aria-hidden="true" />
-          <div><h2 id="ai-heading">KI-Assistent</h2><p>Kontingent, Bonus-Aktionen und eigener API-Key (BYOK).</p></div>
-        </div>
+      <EHPanel title="KI-Assistent">
+        <p>Kontingent, Bonus-Aktionen und eigener API-Key (BYOK).</p>
         <AiSettings />
-      </section>
+      </EHPanel>
 
-      <section className={styles.section} aria-labelledby="account-heading">
-        <div className={styles.sectionHeading}>
-          <ShieldCheck aria-hidden="true" />
-          <div><h2 id="account-heading">Konto & Daten</h2><p>Datenexport und Konto-Löschung nach DSGVO.</p></div>
-        </div>
+      <EHPanel title="Konto & Daten">
+        <p>Datenexport und Konto-Löschung nach DSGVO.</p>
         <AccountActions />
-      </section>
+      </EHPanel>
     </AppShell>
   );
 }

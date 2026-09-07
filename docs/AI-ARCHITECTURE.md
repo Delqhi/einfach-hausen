@@ -20,13 +20,13 @@
 ### 3. Freemium + Rewarded Ad
 - `ai_usage` trackt Cloud-Aktionen je Nutzer/Monat. Default-Kontingent: **20/Monat** (`FREEMIUM_MONTHLY`).
 - Erschöpfung → HTTP 402 mit klarer UX und Optionen (Ad / Kauf / BYOK) — kein Dark Pattern.
-- `ai_credits` + `POST /api/ai/credits`: +10 Aktionen nach Werbeclip (`AD_CREDIT_GRANT`). **Produktions-Hinweis:** Ad-SDK-Bestätigung serverseitig verifizieren (aktuell Rate-Limit-only, dokumentiert im Code).
+- `ai_credits` + `POST /api/ai/credits`: +10 Aktionen nach Werbeclip (`AD_CREDIT_GRANT`); signierte Ad-Receipts werden serverseitig fail-closed geprüft und Single-Use eingelöst (siehe `docs/OPERATIONS.md`).
 - Gateway: OmniRoute (`AI_BASE_URL`/`AI_MODEL`/`AI_API_KEY|OMNIROUTE_MASTER_KEY`), `stream:false`.
 
 ## Endpunkte
 - `POST /api/ki` — Chat (3-Stufen-Logik, liefert `quota`, bei Erschöpfung 402 + `options`)
 - `GET /api/ki` — Quota-Snapshot (Settings)
-- `PUT /api/ki` — (Legacy-Entwurf) Kreditvergabe
+- `PUT /api/ki` — kompatibler Rewarded-Ad-Grant mit derselben signierten Receipt-Prüfung wie `/api/ai/credits`
 - `POST /api/ai/credits` — Rewarded-Ad-Grant (+10)
 - `GET/POST /api/ai/byok` — BYOK speichern/abfragen/deaktivieren
 
