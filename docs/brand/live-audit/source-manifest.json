@@ -1,0 +1,36 @@
+{
+  "base": "fc7c554",
+  "files": {
+    ".gitattributes": {
+      "sha256": "6ab1ed1fbdf7b52c4573a6329439c3f72ded45ceef7c8178cb538e73ce9c13f2",
+      "bytes": 254,
+      "kind": "text"
+    },
+    "design/design-lock.json": {
+      "sha256": "596bd4065972c8736ea61f3106353cc182a7832d1baa4dfa18e2d3bb022a5157",
+      "bytes": 4357,
+      "kind": "text"
+    },
+    "docs/brand/live-audit/NEXT_AGENT.md": {
+      "sha256": "39c5b59dc20b82a4534ec71cd074b702fd252e0adeac95c2579ecdeefeb5fbb8",
+      "bytes": 4351,
+      "kind": "text"
+    },
+    "docs/brand/live-audit/http-evidence.json": {
+      "sha256": "da7c36325b2c1fc976e7387b7be0834b1473aebbe3583c39072bfba34dc0e0ce",
+      "bytes": 364,
+      "kind": "text"
+    },
+    "packages/eh-design/src/index.ts": {
+      "sha256": "4983cd1f42d566d975bca5ebdd46f02f5412be8e19a797cfffd9aa52d52c6e1a",
+      "bytes": 237,
+      "kind": "text"
+    },
+    "packages/eh-design/src/job-forms.tsx": {
+      "sha256": "703eea10b17a9de9ea9712c9821edec878ef61cc498803895e8c1e08c54f8545",
+      "bytes": 3504,
+      "kind": "text"
+    }
+  },
+  "deleted": []
+}
