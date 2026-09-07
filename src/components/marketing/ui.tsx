@@ -1,6 +1,6 @@
 /** Compatibility adapters. Public signatures stay stable; styling belongs to @einfachhausen/design. */
 import {Check, CircleCheck} from "lucide-react";
-import {EHPageHero, EHSection, EHEyebrow, EHHeading, EHText, EHButton, EHTextLink, EHFeatureRows, EHSteps, EHFAQ, EHTimeline, EHFacts, EHPanel, EHProse, EHCallout, EHActions} from "@/design-system";
+import {EHPageHero, EHSection, EHEyebrow, EHHeading, EHText, EHButton, EHTextLink, EHFeatureRows, EHSteps, EHFAQ, EHTimeline, EHFacts, EHPanel, EHProse, EHCallout, EHActions, EHSectionHeading, EHProcess, EHEditorialStatement} from "@/design-system";
 import styles from "./mkt.module.css";
 export {styles as mkt};
 type Tone = "plain" | "canvas" | "surface" | "soft" | "sand" | "dark" | "green";
@@ -11,7 +11,7 @@ export function PageHero({eyebrow,title,text,actions,aside}: {eyebrow:string;tit
   return <EHPageHero {...{eyebrow,title,text,actions}} media={aside}/>;
 }
 export function Section({eyebrow,title,text,children,tone="plain",tight=false,center=false,id}: {eyebrow?:string;title?:string;text?:string;children:React.ReactNode;tone?:Tone;tight?:boolean;center?:boolean;id?:string}) {
-  return <EHSection id={id} tone={tones[tone]} compact={tight}>{(eyebrow || title || text) && <div className={center ? styles.sectionHeadCenter:styles.sectionHead}>{eyebrow && <EHEyebrow>{eyebrow}</EHEyebrow>}{title && <EHHeading>{title}</EHHeading>}{text && <EHText size="lead">{text}</EHText>}</div>}{children}</EHSection>;
+  return <EHSection id={id} tone={tones[tone]} compact={tight}>{(eyebrow || title || text) && <EHSectionHeading {...{eyebrow,title,text,center}}/>}{children}</EHSection>;
 }
 export function CardGrid({children,cols=3}: {children:React.ReactNode;cols?:2|3|4}) {return <div className={styles.cardGrid} data-cols={cols}>{children}</div>;}
 export function Card({icon,title,text,tone="surface",children}: {icon?:React.ReactNode;title:string;text?:string;tone?:"surface"|"sand"|"soft"|"dark";children?:React.ReactNode}) {
@@ -19,9 +19,9 @@ export function Card({icon,title,text,tone="surface",children}: {icon?:React.Rea
   return tone==="dark" || tone==="sand" ? <EHCallout title={title} tone={tone==="dark"?"deep":"sand"}>{body}</EHCallout> : <EHPanel title={title}>{body}</EHPanel>;
 }
 export function FeatureGrid({items}: {items:ReadonlyArray<{icon:React.ReactNode;title:string;text:string}>;cols?:2|3|4}) {return <EHFeatureRows items={[...items]}/>;}
-export function Statement({kicker,tone="sand",children}: {kicker:string;tone?:Tone;children:React.ReactNode}) {return <EHSection tone={tones[tone]}><div className={styles.sectionHead}><EHEyebrow>{kicker}</EHEyebrow><EHHeading>{children}</EHHeading></div></EHSection>;}
+export function Statement({kicker,tone="sand",children}: {kicker:string;tone?:Tone;children:React.ReactNode}) {return <EHEditorialStatement eyebrow={kicker} tone={tones[tone]}>{children}</EHEditorialStatement>;}
 export function Numbered({items}: {items:ReadonlyArray<{title:string;text:string}>;tone?:Tone}) {return <EHFeatureRows items={[...items]}/>;}
-export function Steps({items}: {items:ReadonlyArray<{title:string;text:string;visual?:React.ReactNode}>}) {return <EHSteps items={items.map(item=>({title:item.title,text:<><EHText>{item.text}</EHText>{item.visual}</>}))}/>;}
+export function Steps({items}: {items:ReadonlyArray<{title:string;text:string;visual?:React.ReactNode}>}) {return items.some(item=>item.visual) ? <EHProcess items={items.map(item=>({title:item.title,text:item.text,media:item.visual}))}/> : <EHSteps items={[...items]}/>;}
 export function Split({children}: {children:React.ReactNode}) {return <div className={styles.split}>{children}</div>;}
 type ButtonVariant = "primary" | "ghost" | "terra" | "onDark" | "ghostOnDark";
 const buttonVariants = {primary:"primary",ghost:"secondary",terra:"primary",onDark:"on-dark",ghostOnDark:"quiet"} as const;

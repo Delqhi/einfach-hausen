@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
-import Image from 'next/image';
-import { MessageCircle, Phone, ShieldCheck, UserRound, Wrench } from 'lucide-react';
+import { MessageCircle, ShieldCheck, UserRound, Wrench } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { AppFrame, ContactScreen, OrderStatusScreen, ReminderScreen } from '@/components/marketing/app-frames';
-import { Reveal } from '@/components/marketing/motion';
-import { BulletList, CtaBand, Faq, FeatureGrid, LinkButton, PageHero, Section, Statement, Steps, Timeline, mkt as styles } from '@/components/marketing/ui';
+import { EHProductExcerpt, EHCaseStudy, EHImageFrame } from '@/design-system';
+import { BulletList, CtaBand, Faq, FeatureGrid, LinkButton, PageHero, Section, Statement, Steps, mkt as styles } from '@/components/marketing/ui';
 
 export const metadata: Metadata = { title: "So funktioniert's", description: 'Anliegen beschreiben, wir organisieren, ein Mensch aus deiner Region übernimmt. Kein Auftrag ohne deine Entscheidung.' , alternates: { canonical: canonical('/so-funktionierts') } };
 
@@ -26,30 +24,25 @@ export default function Page() {
         title="Du sagst, was los ist. Wir kümmern uns um alles dazwischen."
         text="Einfach Hausen beginnt nicht mit einer Kategorienwand und endet nicht in einer Warteschleife. Du beschreibst in normalen Worten, wir organisieren, und am Ende steht ein Mensch aus deiner Region vor deiner Tür."
         actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/register?role=homeowner" secondary>Hauskonto kostenlos anlegen</LinkButton></>}
-        aside={<AppFrame label="Vorgangsansicht in der App: Dachrinne reinigen, Schritt 3 von 4, Termin bestätigt"><OrderStatusScreen /></AppFrame>}
+        aside={<EHProductExcerpt label="Vorgang" title="Dachrinne reinigen" rows={[{title:"Deine Entscheidung",text:"Termin bestätigt · Donnerstag, 14 Uhr"},{title:"Kostenrahmen",text:"160–200 € im dargestellten Beispiel"},{title:"Danach",text:"Rechnung und Verlauf bleiben in deiner Hausakte."}]} note="Illustrativer Beispielvorgang, kein verbindliches Angebot."/>}
       />
 
       <Section tone="surface" eyebrow="Der Ablauf" title="Drei Schritte. Für dich fühlt es sich an wie einer." text="Die Organisation im Hintergrund darf komplex sein. Für dich bleibt der Weg kurz.">
         <Steps
           items={[
-            { title: 'Beschreiben', text: 'Text, Foto oder Sprachnachricht. So, wie du es einem Nachbarn erklären würdest. Fehlt etwas Wichtiges, fragen wir gezielt nach, statt dir ein Formular vorzusetzen.', visual: <AppFrame size="sm"><ReminderScreen /></AppFrame> },
-            { title: 'Wir organisieren', text: 'Wir ordnen ein, was dahintersteckt, finden einen geprüften Partner aus deiner Region und holen einen Kostenrahmen und Terminvorschlag ein. Du siehst alles, bevor du entscheidest.', visual: <AppFrame size="sm"><OrderStatusScreen /></AppFrame> },
-            { title: 'Ein Mensch übernimmt', text: 'Dein Ansprechpartner hat Namen, Betrieb und Telefonnummer. Er meldet sich, kommt, erledigt. Rechnung und Dokumente landen in deiner Hausakte.', visual: <AppFrame size="sm"><ContactScreen /></AppFrame> },
+            { title: 'Beschreiben', text: 'Text, Foto oder Sprachnachricht. So, wie du es einem Nachbarn erklären würdest. Fehlt etwas Wichtiges, fragen wir gezielt nach, statt dir ein Formular vorzusetzen.', visual: <EHProductExcerpt label="Anliegen" title="Deine Worte reichen." rows={[{title:"Beschreibung",text:"Bei Regen läuft die Dachrinne über."},{title:"Ergänzung",text:"Ein Foto hilft, die Situation einzuordnen."}]}/> },
+            { title: 'Wir organisieren', text: 'Wir ordnen ein, was dahintersteckt, finden einen geprüften Partner aus deiner Region und holen einen Kostenrahmen und Terminvorschlag ein. Du siehst alles, bevor du entscheidest.', visual: <EHProductExcerpt label="Vorschlag" title="Erst prüfen. Dann freigeben." rows={[{title:"Kostenrahmen",text:"160–200 € im Beispiel"},{title:"Termin",text:"Donnerstag, 14 Uhr"}]}/> },
+            { title: 'Ein Mensch übernimmt', text: 'Dein Ansprechpartner hat Namen, Betrieb und Telefonnummer. Er meldet sich, kommt, erledigt. Rechnung und Dokumente landen in deiner Hausakte.', visual: <EHProductExcerpt label="Ansprechpartner" title="Ein konkreter Mensch." rows={[{title:"Kontakt",text:"Name, Betrieb und Telefonnummer beim Vorgang."},{title:"Verlauf",text:"Absprachen und Unterlagen bleiben zusammen."}]}/> },
           ]}
         />
       </Section>
 
       <Statement kicker="Das Prinzip">Eine Frage ist noch kein Auftrag. <mark>Du entscheidest, wann daraus einer wird.</mark></Statement>
 
-      <Section eyebrow="Ein echter Vorgang" title="So sieht das in einer Woche aus." text="Vom ersten Satz bis zur Rechnung in der Hausakte. Keine Warteschleife, keine fünf Rückrufe.">
-        <div className={styles.split}>
-          <Timeline items={CASE} />
-          <Reveal delay={0.1} className={styles.photo} data-ratio="4:5" data-mw="440">
-            <Image src="/images/marketing/owner-kitchen.jpg" alt="Hausbesitzerin am Küchentisch schaut entspannt auf ihr Handy" width={1024} height={1024} sizes="(min-width: 900px) 440px, 100vw" />
-            <span className={styles.photoCaption}><Phone size={18} aria-hidden="true" /> Du musst niemanden hinterhertelefonieren</span>
-          </Reveal>
-        </div>
-      </Section>
+      <EHCaseStudy eyebrow="Ein Beispielvorgang" title="So kann eine Woche aussehen."
+        text="Vom ersten Satz bis zur Rechnung in der Hausakte. Ein illustrativer Ablauf; Zeiten, Betrieb und Beträge sind Beispieldaten."
+        items={[...CASE]}
+        media={<EHImageFrame src="/images/marketing/owner-kitchen.jpg" alt="Hausbesitzerin am Küchentisch" portrait caption="Illustrative Bildwelt: mehr Zeit für Zuhause."/>}/>
 
       <Section tone="soft" eyebrow="Drei Wege" title="Rat, Kontakt oder Auftrag. Getrennte Entscheidungen." text="Du gehst jeden Weg nur, wenn du es willst. Nichts passiert automatisch.">
         <FeatureGrid items={[
@@ -74,7 +67,7 @@ export default function Page() {
             ]} />
             <div className={styles.heroActions}><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/sicherheit" secondary>Wie wir Partner prüfen</LinkButton></div>
           </div>
-          <div className={styles.centerRow}><AppFrame label="Ansprechpartner-Ansicht in der App mit Name, Betrieb und Chat"><ContactScreen /></AppFrame></div>
+          <div className={styles.centerRow}><EHProductExcerpt label="Kontakt" title="Auch beim nächsten Mal da." rows={[{title:"Dein Ansprechpartner",text:"Der zuständige Betrieb bleibt am Haus gespeichert."},{title:"Der Zusammenhang",text:"Frühere Arbeiten, Nachrichten und Unterlagen sind auffindbar."}]}/></div>
         </div>
       </Section>
 

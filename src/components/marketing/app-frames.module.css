@@ -35,9 +35,10 @@
 .icon { width: 34px; height: 34px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; flex: none; background: var(--eh-teal-050); color: var(--eh-teal-700); }
 .iconWarm { composes: icon; background: var(--eh-terra-soft); color: var(--eh-terra); }
 .iconSand { composes: icon; background: var(--eh-sand-100); color: #7a5a2a; }
-.pill { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; padding: 3px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 700; letter-spacing: .02em; }
+.pill { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; padding: 3px 8px; border-radius: 999px; font-size: var(--eh-font-label); font-weight: 700; letter-spacing: .02em; }
 .pillTeal { composes: pill; background: var(--eh-teal-100); color: var(--eh-teal-900); }
-.pillTerra { composes: pill; background: var(--eh-terra-soft); color: var(--eh-terra); }
+.pillTerra { composes: pill; background: var(--eh-color-sand); color: var(--eh-color-ink); }
+.pillTerra svg { color: var(--eh-color-terra); }
 .pillSand { composes: pill; background: var(--eh-sand-100); color: #7a5a2a; }
 .pillGreen { composes: pill; background: #e3f1e6; color: #1f6b3a; }
 .cta { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--eh-teal-700); color: var(--eh-on-dark); border-radius: 12px; padding: 11px; font-weight: 600; font-size: 13px; }

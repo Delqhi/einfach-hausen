@@ -1,19 +1,14 @@
+import {EHLogo, EHScope} from "@/design-system";
 import Link from 'next/link';
 import { Bell, HelpCircle, Menu } from 'lucide-react';
-import { Logo } from './logo';
 import { BottomNav, isNavActive, ownerNav, providerNav } from './bottom-nav';
 import { OwnerMobileMenu } from './owner-menu';
 import { BellRoundedIcon } from './icons';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 
-function CenterLogo({ href }: { href: string }) {
-  return (
-    <Link className="ehn-center-logo" href={href} aria-label="einfachhausen – Startseite">
-      <svg className="ehn-center-logo-house" width="86" height="58" viewBox="0 0 120 88" fill="none" aria-hidden="true"><path d="M38 34 L74 12 L96 26 V82 H52" stroke="#105258" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      <span className="ehn-center-logo-text"><span className="own-logo-line1">einfach</span><span className="own-logo-line2">hausen</span></span>
-    </Link>
-  );
+function CenterLogo({href}: {href: string}) {
+  return <EHLogo href={href}/>;
 }
 
 export async function AppShell({ role, active, children, title, subtitle }: { role:'homeowner'|'provider'; active:string; children:React.ReactNode; title?:string; subtitle?:string }) {
@@ -33,7 +28,7 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
     <OwnerMobileMenu active={active} />
   );
 
-  return <main className={pro?'app-page app-shell-v3 pro-theme':'app-page app-shell-v3 ehn-owner'}>
+  return <EHScope app><main className={pro?'app-page app-shell-v3 pro-theme':'app-page app-shell-v3 ehn-owner'}>
     <div className="workspace-shell">
       <aside className="desktop-sidebar">
         {/* Desktop shows the workspace navigation expanded by default; the
@@ -45,7 +40,7 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
             <span className="app-menu-summary-label">Menü</span>
           </summary>
           <div className="app-menu-content">
-            <div className="sidebar-brand"><Logo inverse={pro}/></div>
+            <div className="sidebar-brand"><EHLogo href={pro?"/pro":"/app"}/></div>
             <nav className="sidebar-nav" aria-label="Hauptnavigation">{items.map(([href,Icon,label])=><Link key={href} href={href} className={isNavActive(active,href)?'active':''}><span className="sidebar-icon"><Icon size={17}/></span><span>{label}</span></Link>)}</nav>
             <div className="sidebar-footer"><Link href={profileHref} className="sidebar-user"><span className="user-avatar">{initials}</span><span><strong>{user?`${user.first_name} ${user.last_name}`:'Profil'}</strong><small>{pro?'Partnerkonto':'Eigenheim-Konto'}</small></span></Link><span className="sidebar-help"><HelpCircle size={14}/> Hilfe & Support</span></div>
           </div>
@@ -55,7 +50,7 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
       <div className="workspace-main">
         <header className={pro?'topbar-v3':'topbar-v3 ehn-owner-top'}>
           {mobileMenu}
-          <div className="mobile-brand"><Logo inverse={pro}/></div>
+          <div className="mobile-brand"><EHLogo href={pro?"/pro":"/app"}/></div>
           {!pro&&<CenterLogo href="/app"/>}
           <div className="page-context"><strong>{title || (pro?'Partnerbereich':'Einfach Hausen')}</strong><small>{subtitle || (pro?'Aufträge organisieren':'Alles rund um dein Zuhause')}</small></div>
           <div className="top-actions">
@@ -70,7 +65,7 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
       </div>
       <BottomNav role={role} active={active}/>
     </div>
-  </main>;
+  </main></EHScope>;
 }
 
 export function SectionTitle({ children, href }: {children:React.ReactNode; href?:string}) {

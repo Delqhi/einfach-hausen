@@ -1,5 +1,6 @@
 "use client";
 
+import { EHLogo } from "@/design-system";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -143,10 +144,7 @@ export function OwnerMobileMenu({ active }: { active: string }) {
         }}
       >
         <div className="sm-head">
-          <div className="sm-logo">
-            <svg width="70" height="52" viewBox="0 0 120 88" fill="none" aria-hidden="true"><path d="M38 34 L74 12 L96 26 V82 H52" stroke="#105258" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            <div className="own-logo-text"><span className="own-logo-line1">einfach</span><span className="own-logo-line2">hausen</span></div>
-          </div>
+          <EHLogo href="/app" />
           <button className="sm-close" onClick={() => setOpen(false)} aria-label="Menü schließen"><CloseIcon /></button>
         </div>
 

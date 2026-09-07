@@ -1,0 +1,22 @@
+[
+  {
+    "path": "/",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "path": "/so-funktionierts",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "path": "/login",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "path": "/app",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "path": "/pro",
+    "error": "HTTP Error 403: Forbidden"
+  }
+]

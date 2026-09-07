@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { breadcrumbJsonLd, canonical, SITE_URL } from '@/lib/seo';
 import { LEXIKON_EINTRAEGE, LEXIKON_KATEGORIEN, alleBuchstaben, eintraegeInKategorie } from '@/lib/lexikon';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { CtaBand, Section, Steps } from '@/components/marketing/ui';
+import { Steps } from '@/components/marketing/ui';
+import { EHScope, EHSection, EHClosing, EHButton, EHEyebrow, EHHeading, EHText } from '@/design-system';
 import { LexikonExplorer } from '@/components/marketing/lexikon/lexikon-explorer';
 import { KategorieBento, toCardData } from '@/components/marketing/lexikon/lexikon-sections';
 
@@ -45,13 +46,19 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Lexikon', path: '/lexikon' }])) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collection) }} />
 
+      <EHScope>
       <LexikonExplorer entries={entries} categories={categories} letters={letters} featured={FEATURED} />
 
-      <Section tone="surface" eyebrow="Nach Bereich" title="Sieben Bereiche, in denen Eigentümer Entscheidungen treffen." text="Jeder Bereich bündelt die Begriffe, die zusammengehören — und führt zur passenden Leistung, wenn aus Wissen ein Anliegen wird.">
+      <EHSection compact>
+        <EHEyebrow>Nach Bereich</EHEyebrow>
+        <EHHeading>Sieben Bereiche, in denen Eigentümer Entscheidungen treffen.</EHHeading>
+        <EHText size="lead">Jeder Bereich bündelt die Begriffe, die zusammengehören — und führt zur passenden Leistung, wenn aus Wissen ein Anliegen wird.</EHText>
         <KategorieBento reveal={false} />
-      </Section>
+      </EHSection>
 
-      <Section tone="soft" eyebrow="So nutzt du das Lexikon" title="Vom Begriff zur Entscheidung in drei Schritten.">
+      <EHSection compact>
+        <EHEyebrow>So nutzt du das Lexikon</EHEyebrow>
+        <EHHeading>Vom Begriff zur Entscheidung in drei Schritten.</EHHeading>
         <Steps
           items={[
             { title: 'Einordnen', text: 'Definition, Relevanz und Orientierungsstufen zeigen in 30 Sekunden, ob ein Begriff für dein Haus zählt.' },
@@ -59,9 +66,10 @@ export default function Page() {
             { title: 'Anliegen beschreiben', text: 'In eigenen Worten, ohne Fachbegriff. Einordnung, Partnerbetrieb und Kostenrahmen kommen von Einfach Hausen — entscheiden tust du.' },
           ]}
         />
-      </Section>
+      </EHSection>
 
-      <CtaBand title="Begriff verstanden — und jetzt dein Fall." text="Beschreib dein Anliegen in eigenen Worten. Einordnung, geprüfte Partner aus deiner Region und Kostenrahmen kommen von uns. Kein Auftrag ohne deine Entscheidung." />
+      <EHClosing title="Begriff verstanden — und jetzt dein Fall." text="Beschreib dein Anliegen in eigenen Worten. Einordnung, geprüfte Partner aus deiner Region und Kostenrahmen kommen von uns. Kein Auftrag ohne deine Entscheidung." href="/register?role=homeowner" label="Hauskonto kostenlos anlegen" secondary={<EHButton href="/#anliegen" variant="secondary">Anliegen starten</EHButton>} />
+      </EHScope>
     </MarketingShell>
   );
 }

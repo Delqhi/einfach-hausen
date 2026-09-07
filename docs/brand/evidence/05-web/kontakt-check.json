@@ -1,0 +1,23 @@
+{
+  "errors": [],
+  "result": [
+    {
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "axe": 0
+    },
+    {
+      "width": 736,
+      "overflow": false,
+      "small": [],
+      "axe": 0
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "axe": 0
+    }
+  ]
+}

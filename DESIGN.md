@@ -159,3 +159,10 @@ CRM verwendet denselben Vertrag ohne React-Umbau: packages/eh-design/src/html.mj
 ## Fachliche Kompositionen · Edition 2
 
 Acht weitere festgelegte Seitenkompositionen in packages/eh-design/src/domain-recipes.tsx ergänzen die acht Grundrezepte. Verbindliche Auswahl, Daten-/Formularslots, vollständiger Code und lokaler Übernahmeauftrag: docs/brand/system/DOMAIN_RECIPES_HANDOFF.md. Keine neuen Farben, Styles oder Grundkomponenten; 49 Basisbausteine, insgesamt 16 Seitenkompositionen. Neue Rendering-/Verhaltensprüfung und Verteilung sind an lokale Agenten delegiert.
+
+## Verbindliche Komposition (7. September 2026)
+
+Siehe `docs/brand/system/COMPOSITION.md` und `packages/eh-design/src/composition.tsx`. Vollständige Abschnitte statt vermischter Legacy-Layouts. EHProcess trennt Text/Medien; EHCaseStudy besitzt genau einen Abschnittskopf; EHProductExcerpt ist ein gekennzeichnetes Marketingbeispiel, keine echte App. Bestehende EHSteps bleiben reine Textschritte.
+
+## Kontrastentscheidung 2026-09-07
+Badge-Text auf Sand nutzt Ink; Terra nur als ergänzender Icon-Akzent. Verbindlicher Umfang und Nachweis: docs/brand/contrast/DECISION.md. Kein offener Brand-Blocker für pillTerra/Lexikon-Badges.

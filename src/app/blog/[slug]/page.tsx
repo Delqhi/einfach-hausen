@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import { breadcrumbJsonLd, canonical, SITE_URL } from '@/lib/seo';
 import { BLOG_POSTS, CLUSTER_DATE_MODIFIED, CLUSTER_DATE_PUBLISHED } from '@/lib/seo-cluster';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { BulletList, CtaBand, Faq, InfoPanel, LinkButton, PageHero, Section, Steps, TextLink, mkt as styles } from '@/components/marketing/ui';
+import { Steps } from '@/components/marketing/ui';
+import { EHScope, EHSection, EHPageHero, EHList, EHCallout, EHFAQ, EHRelated, EHClosing, EHButton, EHEyebrow, EHHeading, EHText, EHProse } from '@/design-system';
 
 export function generateStaticParams() {
   return BLOG_POSTS.map((p) => ({ slug: p.slug }));
@@ -42,41 +43,53 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     <MarketingShell>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd([{ name: 'Start', path: '/' }, { name: 'Ratgeber', path: '/blog' }, { name: post.title, path: `/blog/${post.slug}` }])) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPosting) }} />
-      <PageHero
+      <EHScope>
+      <EHPageHero
         eyebrow="Ratgeber"
         title={post.title}
         text={post.description}
-        actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/leistungen/heizung" secondary>Heizung als Leistung im Überblick</LinkButton></>}
+        actions={<><EHButton href="/#anliegen" arrow>Anliegen starten</EHButton><EHButton href="/leistungen/heizung" variant="secondary">Heizung als Leistung im Überblick</EHButton></>}
       />
-      <Section eyebrow="Problem" title="Worum es geht.">
-        {post.problem.map((t) => (<p key={t.slice(0, 24)}>{t}</p>))}
-      </Section>
-      <Section tone="surface" eyebrow="Optionen" title="Drei Wege, ehrlich sortiert.">
+      <EHSection compact>
+        <EHEyebrow>Problem</EHEyebrow>
+        <EHHeading>Worum es geht.</EHHeading>
+        <EHProse>
+          {post.problem.map((t) => (<p key={t.slice(0, 24)}>{t}</p>))}
+        </EHProse>
+      </EHSection>
+      <EHSection compact>
+        <EHEyebrow>Optionen</EHEyebrow>
+        <EHHeading>Drei Wege, ehrlich sortiert.</EHHeading>
         <Steps items={post.optionen.map((o) => ({ title: o.title, text: o.text }))} />
-      </Section>
-      <Section eyebrow="Kostenrahmen" title="Womit du rechnen solltest.">
-        <BulletList items={post.kosten} />
-        <InfoPanel label="Einordnung">Kostenrahmen sind Orientierung aus Anfrageverläufen, kein Angebot. Verbindlich ist der Rahmen des Partnerbetriebs, bevor du entscheidest.</InfoPanel>
-      </Section>
-      <Section tone="soft" eyebrow="Prüfpunkte" title="Aus unserer Einordnung: das hilft sofort.">
-        <BulletList items={post.prüfpunkte} />
-      </Section>
-      <Section eyebrow="Entscheidung" title="Der nächste sinnvolle Schritt.">
-        <BulletList items={post.entscheidung} />
-      </Section>
-      <Section eyebrow="Häufige Fragen" title="Zum Artikel." center>
-        <div className={styles.centerRow}>
-          <Faq items={post.faqs.map((f) => ({ q: f.q, a: f.a }))} />
-        </div>
-      </Section>
-      <Section tone="surface" eyebrow="Weiterlesen" title="Passende Seiten im Cluster.">
-        <ul>
-          {post.related.map((r) => (
-            <li key={r.href}><TextLink href={r.href}>{r.label}</TextLink></li>
-          ))}
-        </ul>
-      </Section>
-      <CtaBand title="Beschreib deinen Fall in eigenen Worten." text="Du erhältst Partner, Kostenrahmen und einen festen Ansprechpartner. Erst dann entscheidest du." />
+      </EHSection>
+      <EHSection compact>
+        <EHEyebrow>Kostenrahmen</EHEyebrow>
+        <EHHeading>Womit du rechnen solltest.</EHHeading>
+        <EHList label="Kostenrahmen" items={post.kosten.map((k, i) => ({ id: 'kosten-' + i, title: k }))} />
+        <EHCallout title="Einordnung">Kostenrahmen sind Orientierung aus Anfrageverläufen, kein Angebot. Verbindlich ist der Rahmen des Partnerbetriebs, bevor du entscheidest.</EHCallout>
+      </EHSection>
+      <EHSection compact>
+        <EHEyebrow>Prüfpunkte</EHEyebrow>
+        <EHHeading>Aus unserer Einordnung: das hilft sofort.</EHHeading>
+        <EHList label="Prüfpunkte" items={post.prüfpunkte.map((p, i) => ({ id: 'pruef-' + i, title: p }))} />
+      </EHSection>
+      <EHSection compact>
+        <EHEyebrow>Entscheidung</EHEyebrow>
+        <EHHeading>Der nächste sinnvolle Schritt.</EHHeading>
+        <EHList label="Entscheidung" items={post.entscheidung.map((e, i) => ({ id: 'entscheidung-' + i, title: e }))} />
+      </EHSection>
+      <EHSection compact>
+        <EHEyebrow>Häufige Fragen</EHEyebrow>
+        <EHHeading>Zum Artikel.</EHHeading>
+        <EHFAQ items={post.faqs.map((f) => ({ q: f.q, a: f.a }))} />
+      </EHSection>
+      <EHSection compact>
+        <EHEyebrow>Weiterlesen</EHEyebrow>
+        <EHHeading>Passende Seiten im Cluster.</EHHeading>
+        <EHRelated items={post.related.map((r) => ({ title: r.label, href: r.href }))} />
+      </EHSection>
+      <EHClosing title="Beschreib deinen Fall in eigenen Worten." text="Du erhältst Partner, Kostenrahmen und einen festen Ansprechpartner. Erst dann entscheidest du." href="/register?role=homeowner" label="Hauskonto kostenlos anlegen" secondary={<EHButton href="/#anliegen" variant="secondary">Anliegen starten</EHButton>} />
+      </EHScope>
     </MarketingShell>
   );
 }

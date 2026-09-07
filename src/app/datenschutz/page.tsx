@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
-import { PageHero, Section, LinkButton, mkt as styles } from '@/components/marketing/ui';
+import { EHScope, EHSection, EHPageHero, EHPanel, EHButton, EHActions, EHEyebrow, EHHeading, EHText } from '@/design-system';
 
 export const metadata: Metadata = {
   title: 'Datenschutzerklärung',
@@ -39,30 +39,33 @@ const SECTIONS = [
 export default function Page() {
   return (
     <MarketingShell>
-      <PageHero
+      <EHScope>
+      <EHPageHero
         eyebrow="Datenschutz"
         title="Deine Hausdaten gehören dir. Punkt."
         text="Wir behandeln Angaben zu deinem Zuhause, Rechnungen und Dokumenten mit höchster Vertraulichkeit. Keine Weitergabe ohne deine bewusste Freigabe."
       />
 
-      <Section eyebrow="Transparenz" title="Datenschutzhinweise nach DSGVO.">
-        <div className={styles.stackLg}>
-          {SECTIONS.map((sec) => (
-            <article key={sec.title} className={styles.card}>
-              <h3 className={styles.cardTitle}>{sec.title}</h3>
-              <p className={styles.cardText}>{sec.content}</p>
-            </article>
-          ))}
-        </div>
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Transparenz</EHEyebrow>
+        <EHHeading>Datenschutzhinweise nach DSGVO.</EHHeading>
+        {SECTIONS.map((sec) => (
+          <EHPanel key={sec.title} title={sec.title}>
+            <EHText>{sec.content}</EHText>
+          </EHPanel>
+        ))}
+      </EHSection>
 
-      <Section tone="soft" eyebrow="Rechtliche Navigation" title="Weitere Angaben">
-        <div className={styles.linkRow}>
-          <LinkButton href="/impressum">Impressum</LinkButton>
-          <LinkButton href="/sicherheit" secondary>Sicherheitsstandards</LinkButton>
-          <LinkButton href="/agb" secondary>AGB</LinkButton>
-        </div>
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Rechtliche Navigation</EHEyebrow>
+        <EHHeading>Weitere Angaben</EHHeading>
+        <EHActions>
+          <EHButton href="/impressum">Impressum</EHButton>
+          <EHButton href="/sicherheit" variant="secondary">Sicherheitsstandards</EHButton>
+          <EHButton href="/agb" variant="secondary">AGB</EHButton>
+        </EHActions>
+      </EHSection>
+    </EHScope>
     </MarketingShell>
   );
 }

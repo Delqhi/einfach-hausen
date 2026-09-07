@@ -4,8 +4,7 @@ import Image from 'next/image';
 import { Bell, FileText, Home, MessageCircle, UserRound, Wallet } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { AppFrame, HomeScreen, MiniContact, MiniHausakte, MiniReminder } from '@/components/marketing/app-frames';
-import { Reveal } from '@/components/marketing/motion';
-import { BulletList, CtaBand, Facts, FeatureGrid, InfoPanel, LinkButton, PageHero, Section, Split, Statement, TextLink, mkt as styles } from '@/components/marketing/ui';
+import { EHScope, EHSection, EHPageHero, EHSplitStory, EHFeatureRows, EHServiceIndex, EHPanel, EHList, EHFacts, EHClosing, EHButton, EHEyebrow, EHHeading, EHText, EHProse, EHCallout, EHTextLink } from '@/design-system';
 import { FACTS } from '@/components/marketing/content';
 
 export const metadata: Metadata = { title: 'Für Eigenheimbesitzer', description: 'Weniger im Kopf, mehr im Griff: ein Ort für Anliegen, Ansprechpartner, Erinnerungen und die Geschichte deines Hauses.' , alternates: { canonical: canonical('/eigenheimbesitzer') } };
@@ -19,86 +18,90 @@ const MIRROR = [
 export default function Page() {
   return (
     <MarketingShell>
-      <PageHero
+      <EHScope>
+      <EHPageHero
         eyebrow="Für Eigenheimbesitzer"
         title="Dein Haus hat viele Themen. Du brauchst trotzdem nur eine Eingangstür."
         text="Ein Haus zu besitzen heißt, ständig Dinge im Kopf zu haben: Wartungen, Betriebe, Termine, Rechnungen. Einfach Hausen nimmt dir diese Last ab und bewahrt das Wissen, das sonst verloren geht."
-        actions={<><LinkButton href="/#anliegen">Anliegen starten</LinkButton><LinkButton href="/register?role=homeowner" secondary>Hauskonto kostenlos anlegen</LinkButton></>}
-        aside={<AppFrame label="Startbildschirm der App mit fälligen Aufgaben, laufendem Auftrag und Hausakte"><HomeScreen /></AppFrame>}
+        actions={<><EHButton href="/#anliegen" arrow>Anliegen starten</EHButton><EHButton href="/register?role=homeowner" variant="secondary">Hauskonto kostenlos anlegen</EHButton></>}
+        media={<AppFrame label="Startbildschirm der App mit fälligen Aufgaben, laufendem Auftrag und Hausakte"><HomeScreen /></AppFrame>}
       />
 
-      <Section eyebrow="Kennst du das?" title="Nicht die Reparatur ist das Problem. Das Drumherum ist es." text="Die meisten Dinge am Haus sind lösbar. Anstrengend ist, dass alles an dir hängt: erinnern, suchen, anrufen, dranbleiben, aufheben.">
-        <div className={styles.cardGrid} data-cols="3">
-          {MIRROR.map((m, i) => (
-            <Reveal key={m.tag} delay={i * 0.07} className={styles.mirrorCard}>
-              <span className={styles.mirrorTag}>{m.tag}</span>
-              <p className={styles.mirrorQuote}>{m.quote}</p>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Kennst du das?</EHEyebrow>
+        <EHHeading>Nicht die Reparatur ist das Problem. Das Drumherum ist es.</EHHeading>
+        <EHText size="lead">Die meisten Dinge am Haus sind lösbar. Anstrengend ist, dass alles an dir hängt: erinnern, suchen, anrufen, dranbleiben, aufheben.</EHText>
+        {MIRROR.map((m) => (
+          <EHCallout key={m.tag} title={m.tag}>
+            <EHText>{m.quote}</EHText>
+          </EHCallout>
+        ))}
+      </EHSection>
 
-      <Statement kicker="Der Kern">Dein Haus bekommt ein Gedächtnis. <mark>Du behältst die Kontrolle.</mark></Statement>
+      <EHSection compact>
+          <EHProse>
+            <p><strong>Der Kern.</strong> Dein Haus bekommt ein Gedächtnis. <mark>Du behältst die Kontrolle.</mark></p>
+          </EHProse>
+        </EHSection>
 
-      <Section tone="surface" eyebrow="Was sich ändert" title="Vier Dinge, die du nicht mehr selbst machen musst.">
-        <div className={styles.benefitList}>
-          <Reveal className={styles.benefit}>
-            <div className={styles.benefitCopy}><h3>Wissen, wen man anruft</h3><p>Du musst weder Gewerk noch Fachbegriff kennen. Beschreib, was du siehst. Wir ordnen ein und finden den passenden geprüften Betrieb aus deiner Region.</p><TextLink href="/so-funktionierts">So läuft ein Vorgang ab</TextLink></div>
-            <div className={styles.benefitVisual}><MiniContact /></div>
-          </Reveal>
-          <Reveal className={styles.benefit} data-flip="true">
-            <div className={styles.benefitCopy}><h3>Rechtzeitig dran denken</h3><p>Heizungswartung, Dachrinnen, Rauchmelder, Garantiefristen. Wir erinnern dich, bevor es teuer wird, und du kannst mit einem Tipp organisieren lassen.</p></div>
-            <div className={styles.benefitVisual}><MiniReminder /></div>
-          </Reveal>
-          <Reveal className={styles.benefit}>
-            <div className={styles.benefitCopy}><h3>Nichts mehr suchen</h3><p>Rechnungen, Garantien, Protokolle, Fotos: alles liegt am richtigen Vorgang und am richtigen Bauteil. Nach einem Auftrag automatisch, ohne dass du abheftest.</p><TextLink href="/hausakte">Zur digitalen Hausakte</TextLink></div>
-            <div className={styles.benefitVisual}><MiniHausakte /></div>
-          </Reveal>
-        </div>
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Was sich ändert</EHEyebrow>
+        <EHHeading>Vier Dinge, die du nicht mehr selbst machen musst.</EHHeading>
+        <EHSplitStory title="Wissen, wen man anruft." text="Du musst weder Gewerk noch Fachbegriff kennen. Beschreib, was du siehst. Wir ordnen ein und finden den passenden geprüften Betrieb aus deiner Region." media={<MiniContact />}>
+          <EHTextLink href="/so-funktionierts">So läuft ein Vorgang ab</EHTextLink>
+        </EHSplitStory>
+        <EHSplitStory title="Rechtzeitig dran denken." text="Heizungswartung, Dachrinnen, Rauchmelder, Garantiefristen. Wir erinnern dich, bevor es teuer wird, und du kannst mit einem Tipp organisieren lassen." media={<MiniReminder />} reverse />
+        <EHSplitStory title="Nichts mehr suchen." text="Rechnungen, Garantien, Protokolle, Fotos: alles liegt am richtigen Vorgang und am richtigen Bauteil. Nach einem Auftrag automatisch, ohne dass du abheftest." media={<MiniHausakte />}>
+          <EHTextLink href="/hausakte">Zur digitalen Hausakte</EHTextLink>
+        </EHSplitStory>
+      </EHSection>
 
-      <Section tone="soft" eyebrow="Ein Thema, drei Entscheidungen" title="Erst verstehen. Dann bewusst entscheiden." text="Einfach Hausen macht aus einer Frage nicht sofort einen Auftrag.">
-        <Split>
-          <InfoPanel label="Wenn du nur Rat brauchst">
-            <h3>Frage klären oder Ansprechpartner finden.</h3>
-            <p>Du bekommst eine fachliche Einordnung und kannst auf Wunsch einen passenden Menschen sprechen. Ein Auftrag entsteht dadurch nicht.</p>
-            <BulletList items={['Kein Auftrag durch eine normale Frage', 'Persönlicher Kontakt auch ohne Buchung', 'Beauftragen bleibt eine eigene Entscheidung']} />
-          </InfoPanel>
-          <InfoPanel label="Wenn etwas erledigt werden soll">
-            <h3>Organisiert statt selbst koordiniert.</h3>
-            <p>Wir vervollständigen die Auftragsdaten, suchen passende Partner und führen Kostenrahmen, Termin und Dokumente an einem Ort zusammen.</p>
-            <BulletList items={['Passende Partner statt offene Firmenliste', 'Kostenrahmen vor dem Termin', 'Konkreter Ansprechpartner beim Betrieb']} />
-          </InfoPanel>
-        </Split>
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Ein Thema, drei Entscheidungen</EHEyebrow>
+        <EHHeading>Erst verstehen. Dann bewusst entscheiden.</EHHeading>
+        <EHText size="lead">Einfach Hausen macht aus einer Frage nicht sofort einen Auftrag.</EHText>
+        <EHPanel title="Wenn du nur Rat brauchst">
+          <EHHeading as="h3" scale="item">Frage klären oder Ansprechpartner finden.</EHHeading>
+          <EHText>Du bekommst eine fachliche Einordnung und kannst auf Wunsch einen passenden Menschen sprechen. Ein Auftrag entsteht dadurch nicht.</EHText>
+          <EHList label="Wenn du nur Rat brauchst" items={['Kein Auftrag durch eine normale Frage', 'Persönlicher Kontakt auch ohne Buchung', 'Beauftragen bleibt eine eigene Entscheidung'].map((b, k) => ({ id: 'eigen-rat-' + k, title: b }))} />
+        </EHPanel>
+        <EHPanel title="Wenn etwas erledigt werden soll">
+          <EHHeading as="h3" scale="item">Organisiert statt selbst koordiniert.</EHHeading>
+          <EHText>Wir vervollständigen die Auftragsdaten, suchen passende Partner und führen Kostenrahmen, Termin und Dokumente an einem Ort zusammen.</EHText>
+          <EHList label="Wenn etwas erledigt werden soll" items={['Passende Partner statt offene Firmenliste', 'Kostenrahmen vor dem Termin', 'Konkreter Ansprechpartner beim Betrieb'].map((b, k) => ({ id: 'eigen-tun-' + k, title: b }))} />
+        </EHPanel>
+      </EHSection>
 
-      <Section tone="surface" eyebrow="Direkte Wege" title="Je nach Situation anders starten." text="Eine fachliche Frage, ein dringender Fall und ein Verkaufswunsch sind unterschiedliche Entscheidungen. Deshalb haben sie getrennte Einstiege.">
-        <div className={styles.cardGrid} data-cols="3">
-          <article className={styles.card}><span className={styles.cardIcon}><MessageCircle size={20} /></span><h3>Erst beraten lassen</h3><p>Einen passenden Ansprechpartner sprechen, ohne dass automatisch ein Auftrag entsteht.</p><TextLink href="/beratung">Beratung verstehen</TextLink></article>
-          <article className={styles.card}><span className={styles.cardIcon}><Bell size={20} /></span><h3>Dringenden Fall einordnen</h3><p>Bei einem Notfall wird nach passender verfügbarer Hilfe im regionalen Netzwerk gesucht.</p><TextLink href="/notfall">Notfallweg ansehen</TextLink></article>
-          <article className={styles.card}><span className={styles.cardIcon}><Wallet size={20} /></span><h3>Verkauf vorbereiten</h3><p>Bewertung, Makler-Matching und Datenfreigabe bleiben nachvollziehbar unter deiner Kontrolle.</p><TextLink href="/immobilienverkauf">Verkauf organisieren</TextLink></article>
-        </div>
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Direkte Wege</EHEyebrow>
+        <EHHeading>Je nach Situation anders starten.</EHHeading>
+        <EHText size="lead">Eine fachliche Frage, ein dringender Fall und ein Verkaufswunsch sind unterschiedliche Entscheidungen. Deshalb haben sie getrennte Einstiege.</EHText>
+        <EHServiceIndex items={[
+          { title: 'Erst beraten lassen', text: 'Einen passenden Ansprechpartner sprechen, ohne dass automatisch ein Auftrag entsteht.', href: '/beratung' },
+          { title: 'Dringenden Fall einordnen', text: 'Bei einem Notfall wird nach passender verfügbarer Hilfe im regionalen Netzwerk gesucht.', href: '/notfall' },
+          { title: 'Verkauf vorbereiten', text: 'Bewertung, Makler-Matching und Datenfreigabe bleiben nachvollziehbar unter deiner Kontrolle.', href: '/immobilienverkauf' },
+        ]} />
+      </EHSection>
 
-      <Section eyebrow="Langfristig" title="Ein Haus ist die größte Investition deines Lebens. Behandle es so." text="Wer die Geschichte seines Hauses kennt, entscheidet besser, spart bei Wartung und Verkauf und übergibt irgendwann sauber.">
-        <div className={styles.split}>
-          <FeatureGrid cols={2} items={[
+      <EHSection compact>
+        <EHSplitStory eyebrow="Langfristig" title="Ein Haus ist die größte Investition deines Lebens. Behandle es so." text="Wer die Geschichte seines Hauses kennt, entscheidet besser, spart bei Wartung und Verkauf und übergibt irgendwann sauber." media={<Image src="/images/marketing/family-home.jpg" alt="Familie entspannt auf der Terrasse ihres Hauses" width={1024} height={1024} sizes="(min-width: 900px) 540px, 100vw" />}>
+          <EHFeatureRows items={[
             { icon: <Home size={20} />, title: 'Technik & Ausstattung', text: 'Heizung, PV, Wallbox, Dach, Fenster: strukturiert am Haus geführt, mit Garantien und Ansprechpartnern.' },
             { icon: <FileText size={20} />, title: 'Arbeiten & Wartung', text: 'Erledigte Arbeiten, Kosten, Hinweise und zukünftige Aufgaben in einer Historie.' },
             { icon: <UserRound size={20} />, title: 'Beziehungen', text: 'Bewährte Betriebe und konkrete Menschen bleiben Teil deines Hauswissens.' },
             { icon: <Wallet size={20} />, title: 'Wert beim Verkauf', text: 'Eine lückenlose Hausakte ist beim Verkauf ein Argument, das Käufer und Makler verstehen.' },
           ]} />
-          <Reveal delay={0.1} className={styles.photo} data-ratio="4:3">
-            <Image src="/images/marketing/family-home.jpg" alt="Familie entspannt auf der Terrasse ihres Hauses" width={1024} height={1024} sizes="(min-width: 900px) 540px, 100vw" />
-          </Reveal>
-        </div>
-      </Section>
+        </EHSplitStory>
+      </EHSection>
 
-      <Section tone="soft" eyebrow="Klare Regeln" title="Was du von uns erwarten kannst." tight>
-        <Facts items={FACTS} />
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Klare Regeln</EHEyebrow>
+        <EHHeading>Was du von uns erwarten kannst.</EHHeading>
+        <EHFacts items={FACTS.map((f) => ({ value: f.value, label: f.label }))} />
+      </EHSection>
 
-      <CtaBand title="Dein Hauskonto startet bei 0 €." text="Beschreibe dein erstes Anliegen oder leg einfach los und bau die Hausakte auf. Beides ist kostenlos." />
+      <EHClosing title="Dein Hauskonto startet bei 0 €." text="Beschreibe dein erstes Anliegen oder leg einfach los und bau die Hausakte auf. Beides ist kostenlos." href="/register?role=homeowner" label="Hauskonto kostenlos anlegen" secondary={<EHButton href="/#anliegen" variant="secondary">Anliegen starten</EHButton>} />
+      </EHScope>
     </MarketingShell>
   );
 }
