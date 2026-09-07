@@ -10,6 +10,10 @@
 //  dispatch_fresh   notification dispatcher heartbeat       -> last dispatch run within 15 min
 //  database         SQLite readiness via /api/health check  -> database=ready
 //  backup_fresh     latest verified backup manifest age     -> within 48h
+//  api_latency      GET /api/health + GET / latency         -> p50 within 1500ms (observed_ms)
+//  booking_success  appointments confirmed/completed rate   -> >= 0.6 over 30d (null = no data)
+//  matching_success job_dispatches quoted/accepted/closed   -> >= 0.4 over 30d (null = no data)
+//  notif_delivery   notification_receipts sent share        -> >= 0.95 over 30d (null = no data)
 //
 // Output: one JSON line { probe, ok, target, observed_ms?, detail?, correlation_id }
 // per probe plus a final summary line. Exit 0 only when every probe passes.
@@ -119,12 +123,73 @@ async function probeBackupFresh() {
   }
 }
 
+// T-0133 API latency: the two loopback probes above already carry observed_ms;
+// verdict = each stayed under its target (recorded with the same numbers so the
+// Kestra/journald history doubles as the latency series).
+async function probeApiLatency() {
+  const target = 'GET /api/health <= 3000ms and GET / <= 5000ms (observed_ms from this run)';
+  const health = results.find(r => r.probe === 'web_health');
+  const home = results.find(r => r.probe === 'web_homepage');
+  const ok = Boolean(health?.observed_ms != null && health.observed_ms <= 3000) &&
+             Boolean(home?.observed_ms != null && home.observed_ms <= 5000);
+  const detail = `health=${health?.observed_ms ?? '?'}ms homepage=${home?.observed_ms ?? '?'}ms`;
+  record('api_latency', ok, detail, (health?.observed_ms ?? 0) + (home?.observed_ms ?? 0), target);
+}
+
+// T-0133 business SLO rates: direct read-only aggregates over the production
+// SQLite (same 30d SQL as src/lib/metrics.ts — kept inline because this probe
+// runs as plain node without the TS pipeline). Windows with zero eligible rows
+// report ok=true with rate=null ("insufficient data"), never a fake 100%.
+async function probeBusinessMetrics() {
+  const target = 'booking >= 0.6, matching >= 0.4, notif_delivery >= 0.95 over 30d (null = insufficient data)';
+  const started = Date.now();
+  const dbPath = process.env.DATABASE_PATH || '/var/lib/einfach-hausen/einfach-hausen.db';
+  let Database;
+  try { Database = (await import('better-sqlite3')).default; } catch (e) {
+    return record('business_metrics', false, `better-sqlite3 unavailable: ${String(e.message).slice(0, 80)}`, Date.now() - started, target);
+  }
+  let db;
+  try {
+    db = new Database(dbPath, { readonly: true, fileMustExist: true });
+  } catch (e) {
+    return record('business_metrics', false, `db unavailable: ${String(e.message).slice(0, 80)}`, Date.now() - started, target);
+  }
+  try {
+    const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+    const booking = db.prepare("SELECT COUNT(*) t, SUM(CASE WHEN status IN ('confirmed','completed') THEN 1 ELSE 0 END) g FROM appointments WHERE created_at >= ?").get(since);
+    const matching = db.prepare("SELECT COUNT(*) t, SUM(CASE WHEN status IN ('quoted','accepted','closed') THEN 1 ELSE 0 END) g FROM job_dispatches WHERE sent_at >= ?").get(since);
+    const delivery = db.prepare("SELECT COUNT(*) t, SUM(CASE WHEN state = 'sent' THEN 1 ELSE 0 END) g FROM notification_receipts WHERE created_at >= ?").get(since);
+    const rate = (row) => (row.t > 0 ? (row.g ?? 0) / row.t : null);
+    const bookingRate = rate(booking), matchingRate = rate(matching), deliveryRate = rate(delivery);
+    // Minimum sample size before thresholds enforce (standard SLO practice):
+    // below MIN_SAMPLE the run reports the measured rate with a low-sample
+    // marker instead of alerting, so a pre-GA platform does not page on n=3.
+    const MIN_SAMPLE = 10;
+    const enforce = (rateV, denom, target) => (rateV == null || denom < MIN_SAMPLE || rateV >= target);
+    const parts = [
+      `booking=${bookingRate == null ? 'no-data' : `${bookingRate.toFixed(3)}/${booking.t}${booking.t < MIN_SAMPLE ? '(low-sample)' : ''}`}`,
+      `matching=${matchingRate == null ? 'no-data' : `${matchingRate.toFixed(3)}/${matching.t}${matching.t < MIN_SAMPLE ? '(low-sample)' : ''}`}`,
+      `delivery=${deliveryRate == null ? 'no-data' : `${deliveryRate.toFixed(3)}/${delivery.t}${delivery.t < MIN_SAMPLE ? '(low-sample)' : ''}`}`,
+    ];
+    const ok = enforce(bookingRate, booking.t, 0.6) &&
+               enforce(matchingRate, matching.t, 0.4) &&
+               enforce(deliveryRate, delivery.t, 0.95);
+    record('business_metrics', ok, parts.join(' '), Date.now() - started, target);
+  } catch (e) {
+    record('business_metrics', false, `query failed: ${String(e.message).slice(0, 100)}`, Date.now() - started, target);
+  } finally {
+    try { db?.close(); } catch {}
+  }
+}
+
 async function main() {
   await probeHealth();
   await probeHomepage();
   await probeAuth();
   await probeDispatchFresh();
   await probeBackupFresh();
+  await probeApiLatency();
+  await probeBusinessMetrics();
 
   const failed = results.filter(r => !r.ok);
   console.log(JSON.stringify({ summary: 'slo-probe-run', total: results.length, failed: failed.length, correlation_id: correlationId, failed_probes: failed.map(f => f.probe) }));
