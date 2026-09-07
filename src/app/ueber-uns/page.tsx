@@ -3,7 +3,7 @@ import { canonical } from '@/lib/seo';
 import { BrainCircuit, HeartHandshake, Home } from 'lucide-react';
 import { MarketingShell } from '@/components/marketing/site-shell';
 import { HeroEditorialPhoto } from '@/components/marketing/hero-visuals';
-import { CtaBand, LinkButton, PageHero, Section, Statement, mkt as styles } from '@/components/marketing/ui';
+import { EHScope, EHSection, EHPageHero, EHTimeline, EHFeatureRows, EHProse, EHClosing, EHButton, EHEyebrow, EHHeading, EHText } from '@/design-system';
 
 export const metadata: Metadata = { 
   title: 'Über uns', 
@@ -21,49 +21,40 @@ export default function Page() {
 
   return (
     <MarketingShell>
-      <PageHero 
-        eyebrow="Über uns" 
-        title="Die ruhige Eingangstür für dein Eigenheim." 
-        text="Nicht noch ein unübersichtliches Handwerkerverzeichnis, kein kompliziertes ERP: Eine verlässliche Anlaufstelle, die Anliegen versteht, lokale Meisterbetriebe verbindet und das Wissen deines Hauses bewahrt." 
-        aside={<HeroEditorialPhoto src="/images/premium/hero-homeowner.jpg" label="Einfach Hausen" detail="Verlässliche Organisation im Hintergrund. Handwerkskunst vor Ort." />} 
-        actions={<LinkButton href="/register?role=homeowner">Hauskonto anlegen</LinkButton>} 
+      <EHScope>
+      <EHPageHero
+        eyebrow="Über uns"
+        title="Die ruhige Eingangstür für dein Eigenheim."
+        text="Nicht noch ein unübersichtliches Handwerkerverzeichnis, kein kompliziertes ERP: Eine verlässliche Anlaufstelle, die Anliegen versteht, lokale Meisterbetriebe verbindet und das Wissen deines Hauses bewahrt."
+        actions={<EHButton href="/register?role=homeowner" arrow>Hauskonto anlegen</EHButton>}
+        media={<HeroEditorialPhoto src="/images/premium/hero-homeowner.jpg" label="Einfach Hausen" detail="Verlässliche Organisation im Hintergrund. Handwerkskunst vor Ort." />}
       />
 
-      {/* Reduziertes, typografisches Editorial-Manifest statt Standard-Kachelraster */}
-      <Section eyebrow="Leitbild" title="Vier Grundsätze, an denen wir jede Zeile Code messen.">
-        <div className={styles.principleList}>
-          {principles.map(p => (
-            <div key={p.num} className={styles.principleRow}>
-              <span className={styles.principleNum}>{p.num}</span>
-              <div className={styles.principleBody}><h3>{p.title}</h3><p>{p.text}</p></div>
-            </div>
-          ))}
-        </div>
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Leitbild</EHEyebrow>
+        <EHHeading>Vier Grundsätze, an denen wir jede Zeile Code messen.</EHHeading>
+        <EHTimeline items={principles.map((p) => ({ when: p.num, title: p.title, text: p.text }))} />
+      </EHSection>
 
-      <Statement kicker="Unser Versprechen" tone="green">Ein Ansprechpartner für alles rund ums Eigenheim.</Statement>
+      <EHSection compact>
+          <EHProse>
+            <p><strong>Unser Versprechen.</strong> Ein Ansprechpartner für alles rund ums Eigenheim.</p>
+          </EHProse>
+        </EHSection>
 
-      <Section eyebrow="Transparenz" title="Echte Menschen, regionale Partner und 0 % Provision." text="Wir verdienen nicht an vermittelten Aufträgen, sondern an stabilen Service-Paketen für Haus und Betrieb.">
-        <div className={styles.cardGrid} data-cols="3">
-          <article className={styles.card}>
-            <span className={styles.cardKicker}><HeartHandshake size={20} /></span>
-            <h3 className={styles.cardTitle}>Keine Lead-Auktionen</h3>
-            <p className={styles.cardText}>Partner kaufen keine Anfragen im Sekundentakt. Anfragen gehen gezielt an den passenden Betrieb in deiner Nachbarschaft.</p>
-          </article>
-          <article className={styles.card}>
-            <span className={styles.cardKicker}><BrainCircuit size={20} /></span>
-            <h3 className={styles.cardTitle}>Assistenz statt Show</h3>
-            <p className={styles.cardText}>Der Hausmeister-Copilot hilft bei der Problembeschreibung und Terminkoordination, nimmt dir aber niemals eigenmächtig das Ruder aus der Hand.</p>
-          </article>
-          <article className={styles.card}>
-            <span className={styles.cardKicker}><Home size={20} /></span>
-            <h3 className={styles.cardTitle}>Dauerhafter Werterhalt</h3>
-            <p className={styles.cardText}>Jede Rechnung, jede Wartung und jeder Kontakt fließt in die digitale Hausakte deines Eigenheims.</p>
-          </article>
-        </div>
-      </Section>
+      <EHSection compact>
+        <EHEyebrow>Transparenz</EHEyebrow>
+        <EHHeading>Echte Menschen, regionale Partner und 0 % Provision.</EHHeading>
+        <EHText size="lead">Wir verdienen nicht an vermittelten Aufträgen, sondern an stabilen Service-Paketen für Haus und Betrieb.</EHText>
+        <EHFeatureRows items={[
+          { icon: <HeartHandshake size={20} />, title: 'Keine Lead-Auktionen', text: 'Partner kaufen keine Anfragen im Sekundentakt. Anfragen gehen gezielt an den passenden Betrieb in deiner Nachbarschaft.' },
+          { icon: <BrainCircuit size={20} />, title: 'Assistenz statt Show', text: 'Der Hausmeister-Copilot hilft bei der Problembeschreibung und Terminkoordination, nimmt dir aber niemals eigenmächtig das Ruder aus der Hand.' },
+          { icon: <Home size={20} />, title: 'Dauerhafter Werterhalt', text: 'Jede Rechnung, jede Wartung und jeder Kontakt fließt in die digitale Hausakte deines Eigenheims.' },
+        ]} />
+      </EHSection>
 
-      <CtaBand title="Lerne Einfach Hausen für dein Zuhause kennen." text="Erstelle in zwei Minuten dein kostenloses Hauskonto und behalte den Kopf frei." />
+      <EHClosing title="Lerne Einfach Hausen für dein Zuhause kennen." text="Erstelle in zwei Minuten dein kostenloses Hauskonto und behalte den Kopf frei." href="/register?role=homeowner" label="Hauskonto kostenlos anlegen" secondary={<EHButton href="/#anliegen" variant="secondary">Anliegen starten</EHButton>} />
+    </EHScope>
     </MarketingShell>
   );
 }

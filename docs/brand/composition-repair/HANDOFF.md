@@ -48,3 +48,8 @@ GitNexus impact ausgeführt: Section HIGH, 15 erfasste Abhängigkeiten; alter In
 Keine umfassende Testsuite durch Root. App-Workflow-Lücken aus APP_COVERAGE_GAPS.md bleiben offen.
 
 Frische Prüfung: TypeScript --noEmit --incremental false EXIT 0. Kanonischer Generator EXIT 0; Designguard EH_DESIGN_CONSISTENT EXIT 0. detect-changes: beide isolierten Worktrees nicht registriert, daher keine Graphfreigabe.
+
+## Integration 2026-09-07
+Die Migration des lokalen Agenten ist inzwischen main96ebf03. Ihre zwei Kompositionskonflikte wurden gezielt aufgelöst; alle übrigen Main-Aenderungen bleiben erhalten. Die Doppelüberschrift wurde jetzt in main src/app/so-funktionierts/page.tsx bestätigt: EHHeading plus EHSplitStory mit identischem Titel. EHCaseStudy ersetzt beide.
+Mac-i9 Skills installiert:1c8a080, Backup /Users/jeremyschulze/.local/share/eh-design-backups/20260907T025723Z, Codex und OpenCode, bestehende globale Regeln vorhanden.
+GitHub Actions starten derzeit wegen einer Kontosperre bei der Abrechnung nicht. Checkannotation: The job was not started because your account is locked due to a billing issue. Keine Checks abgeschwächt oder künstlich auf Erfolg gesetzt.

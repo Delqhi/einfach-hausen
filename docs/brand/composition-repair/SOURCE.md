@@ -1,6 +1,6 @@
 # Vollständige Quelldateien der Lieferung
 
-Basiscommit: dc70cd6. Pfade relativ zu diesem Repository. Dateien vollständig, keine Auslassungszeichen. Binärdateien werden im Manifest mit SHA256 referenziert. Dieses Dokument ist ein Nachschlagewerk; implementiert wird aus den versionierten Quelldateien.
+Basiscommit: 96ebf03. Pfade relativ zu diesem Repository. Dateien vollständig, keine Auslassungszeichen. Binärdateien werden im Manifest mit SHA256 referenziert. Dieses Dokument ist ein Nachschlagewerk; implementiert wird aus den versionierten Quelldateien.
 
 ## .gitattributes
 
@@ -1174,6 +1174,11 @@ Keine umfassende Testsuite durch Root. App-Workflow-Lücken aus APP_COVERAGE_GAP
 
 Frische Prüfung: TypeScript --noEmit --incremental false EXIT 0. Kanonischer Generator EXIT 0; Designguard EH_DESIGN_CONSISTENT EXIT 0. detect-changes: beide isolierten Worktrees nicht registriert, daher keine Graphfreigabe.
 
+## Integration 2026-09-07
+Die Migration des lokalen Agenten ist inzwischen main96ebf03. Ihre zwei Kompositionskonflikte wurden gezielt aufgelöst; alle übrigen Main-Aenderungen bleiben erhalten. Die Doppelüberschrift wurde jetzt in main src/app/so-funktionierts/page.tsx bestätigt: EHHeading plus EHSplitStory mit identischem Titel. EHCaseStudy ersetzt beide.
+Mac-i9 Skills installiert:1c8a080, Backup /Users/jeremyschulze/.local/share/eh-design-backups/20260907T025723Z, Codex und OpenCode, bestehende globale Regeln vorhanden.
+GitHub Actions starten derzeit wegen einer Kontosperre bei der Abrechnung nicht. Checkannotation: The job was not started because your account is locked due to a billing issue. Keine Checks abgeschwächt oder künstlich auf Erfolg gesetzt.
+
 `````
 
 ## docs/brand/system/COMPOSITION.md
@@ -2120,10 +2125,10 @@ import {
   EHSection, EHSectionHeading, EHProblemNotes, EHComparison, EHProcess,
   EHProductExcerpt, EHBenefitStories, EHSplitStory, EHImageFrame,
   EHFeatureRows, EHServiceIndex, EHFAQ, EHText, EHTextLink, EHButton,
-  EHActions, EHCallout,
+  EHActions, EHCallout, EHFacts,
 } from "@/design-system";
 import { IntakeForm } from "@/components/home/intake-form";
-import { HOME_FAQ, PRINCIPLES } from "./content";
+import { FACTS, HOME_FAQ, PRINCIPLES } from "./content";
 import { SERVICE_CATEGORIES } from "./service-catalog";
 export { HomeHero } from "./home-hero";
 export { Statement } from "./ui";
@@ -2193,6 +2198,7 @@ export function Benefits() {
 
 export function Trust() {
   return <EHSection><EHSectionHeading eyebrow="Warum du uns vertrauen kannst" title="Klare Regeln. Ein konkreter Ansprechpartner."/>
+    <EHFacts items={FACTS.map(f=>({value:f.value,label:f.label}))}/>
     <EHSplitStory title="Persönlich verbunden. Nachvollziehbar organisiert."
       media={<EHImageFrame src="/images/marketing/partner-doorstep.jpg" alt="Gespräch an einer Haustür" caption="Illustrative Bildwelt: persönliche Zusammenarbeit."/>}>
       <EHFeatureRows items={PRINCIPLES.map(p=>({title:p.title,text:p.text}))}/>

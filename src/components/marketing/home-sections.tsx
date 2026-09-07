@@ -2,10 +2,10 @@ import {
   EHSection, EHSectionHeading, EHProblemNotes, EHComparison, EHProcess,
   EHProductExcerpt, EHBenefitStories, EHSplitStory, EHImageFrame,
   EHFeatureRows, EHServiceIndex, EHFAQ, EHText, EHTextLink, EHButton,
-  EHActions, EHCallout,
+  EHActions, EHCallout, EHFacts,
 } from "@/design-system";
 import { IntakeForm } from "@/components/home/intake-form";
-import { HOME_FAQ, PRINCIPLES } from "./content";
+import { FACTS, HOME_FAQ, PRINCIPLES } from "./content";
 import { SERVICE_CATEGORIES } from "./service-catalog";
 export { HomeHero } from "./home-hero";
 export { Statement } from "./ui";
@@ -75,6 +75,7 @@ export function Benefits() {
 
 export function Trust() {
   return <EHSection><EHSectionHeading eyebrow="Warum du uns vertrauen kannst" title="Klare Regeln. Ein konkreter Ansprechpartner."/>
+    <EHFacts items={FACTS.map(f=>({value:f.value,label:f.label}))}/>
     <EHSplitStory title="Persönlich verbunden. Nachvollziehbar organisiert."
       media={<EHImageFrame src="/images/marketing/partner-doorstep.jpg" alt="Gespräch an einer Haustür" caption="Illustrative Bildwelt: persönliche Zusammenarbeit."/>}>
       <EHFeatureRows items={PRINCIPLES.map(p=>({title:p.title,text:p.text}))}/>
