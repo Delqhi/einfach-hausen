@@ -1,3 +1,294 @@
+# Vollständige Quelldateien der Lieferung
+
+Basiscommit: origin/main. Pfade relativ zu diesem Repository. Dateien vollständig, keine Auslassungszeichen. Binärdateien werden im Manifest mit SHA256 referenziert. Dieses Dokument ist ein Nachschlagewerk; implementiert wird aus den versionierten Quelldateien.
+
+## .gitattributes
+
+`````text
+
+# Generated verbatim source packet preserves inherited Markdown/code whitespace.
+docs/brand/system/SOURCE.md whitespace=-blank-at-eol
+
+docs/brand/composition-repair/SOURCE.md whitespace=-blank-at-eol
+
+docs/brand/contrast/SOURCE.md whitespace=-blank-at-eol
+
+`````
+
+## DESIGN.md
+
+`````markdown
+# Einfachhausen · Designsystem 1.0
+
+**Verbindlich seit 6. September 2026.** Jerry hat Atelier 02 ausdrücklich angenommen: „omg das ist MEGA!“ Diese Freigabe ersetzt den früheren Status „noch nicht visuell freigegeben“. Die drei alten Stilproben aus PR40 sind verworfen. Der angenommene Entwurf und seine ursprüngliche Begutachtung bleiben unter `design/brand-atelier/` und `docs/brand/ATELIER_02.md` als historische Referenz erhalten.
+
+## 1. Autorität und Geltungsbereich
+
+Dieses Dokument und `packages/eh-design/` definieren die Marke für Website, Unterseiten, Hausakte, Owner-App, Handwerker-App, CRM, Portalhub und Präsentationen. **Andere Agenten dürfen das Design nicht eigenständig verändern.** Der Auftrag, eine neue Seite zu bauen, ist keine Erlaubnis, Farben, Schrift, Logo, Radien, Effekte oder eine eigene Komponentenfamilie zu erfinden. Nur eine ausdrückliche Anweisung von Jerry zum Markendesign autorisiert eine neue Designversion. Ein fehlender Baustein wird als Bedarf dokumentiert; bis zur Entscheidung wird eine bestehende passende Komposition verwendet.
+
+Inhalt, Reihenfolge, Seitenstruktur, echte Bilder, fachliche Daten, erlaubte Komponentenvarianten und bestehende Aktionen dürfen passend zum Thema kombiniert werden. Unterschiedliche Seiten sollen unterschiedlich aufgebaut sein. Einheitlichkeit bedeutet gemeinsame Gestaltungssprache, nicht identische Seiten.
+
+Bei widersprüchlichen alten Dokumenten gilt diese angenommene Version. Historische Freigaben, Screenshots und Aufgaben bleiben nachvollziehbar, dürfen aber nicht als heutige Gestaltungsanweisung wiederverwendet werden.
+
+## 2. Das Eigene an Einfachhausen
+
+**Zuhause, mit Überblick.** Die Marke verbindet ein persönliches Zuhause mit klarer, nachvollziehbarer Ordnung. Die Gestaltung fühlt sich warm und entschieden an. Sie zeigt echte Inhalte und Beziehungen: Menschen, Unterlagen, Arbeiten, Termine und Hausgeschichte.
+
+- **Hauskante:** genau eine bewusst geschnittene 45°-Ecke an großen Bildflächen und Aktenumschlägen. Keine abgeschnittenen Eingabefelder oder Schaltflächen. Wichtige Gesichter und Bildaussagen bleiben sichtbar. Interaktive Elemente liegen nicht im abgeschnittenen Bereich.
+- **Hauslinie:** feine, funktionale Linien gliedern Register, Abläufe, Listen, Vergleiche und Chroniken. Nummern geben Orientierung. Keine zufälligen farbigen Streifen als Dekoration.
+- **Wortbild:** kräftige, eng gesetzte Inter-Überschriften mit ruhigem Fließtext. Keine zweite Displayschrift. Der handschriftliche Teil des unveränderten Original-Logos bleibt die einzige Schreibschrift.
+- **Rhythmus:** helle Arbeitsflächen und Lesestrecken, dunkle Kapitel oder Aktenumschläge. Sand setzt inhaltlich begründete Flächen ab. Keine beliebige Sammlung gleichförmiger Karten.
+- **Fotografie:** glaubwürdige Wohnsituationen und persönliche Zusammenarbeit. Keine erfundenen Kunden, Mitarbeiter, Bewertungen oder Erfolgszahlen. Illustrative Bilder werden entsprechend bezeichnet. Bilder nie pauschal so beschneiden, dass Köpfe verschwinden.
+
+Verboten sind neue Verläufe, Glow, Glassmorphism, schwebende Kugeln, dekorative Dauerschleifen, beliebige Pillen, nachgebaute Logos und autonome „Verbesserungen“ der Marke.
+
+## 3. Eine einzige Markenquelle
+
+| Quelle | Aufgabe |
+| --- | --- |
+| `packages/eh-design/src/tokens.json` | Kanonische, versionierte Werte |
+| `packages/eh-design/src/tokens.css` und `tokens.ts` | Daraus generierte CSS- und TypeScript-Ausgaben |
+| `packages/eh-design/src/styles.module.css` | Einzige neue Komponentenstilquelle |
+| `packages/eh-design/src/primitives.tsx` | Grundlagen |
+| `packages/eh-design/src/blocks.tsx` | Inhaltsblöcke |
+| `packages/eh-design/src/app.tsx` | Interaktive und funktionale App-Komponenten |
+| `packages/eh-design/src/recipes.tsx` | Vollständige, ausführbare Seitenvorlagen |
+| `src/design-system/index.ts` | Importstelle der Website |
+| `src/app/design-system/` | Browserbibliothek unter /design-system; noindex |
+| `src/components/marketing/ui.tsx` | Kompatible Adapter für vorhandene Unterseiten |
+| `src/components/marketing/tokens.css` | Alte Namen als Aliase, keine zweite Palette |
+| `design/design-lock.json` | Prüfsummen des geschützten Designkerns |
+
+Andere Repositories erhalten eine identische, versionierte Kopie nach `vendor/eh-design/` und eine Prüfsummenliste unter `design/eh-design-vendor.json`. Diese Kopie wird niemals lokal umgestaltet.
+
+### Farben
+
+| Rolle | Wert | Verwendung |
+| --- | --- | --- |
+| Papier | #faf8f4 | Grundfläche |
+| Petrol | #105258 | Primäre Aktion, Orientierung |
+| Tiefes Petrol | #0a3539 | Aktenumschlag, Kapitel, Abschluss |
+| Tinte | #10222a | Fließtext und Überschriften |
+| Sekundärtext | #4b5b60 | Lesbare Metadaten |
+| Linie | #e4e2dc | Gliederung auf hellen Flächen |
+| Sand | #ecdfc9 | Hinweise und sachliche Hervorhebungen |
+| Terra | #a84d29 | Kleine Registersignale und begründete Hinweise |
+| Weiß | #ffffff | Eingaben und funktionale Arbeitsflächen |
+
+Statusfarben `error` und `success` gehören ebenfalls zu den kanonischen Tokens. Status braucht immer Text; Farbe alleine ist keine Information. Dunkle Flächen verwenden Papier als Textfarbe und Sand als Sekundärtext.
+
+### Schrift und Lesbarkeit
+
+Inter Variable wird selbst gehostet. Originaldatei: `src/fonts/InterVariable.woff2`; identische Paketkopie: `packages/eh-design/assets/inter-variable.woff2`. Keine externen Google-Font-Anfragen.
+
+| Verwendung | Mindestwert / Skala |
+| --- | --- |
+| Website-Fließtext | 17–18 px; lesende Artikel 18 px |
+| App-Fließtext | 16 px |
+| Beschriftungen und Aktionen | 15 px; bestehende Übergangsflächen mindestens 14 px |
+| Metadaten und Bildunterschriften | 13 px |
+| Kurze, nicht entscheidende Großbuchstabenregister | 12 px |
+| Input, Select, Textarea | 16 px, auch mobil |
+| Startseiten-Display | 56–112 px, responsive |
+| Unterseiten-H1 | 44–68 px |
+| App-H1 | 32–44 px |
+| Präsentation bei 1920×1080 | Bild-/Fußtexte mindestens 24 px, Inhalt 32–36 px, Titel 56–88 px |
+
+Eine überladene Folie wird inhaltlich aufgeteilt. Text wird nicht bis zur Unlesbarkeit verkleinert oder abgeschnitten. Numerische Schritte bleiben ungebrochen. Absätze haben kurze, sinnvolle Leselängen; lange Fachtexte kommen in `EHProse`.
+
+### Form, Abstand und Bewegung
+
+Eingaben und Schaltflächen: 6 px Radius. Funktionale Panels: 8 px. Fotografien und Aktenumschläge: die kanonische Hauskante. Touch-Ziele mindestens 44×44 px, reguläre Buttons 48 px hoch. Sichtbarer Fokus mit 3-px-Kontur und Abstand, keine Entfernung ohne gleichwertigen Ersatz.
+
+Bewegung unterstützt einen Zustand oder einen Wechsel. Kurze endliche Übergänge; keine Typewriter-Platzhalter, Hintergrunddrifts oder erzwungenen Scroll-Animationen. `prefers-reduced-motion` zeigt den vollständigen Endzustand. Keine Animation darf den Inhalt für Tastatur- oder Screenreader-Nutzer verbergen.
+
+## 4. Komponentenregister
+
+| Familie | Kanonische Komponenten |
+| --- | --- |
+| Grundlagen | EHScope, EHLogo, EHContainer, EHSection, EHEyebrow, EHHeading, EHText, EHButton, EHTextLink, EHActions, EHImageFrame, EHRecordCover, EHStatus, EHDivider |
+| Einstieg und Erzählung | EHPageHero, EHPromiseRow, EHSplitStory, EHMediaStory, EHClosing |
+| Leistung und Erklärung | EHFeatureRows, EHSteps, EHTimeline, EHFacts, EHComparison, EHFAQ, EHCallout, EHServiceIndex, EHPricing |
+| Lesen und Navigation | EHProse, EHArticleHeader, EHArticleLayout, EHContents, EHRelated |
+| Arbeitsflächen | EHAppHeader, EHPanel, EHList, EHDataTable, EHDocumentList |
+| Eingaben | EHField, EHInput, EHTextarea, EHSelect, EHCheckbox, EHComposer |
+| Interaktion und Zustände | EHTabs, EHDialog, EHEmptyState, EHLoadingState, EHErrorState |
+
+Die vollständigen TypeScript-Props sind die API-Referenz; sie stehen mit dem vollständigen Code in der Quellkapsel. Keine zusätzlichen `style`- oder `className`-Schlupflöcher an den neuen öffentlichen Komponenten. Bestehende Adapter behalten ihre bisherigen Schnittstellen, damit Unterseiten nicht brechen.
+
+`EHField` verknüpft Label und Eingabe über dieselbe ID. Hinweise und Fehler werden mit `aria-describedby` verbunden; Fehlerzustand über `aria-invalid`. `EHTabs` unterstützt Links/Rechts, Home/End und deaktivierte Einträge. `EHDialog` nutzt den nativen modalen Dialog, Fokusbindung und Escape. Datenlisten behalten eindeutige IDs. Tabellen haben Caption und Spaltenköpfe; auf kleinen Bildschirmen ist ausschließlich der Tabellenbereich horizontal scrollbar.
+
+## 5. Seiten individuell zusammensetzen
+
+| Inhalt | Vollständige Vorlage | Schwerpunkt |
+| --- | --- | --- |
+| Startseite | EHHomePage | Starkes Wortbild, Fotografie, Versprechen, Hausakte, Ablauf |
+| Leistungsdetail | EHServicePage | Bedarf, Leistungsumfang, Entscheidung, Fragen |
+| Ratgeber / Fachartikel | EHArticlePage | Inhaltsverzeichnis, Lesespalte, Zwischenüberschriften, verwandte Themen |
+| Leistungsübersicht | EHServiceIndexPage | Themenregister und konkrete nächste Wege |
+| Kontakt | EHContactPage | Persönlicher Kontext, vollständiges Formular, tatsächliche Kontaktdaten |
+| Preise / Umfang | EHPricingPage | Klarer Leistungsumfang, gültige Preise, Bedingungen |
+| Owner-App | EHOwnerPage | Hausakte, Unterlagen, Menschen, Chronik, Anliegen |
+| Handwerker-App | EHProviderPage | Anfragen, Bearbeitungsstatus, Termine |
+
+Die Vorlagen nehmen Inhalte und echte Handler als Props entgegen. Datenzugriff, Authentifizierung, Routing, Speicherung und Beauftragung werden aus dem bestehenden Produkt angebunden. Die Browserbibliothek enthält gekennzeichnete Vorschauhandlungen und Beispieldaten; sie sind keine produktiven Endpunkte. Keine Vorschau-Antwort oder Beispieladresse wird in eine echte App übernommen.
+
+Eine neue Seite beginnt mit der passenden vollständigen Vorlage. Fachlich begründete Umstellungen mit vorhandenen Blöcken sind erlaubt. Eine neue Seitenfarbe, Schrift oder lokale Komponentenfamilie ist es nicht.
+
+## 6. Präsentationen
+
+Kanonischer Verbraucher: `einfachhausen-de/einfachhausen-presentation-generator`.
+
+- Die 13 Schema-Typen bleiben kompatibel: title, section, bullets, cards, comparison, steps, stats, quote, timeline, chart, image, split, closing.
+- Die 25 vorhandenen Remotion-Geschichten behalten ihre Inhalte, Aufrufwege und fachlichen Einschränkungen.
+- Beide Renderer lesen dieselben vendorten Tokens; Logo und Inter kommen aus den unveränderten Paketassets.
+- Karten werden als lesbare Registereinträge gestaltet. Aktenpanels verwenden die Hauskante.
+- Der historische API-Name `Phone` bleibt erhalten; sein Inhalt wird als lesbare Hausakte dargestellt.
+- Keine zweite Palette, kein nachgebautes Wortzeichen, keine zusätzliche Schrift.
+- Diagramme bilden tatsächlich übergebene Zahlen ab. Beispielzahlen sind keine Belege.
+- Remotion bleibt im Generator. Die früher entfernten Website-Präsentationsbereiche werden durch diese Arbeit nicht wieder eingeführt.
+
+## 7. Schutz vor unbeabsichtigter Änderung
+
+`node scripts/eh-design-generate.mjs --check` verhindert Abweichungen generierter Tokens.
+`node scripts/eh-design-check.mjs` prüft die versiegelten Kerndateien und neue Verstöße.
+`node --test scripts/eh-design-check.test.mjs` beweist Positiv- und Negativfälle.
+`node scripts/eh-design-browser.mjs` prüft die echte Bibliothek auf responsives Verhalten, WCAG-Meldungen, Lesbarkeit und Bedienung.
+
+Vorhandene Altlasten stehen präzise pro Datei und Fundtyp in `design/design-debt.json`. Sie dürfen abnehmen, aber nicht durch eine neue Baseline versteckt werden. Neue CSS-Dateien und UI-Dateien ohne kanonischen Import scheitern im PR-Check. Ein Umbruch oder Verschieben von Zeilen schafft kein neues Kontingent für Verstöße.
+
+Der GitHub-Check verwendet gewöhnliche, unprivilegierte PR-Jobs mit Leserechten. Er verwendet weder fremden Code mit Produktionsgeheimnissen noch einen Produktionsrunner. Der öffentliche Haupt-Repository kann GitHub-Actions-Prüfungen ohne bezahlten Bot verwenden. Bei privaten Organisations-Repositories hängt verpflichtender Branch-Schutz vom vorhandenen GitHub-Plan ab.
+
+**Technische Grenze:** Prüfungen können definierte Abweichungen blockieren und Review erzwingen; sie beurteilen nicht automatisch jede gestalterische Qualität. Agenten mit denselben Administratorrechten wie der Eigentümer sind keine separat absperrbare Identität. Kein Dokument oder kostenloser CI-Check rechtfertigt das Versprechen, ein Administrator könne das System niemals umgehen. Ein Agent darf deshalb weder Schutzregeln lockern noch den Designkern neu versiegeln, um seinen eigenen fehlgeschlagenen Check grün zu machen.
+
+## 8. Übergabe und Änderung
+
+Pflichtreihenfolge: `AGENTS.md` → `DESIGN.md` → `NEXT_AGENT.md` → konkrete Aufgabe → `sin-eh-design` → passende vollständige Recipe-Datei → tatsächlicher betroffener Code.
+
+Vor Änderungen an geteilten Funktionen: GitNexus-Auswirkung und echte Aufrufer prüfen. UNKNOWN bedeutet nicht unbenutzt. PageHero, LinkButton, MarketingShell und der Präsentationsrenderer haben große Auswirkung; Schnittstellen bleiben stabil.
+
+Jede Übergabe enthält Repository, Branch, Basis-Commit, absolute Workspace-Pfade, vollständigen neuen/geänderten Quelltext, unveränderte Assets mit Hash, exakte Befehle, Prüfergebnisse, tatsächliche Restarbeit und nächste Aufgabe. Keine Ellipsen, „den Rest analog“, TODO-Komponenten oder erfundenen Freigaben.
+
+Die aktuellen vollständigen Quellkapseln und Prüfsummen liegen unter `docs/brand/system/`. Die alte Atelier-Quellkapsel bleibt unverändert historisch erhalten. Neue Freigaben werden mit ihrer tatsächlichen Aussage in Aufgaben, Handoff und den verfügbaren Memory-Systemen fortgeschrieben.
+
+## Native HTML / Worker
+
+CRM verwendet denselben Vertrag ohne React-Umbau: packages/eh-design/src/html.mjs, html.css und html-style.mjs. Der Generator erzeugt diese aus den kanonischen CSS-Modulen und Original-Assets. html-style.mjs enthält Schrift und Logo eingebettet. Vollständige datenabhängige CRM-Komposition: docs/brand/system/CRM_RECIPE.mjs. Ausschließlich dokumentierte HTML-Slots dürfen bereits sicher gerendertes HTML enthalten; Daten werden escaped, URLs validiert. Keine zweite Palette oder lokale Komponenten-Kopie.
+
+
+## Fachliche Kompositionen · Edition 2
+
+Acht weitere festgelegte Seitenkompositionen in packages/eh-design/src/domain-recipes.tsx ergänzen die acht Grundrezepte. Verbindliche Auswahl, Daten-/Formularslots, vollständiger Code und lokaler Übernahmeauftrag: docs/brand/system/DOMAIN_RECIPES_HANDOFF.md. Keine neuen Farben, Styles oder Grundkomponenten; 49 Basisbausteine, insgesamt 16 Seitenkompositionen. Neue Rendering-/Verhaltensprüfung und Verteilung sind an lokale Agenten delegiert.
+
+## Verbindliche Komposition (7. September 2026)
+
+Siehe `docs/brand/system/COMPOSITION.md` und `packages/eh-design/src/composition.tsx`. Vollständige Abschnitte statt vermischter Legacy-Layouts. EHProcess trennt Text/Medien; EHCaseStudy besitzt genau einen Abschnittskopf; EHProductExcerpt ist ein gekennzeichnetes Marketingbeispiel, keine echte App. Bestehende EHSteps bleiben reine Textschritte.
+
+## Kontrastentscheidung 2026-09-07
+Badge-Text auf Sand nutzt Ink; Terra nur als ergänzender Icon-Akzent. Verbindlicher Umfang und Nachweis: docs/brand/contrast/DECISION.md. Kein offener Brand-Blocker für pillTerra/Lexikon-Badges.
+
+`````
+
+## docs/brand/contrast/DECISION.md
+
+`````markdown
+# Verbindliche Kontrastentscheidung · 2026-09-07
+
+Jerry hat die direkte Korrektur von pillTerra und Lexikon-Badges beauftragt. Keine weitere Markenentscheidung erforderlich.
+
+Terra #a84d29 auf Sand #ecdfc9: 4.247678:1, für kleinen normalen Text unzureichend. Text jetzt Ink #10222a auf Sand #ecdfc9: 12.431167:1. Vorhandenes Terra bleibt nur beim SVG-Icon als ergänzendem Akzent (4.247678:1); Bedeutung weiterhin ausgeschrieben. Tokens unverändert.
+
+Geänderte Selektoren: src/components/marketing/app-frames.module.css .pill/.pillTerra und src/components/marketing/lexikon/lexikon.module.css .badge/.badge[data-tone=pflicht]/.explorer .badge. Textgröße var(--eh-font-label) (15px bei 16px Root). Lexikon min-height statt starrer Höhe; 11px-Override entfernt. Empfohlen/Wissen behalten ihre vorhandenen kontrastreichen Tokenpaare.
+
+Prüfung: rechnerische sRGB-Luminanz der kanonischen Farben, diff --check. Keine Live-CSS-Messung oder visuelle Abnahme behauptet. Lokaler Agent übernimmt diesen eigenständigen main-basierten Commit, prüft die gemeldeten Axe-Fälle samt 390/736/1440px, Zoom und Wrapping und kann danach den Kontrast-Unterpunkt schließen. Keine weiteren Workflows eigenständig designen. Nicht die gesamte Designmigration schließen. Andere offene App-Vorgaben: PR49 und PR51.
+
+`````
+
+## src/components/marketing/app-frames.module.css
+
+`````css
+/* Phone frame + realistic app screen mockups for the public website. */
+.frame {
+  --w: 320px;
+  width: var(--w); max-width: 100%;
+  aspect-ratio: 9 / 18.5;
+  border-radius: 40px; padding: 10px;
+  background: linear-gradient(160deg, #1f3339, #0b1a1e);
+  box-shadow: var(--eh-shadow-lg), inset 0 0 0 1px rgba(255,255,255,.08);
+  position: relative; flex: none;
+}
+.frameSm { --w: 240px; border-radius: 32px; padding: 8px; }
+.frameSm .screen { border-radius: 26px; font-size: 12px; }
+.frameSm .notch { width: 70px; height: 18px; }
+.frameSm .body { mask-image: linear-gradient(#000 78%, transparent 98%); -webkit-mask-image: linear-gradient(#000 78%, transparent 98%); }
+.screen {
+  width: 100%; height: 100%; border-radius: 32px; overflow: hidden;
+  background: #f6f7f7; color: var(--eh-ink);
+  display: flex; flex-direction: column; font-size: 13.5px; line-height: 1.35;
+  font-family: var(--eh-font);
+}
+.notch {
+  position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+  width: 96px; height: 24px; border-radius: 999px; background: #0b1a1e; z-index: 2;
+}
+.status { display: flex; justify-content: space-between; padding: 14px 22px 0; font-size: 11px; font-weight: 600; color: var(--eh-ink-soft); }
+.bar { display: flex; flex-direction: column; gap: 2px; padding: 22px 18px 12px; }
+.bar small { font-size: 11px; color: var(--eh-ink-mute); font-weight: 500; }
+.bar strong { font-size: 19px; letter-spacing: -0.02em; font-weight: 700; color: var(--eh-teal-900); }
+.body { display: flex; flex-direction: column; gap: 10px; padding: 0 14px 14px; flex: 1 1 auto; overflow: hidden; }
+.tile { background: var(--eh-surface); border-radius: 16px; padding: 12px 13px; display: flex; flex-direction: column; gap: 6px; border: 1px solid var(--eh-line); }
+.tileRow { display: flex; align-items: center; gap: 10px; }
+.tileRow > div { display: flex; flex-direction: column; gap: 1px; flex: 1 1 auto; min-width: 0; }
+.tileRow strong { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tileRow > div span { font-size: 11.5px; color: var(--eh-ink-mute); }
+.icon { width: 34px; height: 34px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; flex: none; background: var(--eh-teal-050); color: var(--eh-teal-700); }
+.iconWarm { composes: icon; background: var(--eh-terra-soft); color: var(--eh-terra); }
+.iconSand { composes: icon; background: var(--eh-sand-100); color: #7a5a2a; }
+.pill { display: inline-flex; align-items: center; gap: 5px; align-self: flex-start; padding: 3px 8px; border-radius: 999px; font-size: var(--eh-font-label); font-weight: 700; letter-spacing: .02em; }
+.pillTeal { composes: pill; background: var(--eh-teal-100); color: var(--eh-teal-900); }
+.pillTerra { composes: pill; background: var(--eh-color-sand); color: var(--eh-color-ink); }
+.pillTerra svg { color: var(--eh-color-terra); }
+.pillSand { composes: pill; background: var(--eh-sand-100); color: #7a5a2a; }
+.pillGreen { composes: pill; background: #e3f1e6; color: #1f6b3a; }
+.cta { margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--eh-teal-700); color: var(--eh-on-dark); border-radius: 12px; padding: 11px; font-weight: 600; font-size: 13px; }
+.section { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--eh-ink-mute); padding: 4px 2px 0; }
+
+/* timeline inside screen */
+.tl { display: flex; flex-direction: column; gap: 0; }
+.tlRow { display: flex; gap: 10px; }
+.tlRail { display: flex; flex-direction: column; align-items: center; width: 14px; flex: none; }
+.tlDot { width: 8px; height: 8px; border-radius: 50%; background: var(--eh-teal-700); margin-top: 6px; flex: none; }
+.tlDotSand { background: var(--eh-sand-400); }
+.tlLine { width: 2px; flex: 1 1 auto; background: var(--eh-line); margin: 3px 0; }
+.tlRow:last-child .tlLine { display: none; }
+.tlBody { display: flex; flex-direction: column; gap: 1px; padding-bottom: 12px; min-width: 0; }
+.tlBody small { font-size: 10.5px; color: var(--eh-ink-mute); }
+.tlBody strong { font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* contact card */
+.person { display: flex; align-items: center; gap: 12px; }
+.avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--eh-teal-100); color: var(--eh-teal-900); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex: none; }
+.person strong { font-size: 15px; font-weight: 700; display: block; }
+.person span { font-size: 12px; color: var(--eh-ink-soft); }
+.actions { display: flex; gap: 8px; }
+.actions span { flex: 1 1 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px; border-radius: 10px; background: var(--eh-teal-050); color: var(--eh-teal-700); font-weight: 600; font-size: 12px; }
+.bubble { align-self: flex-start; max-width: 88%; background: var(--eh-surface); border: 1px solid var(--eh-line); border-radius: 14px 14px 14px 4px; padding: 9px 12px; font-size: 12.5px; }
+.bubbleMe { composes: bubble; align-self: flex-end; background: var(--eh-teal-700); color: var(--eh-on-dark); border-color: transparent; border-radius: 14px 14px 4px 14px; }
+
+/* progress */
+.progress { display: flex; gap: 4px; }
+.progress i { flex: 1 1 0; height: 5px; border-radius: 3px; background: var(--eh-line); }
+.progress i[data-on='true'] { background: var(--eh-teal-700); }
+
+/* Mini card visuals for benefits (no frame) */
+.miniStack { display: flex; flex-direction: column; gap: 10px; width: min(100%, 340px); }
+.miniStack .tile { box-shadow: var(--eh-shadow-sm); }
+
+`````
+
+## src/components/marketing/lexikon/lexikon.module.css
+
+`````css
 /* ============================================================
    Lexikon — Wissens-Archetyp der öffentlichen Website.
    Nutzt ausschließlich .mkt-Tokens (tokens.css). Motion: transform/opacity,
@@ -488,3 +779,5 @@
   .register { gap: 7px; }
   .explorer { padding-top: 24px; }
 }
+
+`````
