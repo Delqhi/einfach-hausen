@@ -1,0 +1,60 @@
+[
+  {
+    "id": "EH-BRAND-01",
+    "exit": 0,
+    "out": "EH-BRAND-01\n",
+    "error": ""
+  },
+  {
+    "id": "EH-BRAND-02",
+    "exit": 0,
+    "out": "EH-BRAND-02\n",
+    "error": ""
+  },
+  {
+    "id": "EH-BRAND-03",
+    "exit": 0,
+    "out": "EH-BRAND-03\n",
+    "error": ""
+  },
+  {
+    "id": "EH-BRAND-04",
+    "exit": 0,
+    "out": "EH-BRAND-04\n",
+    "error": ""
+  },
+  {
+    "id": "EH-BRAND-05",
+    "exit": 0,
+    "out": "EH-BRAND-05\n",
+    "error": ""
+  },
+  {
+    "id": "EH-BRAND-06",
+    "exit": 0,
+    "out": "EH-BRAND-06\n",
+    "error": ""
+  },
+  {
+    "claim": "EH-BRAND-01",
+    "exit": 0,
+    "out": "claimed EH-BRAND-01 owner=worker\n",
+    "error": ""
+  },
+  {
+    "claim": "EH-BRAND-02",
+    "exit": 0,
+    "out": "claimed EH-BRAND-02 owner=worker\n",
+    "error": ""
+  },
+  {
+    "command": "render",
+    "exit": 0,
+    "out": "/home/ubuntu/dev/einfach-hausen/.sin-gpt-web/TASKPLAN.md\n"
+  },
+  {
+    "command": "validate",
+    "exit": 0,
+    "out": "task plan valid\n"
+  }
+]

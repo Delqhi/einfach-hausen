@@ -1,0 +1,43 @@
+name: Einfachhausen design
+on:
+  pull_request:
+  push:
+    branches: [main, "design/**"]
+permissions:
+  contents: read
+jobs:
+  consistency:
+    name: EH design consistency
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Select trusted guard
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/eh-trusted"
+          if [ -n "$BASE_SHA" ] && git cat-file -e "$BASE_SHA:scripts/eh-design-check.mjs" 2>/dev/null; then
+            git show "$BASE_SHA:scripts/eh-design-check.mjs" > "$RUNNER_TEMP/eh-trusted/check.mjs"
+          else
+            cp scripts/eh-design-check.mjs "$RUNNER_TEMP/eh-trusted/check.mjs"
+          fi
+      - name: Verify design contract
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          EH_DESIGN_ROOT: ${{ github.workspace }}
+        run: |
+          if [ -n "$BASE_SHA" ]; then
+            node "$RUNNER_TEMP/eh-trusted/check.mjs" --base "$BASE_SHA"
+          else
+            node "$RUNNER_TEMP/eh-trusted/check.mjs"
+          fi
+      - name: Verify generated tokens
+        run: node scripts/eh-design-generate.mjs --check
+      - name: Exercise guard failures
+        run: node --test scripts/eh-design-check.test.mjs scripts/eh-design-html.test.mjs

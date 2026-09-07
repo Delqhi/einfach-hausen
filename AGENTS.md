@@ -1,3 +1,15 @@
+<!-- EH-DESIGN-AUTHORITY-V1:BEGIN -->
+## Verbindliche Einfachhausen Gestaltung · 2026-09-06
+
+Jerry hat Atelier 02 ausdrücklich freigegeben. Für ALLES rund um Einfachhausen gilt Designsystem 1.0: Website und Unterseiten, Owner-/Handwerker-App, CRM, Portalhub, Präsentationen.
+
+**Andere Agenten dürfen das Design NICHT eigenständig verändern.** Pflicht: `sin-eh-design` laden, aktuelle `DESIGN.md` lesen, kanonische `packages/eh-design`-Komponenten bzw. versiegelte `vendor/eh-design`-Kopie verwenden. Neue Seiten werden aus vollständigen Recipes und vorhandenen Blöcken inhaltlich passend zusammengesetzt. Keine eigene Farbpalette, Schrift, Logo-Nachbildung, lokale Stilfamilie oder „kreative“ Neuinterpretation. Guard/Baseline/Workflow niemals zum Bestehen eines eigenen Checks abschwächen oder neu versiegeln.
+
+Original-Logo, selbst gehostete Inter, lesbare Typografie, Hauskante und funktionale Registerlinien sind festgelegt. Businesslogik, Navigation, Auth und Daten bleiben erhalten. Eine neue Seite ist keine Autorisierung zur Änderung des Markendesigns. Fehlende Bausteine als konkreten Bedarf an die Designautorität melden; sonst mit vorhandenen Bausteinen weiterarbeiten.
+
+Übergaben müssen sämtliche neuen/geänderten Quelldateien vollständig mit Pfaden, Asset-Hashes, tatsächlichen Befehlen und Ergebnissen enthalten. Keine Platzhalter oder „Rest analog“. Aktuelle Quellkapseln: `docs/brand/system/`. Historische PR40-Studien sind verworfen; alte „Atelier 02 noch nicht freigegeben“-Notizen sind überholt.
+<!-- EH-DESIGN-AUTHORITY-V1:END -->
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
@@ -713,3 +725,19 @@ updated: 2026-09-05T09:09:00+00:00
 actor: chatgpt-web
 evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
 -->
+
+## EH-BRAND — Operator-Auftrag vom 06.09.2026
+
+Der aktuelle Operator beauftragt die vollständige Markenstudie, Dokumentation und Delegation an Prime Agent bai/glm-5.3-flash auf sinsupabase. Die frühere Kein-Rebrand-Regel begrenzt die bestehenden Produktionsflächen; die neue isolierte Markenstudie ist ausdrücklich angefragt. Kein stiller Wechsel von Modell oder Host. Original-Logo, Produktlogik, Navigation und fremde Agentenarbeiten erhalten. Konkreter Umfang und vollständige Befunde stehen in der unten verlinkten Spezifikation.
+
+- Spezifikation: `docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md`
+- Ausführungsplan: `docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md`
+- Handoff: `docs/brand/HANDOFF.md`
+- Vollständiger Zielquelltext: `docs/brand/SOURCE_PACKET.md`
+- Tasks: EH-BRAND-01 bis EH-BRAND-06; vorhandenes T-0151 und Issue #33 berücksichtigen.
+- Ausführung: `/home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906`, Branch `design/einfachhausen-brand-system-20260906`, Node 22.23.0.
+
+
+## EH-BRAND — Korrektur: Atelier 02 (2026-09-06)
+
+Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren technische 27/27-Prüfung ist keine visuelle Freigabe. Root Codex gestaltet und implementiert die neue Richtung persönlich; keinen weiteren Prime/bai-Dispatch aus alten Abschnitten ableiten. Neuer Arbeitsstand: `design/einfachhausen-brand-atelier-20260906`, Workspace `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`. Konzept, vollständige Nutzerkorrektur und Plan: `docs/brand/ATELIER_02.md`; aktuelle Übergabe: `docs/brand/HANDOFF.md`; vollständige Quellen: `docs/brand/ATELIER_02_SOURCE.md`; bedienbare Vollansicht: `design/brand-atelier/preview.html`. EH-BRAND-03 bleibt in Arbeit, die neue Richtung wurde noch nicht vom Nutzer bewertet. Genau nächste Markenaktion: diese neue Vollansicht besprechen und tatsächliches Nutzerfeedback dokumentieren. EH-BRAND-04..06 folgen erst der Richtungsentscheidung; kein Merge/Deploy. Ältere Empfehlungen/Dispatch-Anweisungen sind für diese Markenwelle historisch. Andere laufende Arbeitswellen bleiben erhalten.

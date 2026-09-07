@@ -1,0 +1,87 @@
+{
+  "errors": [],
+  "result": [
+    {
+      "route": "/agb",
+      "width": 390,
+      "overflow": true,
+      "small": [],
+      "axe": []
+    },
+    {
+      "route": "/agb",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "axe": []
+    },
+    {
+      "route": "/datenschutz",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "axe": []
+    },
+    {
+      "route": "/datenschutz",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "axe": []
+    },
+    {
+      "route": "/impressum",
+      "width": 390,
+      "overflow": true,
+      "small": [],
+      "axe": []
+    },
+    {
+      "route": "/impressum",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "axe": []
+    },
+    {
+      "route": "/sicherheit",
+      "width": 390,
+      "overflow": false,
+      "small": [
+        "9:41●●●",
+        "9:41",
+        "●●●",
+        "Dein Vorgang · Dachrinne",
+        "Verlauf"
+      ],
+      "axe": []
+    },
+    {
+      "route": "/sicherheit",
+      "width": 1440,
+      "overflow": false,
+      "small": [
+        "9:41●●●",
+        "9:41",
+        "●●●",
+        "Dein Vorgang · Dachrinne",
+        "Verlauf"
+      ],
+      "axe": []
+    },
+    {
+      "route": "/barrierefreiheit",
+      "width": 390,
+      "overflow": false,
+      "small": [],
+      "axe": []
+    },
+    {
+      "route": "/barrierefreiheit",
+      "width": 1440,
+      "overflow": false,
+      "small": [],
+      "axe": []
+    }
+  ]
+}

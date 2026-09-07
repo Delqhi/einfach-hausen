@@ -1,0 +1,265 @@
+{
+  "base": "1239f7c469007ca5dd9895a8a0f44100c2b8b583",
+  "workspace": "/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906",
+  "capsule_sha256": "aedf9b6ff79dacdb24632543d225ddfe5116a152636723964bba3b8afb560e8d",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 30410,
+      "sha256": "7e8cd81f34e6c6ae3086d8bb4136b18d9f80ab37b1eede6bf9eb42202a6a5ee6",
+      "kind": "complete-text"
+    },
+    {
+      "path": "README.md",
+      "bytes": 36421,
+      "sha256": "956de8cdfc66a41db12a72b2bb7a60ca50b910b5a2f52a25dc156a9170e9bf85",
+      "kind": "complete-text"
+    },
+    {
+      "path": "design/brand-atelier/atelier.css",
+      "bytes": 32761,
+      "sha256": "799b7fbcaa5b945b6a3fbefd956553befc56ba7e52000b441137782e9b85567f",
+      "kind": "complete-text"
+    },
+    {
+      "path": "design/brand-atelier/atelier.js",
+      "bytes": 6875,
+      "sha256": "686b400f608ee9d842594b524e5b1cc3e77673dc90e1a40939427901648b6ee5",
+      "kind": "complete-text"
+    },
+    {
+      "path": "design/brand-atelier/build-preview.py",
+      "bytes": 1491,
+      "sha256": "dc69e61551f4f3938ee1a2ee7456ab13ea2c8c46f4564a5a73ae6b89973fe077",
+      "kind": "complete-text"
+    },
+    {
+      "path": "design/brand-atelier/export-source.py",
+      "bytes": 2391,
+      "sha256": "bc14289d766e5f0a1085aef44cbcf081463c931302fe84dee44ca8ce6ca8ed46",
+      "kind": "complete-text"
+    },
+    {
+      "path": "design/brand-atelier/index.html",
+      "bytes": 18416,
+      "sha256": "fd89e94a41a0aed1e23db8f28788075cc0710b1c79e228ac42b3a7bc2cd8cff5",
+      "kind": "complete-text"
+    },
+    {
+      "path": "design/brand-atelier/preview.html",
+      "bytes": 1050269,
+      "sha256": "a8b3bbaa9755fd6c14222713d7cf12c4d44ea21b0672625efc65331a821a9be5",
+      "kind": "complete-text"
+    },
+    {
+      "path": "design/brand-atelier/server.mjs",
+      "bytes": 2394,
+      "sha256": "461b0e6e723797834c9d42b49b73ed77f89738546ede8691ddd41f40dd333330",
+      "kind": "complete-text"
+    },
+    {
+      "path": "design/brand-atelier/verify.mjs",
+      "bytes": 7409,
+      "sha256": "eb90097d220d11508b7c464574a192bcc5ab79ce9ec30c98b3c2ad30d698b0fc",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "bytes": 29877,
+      "sha256": "d408687922eb87aeeb827509f09decc89a3a106df56b2e4acb0e067023553cc6",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/NEXT_AGENT.md",
+      "bytes": 8390,
+      "sha256": "1f85a2550f1e084373fe2d92b5f6de5ae7ee5f1a269148fe8a8001a463d02988",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/PRODUCTION_HANDOVER.md",
+      "bytes": 36356,
+      "sha256": "771efeffce823cc33e94c5f9051f6b66d0e8b8703d3706a3f85c62526a1d0268",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/ATELIER_02.md",
+      "bytes": 6665,
+      "sha256": "1c99061a414bd0954ae207cf1b561805f91fef2c877cdbc17a34f56dc305ba76",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/ATELIER_02_PR.md",
+      "bytes": 1763,
+      "sha256": "a10f21be70d49647b1eecfd513d22db73accb6389bc9afe2322cd7a421332604",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/HANDOFF.md",
+      "bytes": 4885,
+      "sha256": "f7de35a70e9ad456d46fcf57a141d7c9dfcb6ac099e99076c3bdb14a118d412c",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/ISSUE_UPDATE.md",
+      "bytes": 1007,
+      "sha256": "09e8a7f5106123d1c4103941c9641f9419b23bf8658d8c48f71bf9054c5512a4",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/VISUAL_REVIEW.md",
+      "bytes": 3720,
+      "sha256": "cbb0afcdef4464f11f8178ed55136233bf065ab9631e796b0a503a2fd7e6ea4f",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/assets.json",
+      "bytes": 600,
+      "sha256": "68078fd090fbe179446b19c87741bd48f733334eb3a01a500ac1c6785f483181",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/delivery.json",
+      "bytes": 2398,
+      "sha256": "02bbf0181d390d9669ebc6d0981ae499e5506ff826c5927cc577e12984f79c5d",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/draft-1440.png",
+      "bytes": 621961,
+      "sha256": "298d137dee79de225bf2249c919ed83e65e3bf8781f51e705dfaa61b5b4ed157",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/draft-320.png",
+      "bytes": 164364,
+      "sha256": "e5842520c9b3427cd80795e14994a6adbaf54c59f70cf52bf0d138a365f654c7",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/draft-390.png",
+      "bytes": 418623,
+      "sha256": "4c7f1fcae3b0b08bef71f9a6045baf59d2a57952d3c890a941ee37fe9b9fbd41",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/gitnexus.json",
+      "bytes": 1383,
+      "sha256": "a8ff6aa3a28eb3c5fb66e6c9aa001c888bab813bd42373c6b9e217ac71455512",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/hausakte-1440.png",
+      "bytes": 241701,
+      "sha256": "4bd1cc58dc603314997b13a0ada90dcb9048fec8383b882ac1ed665c8f58ec10",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/hausakte-320.png",
+      "bytes": 100725,
+      "sha256": "cc761b98c947212715f961e5b5502896c1da26582e4624fa464a8a68648625b9",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/hausakte-390.png",
+      "bytes": 108053,
+      "sha256": "deb4c67fa88a3d66c2d2879d68edf9e3a48ac68042a8510d39c7f36f7658f3c2",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/hausakte-736.png",
+      "bytes": 161278,
+      "sha256": "67fa618149690a4b8afe5c7e3285f5e020cf4ec48657a4b9b581c5218149dce2",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/home-1440.png",
+      "bytes": 861185,
+      "sha256": "961a9bab021e691966c40ba29f21fcc526ce07f6eb24f21dcbf01e5f6c729cb2",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/home-320.png",
+      "bytes": 431582,
+      "sha256": "1c4be0b110e20d1cbcdc1e8213826cdc62318c0b0b95ae47ff967291efa1ec6f",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/home-390.png",
+      "bytes": 483552,
+      "sha256": "48d865f08352b1ec545d6bd54b9470faf389cfe02f2ab49219ed6df57ced66bc",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/home-736.png",
+      "bytes": 477600,
+      "sha256": "0da076507d61e890ae00b3604b94f61b6b27ea8dcf07fe19f339cf4c77c5602c",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/kontakt-1440.png",
+      "bytes": 469496,
+      "sha256": "6896f67e5754ad3ca19eb79da3acf0ee2a41837f17fdabd3ffc4520fdf95d353",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/kontakt-320.png",
+      "bytes": 206765,
+      "sha256": "4a934a474fa950d82937a6083738e55db4f0b1ce03a7c7a428dd9b7b3c9a14af",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/kontakt-390.png",
+      "bytes": 231765,
+      "sha256": "a6a97a55bf94157876f2164fdc4587929602c43defc19793d6c1d449a12dce37",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/kontakt-736.png",
+      "bytes": 261910,
+      "sha256": "20b3faa2284660760acdf3bd6c6b5777fe02a3192759be3b0d37d351de35c9e9",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/opening-1440.png",
+      "bytes": 623160,
+      "sha256": "814ddbaa74985d93b0ea9f9056b9f4612739fe93767f1ffeb7785cd1a1ac8c28",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/opening-390.png",
+      "bytes": 217460,
+      "sha256": "955f14dbb373c8938ee749f8bed37391644a35cf7088b16fd99482a6a5233b35",
+      "kind": "binary"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/persistence.json",
+      "bytes": 6770,
+      "sha256": "1db10ccd3f4b5b1e2445dfd1da61ce160d4688e3ca0c037008d137b6b4c93d52",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/tasks.json",
+      "bytes": 10087,
+      "sha256": "de0cd2db47c75d39dfa775d3304f6888d72646afb7baa514b4ff13b548890d45",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/brand/evidence/atelier/verification.json",
+      "bytes": 2350,
+      "sha256": "0442da5ac7aa1ec4da592163a9b34407aa40c58553fd7730e2dc2529414529b3",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md",
+      "bytes": 11882,
+      "sha256": "a4a1547de18ad7e10617134b4c78ce175a7ae72ee689925590c5e19e43a64b13",
+      "kind": "complete-text"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md",
+      "bytes": 22651,
+      "sha256": "dcdf3edfdba968974f0f2f210013bf071b0585d7f6015cb3e86606e8bb6efd63",
+      "kind": "complete-text"
+    }
+  ]
+}

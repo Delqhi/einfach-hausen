@@ -1,0 +1,173 @@
+{
+  "errors": [],
+  "result": [
+    {
+      "slug": "haus-technik",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "haus-technik",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "elektro-smart-home",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "elektro-smart-home",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "heizung",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "heizung",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "sanitaer-wasser",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "sanitaer-wasser",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "dach-fenster-tueren",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "dach-fenster-tueren",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "innenausbau-sanierung",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "innenausbau-sanierung",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "garten-aussenbereich",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "garten-aussenbereich",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "reinigung-pflege",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "reinigung-pflege",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "saisonale-dienste",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "saisonale-dienste",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "spezialfaelle",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "spezialfaelle",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "umzug-entruempelung",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "umzug-entruempelung",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "beratung-notfall",
+      "width": 390,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    },
+    {
+      "slug": "beratung-notfall",
+      "width": 1440,
+      "overflow": false,
+      "small": 0,
+      "axe": 0
+    }
+  ]
+}

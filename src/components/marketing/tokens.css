@@ -1,27 +1,24 @@
-/*
- * Einfach Hausen – public website design tokens.
- * Global `:root` exposes the DESIGN.md contract to site, owner, provider and admin.
- * `.mkt` extends that contract with website-only palette/layout primitives.
- * Reference: DESIGN.md §3 (kanonische --eh-* Namen) + §"Public Website – erweiterte Palette".
- */
+/* Legacy aliases only. Canonical values: packages/eh-design/src/tokens.json. */
 :root {
-  /* DESIGN.md portal aliases: one palette for site, owner, provider and admin. */
-  --eh-green-900: #0a3539;
-  --eh-green-700: #105258;
-  --eh-green-600: #147078;
-  --eh-green-100: #dcebec;
-  --eh-green-50: #edf5f5;
-  --eh-bg: #faf8f4;
-  --eh-surface: #ffffff;
-  --eh-surface-subtle: #f2f5f5;
-  --eh-text: #10222a;
-  --eh-text-secondary: #4b5b60;
-  --eh-border: #e4e2dc;
-  --eh-border-strong: #cfcbc2;
-  --eh-terra: #a84d29;
-  --eh-terra-deep: #a84d29;
-  --eh-terra-soft: #f7e4da;
-  --eh-on-dark: #f3f6f5;
+  --eh-fg: var(--eh-color-ink);
+  --eh-rule: var(--eh-color-line);
+
+  --eh-green-900: var(--eh-color-deep);
+  --eh-green-700: var(--eh-color-petrol);
+  --eh-green-600: var(--eh-color-petrol);
+  --eh-green-100: var(--eh-color-sand);
+  --eh-green-50: var(--eh-color-paper);
+  --eh-bg: var(--eh-color-paper);
+  --eh-surface: var(--eh-color-white);
+  --eh-surface-subtle: var(--eh-color-paper);
+  --eh-text: var(--eh-color-ink);
+  --eh-text-secondary: var(--eh-color-secondary);
+  --eh-border: var(--eh-color-line);
+  --eh-border-strong: var(--eh-color-secondary);
+  --eh-terra: var(--eh-color-terra);
+  --eh-terra-deep: var(--eh-color-terra);
+  --eh-terra-soft: var(--eh-color-sand);
+  --eh-on-dark: var(--eh-color-paper);
   --eh-soft: var(--eh-surface-subtle);
   --eh-soft-2: var(--eh-green-50);
   --eh-muted: var(--eh-text-secondary);
@@ -44,70 +41,55 @@
 }
 
 .mkt {
-  /* Brand teal scale (logo teal = 700) */
-  --eh-teal-900: #0b3a3f;
-  --eh-teal-800: #0d474d;
-  --eh-teal-700: #105258;
-  --eh-teal-500: #1f7a80;
-  --eh-teal-300: #7fb7ba;
-  --eh-teal-100: #dcebec;
-  --eh-teal-050: #eef5f5;
 
-  /* Warm canvas + sand */
-  --eh-canvas: #faf8f4;
-  --eh-surface: #ffffff;
-  --eh-sand-100: #f4ebdd;
-  --eh-sand-200: #ecdfc9;
-  --eh-sand-400: #d9b98a;
+  --eh-teal-900: var(--eh-color-deep);
+  --eh-teal-800: var(--eh-color-deep);
+  --eh-teal-700: var(--eh-color-petrol);
+  --eh-teal-500: var(--eh-color-petrol);
+  --eh-teal-300: var(--eh-color-sand);
+  --eh-teal-100: var(--eh-color-sand);
+  --eh-teal-050: var(--eh-color-paper);
 
-  /* Single warm signal accent (sparingly) */
-  --eh-terra: #a84d29;
-  --eh-terra-deep: #a84d29;
-  --eh-terra-soft: #f7e4da;
+  --eh-canvas: var(--eh-color-paper);
+  --eh-surface: var(--eh-color-white);
+  --eh-sand-100: var(--eh-color-paper);
+  --eh-sand-200: var(--eh-color-sand);
+  --eh-sand-400: var(--eh-color-sand);
 
-  /* Ink */
-  --eh-ink: #10222a;
-  --eh-ink-soft: #4b5b60;
-  --eh-ink-mute: #5f6e75;
-  --eh-line: #e4e2dc;
-  --eh-line-strong: #cfcbc2;
+  --eh-terra: var(--eh-color-terra);
+  --eh-terra-deep: var(--eh-color-terra);
+  --eh-terra-soft: var(--eh-color-sand);
 
-  /* On-dark */
-  --eh-on-dark: #f3f6f5;
-  --eh-on-dark-soft: rgba(243, 246, 245, 0.72);
-  --eh-on-dark-line: rgba(243, 246, 245, 0.16);
+  --eh-ink: var(--eh-color-ink);
+  --eh-ink-soft: var(--eh-color-secondary);
+  --eh-ink-mute: var(--eh-color-secondary);
+  --eh-line: var(--eh-color-line);
+  --eh-line-strong: var(--eh-color-secondary);
 
-  /*
-   * Shape: eine Skala. Die Aliase (xs, chip, input, media) ersetzen
-   * verstreute Einzelwerte in den Modulen. Bestehende Werte bleiben
-   * unverändert (Kanon, DESIGN.md §3) — es kommt nur dazu, nichts um.
-   */
-  --eh-r-xs: 8px;
-  --eh-r-chip: 10px;
-  --eh-r-card: 24px;
-  --eh-r-card-lg: 28px;
-  --eh-r-btn: 12px;
-  --eh-r-input: 12px;
-  --eh-r-media: 28px;
-  --eh-r-pill: 999px;
+  --eh-on-dark: var(--eh-color-paper);
+  --eh-on-dark-soft: var(--eh-color-sand);
+  --eh-on-dark-line: var(--eh-color-secondary);
 
-  /* Depth: drei Stufen auf derselben Ink-Hue, dazu ein Hairline-Ring. */
-  --eh-shadow-sm: 0 1px 2px rgba(16, 34, 42, 0.05), 0 6px 18px -8px rgba(16, 34, 42, 0.12);
-  --eh-shadow-md: 0 2px 4px rgba(16, 34, 42, 0.05), 0 18px 40px -16px rgba(16, 34, 42, 0.22);
-  --eh-shadow-lg: 0 4px 10px rgba(16, 34, 42, 0.06), 0 40px 80px -30px rgba(11, 58, 63, 0.35);
+  --eh-r-xs: var(--eh-shape-control);
+  --eh-r-chip: var(--eh-shape-control);
+  --eh-r-card: var(--eh-shape-panel);
+  --eh-r-card-lg: var(--eh-shape-panel);
+  --eh-r-btn: var(--eh-shape-control);
+  --eh-r-input: var(--eh-shape-control);
+  --eh-r-media: 0;
+  --eh-r-pill: var(--eh-shape-control);
+
+  --eh-shadow-sm: none;
+  --eh-shadow-md: none;
+  --eh-shadow-lg: none;
   --eh-ring: 0 0 0 1px var(--eh-line);
 
-  /* Layout */
-  --eh-container: 1180px;
+  --eh-container: 1296px;
   --eh-container-narrow: 760px;
   --eh-gutter: clamp(20px, 4vw, 32px);
   --eh-section-y: clamp(64px, 9vw, 120px);
   --eh-section-y-tight: clamp(48px, 6vw, 80px);
 
-  /*
-   * Vertikaler Rhythmus innerhalb einer Section. Bewusst ungleichmäßig,
-   * damit Blöcke atmen, statt überall gleich zu sitzen.
-   */
   --eh-space-1: 4px;
   --eh-space-2: 8px;
   --eh-space-3: 14px;
@@ -116,37 +98,34 @@
   --eh-space-6: 52px;
   --eh-space-7: 76px;
 
-  /* Motion: eine Kurve, drei Dauern. Kein bounce, kein elastic. */
   --eh-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --eh-dur-fast: 140ms;
   --eh-dur: 240ms;
   --eh-dur-slow: 420ms;
 
-  /* DESIGN.md §3 Kanon-Aliase (gleiche Werte, Vertragsname) */
-  --eh-green-900: #0a3539;
-  --eh-green-700: #105258;
-  --eh-green-600: #147078;
-  --eh-green-100: #dcebec;
-  --eh-green-50: #edf5f5;
-  --eh-bg: #faf8f4;
-  --eh-surface: #ffffff;
-  --eh-surface-subtle: #f2f5f5;
-  --eh-text: #10222a;
-  --eh-text-secondary: #4b5b60;
-  --eh-border: #e4e2dc;
-  --eh-border-strong: #cfcbc2;
-  --eh-on-dark: #f3f6f5;
+  --eh-green-900: var(--eh-color-deep);
+  --eh-green-700: var(--eh-color-petrol);
+  --eh-green-600: var(--eh-color-petrol);
+  --eh-green-100: var(--eh-color-sand);
+  --eh-green-50: var(--eh-color-paper);
+  --eh-bg: var(--eh-color-paper);
+  --eh-surface: var(--eh-color-white);
+  --eh-surface-subtle: var(--eh-color-paper);
+  --eh-text: var(--eh-color-ink);
+  --eh-text-secondary: var(--eh-color-secondary);
+  --eh-border: var(--eh-color-line);
+  --eh-border-strong: var(--eh-color-secondary);
+  --eh-on-dark: var(--eh-color-paper);
 
-  /* Type scale */
   --eh-font: var(--font-marketing, ui-sans-serif, system-ui, sans-serif);
-  --eh-display: clamp(40px, 5.2vw, 68px);
-  --eh-h1: clamp(36px, 4.4vw, 56px);
-  --eh-h2: clamp(30px, 3.4vw, 44px);
+  --eh-display: var(--eh-font-display);
+  --eh-h1: var(--eh-font-page);
+  --eh-h2: var(--eh-font-section);
   --eh-h3: 22px;
   --eh-lead: clamp(17px, 1.4vw, 20px);
   --eh-body: 17px;
   --eh-small: 14px;
-  --eh-micro: 12.5px;
+  --eh-micro: var(--eh-font-meta);
 
   color: var(--eh-ink);
   background: var(--eh-canvas);
@@ -168,10 +147,6 @@
   border-radius: 6px;
 }
 
-/*
- * A11y: Motion-Tokens kollabieren, wenn das Betriebssystem Animationen
- * reduziert. Module müssen nur die Tokens nutzen, nicht selbst abfragen.
- */
 @media (prefers-reduced-motion: reduce) {
   .mkt {
     --eh-dur-fast: 1ms;

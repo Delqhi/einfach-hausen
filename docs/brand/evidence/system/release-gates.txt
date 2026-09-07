@@ -1,0 +1,198 @@
+
+> einfach-hausen@0.1.0 lint
+> eslint
+
+
+/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906/scripts/a11y-matrix.mjs
+  103:107  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906/scripts/design-audit-shots.mjs
+  44:7  warning  'identities' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906/scripts/dispatch-notifications.mjs
+  28:11  warning  'db' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906/scripts/e2e.mjs
+   88:16   warning  'runChild' is defined but never used                     @typescript-eslint/no-unused-vars
+  165:66   warning  'response' is defined but never used                     @typescript-eslint/no-unused-vars
+  459:7    warning  'e' is defined but never used                            @typescript-eslint/no-unused-vars
+  481:232  warning  'supabaseTechUserId' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  493:78   warning  'e' is defined but never used                            @typescript-eslint/no-unused-vars
+
+/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906/scripts/pro-audit.mjs
+  6:8  warning  'fs' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906/scripts/release-gate.mjs
+  228:9  warning  'perfFailures' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  277:7  warning  'staticOk' is assigned a value but never used      @typescript-eslint/no-unused-vars
+
+/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906/scripts/responsive-matrix.mjs
+  12:17  warning  'execFileSync' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906/scripts/t0203-gdpr-regression.mjs
+  79:9  warning  'dbPath' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 13 problems (0 errors, 13 warnings)
+
+
+> einfach-hausen@0.1.0 typecheck
+> tsc --noEmit
+
+
+> einfach-hausen@0.1.0 build
+> next build
+
+▲ Next.js 16.3.1 (Turbopack)
+✓ Running next.config.ts took 44ms
+- Experiments (use with caution):
+  · cpus: 1
+  · serverActions
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 19.3s
+  Running TypeScript ...
+  Finished TypeScript in 5.0s ...
+  Collecting page data using 1 worker ...
+  Generating static pages using 1 worker (0/137) ...
+  Generating static pages using 1 worker (34/137) 
+  Generating static pages using 1 worker (68/137) 
+  Generating static pages using 1 worker (102/137) 
+✓ Generating static pages using 1 worker (137/137) in 4.5s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /admin/crm
+├ ƒ /admin/login
+├ ƒ /admin/ops
+├ ƒ /agb
+├ ƒ /anfrage/[id]
+├ ƒ /anfrage/neu
+├ ƒ /anfragen-pro
+├ ƒ /ansprechpartner
+├ ƒ /api/account/export
+├ ƒ /api/admin/verification-file/[id]
+├ ƒ /api/ai/byok
+├ ƒ /api/ai/credits
+├ ƒ /api/auth/local-login
+├ ƒ /api/documents/[id]
+├ ƒ /api/errors
+├ ƒ /api/health
+├ ƒ /api/hooks/neue-anfrage
+├ ƒ /api/hooks/neues-angebot
+├ ƒ /api/house-history-documents/[id]
+├ ƒ /api/house-history-files/[id]/[kind]
+├ ƒ /api/job-media/[id]
+├ ƒ /api/ki
+├ ƒ /api/konto-loeschen
+├ ƒ /api/live
+├ ƒ /api/memberships/success
+├ ƒ /api/owner/messages/[contactUserId]
+├ ƒ /api/packages/success
+├ ƒ /api/partner-memberships/success
+├ ƒ /api/payments/success
+├ ƒ /api/stripe/connect/refresh
+├ ƒ /api/stripe/connect/return
+├ ƒ /api/stripe/webhook
+├ ƒ /api/support/messages/[homeownerId]
+├ ƒ /api/telemetry
+├ ƒ /api/whatsapp/webhook
+├ ƒ /app
+├ ƒ /app/calendar
+├ ƒ /app/consultation
+├ ƒ /app/documents
+├ ƒ /app/documents/[jobId]/receipt
+├ ƒ /app/emergency
+├ ƒ /app/hausmeister
+├ ƒ /app/home
+├ ƒ /app/home/history
+├ ƒ /app/home/passport
+├ ƒ /app/home/sale
+├ ƒ /app/insurance
+├ ƒ /app/invoices/[id]
+├ ƒ /app/jobs
+├ ƒ /app/jobs/[id]
+├ ƒ /app/messages
+├ ƒ /app/more
+├ ƒ /app/onboarding
+├ ƒ /app/partners
+├ ƒ /app/partners/[id]
+├ ƒ /app/plans
+├ ƒ /app/profile
+├ ƒ /app/settings
+├ ƒ /app/year
+├ ƒ /barrierefreiheit
+├ ƒ /beratung
+├ ƒ /blog
+├ ƒ /blog/[slug]
+├ ƒ /chat/[anfrageId]
+├ ƒ /check-email
+├ ƒ /datenschutz
+├ ƒ /design-system
+├ ƒ /eigenheimbesitzer
+├ ƒ /hausakte
+├ ƒ /hilfe
+├ ƒ /immobilienverkauf
+├ ƒ /impressum
+├ ƒ /ki-chat
+├ ƒ /kontakt
+├ ƒ /leistungen
+├ ƒ /leistungen/[slug]
+├ ƒ /leistungen/heizung
+├ ƒ /lexikon
+├   /lexikon/[begriff]
+│ ├ ● /lexikon/dachinspektion
+│ ├ ● /lexikon/e-check
+│ ├ ● /lexikon/energieausweis
+│ └ ● [+15 more paths]
+├   /lexikon/kategorie/[kategorie]
+│ ├ ● /lexikon/kategorie/heizung-energie
+│ ├ ● /lexikon/kategorie/feuchte-schimmel
+│ ├ ● /lexikon/kategorie/dach-gebaeudehuelle
+│ └ ● [+4 more paths]
+├ ƒ /login
+├ ○ /manifest.webmanifest
+├ ƒ /mein-haus
+├ ƒ /notfall
+├ ƒ /notifications
+├ ƒ /onboarding/pro
+├ ƒ /onboarding/pro/[schritt]
+├ ƒ /onboarding/pro/gebiet
+├ ƒ /partner
+├ ƒ /partner-invite/[token]
+├ ƒ /pilotphase
+├ ƒ /preise
+├ ƒ /pro
+├ ƒ /pro/calendar
+├ ƒ /pro/invoices/[id]
+├ ƒ /pro/jobs/[id]
+├ ƒ /pro/leads
+├ ƒ /pro/messages
+├ ƒ /pro/onboarding
+├ ƒ /pro/orders
+├ ƒ /pro/plans
+├ ƒ /pro/profile
+├ ƒ /pro/team
+├ ƒ /register
+├ ƒ /register-owner
+├ ƒ /register-pro
+├ ○ /robots.txt
+├ ƒ /role
+├ ƒ /sicherheit
+├ ○ /sitemap.xml
+├ ƒ /so-funktionierts
+├ ƒ /transfer/[token]
+├ ƒ /ueber-uns
+├ ƒ /versicherung
+└ ƒ /welcome
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+EH_RELEASE_GATES [0, 0, 0]

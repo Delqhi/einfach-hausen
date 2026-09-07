@@ -1,3 +1,5 @@
+> **Aktueller Designvertrag · 2026-09-06:** Jerry hat Atelier 02 ausdrücklich freigegeben. Verbindlich sind DESIGN.md, packages/eh-design und der Skill SIN-EH-design. Eigenständige Änderungen am Markenstil sind verboten. Vollständige Übergabe: docs/brand/system/HANDOFF.md; kompletter Quelltext: docs/brand/system/SOURCE.md. Frühere Statusangaben zu noch offenen Stilentscheidungen sind historisch. Restmigration: EH-BRAND-05-WEB, -APPS, -CRM, -HUB. Unternehmensidentität bleibt docs/COMPANY_IDENTITY.md (Gina Inhaberin/Geschäftsführerin, Jeremy Entwickler).
+
 # Einfach Hausen — Production Handover and Continuation Runbook
 
 **Canonical company identity:** `docs/COMPANY_IDENTITY.md` — **Gina Schulze** ist Inhaberin und Geschäftsführerin. **Jeremy Schulze** ist ausschließlich Developer / technische Entwicklung. Diese Rollen gelten für Impressum, Legal-Modals, Dokumentation und generierte Inhalte. Keine unbestätigten Rechts-/Registerdaten erfinden.
@@ -917,3 +919,19 @@ updated: 2026-09-05T09:09:00+00:00
 actor: chatgpt-web
 evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
 -->
+
+## EH-BRAND — Operator-Auftrag vom 06.09.2026
+
+EH-BRAND ist eine isolierte Markenstudie. Der Produktionsstand 3d7d84e ist der geprüfte Ausgangspunkt; neue Produktionsstände vor jeder Integration erneut lesen. Diese Dokumentation behauptet keinen neuen Deploy. Die visuelle Richtung und die betroffenen produktiven Dateien müssen vor der Folge-Migration konkret dokumentiert sein. Entfernte Präsentationssektionen bleiben entfernt.
+
+- Spezifikation: `docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md`
+- Ausführungsplan: `docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md`
+- Handoff: `docs/brand/HANDOFF.md`
+- Vollständiger Zielquelltext: `docs/brand/SOURCE_PACKET.md`
+- Tasks: EH-BRAND-01 bis EH-BRAND-06; vorhandenes T-0151 und Issue #33 berücksichtigen.
+- Ausführung: `/home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906`, Branch `design/einfachhausen-brand-system-20260906`, Node 22.23.0.
+
+
+## EH-BRAND — Korrektur: Atelier 02 (2026-09-06)
+
+Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren technische 27/27-Prüfung ist keine visuelle Freigabe. Root Codex gestaltet und implementiert die neue Richtung persönlich; keinen weiteren Prime/bai-Dispatch aus alten Abschnitten ableiten. Neuer Arbeitsstand: `design/einfachhausen-brand-atelier-20260906`, Workspace `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`. Konzept, vollständige Nutzerkorrektur und Plan: `docs/brand/ATELIER_02.md`; aktuelle Übergabe: `docs/brand/HANDOFF.md`; vollständige Quellen: `docs/brand/ATELIER_02_SOURCE.md`; bedienbare Vollansicht: `design/brand-atelier/preview.html`. EH-BRAND-03 bleibt in Arbeit, die neue Richtung wurde noch nicht vom Nutzer bewertet. Genau nächste Markenaktion: diese neue Vollansicht besprechen und tatsächliches Nutzerfeedback dokumentieren. EH-BRAND-04..06 folgen erst der Richtungsentscheidung; kein Merge/Deploy. Ältere Empfehlungen/Dispatch-Anweisungen sind für diese Markenwelle historisch. Andere laufende Arbeitswellen bleiben erhalten.
