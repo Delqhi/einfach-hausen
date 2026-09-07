@@ -618,7 +618,7 @@
 .note a { color: var(--eh-teal-700); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
 /* Footer */
-.footer { margin-top: auto; background: var(--eh-teal-900); color: var(--eh-on-dark); }
+.footer { margin-top: auto; background: var(--eh-teal-900); color: var(--eh-on-dark); --eh-fg: var(--eh-on-dark); --eh-muted: var(--eh-on-dark-soft); }
 .footerIntake { border-bottom: 1px solid var(--eh-on-dark-line); }
 .footerIntakeInner { composes: container; display: flex; flex-direction: column; gap: 20px; padding-top: 44px; padding-bottom: 44px; }
 .footerIntakeInner h2 { font-size: clamp(22px, 2.4vw, 30px); letter-spacing: -0.025em; font-weight: 700; }
