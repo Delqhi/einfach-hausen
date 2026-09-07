@@ -1,3 +1,5 @@
+> **Designkorrektur 2026-09-07:** Vor jeder Seitenmigration `docs/brand/system/COMPOSITION.md` lesen und `packages/eh-design/src/composition.tsx` verwenden. Vollständiger Code: `docs/brand/composition-repair/SOURCE.md`. Keine Produktillustration in einen Text-Slot stecken; Abschnittsüberschrift genau einmal; echte App-Bedienung nicht durch Marketingbeispiele ersetzen. Technische Prüfungen ersetzen keine visuelle Begutachtung.
+
 <!-- EH-DESIGN-AUTHORITY-V1:BEGIN -->
 ## Verbindliche Einfachhausen Gestaltung · 2026-09-06
 
