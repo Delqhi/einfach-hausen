@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { ArrowRight, BadgeCheck, ClipboardList, FileText, Flame, Leaf, MapPin, Sprout } from 'lucide-react';
+import { BadgeCheck, ClipboardList, Flame, Leaf, MapPin, Sprout } from 'lucide-react';
+import { EHPanel, EHList, EHButton } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { ProviderAccessBoundary, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
@@ -111,46 +111,24 @@ export default async function Pro() {
 
       {/* Nächster Arbeitsschritt: Prominent hervorgehoben */}
       {ctx.canManageJobs && quoteCandidates > 0 && (
-        <Link href={`/pro/jobs/${requests.find((job) => !job.my_quote && job.request_kind !== 'contact')?.id}`} className="pdx-quote-cta mb-6">
-          <span className="pdx-quote-icon"><FileText size={20} /></span>
-          <div className="grow">
-            <strong>Nächster Schritt: Angebot erstellen</strong>
-            <small>Bei {quoteCandidates} passenden Kundenanfragen liegen alle Informationen für einen Richtpreis vor.</small>
-          </div>
-          <span className="pdx-quote-button">Angebot öffnen</span>
-        </Link>
+        <EHPanel title="Nächster Schritt: Angebot erstellen">
+          <p>Bei {quoteCandidates} passenden Kundenanfragen liegen alle Informationen für einen Richtpreis vor.</p>
+          <EHButton href={`/pro/jobs/${requests.find((job) => !job.my_quote && job.request_kind !== 'contact')?.id}`} arrow>Angebot öffnen</EHButton>
+        </EHPanel>
       )}
 
       {/* Arbeitsliste: Klare Auftragszeilen */}
-      <div className="pdx-section-head">
-        <h2>Passende Kundenanfragen</h2>
-        <Link href="/pro/orders">Alle ansehen <ArrowRight size={13} /></Link>
-      </div>
-
-      <div className="pdx-requests">
-        {requests.slice(0, 5).map((job) => {
+      <EHPanel title="Passende Kundenanfragen" footer={requests.length > 5 ? { href: '/pro/orders', text: `Alle ${requests.length} Anfragen einsehen` } : { href: '/pro/orders', text: 'Alle ansehen' }}>
+        <EHList label="Passende Kundenanfragen" items={requests.slice(0, 5).map((job) => {
           const badge = requestBadge(job);
-          const BadgeIcon = badge.icon;
           const price = job.my_quote ? euro(job.my_quote) : job.budget_min && job.budget_max ? `ca. ${euro((job.budget_min + job.budget_max) / 2)}` : job.budget_max ? `ca. ${euro(job.budget_max)}` : null;
-          return (
-            <Link href={`/pro/jobs/${job.id}`} className="pdx-request pro-request" key={job.dispatch_id}>
-              <span className={`pdx-request-icon ${badge.kind}`}><BadgeIcon size={18} /></span>
-              <div className="pdx-request-main">
-                <div className="pdx-request-title">
-                  <span className={badge.className}>{badge.label}</span>
-                  <strong>{job.title.replace(/^Ansprechpartner:\s*/, '')}</strong>
-                  <small>{timeAgo(job.sent_at)}</small>
-                </div>
-                <p>{job.description.length > 95 ? `${job.description.slice(0, 95)}…` : job.description}</p>
-                <div className="pdx-request-meta">
-                  <span><MapPin size={12} /> {job.postcode || 'Region'}{job.distance_km ? ` · ${Math.round(job.distance_km)} km` : ''}</span>
-                  {price && <span className="pdx-price-chip">{price}</span>}
-                </div>
-              </div>
-              <ArrowRight size={16} className="pdx-chevron" />
-            </Link>
-          );
-        })}
+          return {
+            id: String(job.dispatch_id),
+            title: `${badge.label} · ${job.title.replace(/^Ansprechpartner:\s*/, '')}`,
+            text: `${job.description.length > 95 ? `${job.description.slice(0, 95)}…` : job.description} — ${job.postcode || 'Region'}${job.distance_km ? ` · ${Math.round(job.distance_km)} km` : ''}${price ? ` · ${price}` : ''} · ${timeAgo(job.sent_at)}`,
+            href: `/pro/jobs/${job.id}`,
+          };
+        })} />
         {requests.length === 0 && (
           <ProviderState
             icon={<ClipboardList size={21} />}
@@ -158,38 +136,21 @@ export default async function Pro() {
             description="Neue Anfragen erscheinen hier automatisch, sobald passende Vorhaben in deinem PLZ-Bereich freigegeben werden."
           />
         )}
-      </div>
+      </EHPanel>
 
-      {requests.length > 5 && <Link className="pdx-show-all" href="/pro/orders">Alle {requests.length} Anfragen einsehen <ArrowRight size={14} /></Link>}
-
-      {/* Termine */}
-      <div className="pdx-section-head pdx-section-head-tight mt-8">
-        <h2>Kommende Vor-Ort-Termine</h2>
-        <Link href="/pro/calendar">Kalender <ArrowRight size={13} /></Link>
-      </div>
-      <div className="pdx-appointments">
-        {upcoming.map((appointment) => {
+      <EHPanel title="Kommende Vor-Ort-Termine" footer={{ href: '/pro/calendar', text: 'Kalender' }}>
+        <EHList label="Kommende Vor-Ort-Termine" items={upcoming.map((appointment) => {
           const start = new Date(appointment.start_at + 'Z');
           const sameDay = start.toDateString() === new Date().toDateString();
-          return (
-            <Link href={`/pro/jobs/${appointment.id}`} className="pdx-appointment" key={`${appointment.id}-${appointment.start_at}`}>
-              <span className="pdx-date-tile">
-                <strong>{start.getDate()}</strong>
-                <small>{start.toLocaleDateString('de-DE', { month: 'short' }).replace('.', '')}</small>
-              </span>
-              <div className="grow">
-                <strong>{appointment.title.replace(/^Ansprechpartner:\s*/, '')}</strong>
-                <small>{appointment.postcode || 'Terminort'}</small>
-              </div>
-              <span className="pdx-appointment-time">
-                {sameDay ? <b>Heute</b> : dateLabel(appointment.start_at.slice(0, 10))}
-                <small>{start.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr</small>
-              </span>
-            </Link>
-          );
-        })}
-        {upcoming.length === 0 && <p className="pdx-empty-line">Keine anstehenden Termine.</p>}
-      </div>
+          return {
+            id: `${appointment.id}-${appointment.start_at}`,
+            title: appointment.title.replace(/^Ansprechpartner:\s*/, ''),
+            text: `${sameDay ? 'Heute' : dateLabel(appointment.start_at.slice(0, 10))}, ${start.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr · ${appointment.postcode || 'Terminort'}`,
+            href: `/pro/jobs/${appointment.id}`,
+          };
+        })} />
+        {upcoming.length === 0 && <p>Keine anstehenden Termine.</p>}
+      </EHPanel>
     </AppShell>
   );
 }
