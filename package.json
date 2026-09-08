@@ -44,7 +44,7 @@
     "test:i18n": "node scripts/i18n-regression.mjs",
     "test:public-site": "node scripts/public-website-contract.mjs",
     "test:public-nav": "node scripts/public-navigation-e2e.mjs",
-    "test:auth-design": "node scripts/auth-design-system-e2e.mjs",
+    "test:auth-design": "node scripts/auth-edition-contract.mjs && node scripts/demo-accounts-contract.mjs && node scripts/auth-design-system-e2e.mjs",
     "test:observability": "node scripts/observability-regression.mjs",
     "test:slo": "node scripts/t0123-slo-probes.mjs",
     "test:backup-drill": "bash scripts/t0124-backup-drill.sh",
@@ -52,7 +52,7 @@
     "test:health-regression": "node scripts/t0134-health-regression.mjs",
     "test:export-regression": "node scripts/t0143-export-regression.mjs",
     "test:deletion-regression": "node scripts/t0144-deletion-regression.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@capacitor/keyboard": "^8.0.5",
@@ -69,7 +69,7 @@
     "lenis": "^1.3.26",
     "lucide-react": "^1.39.0",
     "motion": "^13.1.1",
-    "next": "16.3.1",
+    "next": "16.3.4",
     "nodemailer": "^9.0.6",
     "radix-ui": "^1.6.7",
     "react": "19.2.8",
