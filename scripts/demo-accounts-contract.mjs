@@ -18,6 +18,12 @@ for (const token of ['DEMO_LOGIN_ENABLED', 'ensureDemoAppRow', 'isDemoEmail']) {
 for (const token of ['btn-demo-kunde', 'btn-demo-handwerker', 'demoEmailFor', 'DEMO_PASSWORD']) {
   if (!form.includes(token)) failures.push(`auth UI demo behavior missing ${token}`);
 }
+for (const token of [
+  'safeNextPath(nextPath, loginRole === "handwerker" ? "/pro" : "/app")',
+  'doLogin(demo.email, DEMO_PASSWORD, targetRole)',
+]) {
+  if (!form.includes(token)) failures.push(`role-aware demo redirect missing ${token}`);
+}
 for (const token of ['per_page=', 'verifyCredentials', '/auth/v1/token?grant_type=password']) {
   if (!seed.includes(token)) failures.push(`demo seeder missing ${token}`);
 }

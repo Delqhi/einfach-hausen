@@ -68,7 +68,7 @@ export function LoginForm({
     else setLegalModalType(type);
   };
 
-  async function doLogin(email: string, pw: string) {
+  async function doLogin(email: string, pw: string, loginRole: Role = role) {
     setIsLoading(true);
     setErrorMessage(null);
     try {
@@ -79,7 +79,7 @@ export function LoginForm({
         setIsLoading(false);
         return;
       }
-      router.replace(safeNextPath(nextPath));
+      router.replace(safeNextPath(nextPath, loginRole === "handwerker" ? "/pro" : "/app"));
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Anmeldung fehlgeschlagen.");
       setIsLoading(false);
@@ -93,7 +93,7 @@ export function LoginForm({
     setErrorMessage(null);
     setIdentifier(demo.username);
     setPassword(DEMO_PASSWORD);
-    void doLogin(demo.email, DEMO_PASSWORD);
+    void doLogin(demo.email, DEMO_PASSWORD, targetRole);
   };
 
   const handleLoginSubmit = (event: React.FormEvent) => {
