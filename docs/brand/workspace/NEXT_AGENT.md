@@ -20,3 +20,15 @@ GitNexus impact versucht für AppShell/Dashboard/More/Pro: Timeouts und defekte 
 5. Erst nach echter integrierter Prüfung normalen Merge-/Releaseprozess durchführen. Keine Guards abschwächen. Vollständige geänderte Dateien: SOURCE.md und source-manifest.json.
 
 Aktueller Design-Check: FEHLGESCHLAGEN wegen bereits in Basis7eabe4a vorhandenen literal-color/unowned-style in src/app/docs-internal/{page.tsx,layout.tsx,[doc]/page.tsx}. Diese Dateien sind im Workspace-Branch unverändert. Nicht Baseline/Guard abschwächen; separate Docs-Korrektur nötig.
+
+
+## Frontend-Erweiterung auf ausdrücklichen Auftrag 2026-09-08
+Backend-Anbindungen, Tests und Release übernimmt ausdrücklich der lokale Agent. In dieser Erweiterung KEINE Tests/Builds durchgeführt und keine neue Backend-Logik implementiert.
+
+Neue kanonische Datei packages/eh-design/src/workspace-records.tsx: EHRouteTabs, EHScheduleList, EHDossierList, EHOrderList, EHIdentitySummary. CSS ausschließlich styles.module.css. Vollständige Verbraucher: src/app/app/calendar/page.tsx, src/app/app/documents/page.tsx, src/app/app/year/page.tsx, src/app/app/profile/page.tsx, src/app/pro/orders/page.tsx.
+
+Kalender: Monatsgruppen bleiben, jeder Termin erhält Datumskachel und ausgeschriebenen Status. Alte Termine bleiben separat. Keine neue Terminbearbeitung. Dokumente: Rechnungen, Nachweise, Zahlungsbelege erhalten eigene sichtbare Bereiche und Datei-/Betragsstruktur; originale geschützte Links bleiben. Jahresplan: echte Plan-/Historie-Links bleiben, Datumskacheln statt Textzeilen, Überfälligkeit bleibt. Pro-Aufträge: Art, Status, Kontakt, Preis und tatsächliche nächste Aktion einzeln dargestellt; rollenabhängige Datenabfragen unverändert. Profil: vollständig sichtbares, gruppiertes Formular plus Identitätsbereich; dieselben Feldnamen und Aktionen, alle Installations-/WhatsApp-/Privatsphäre-Hinweise bleiben.
+
+GitNexus impact dieser fünf Routensymbole: UNKNOWN, keine aufgelösten Aufrufer; kein Beweis fehlender Risiken. Keine technischen oder visuellen Testergebnisse für diese neue Erweiterung behaupten. Lokaler Agent prüft Syntax/Typen/Build, echte Inhalte und alle bisherigen Funktionen und belegt mobile Ansichten. Auch die Kalender-Datumsinterpretation bleibt aus dem Backend übernommen und muss fachlich geprüft werden.
+
+Noch keine Komplettabnahme aller App-Flächen. Offene Gestaltungskandidaten außerhalb dieser Welle: echte Nachrichten-/Anhangsansichten, Detailseiten, Rechnungseditor, Provider-Profil, Haus-Technik und Spezialabläufe. Keine generischen Ersatzformulare einsetzen. Vorhandene Funktionen erhalten und konkrete Designlücken sammeln. Nicht alleine durch einen kanonischen Import fertig melden.

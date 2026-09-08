@@ -1,5 +1,5 @@
 import { ClipboardList } from 'lucide-react';
-import { EHPanel, EHList, EHStatus } from '@/design-system';
+import { EHWorkSection, EHOrderList, EHStatus } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
@@ -34,8 +34,8 @@ export default async function Orders() {
 
       <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
-      <EHPanel title={`Arbeitsliste · ${rows.length} ${rows.length === 1 ? 'Vorgang' : 'Vorgänge'} im aktuellen Zugriff.`}>
-        <EHList label="Arbeitsliste" items={rows.map((row) => {
+      <EHWorkSection title={`Arbeitsliste · ${rows.length} ${rows.length === 1 ? 'Vorgang' : 'Vorgänge'} im aktuellen Zugriff.`}>
+        <EHOrderList items={rows.map((row) => {
           const isContact = row.request_kind === 'contact';
           const nextAction = isContact
             ? 'Kundenkontakt öffnen'
@@ -47,9 +47,13 @@ export default async function Orders() {
           return {
             id: String(row.id),
             title: row.title.replace(/^Ansprechpartner:\s*/, ''),
-            text: `${isContact ? 'Persönlicher Ansprechpartner' : `Angebot ${statusLabel(row.quote_status)} · Auftrag ${statusLabel(row.status)}`}${row.contact_first ? ` · ${row.contact_first} ${row.contact_last}` : ''} · ${nextAction} · ${isContact ? 'Ohne Preis' : euro(row.amount)}`,
-            href: `/pro/jobs/${row.id}`,
-            meta: <EHStatus>{isContact ? 'Kontakt' : statusLabel(row.status)}</EHStatus>,
+            kind:isContact?'Kontakt':'Auftrag',
+            status:isContact?'Kontakt':statusLabel(row.status),
+            contact:row.contact_first?`${row.contact_first} ${row.contact_last}`:'Noch nicht zugewiesen',
+            amount:isContact?'Ohne Preis':euro(row.amount),
+            detail:isContact?'Persönlicher Ansprechpartner':`Angebot ${statusLabel(row.quote_status)}`,
+            action:nextAction,
+            href:`/pro/jobs/${row.id}`,
           };
         })} />
         {rows.length === 0 && (
@@ -59,7 +63,7 @@ export default async function Orders() {
             description={ctx.canManageJobs ? 'Sobald ein Kontakt übernommen oder ein Angebot gesendet wurde, bleibt der Vorgang hier bis zum Abschluss nachvollziehbar.' : 'Sobald dir ein Vorgang zugewiesen wurde, erscheint er hier.'}
           />
         )}
-      </EHPanel>
+      </EHWorkSection>
     </AppShell>
   );
 }
