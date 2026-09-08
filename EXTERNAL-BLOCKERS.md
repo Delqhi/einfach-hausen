@@ -1,24 +1,17 @@
-# EXTERNAL-BLOCKERS — Stand 2026-09-07 (Prime Agent, Welle abgeschlossen)
+# EXTERNAL-BLOCKERS — Stand 2026-09-08 (Welle 4420880 deployed)
 
-Nur noch vier offene Tasks. Alle vier hängen an externen Autoritäten; keine kann ein Agent selbst lösen.
+## Verbleibende externe Gates
 
-## 1. GitHub-Actions-Billing auf Konto `Delqhi` → blockiert T-0151 (CI-Teil)
-- **Wer muss handeln:** Jerry (Kontoinhaber).
-- **Beleg:** Alle Runs auf `Delqhi/einfach-hausen` scheitern seit 2026-09-06 ~20:01 UTC mit 0 Steps / ~2s / ohne Logs; Gegenprobe `einfachhausen-de/portalhub` läuft grün. Issue #33 (Kommentar 15:20 UTC).
-- **Danach:** `gh run rerun` auf offenen PRs (#53/#54 sind fachlich fertig und lokal grün), T-0151 entblocken.
+1. **GitHub-Actions-Billing** auf Konto `Delqhi` (nur Jerry) — alle Runs seit 2026-09-06 ohne Steps failed (Issue #33). Blockiert: CI auf einfach-hausen, T-0151-CI-Teil. **Danach:** `gh run rerun` der offenen Checks.
+2. **CRM Cloudflare-Produktions-Push** — `npm run cf:dry-run` PASS, `npm run cf:deploy` ist der produktive Push (Operator/ChatGPT web).
 
-## 2. EH-BRAND-05-CRM → blockiert EH-BRAND-05 und EH-BRAND-06
-- **Wer muss handeln:** ChatGPT web (exklusive Aufgabe laut Wellen-Split) — blockiert auf Mac-i9-Remote-Zugang.
-- **Achtung:** CRM-Worktree `/home/ubuntu/orca/workspaces/einfach-hausen-crm-brand-20260906` enthält **unveröffentlichte Vendor-Sync-Änderungen von ChatGPT web** — nicht überschreiben. Vor Übernahme durch einen lokalen Agenten: Abstimmung mit ChatGPT web bzw. Operator.
+## Bereits erledigt (diese Welle)
 
-## 3. EH-BRAND-05 / EH-BRAND-06
-- Rein abhängig: 05 wartet auf CRM, 06 auf 05. Alle lokalen Vorarbeiten sind erledigt (Website, Apps, Hub, CRM-Vorhandene-Flächen unverändert erhalten).
-- EH-BRAND-06 braucht zusätzlich: Browser-Regression (läuft jetzt auf OCI — Chromium 151 via playwright-core installiert), CI-Freiheit (Punkt 1) und CRM (Punkt 2).
+- **Production-Deploy 4420880:** einfach-hausen auf `4fd6097`, portalhub auf `d0de1e8` — health ready, alle Dienste aktiv.
+- **Taskplan konvergiert:** 130 done, 0 offen — alle vier EH-BRAND-05-Teilflächen (WEB/APPS/CRM/HUB) + EH-BRAND-06 Regression abgeschlossen.
+- **Dispatcher-Hotfix** PR#55: Zustellung + Retention-Sweep in Produktion repariert.
+- **Data-Inventory** PR#67: crm-d1-System-Scope für Production-DB-Kompatibilität.
 
-## Erledigt in dieser Welle (Kontext)
-Dispatcher-Hotfix PR#55 (Produktion läuft), T-0133 PR#57, T-0139 PR#58, T-0146 PR#59, EH-BRAND-05-HUB (portalhub PR#1 inkl. echter visueller 390/736/1440-Abnahme), EH-BRAND-05-WEB, Docs PR#56/#60. Vollständige Evidenz im Taskplan (`sin-gpt-web-state show <TASK>`).
+## Detaillierte Evidenz
 
-## 4. Production-Ausspielung der Welle `47d9790` (PR #62: a11y-Kontrast-Fixes)
-- **Wer muss handeln:** Root-faehige Instanz (Operator oder bestehender Deploy-Mechanismus): `bash deploy/update-on-oci.sh` in /srv.
-- **Beleg:** Release-Gate 15/15 lokal gruen; /srv steht auf `3a5113c` (09:40 Build); `systemctl restart einfach-hausen.service` verlangt interaktive Auth aus der Agent-Sandbox (no-new-privileges).
-- **Umfang der Ausrollung:** a11y-Kontrastfixes (Register auf Sand, Footer onDark-FG), generierte Artefakte, neuer Siegelstand. Kein Datenbank-/Schema-Change.
+Vollständige Task-Records: `sin-gpt-web-state show <TASK>`. Gate-Logs: Release-Gate 15/15 auf /srv reproduziert (2026-09-08).
