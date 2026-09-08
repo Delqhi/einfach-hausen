@@ -30,7 +30,13 @@ db.close();
 // 1) table sets match
 const invTables = new Set(Object.keys(inventory.tables));
 for (const t of tables) if (!invTables.has(t)) failures.push(`table not in inventory: ${t}`);
-for (const t of invTables) if (!(t in schema)) failures.push(`inventory table does not exist in DB: ${t}`);
+for (const t of invTables) {
+  if (!(t in schema)) {
+    const sys = inventory.tables[t]?.system || 'core';
+    if (sys === 'core') failures.push(`inventory table does not exist in DB: ${t}`);
+    // crm-d1 tables live in the separate CRM D1 database — absence in the core DB is expected
+  }
+}
 
 // 2) personal tables need purpose + known retention key
 for (const [t, def] of Object.entries(inventory.tables)) {
