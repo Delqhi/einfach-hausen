@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import fs from "node:fs";
 import path from "node:path";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/admin-auth";
+import { EHArticleHeader, EHProse, EHTextLink } from "@/design-system";
 
 export const metadata: Metadata = {
   title: "Dokument (intern)",
@@ -144,29 +144,13 @@ export default async function DocPage({ params }: { params: Promise<{ doc: strin
   const html = mdToHtml(md);
   return (
     <div>
-      <p style={{ fontSize: "13px", marginBottom: "8px" }}>
-        <Link
-          href="/docs-internal"
-          style={{ color: "var(--eh-color-accent, #0b5fff)", textDecoration: "underline" }}
-        >
-          &larr; Alle Docs
-        </Link>
+      <EHArticleHeader category="Entwickler-Doku" title={`${slug}.md`} />
+      <p>
+        <EHTextLink href="/docs-internal">&larr; Alle Docs</EHTextLink>
       </p>
-      <h1
-        style={{
-          fontSize: "24px",
-          marginBottom: "16px",
-          fontFamily: "monospace",
-          wordBreak: "break-all",
-        }}
-      >
-        {slug}.md
-      </h1>
-      <article
-        className="docs-internal-body"
-        style={{ lineHeight: 1.7, fontSize: "15px", overflowWrap: "anywhere" }}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <EHProse>
+        <article dangerouslySetInnerHTML={{ __html: html }} />
+      </EHProse>
     </div>
   );
 }
