@@ -22,6 +22,9 @@ export default async function AdminOps({searchParams}:{searchParams:Promise<Reco
     LEFT JOIN provider_profiles p ON p.user_id=d.provider_id
     ORDER BY d.created_at DESC LIMIT 15`).all() as any[];
   return <main className="admin-page"><EHAppHeader eyebrow="Betriebsverwaltung" title="Operations" text="Lookup, Zustellstatus, Matching-Trace, Flags." />
+    <section className="admin-panel"><h2>Intern</h2>
+      <div className="stack"><div className="admin-card"><a href="/docs-internal">Entwickler-Docs (intern)</a></div></div>
+    </section>
     <section className="admin-panel"><h2>Feature-Flags</h2>
       <div className="stack">{['ki_chat','pilot_cohort_open'].map(flag=>{
         const enabled=isFeatureEnabled(flag);
