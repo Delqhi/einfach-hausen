@@ -329,8 +329,10 @@ async function run() {
     const page = await context.newPage();
     const profileResponse = await page.goto(`${prodServer.base}/app/profile`, { waitUntil: 'domcontentloaded' });
     check('logout precondition: authenticated profile loads', profileResponse?.status() === 200, `HTTP ${profileResponse?.status()}`);
-    await page.getByRole('button', { name: 'Ausloggen' }).click();
-    await page.waitForLoadState('domcontentloaded');
+    await Promise.all([
+      page.waitForURL((url) => url.pathname === '/', { timeout: 10000 }),
+      page.getByRole('button', { name: 'Ausloggen' }).click(),
+    ]);
     await page.goto(`${prodServer.base}/app`, { waitUntil: 'domcontentloaded' });
     await page.waitForURL(/\/login(?:\?|$)/, { timeout: 4000 }).catch(() => {});
     check('11 logout invalidates subsequent protected access', page.url().includes('/login'), page.url());
