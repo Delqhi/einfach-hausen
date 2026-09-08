@@ -2,6 +2,7 @@ import { isFeatureEnabled } from '@/lib/feature-flags';
 import { toggleFeatureFlagAction, requeueDeadNotificationAction } from '@/app/actions';
 import { requireAdmin } from '@/lib/admin-auth';
 import { db } from '@/lib/db';
+import { EHAppHeader } from '@/design-system';
 
 export default async function AdminOps({searchParams}:{searchParams:Promise<Record<string,string|undefined>>}){
   await requireAdmin();
@@ -20,7 +21,7 @@ export default async function AdminOps({searchParams}:{searchParams:Promise<Reco
     FROM match_decision_trace d JOIN users pr ON pr.id=d.provider_id
     LEFT JOIN provider_profiles p ON p.user_id=d.provider_id
     ORDER BY d.created_at DESC LIMIT 15`).all() as any[];
-  return <main className="admin-page"><header className="admin-header"><h1>Operations</h1><p>Lookup, Zustellstatus, Matching-Trace, Flags.</p></header>
+  return <main className="admin-page"><EHAppHeader eyebrow="Betriebsverwaltung" title="Operations" text="Lookup, Zustellstatus, Matching-Trace, Flags." />
     <section className="admin-panel"><h2>Feature-Flags</h2>
       <div className="stack">{['ki_chat','pilot_cohort_open'].map(flag=>{
         const enabled=isFeatureEnabled(flag);

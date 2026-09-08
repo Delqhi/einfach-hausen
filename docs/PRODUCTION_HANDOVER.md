@@ -886,52 +886,156 @@ evidence-sha256: 52a6748748dfe2d958322ba6584bcd9e8cd8284ed731054bf7f3d48948bf4d4
 -->
 
 <!-- SIN-GPT-WEB-HANDOVER
-task: EH-01
-updated: 2026-09-05T02:00:41+00:00
-actor: chatgpt-web
-evidence-sha256: 223ddabf850fcb56047dafd0834c4648fe0356286d14630d790002d451660459
--->
-
-<!-- SIN-GPT-WEB-HANDOVER
-task: EH-02
-updated: 2026-09-05T02:19:47+00:00
-actor: chatgpt-web
-evidence-sha256: d3169b9afa465be4ab22588b73903be33178b28010810633f5fb6546dc51f563
--->
-
-<!-- SIN-GPT-WEB-HANDOVER
-task: EH-03
-updated: 2026-09-05T04:33:10+00:00
+task: T-0132
+updated: 2026-09-03T13:48:49+00:00
 actor: local-agent
-evidence-sha256: b9300da9b1e348fc386da08fda11e75c105f6db589d60a0f190ae0af25041437
+evidence-sha256: 7e0b781bd511bf7c78d504be2551763dc8d69cb587488ebbb271c6ea9297cc0b
 -->
 
 <!-- SIN-GPT-WEB-HANDOVER
-task: EH-04
-updated: 2026-09-05T06:26:03+00:00
-actor: chatgpt-web
-evidence-sha256: 0bf6db00102a87441e641b95f92d629df17ac5aa3144da80eeb67f83cab48460
+task: T-0134
+updated: 2026-09-03T14:38:08+00:00
+actor: local-agent
+evidence-sha256: 3ad2590c9c31b9a8bcfe0e7212d85d446458c4690bf1ff152b848245aa2ab81c
 -->
 
 <!-- SIN-GPT-WEB-HANDOVER
-task: EH-05
-updated: 2026-09-05T09:09:00+00:00
-actor: chatgpt-web
-evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
+task: T-0137
+updated: 2026-09-03T14:57:29+00:00
+actor: local-agent
+evidence-sha256: 73bd2d6844b5aeaef8c0a753fb3ffc143ba55ec8b8a6ea80d0937f17d8d01123
 -->
 
-## EH-BRAND — Operator-Auftrag vom 06.09.2026
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0143
+updated: 2026-09-03T15:20:03+00:00
+actor: local-agent
+evidence-sha256: d669bf8aeac2f37f703094ffd9db570e6d658293f99d7995729a5420ac2b89c7
+-->
 
-EH-BRAND ist eine isolierte Markenstudie. Der Produktionsstand 3d7d84e ist der geprüfte Ausgangspunkt; neue Produktionsstände vor jeder Integration erneut lesen. Diese Dokumentation behauptet keinen neuen Deploy. Die visuelle Richtung und die betroffenen produktiven Dateien müssen vor der Folge-Migration konkret dokumentiert sein. Entfernte Präsentationssektionen bleiben entfernt.
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0144
+updated: 2026-09-03T16:36:34+00:00
+actor: local-agent
+evidence-sha256: 765f10be899bb7edd6395df543b8cdc5f0d0ef9c4670d5dc185d848f11bbcb39
+-->
 
-- Spezifikation: `docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md`
-- Ausführungsplan: `docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md`
-- Handoff: `docs/brand/HANDOFF.md`
-- Vollständiger Zielquelltext: `docs/brand/SOURCE_PACKET.md`
-- Tasks: EH-BRAND-01 bis EH-BRAND-06; vorhandenes T-0151 und Issue #33 berücksichtigen.
-- Ausführung: `/home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906`, Branch `design/einfachhausen-brand-system-20260906`, Node 22.23.0.
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-01
+updated: 2026-09-06T00:46:30+00:00
+actor: prime-agent
+evidence-sha256: aa823be75191650b55367801543a3d6f9565f6acc4023427e89de00885b7ab9b
+-->
 
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-02
+updated: 2026-09-06T00:46:30+00:00
+actor: prime-agent
+evidence-sha256: aa823be75191650b55367801543a3d6f9565f6acc4023427e89de00885b7ab9b
+-->
 
-## EH-BRAND — Korrektur: Atelier 02 (2026-09-06)
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-03
+updated: 2026-09-06T08:05:25+00:00
+actor: chatgpt-web
+evidence-sha256: 4507a81925e57caf5947f5cf5489e0d59dc2921fba11a6902bf52d2baf09c4f4
+-->
 
-Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren technische 27/27-Prüfung ist keine visuelle Freigabe. Root Codex gestaltet und implementiert die neue Richtung persönlich; keinen weiteren Prime/bai-Dispatch aus alten Abschnitten ableiten. Neuer Arbeitsstand: `design/einfachhausen-brand-atelier-20260906`, Workspace `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`. Konzept, vollständige Nutzerkorrektur und Plan: `docs/brand/ATELIER_02.md`; aktuelle Übergabe: `docs/brand/HANDOFF.md`; vollständige Quellen: `docs/brand/ATELIER_02_SOURCE.md`; bedienbare Vollansicht: `design/brand-atelier/preview.html`. EH-BRAND-03 bleibt in Arbeit, die neue Richtung wurde noch nicht vom Nutzer bewertet. Genau nächste Markenaktion: diese neue Vollansicht besprechen und tatsächliches Nutzerfeedback dokumentieren. EH-BRAND-04..06 folgen erst der Richtungsentscheidung; kein Merge/Deploy. Ältere Empfehlungen/Dispatch-Anweisungen sind für diese Markenwelle historisch. Andere laufende Arbeitswellen bleiben erhalten.
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-04
+updated: 2026-09-06T20:09:19+00:00
+actor: chatgpt-web
+evidence-sha256: 5114f14401e6e23ddd983775a51c5a8e1db89c2d6092a28b3304c59c45dd65ae
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-APP-COVERAGE
+updated: 2026-09-06T22:40:19+00:00
+actor: local-agent
+evidence-sha256: 5ade9dc3a11113a69057f1a7fd3d37828c6dffa092c335a17ec41dc127fba1dc
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-04-R2
+updated: 2026-09-06T22:58:55+00:00
+actor: local-agent
+evidence-sha256: 5297533580034decc51d043ff1cc0c19fd189e3b8666af8eca66a56d7fe78106
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05-APPS
+updated: 2026-09-07T09:46:06+00:00
+actor: local-agent
+evidence-sha256: aa25baaa016bcf64563c1194b16402bbf2f70099674c2fed3050e31cad982da5
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0145
+updated: 2026-09-07T15:40:44+00:00
+actor: local-agent
+evidence-sha256: 8a0d123d7986ce23d4b44a81962d5c80f660962912df8aa6ca3a80d4fb971ff1
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05-WEB
+updated: 2026-09-07T15:42:00+00:00
+actor: local-agent
+evidence-sha256: 5d479d537dc1a308fb33c559a4ebed39b7d29eb42929fcec65af97e584a85625
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0133
+updated: 2026-09-07T16:11:04+00:00
+actor: local-agent
+evidence-sha256: bf8f5935018f755d0889723675beae705dcbf68623bb749f02ea254b258714e1
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0139
+updated: 2026-09-07T16:22:19+00:00
+actor: local-agent
+evidence-sha256: 46135bd1f7765e7da6d9c33f49df38f730beb056f428a98d8d598e7ae3239275
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0146
+updated: 2026-09-07T16:33:33+00:00
+actor: local-agent
+evidence-sha256: 1bc3466f4209a88e0e08b805d40e1ea395406db8d735bae99df68e6a25e4aae0
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05-HUB
+updated: 2026-09-07T16:56:33+00:00
+actor: local-agent
+evidence-sha256: 904cd87db9d3e5092e50dc56992e8758987a4477a8153ade6eed0f1985389888
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0151
+updated: 2026-09-07T17:11:32+00:00
+actor: local-agent
+evidence-sha256: 1aff41d46d74a7fadab58ab6f600da298c53f5177c45bb9dff7cd4b077055aaa
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05-CRM
+updated: 2026-09-07T18:57:23+00:00
+actor: local-agent
+evidence-sha256: f05b5cb9a79e1d9a720fb63db01722b1fa2fb1103f5d916d9e79e42e72ba1567
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05
+updated: 2026-09-07T18:57:39+00:00
+actor: local-agent
+evidence-sha256: 75d41828db93f7f1cf0319cb62b4555505145aa7e350e3f76b5e54e3998e980b
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-06
+updated: 2026-09-07T19:04:42+00:00
+actor: local-agent
+evidence-sha256: 5f22e53b7db61e188b5dc47f904485e0d6871007582380be638be5b78ce4a5ab
+-->
+
