@@ -65,7 +65,7 @@ export default async function Dashboard() {
         ) : (
           <EHList label="Als Nächstes" items={[
             ...(nextAppointment ? [{ id: 'appt-' + nextAppointment.job_id, title: 'Nächster Termin', text: `${nextAppointment.title} · ${nextAppointment.business_name} · ${dateLabel(nextAppointment.start_at)}`, href: `/app/jobs/${nextAppointment.job_id}` }] : []),
-            ...(openDecision ? [{ id: 'dec-' + openDecision.id, title: 'Offenes Angebot', text: `${openDecision.title}${openDecisionQuotes > 0 ? ` · ${openDecisionQuotes} ${openDecisionQuotes === 1 ? 'Angebot' : 'Angebote'} prüfen` : ''}`, href: `/app/jobs/${openDecision.id}` }] : []),
+            // openDecision renders once as EHPriorityAction above; no duplicate list entry.
             ...(dueMaintenance ? [{ id: 'maint', title: 'Fällige Wartung', text: `${dueMaintenance.title} · ${dateLabel(dueMaintenance.due_date)}`, href: '/app/year' }] : []),
           ]} />
         )}

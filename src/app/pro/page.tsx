@@ -103,7 +103,7 @@ export default async function Pro() {
             id: String(job.dispatch_id),
             kind: badge.label,
             title: job.title.replace(/^Ansprechpartner:\s*/, ''),
-            description: job.description,
+            description: job.description.length > 140 ? `${job.description.slice(0, 140)}…` : job.description,
             location: `${job.postcode || 'Region'}${job.distance_km ? ` · ${Math.round(job.distance_km)} km` : ''}`,
             price,
             time: timeAgo(job.sent_at),

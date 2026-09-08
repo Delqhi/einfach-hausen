@@ -1,6 +1,5 @@
-import { ChevronDown, Layers3, MessageSquare, Phone, UserRound } from 'lucide-react';
-import { EHInbox, EHContactGroup, EHConversation, EHWorkflowForm, EHSubmitButton, EHFormFeedback, EHAppHeader, EHPanel, EHList, EHEmptyState, EHErrorState, EHCallout, EHButton, EHField, EHSelect, EHInput, EHStatus } from '@/design-system';
-import { AppShell, SectionTitle } from '@/components/shell';
+import { EHInbox, EHContactGroup, EHConversation, EHWorkflowForm, EHSubmitButton, EHFormFeedback, EHAppHeader, EHEmptyState, EHErrorState, EHCallout, EHButton, EHField, EHSelect, EHInput, EHStatus } from '@/design-system';
+import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { updateContactCategoryAction } from '@/app/actions';
@@ -73,7 +72,7 @@ export default async function Messages({ searchParams }: { searchParams: Promise
     <EHAppHeader eyebrow="Netzwerk" title="Meine Ansprechpartner" text="Nach Bereichen sortiert, damit du sofort weißt, wen du für Garten, Dach, Elektro oder andere Themen ansprechen kannst." />
     {contacts.length === 0 ? <EHEmptyState title="Noch keine Ansprechpartner" text="Wenn du zuerst nur mit einem passenden Menschen sprechen möchtest, startest du beim Hausmeister und wählst bewusst „Ansprechpartner finden“." action={<EHButton href="/app/hausmeister" arrow>Ansprechpartner finden</EHButton>} /> : <>
       {hasRequestedContact && !selected && <EHErrorState text="Dieser Ansprechpartner ist nicht mehr verfügbar. Wähle einen Kontakt aus deiner Liste." />}
-      <EHInbox contacts={grouped.map(([category,rows])=><EHContactGroup key={category} title={category} contacts={rows.map((contact:any)=>({id:String(contact.contact_user_id),href:`/app/messages?contact=${contact.contact_user_id}`,name:`${contact.first_name} ${contact.last_name}`,detail:`${contact.job_title||'Ansprechpartner'} · ${contact.business_name}${contact.last_job_title?` · ${contact.last_job_title}`:''}`,active:contact.contact_user_id===selectedId,unread:Number(contact.unread_count||0)}))}/>)}>
+      <EHInbox contacts={grouped.map(([category,rows])=><EHContactGroup key={category} title={category} contacts={rows.map((contact:any)=>({id:String(contact.contact_user_id),href:`/app/messages?contact=${contact.contact_user_id}`,name:`${contact.first_name} ${contact.last_name}`,detail:`${contact.job_title||'Ansprechpartner'} · ${contact.business_name} — ${contact.last_job_title?`Kennt dein Haus aus: ${contact.last_job_title}`:'Mit deinem Haus verknüpft'}`,active:contact.contact_user_id===selectedId,unread:Number(contact.unread_count||0)}))}/>)}>
         {selected&&<EHConversation role="owner" name={`${selected.first_name} ${selected.last_name}`} detail={`${selected.job_title||'Ansprechpartner'} · ${selected.business_name} · ${selectedCategory}`} phone={selected.phone}
           messages={messages.map(message=>({id:`${message.source}-${message.id}`,mine:message.sender_id===u.id,author:`${message.sender_id===u.id?'Du':selected.first_name}${message.source==='job'&&message.context_title?` · Auftrag: ${message.context_title}`:''}`,body:message.body}))}
           composer={<OwnerMessageComposer contactUserId={selected.contact_user_id} peerName={selected.first_name} unreadCount={unreadCount}/>}

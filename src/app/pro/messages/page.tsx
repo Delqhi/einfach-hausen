@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { MessageSquare, Phone, UserRound } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { getProviderContext } from '@/lib/provider';
-import { EHInbox, EHContactGroup, EHConversation, EHFormFeedback, EHPanel, EHList, EHStatus } from '@/design-system';
+import { EHInbox, EHContactGroup, EHConversation, EHFormFeedback, EHStatus } from '@/design-system';
 import { ProviderMessageComposer } from './thread-client';
 import styles from './messages.module.css';
 

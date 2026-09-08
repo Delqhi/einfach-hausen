@@ -1,4 +1,4 @@
-import { ChevronRight, UserRound } from 'lucide-react';
+
 import { EHAppHeader, EHList, EHCallout, EHField, EHInput, EHWorkspaceGrid, EHIdentitySummary, EHWorkflowForm, EHFormSection, EHFieldGrid, EHSubmitButton, EHWorkSection } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { InstallAppCard } from '@/components/install-app-card';

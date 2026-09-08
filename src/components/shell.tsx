@@ -1,9 +1,8 @@
 import {EHScope, EHWorkspaceFrame, EHWorkspaceNavItem} from "@/design-system";
 import Link from 'next/link';
-import { Bell, HelpCircle, Menu } from 'lucide-react';
+import { Bell, Menu } from 'lucide-react';
 import { BottomNav, isNavActive, ownerNav, providerNav } from './bottom-nav';
 import { OwnerMobileMenu } from './owner-menu';
-import { BellRoundedIcon } from './icons';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 
