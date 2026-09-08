@@ -17,8 +17,8 @@
       "kind": "text"
     },
     "design/design-lock.json": {
-      "sha256": "ee7f0faf6ba832e5c26d6007703a0f81fc1b7747618c9d3da94e6487e53ca437",
-      "bytes": 4818,
+      "sha256": "33f7c5cc1a19cbad18bf13ecccd93fdd906ad2cbb21e210b799a5faa9f0fbccf",
+      "bytes": 4943,
       "kind": "text"
     },
     "docs/NEXT_AGENT.md": {
@@ -27,28 +27,33 @@
       "kind": "text"
     },
     "docs/brand/workspace/NEXT_AGENT.md": {
-      "sha256": "89050bc7792f924dec22a9c5e4a79c2d4c59a96c624abe2db6de805e81d34d95",
-      "bytes": 5995,
+      "sha256": "62107a68633704e38719aee8fd1adc49bd9ebba142aea11790249e001a483505",
+      "bytes": 7471,
       "kind": "text"
     },
     "packages/eh-design/src/html-style.mjs": {
-      "sha256": "000a9c7b3b3594183e9c07b27bc4de0d3dd5505b79b6afa82d127ab4e49f1c5e",
-      "bytes": 285399,
+      "sha256": "51637a059dcd2328fb8b3d1cff37ad23d9d97c6416220f5004611052f2f90517",
+      "bytes": 288230,
       "kind": "text"
     },
     "packages/eh-design/src/html.css": {
-      "sha256": "0cc28437c799b8d232bd324b338ca362f9696572fdd7e804845833342b3c9948",
-      "bytes": 39002,
+      "sha256": "c8d7be409d8c356f9b456a5d98edc23e711444f5e931eca250a45c01fc11c750",
+      "bytes": 41801,
       "kind": "text"
     },
     "packages/eh-design/src/index.ts": {
-      "sha256": "c38eeedcba8752e5fe7fd322c56b12e62a25b7346b94576e53f0976a08182d45",
-      "bytes": 366,
+      "sha256": "7b649aba6b99f8b4e302415f77635e3d1d0e0b6a13272aa1cfda090bb560c529",
+      "bytes": 408,
       "kind": "text"
     },
     "packages/eh-design/src/styles.module.css": {
-      "sha256": "d2c1f5775893c963376a75997118002b98a60c8d596f006b6510617f93a6fbdd",
-      "bytes": 37661,
+      "sha256": "14830466f1a2f8dfb5471d2ff598c393313e6128593067bf189f3a5a0467dd6d",
+      "bytes": 40373,
+      "kind": "text"
+    },
+    "packages/eh-design/src/workspace-conversation.tsx": {
+      "sha256": "040f7d82d9d93642460d2f28f9c33d50d013b016acace6df8d3b4719cf377515",
+      "bytes": 1781,
       "kind": "text"
     },
     "packages/eh-design/src/workspace-records.tsx": {
@@ -71,6 +76,16 @@
       "bytes": 2843,
       "kind": "text"
     },
+    "src/app/app/jobs/page.tsx": {
+      "sha256": "143f1a8f94b419d86fc0a54377aa17ce7b665db1a8f752abd6067548b8ad1afd",
+      "bytes": 3107,
+      "kind": "text"
+    },
+    "src/app/app/messages/page.tsx": {
+      "sha256": "17025c5101f47785801de4adcbdf6a8f164d07ce01db255d4cdb7d7cf0c9db98",
+      "bytes": 7168,
+      "kind": "text"
+    },
     "src/app/app/more/page.tsx": {
       "sha256": "5a724cad424317dc7af926b5ac0dc46a51b37ba3595e19c1960b4ccf4d7da681",
       "bytes": 1684,
@@ -89,6 +104,16 @@
     "src/app/app/year/page.tsx": {
       "sha256": "7ce22b0c0ad9a36f26b3bdbe4ff3df70469bc3c7bd08365edf07676578a7a366",
       "bytes": 4353,
+      "kind": "text"
+    },
+    "src/app/pro/calendar/page.tsx": {
+      "sha256": "10f6e835bc14ca6894b87be77b163204f96e2b6743cb7de2b773507077e82714",
+      "bytes": 2891,
+      "kind": "text"
+    },
+    "src/app/pro/messages/page.tsx": {
+      "sha256": "b692037ef8c5ccf9d14e4b5fa76ecfa571f2a88710712aa00e22a91b672a0c98",
+      "bytes": 5674,
       "kind": "text"
     },
     "src/app/pro/orders/page.tsx": {

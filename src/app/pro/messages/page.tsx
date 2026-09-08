@@ -5,7 +5,7 @@ import { ProviderAccessBoundary, ProviderPageIntro, ProviderSectionHeader, Provi
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { getProviderContext } from '@/lib/provider';
-import { EHPanel, EHList, EHStatus } from '@/design-system';
+import { EHInbox, EHContactGroup, EHConversation, EHFormFeedback, EHPanel, EHList, EHStatus } from '@/design-system';
 import { ProviderMessageComposer } from './thread-client';
 import styles from './messages.module.css';
 
@@ -87,52 +87,11 @@ export default async function Messages({ searchParams }: { searchParams: Promise
           description="Sobald dir eine Kontaktanfrage oder ein Auftrag zugewiesen wurde, kann daraus ein direkter Kundenkontakt entstehen."
         />
       ) : (
-        <div className="provider-messages-layout">
-          <section className="provider-message-list-pane" aria-label="Kundenkontakte">
-            <EHPanel title={`Kunden · ${customers.length} ${customers.length === 1 ? 'Kontakt' : 'Kontakte'}`}>
-            <EHList label="Kundenkontakte" items={customers.map((customer) => ({
-              id: String(customer.homeowner_id),
-              title: `${customer.first_name} ${customer.last_name}`,
-              text: `${customer.address || customer.postcode} · ${customer.last_job_title || customer.category || 'Hausservice'}`,
-              href: `/pro/messages?homeowner=${customer.homeowner_id}`,
-              meta: Number(customer.unread_count) > 0 ? <EHStatus>{customer.unread_count > 99 ? '99+' : customer.unread_count} ungelesen</EHStatus> : null,
-            }))} />
-            </EHPanel>
-          </section>
-
-          <section className={`provider-message-thread ${styles.threadShell}`} aria-label={selected ? `Nachrichten mit ${selected.first_name} ${selected.last_name}` : 'Nachrichten'} data-message-thread="provider">
-            {hasRequestedHomeowner && !selected ? (
-              <div className="alert error" role="alert">Dieser Kundenkontakt ist nicht mehr verfügbar. Wähle einen Kontakt aus deiner Liste.</div>
-            ) : selected ? <>
-              <ProviderSectionHeader title={`${selected.first_name} ${selected.last_name}`} description={selected.address || selected.postcode} />
-              <div className="contact-card pro-contact-card">
-                <UserRound aria-hidden="true" />
-                <div className="grow">
-                  <strong>{selected.first_name} {selected.last_name}</strong>
-                  <p>{selected.last_job_title ? `Letzter Auftrag: ${selected.last_job_title}` : 'Bestehender Kunde'}</p>
-                  <small>Du bist als direkter Ansprechpartner hinterlegt.</small>
-                </div>
-                {selected.phone && <a className="icon-contact" href={`tel:${selected.phone}`} aria-label={`${selected.first_name} anrufen`}><Phone aria-hidden="true" /></a>}
-              </div>
-
-              <div className="chat pro-chat">
-                {messages.length === 0 && (
-                  <div className="contact-chat-intro">
-                    <MessageSquare aria-hidden="true" />
-                    <p>Schreibe eine erste Nachricht, wenn du Termin, Rückfrage oder nächste Arbeit abstimmen möchtest.</p>
-                  </div>
-                )}
-                {messages.map((message) => (
-                  <div className={message.sender_id === u.id ? 'msg mine' : 'msg'} key={`${message.source}-${message.id}`}>
-                    <small>{message.sender_id === u.id ? 'Du' : selected.first_name}{message.source === 'job' && message.context_title ? ` · Auftrag: ${message.context_title}` : ''}</small>
-                    <p className={styles.messageBody}>{message.body}</p>
-                  </div>
-                ))}
-                <ProviderMessageComposer homeownerId={selected.homeowner_id} peerName={selected.first_name} unreadCount={unreadCount} />
-              </div>
-            </> : null}
-          </section>
-        </div>
+        <EHInbox contacts={<EHContactGroup title={`Kunden · ${customers.length}`} contacts={customers.map(customer=>({id:String(customer.homeowner_id),href:`/pro/messages?homeowner=${customer.homeowner_id}`,name:`${customer.first_name} ${customer.last_name}`,detail:`${customer.address||customer.postcode} · ${customer.last_job_title||customer.category||'Hausservice'}`,active:customer.homeowner_id===selectedId,unread:Number(customer.unread_count||0)}))}/>}>
+          {hasRequestedHomeowner&&!selected?<EHFormFeedback kind="error">Dieser Kundenkontakt ist nicht mehr verfügbar. Wähle einen Kontakt aus deiner Liste.</EHFormFeedback>:selected?<EHConversation role="provider" name={`${selected.first_name} ${selected.last_name}`} detail={`${selected.address||selected.postcode}${selected.last_job_title?` · Letzter Auftrag: ${selected.last_job_title}`:' · Bestehender Kunde'}`} phone={selected.phone}
+            messages={messages.map(message=>({id:`${message.source}-${message.id}`,mine:message.sender_id===u.id,author:`${message.sender_id===u.id?'Du':selected.first_name}${message.source==='job'&&message.context_title?` · Auftrag: ${message.context_title}`:''}`,body:message.body}))}
+            composer={<ProviderMessageComposer homeownerId={selected.homeowner_id} peerName={selected.first_name} unreadCount={unreadCount}/>}/>:null}
+        </EHInbox>
       )}
     </AppShell>
   );

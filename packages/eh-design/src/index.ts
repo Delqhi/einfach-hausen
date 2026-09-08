@@ -10,3 +10,4 @@ export * from "./submit-button";
 export * from "./job-forms";
 export * from "./workspace";
 export * from "./workspace-records";
+export * from "./workspace-conversation";
