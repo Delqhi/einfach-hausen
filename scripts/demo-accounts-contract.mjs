@@ -8,6 +8,7 @@ const seed = fs.readFileSync(path.join(root, 'scripts/seed-demo-users.mjs'), 'ut
 const accounts = fs.readFileSync(path.join(root, 'src/lib/demo-accounts.ts'), 'utf8');
 const auth = fs.readFileSync(path.join(root, 'src/lib/auth.ts'), 'utf8');
 const form = fs.readFileSync(path.join(root, 'src/components/auth-v2/LoginForm.tsx'), 'utf8');
+const loginRoute = fs.readFileSync(path.join(root, 'src/app/login/page.tsx'), 'utf8');
 
 for (const token of ['kunde@demo.einfachhausen.de', 'handwerker@demo.einfachhausen.de', "DEMO_PASSWORD = 'admin'"]) {
   if (!accounts.includes(token)) failures.push(`demo account contract missing ${token}`);
@@ -23,6 +24,12 @@ for (const token of [
   'doLogin(demo.email, DEMO_PASSWORD, targetRole)',
 ]) {
   if (!form.includes(token)) failures.push(`role-aware demo redirect missing ${token}`);
+}
+if (!loginRoute.includes('nextPath={sp.next}')) {
+  failures.push('login route must preserve an absent next value so LoginForm can choose the role-aware fallback');
+}
+if (loginRoute.includes('nextPath={safeNextPath(sp.next)}')) {
+  failures.push('login route must not pre-default an absent next value to /app');
 }
 for (const token of ['per_page=', 'verifyCredentials', '/auth/v1/token?grant_type=password']) {
   if (!seed.includes(token)) failures.push(`demo seeder missing ${token}`);

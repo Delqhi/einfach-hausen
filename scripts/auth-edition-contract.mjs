@@ -25,7 +25,8 @@ for (const file of routeFiles) {
 }
 
 const loginPage = read('src/app/login/page.tsx');
-has(loginPage, 'safeNextPath', 'login route');
+has(loginPage, 'nextPath={sp.next}', 'login route');
+lacks(loginPage, 'safeNextPath(', 'login route');
 has(loginPage, 'initialAuthMode="login"', 'login route');
 const registerPage = read('src/app/register/page.tsx');
 has(registerPage, 'initialAuthMode="register"', 'register route');
