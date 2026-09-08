@@ -1,4 +1,4 @@
-import {EHLogo, EHScope} from "@/design-system";
+import {EHScope, EHWorkspaceFrame, EHWorkspaceNavItem} from "@/design-system";
 import Link from 'next/link';
 import { Bell, HelpCircle, Menu } from 'lucide-react';
 import { BottomNav, isNavActive, ownerNav, providerNav } from './bottom-nav';
@@ -6,10 +6,6 @@ import { OwnerMobileMenu } from './owner-menu';
 import { BellRoundedIcon } from './icons';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
-
-function CenterLogo({href}: {href: string}) {
-  return <EHLogo href={href}/>;
-}
 
 export async function AppShell({ role, active, children, title, subtitle }: { role:'homeowner'|'provider'; active:string; children:React.ReactNode; title?:string; subtitle?:string }) {
   const pro = role === 'provider';
@@ -28,44 +24,13 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
     <OwnerMobileMenu active={active} />
   );
 
-  return <EHScope app><main className={pro?'app-page app-shell-v3 pro-theme':'app-page app-shell-v3 ehn-owner'}>
-    <div className="workspace-shell">
-      <aside className="desktop-sidebar">
-        {/* Desktop shows the workspace navigation expanded by default; the
-        summary stays clickable so users can collapse it. Mobile hides this
-        aside entirely (bottom nav + mobile menu own that breakpoint). */}
-        <details className="app-menu" open>
-          <summary className="app-menu-summary" aria-label="Menü öffnen oder schließen">
-            <span className="app-menu-mark"><Menu size={19} strokeWidth={1.9}/></span>
-            <span className="app-menu-summary-label">Menü</span>
-          </summary>
-          <div className="app-menu-content">
-            <div className="sidebar-brand"><EHLogo href={pro?"/pro":"/app"}/></div>
-            <nav className="sidebar-nav" aria-label="Hauptnavigation">{items.map(([href,Icon,label])=><Link key={href} href={href} className={isNavActive(active,href)?'active':''}><span className="sidebar-icon"><Icon size={17}/></span><span>{label}</span></Link>)}</nav>
-            <div className="sidebar-footer"><Link href={profileHref} className="sidebar-user"><span className="user-avatar">{initials}</span><span><strong>{user?`${user.first_name} ${user.last_name}`:'Profil'}</strong><small>{pro?'Partnerkonto':'Eigenheim-Konto'}</small></span></Link><span className="sidebar-help"><HelpCircle size={14}/> Hilfe & Support</span></div>
-          </div>
-        </details>
-      </aside>
-
-      <div className="workspace-main">
-        <header className={pro?'topbar-v3':'topbar-v3 ehn-owner-top'}>
-          {mobileMenu}
-          <div className="mobile-brand"><EHLogo href={pro?"/pro":"/app"}/></div>
-          {!pro&&<CenterLogo href="/app"/>}
-          <div className="page-context"><strong>{title || (pro?'Partnerbereich':'Einfach Hausen')}</strong><small>{subtitle || (pro?'Aufträge organisieren':'Alles rund um dein Zuhause')}</small></div>
-          <div className="top-actions">
-            <Link className="notification-link" href="/notifications" aria-label={unread?`${unread} ungelesene Benachrichtigungen`:'Benachrichtigungen'}>
-              {pro?<Bell size={18}/>:<BellRoundedIcon/>}
-              {unread>0&&(pro?<span>{unread>99?'99+':unread}</span>:<span className="ehn-bell-dot" aria-hidden="true"/>)}
-            </Link>
-            <Link href={profileHref} className="top-user-avatar" aria-label="Profil">{initials}</Link>
-          </div>
-        </header>
-        <section className={`screen-v3${!pro && active === "/app" ? " ehn-dash-screen" : ""}`}>{children}</section>
-      </div>
-      <BottomNav role={role} active={active}/>
-    </div>
-  </main></EHScope>;
+  return <EHScope app><EHWorkspaceFrame homeHref={pro?"/pro":"/app"}
+    context={pro ? "Partnerbereich" : "Mein Zuhause"}
+    navigation={items.map(([href,Icon,label])=><EHWorkspaceNavItem key={href} href={href} active={isNavActive(active,href)} icon={<Icon size={22}/>}>{label}</EHWorkspaceNavItem>)}
+    account={<Link href={profileHref}><strong>{user?`${user.first_name} ${user.last_name}`:'Profil'}</strong><small>{pro?'Partnerkonto':'Eigenheim-Konto'} · Profil öffnen</small></Link>}
+    mobileMenu={mobileMenu}
+    notifications={<><Link href="/notifications" aria-label={unread?`${unread} ungelesene Benachrichtigungen`:'Benachrichtigungen'}><Bell size={22}/>{unread>0&&<span>{unread>99?'99+':unread}</span>}</Link><Link href={profileHref} aria-label="Profil">{initials}</Link></>}
+    bottomNav={<BottomNav role={role} active={active}/>}>{children}</EHWorkspaceFrame></EHScope>;
 }
 
 export function SectionTitle({ children, href }: {children:React.ReactNode; href?:string}) {

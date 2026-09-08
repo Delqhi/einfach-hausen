@@ -901,3 +901,6 @@ Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren tec
 ## App-Vorlagen: verbindliche Ergänzung 2026-09-07
 Für Shell, Provider-Onboarding und Team zuerst docs/brand/app-foundation/NEXT_AGENT.md lesen. Bestehende Vorlagen wiederverwenden; fehlende Workflows nicht selbst gestalten. Edition 2 bedeutet nicht vollständige App-Abdeckung.
 >>>>>>> origin/main
+
+## App-Komposition 2026-09-08: bisherige gestalterische Abnahme zurückgewiesen
+Jerry verlangt professionellen Neuaufbau innerhalb Atelier02. Verbindlicher Kandidat und Beweisgrenzen: docs/brand/workspace/NEXT_AGENT.md. Technische Gates und EH-Imports beweisen keine Produktgestaltung; keine neue visuelle Baseline ohne Begutachtung.

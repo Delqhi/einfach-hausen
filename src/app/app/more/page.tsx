@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ChevronRight,FileText,House,MessageCircle,Settings,ShieldCheck,UserRound,WalletCards,Wrench } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
-import { EHAppHeader, EHList, EHCallout } from '@/design-system';
+import { EHAppHeader, EHServiceDirectory, EHCallout } from '@/design-system';
 
 const links=[
   ['/app/hausmeister',MessageCircle,'Hausmeisterservice','Fragen klären und den nächsten Schritt organisieren'],
@@ -16,6 +16,9 @@ const links=[
 
 export default async function More(){await requireUser('homeowner');return <AppShell role="homeowner" active="/app/more" title="Mehr" subtitle="Alles Weitere rund um dein Zuhause">
     <EHAppHeader eyebrow="Navigation" title="Mehr" text="Alles Weitere rund um dein Zuhause." />
-    <EHList label="Weitere Bereiche" items={links.map(([href,,title,sub])=>({ id: href, title, text: sub, href }))} />
+    <EHServiceDirectory groups={[
+      {title:"Dein Haus organisieren",items:links.slice(0,4).map(([href,Icon,title,text])=>({href,title,text,icon:<Icon/>}))},
+      {title:"Dein Konto",items:links.slice(4).map(([href,Icon,title,text])=>({href,title,text,icon:<Icon/>}))},
+    ]}/>
     <EHCallout title="Hilfe & Support"><p>Wenn ein Vorgang festhängt, kannst du ihn direkt im Auftrag als Servicefall melden.</p></EHCallout>
   </AppShell>}

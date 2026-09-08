@@ -8,3 +8,4 @@ export * from "./request-form";
 export * from "./workflow-layouts";
 export * from "./submit-button";
 export * from "./job-forms";
+export * from "./workspace";
