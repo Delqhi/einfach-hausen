@@ -10,6 +10,10 @@
       "session": "Session-Ablauf (30 Tage) bzw. Ausloggen",
       "audit": "Admin-Audit-Log, abloesbar nach internem Standard",
       "ephemeral": "verarbeitet, nicht persistiert / nur Betriebs-Log"
+    },
+    "systems": {
+      "core": "Haupt-App SQLite (/var/lib/einfach-hausen/einfach-hausen.db)",
+      "crm-d1": "CRM Cloudflare Worker D1-Datenbank (separates System, Deployment siehe einfach-hausen-crm Repo)"
     }
   },
   "tables": {
@@ -81,17 +85,20 @@
     "crm_events": {
       "personal": true,
       "purpose": "Lead-Historie (Notizen, Kanal, Richtung)",
-      "retention": "business"
+      "retention": "business",
+      "system": "crm-d1"
     },
     "crm_leads": {
       "personal": true,
       "purpose": "B2B-Leadregister (Firmendaten; Kontakt nur mit dokumentierter Berechtigung)",
-      "retention": "business"
+      "retention": "business",
+      "system": "crm-d1"
     },
     "crm_meta": {
       "personal": false,
       "purpose": "CRM-Betriebsmetadata (keine Personenbezogenen)",
-      "retention": "business"
+      "retention": "business",
+      "system": "crm-d1"
     },
     "cwv_metrics": {
       "personal": false,
