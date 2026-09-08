@@ -9,7 +9,7 @@
     "lint": "eslint",
     "test:e2e": "node scripts/e2e.mjs",
     "test:api-contract": "node scripts/eh02-api-contract-regression.mjs",
-    "test:security": "node scripts/security-regression.mjs && node scripts/t0003-security-regression.mjs && node scripts/t0120-security-fuzz.mjs",
+    "test:security": "node scripts/security-regression.mjs && node scripts/t0003-security-regression.mjs && node scripts/t0120-security-fuzz.mjs && node scripts/demo-binding-regression.mjs",
     "test:supply-chain": "node scripts/t0121-supply-chain.mjs",
     "graph:update": "graphify update .",
     "graph:check": "graphify check-update .",

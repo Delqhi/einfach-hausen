@@ -5,19 +5,25 @@ import { createServerClient } from '@supabase/ssr';
 import { DEMO_LOGIN_ENABLED, DEMO_USERS, isDemoEmail } from './demo-accounts';
 
 /**
- * Demo-Phase: legt die App-Zeile fuer eine verifizierte Demo-Identitaet an
- * (feste Rolle pro Demo-User). Idempotent; fasst bestehende Zeilen nie an —
- * ein E-Mail-/Rollenkonflikt bleibt bestehen und faellt fail-closed.
+ * Demo-Phase: binds the two fixed public demo identities to the current
+ * verified Supabase subjects. An existing demo row may be rebound only when
+ * its server-controlled role still matches the fixed demo role. Role/email or
+ * subject collisions remain fail-closed.
  */
 export function ensureDemoAppRow(email: string, authSubject: string): void {
   const demo = (Object.values(DEMO_USERS) as Array<{ email: string; role: string; firstName: string; lastName: string }>).find(
     (u) => u.email === email.trim().toLowerCase(),
   );
   if (!demo) return;
+  const existing = db.prepare('SELECT id,role,auth_subject FROM users WHERE lower(email)=lower(?)').get(demo.email) as { id: number; role: string; auth_subject: string | null } | undefined;
+  if (existing) {
+    if (existing.role !== demo.role || existing.auth_subject === authSubject) return;
+    db.prepare('UPDATE OR IGNORE users SET auth_subject=? WHERE id=? AND role=?').run(authSubject, existing.id, demo.role);
+    return;
+  }
   db.prepare(
-    `INSERT INTO users(email,password_hash,role,first_name,last_name,phone,auth_subject)
-     SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM users WHERE lower(email)=lower(?))`,
-  ).run(demo.email, 'demo-supabase-only', demo.role, demo.firstName, demo.lastName, null, authSubject, demo.email);
+    'INSERT OR IGNORE INTO users(email,password_hash,role,first_name,last_name,phone,auth_subject) VALUES(?,?,?,?,?,?,?)',
+  ).run(demo.email, 'demo-supabase-only', demo.role, demo.firstName, demo.lastName, null, authSubject);
 }
 
 // Resolved once per call: the Supabase gateway is the production identity
