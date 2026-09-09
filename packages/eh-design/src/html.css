@@ -468,7 +468,7 @@
 @media(max-width:599px) { .eh-conversation > header { align-items:flex-start;flex-direction:column; } .eh-conversationMessages { padding:24px 16px; } .eh-conversationMessages > li { max-width:95%; } }
 
 .eh-detailHeading { display:flex;align-items:flex-start;justify-content:space-between;gap:24px; }
-.eh-detailHeading h1 { font-size:clamp(2rem,3.5vw,3rem);line-height:1.1;letter-spacing:-.04em;margin:12px 0 16px;max-width:22ch; }
+.eh-detailHeading h1,.eh-detailHeading h2 { font-size:clamp(2rem,3.5vw,3rem);line-height:1.1;letter-spacing:-.04em;margin:12px 0 16px;max-width:22ch; }
 .eh-detailHeading p { color:var(--eh-color-secondary);font-size:var(--eh-font-label); }
 .eh-detailBrief { background:var(--eh-color-white);padding:32px;border-radius:var(--eh-shape-panel); }
 .eh-detailBrief > span,.eh-detailNext > span,.eh-invoiceRecipient > span,.eh-invoiceSummary > span { font-size:var(--eh-font-meta);font-weight:650;letter-spacing:.06em; }
@@ -525,3 +525,8 @@
  .eh-attachmentList li { flex-wrap:wrap; }
  .eh-attachmentList li > span:last-child { width:100%; }
 }
+
+.eh-invoiceEditor { display:grid;gap:32px;min-width:0; }
+.eh-invoiceEditor[data-embedded] { padding:24px; }
+.eh-attachmentPanel form > section { display:grid;gap:20px; }
+@media(max-width:599px) { .eh-invoiceEditor[data-embedded] { padding:16px; } }
