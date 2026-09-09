@@ -958,3 +958,38 @@ Die Markenstudie liegt unter design/brand-study/ und ist unabhängig von Next-Ap
 
 Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren technische 27/27-Prüfung ist keine visuelle Freigabe. Root Codex gestaltet und implementiert die neue Richtung persönlich; keinen weiteren Prime/bai-Dispatch aus alten Abschnitten ableiten. Neuer Arbeitsstand: `design/einfachhausen-brand-atelier-20260906`, Workspace `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`. Konzept, vollständige Nutzerkorrektur und Plan: `docs/brand/ATELIER_02.md`; aktuelle Übergabe: `docs/brand/HANDOFF.md`; vollständige Quellen: `docs/brand/ATELIER_02_SOURCE.md`; bedienbare Vollansicht: `design/brand-atelier/preview.html`. EH-BRAND-03 bleibt in Arbeit, die neue Richtung wurde noch nicht vom Nutzer bewertet. Genau nächste Markenaktion: diese neue Vollansicht besprechen und tatsächliches Nutzerfeedback dokumentieren. EH-BRAND-04..06 folgen erst der Richtungsentscheidung; kein Merge/Deploy. Ältere Empfehlungen/Dispatch-Anweisungen sind für diese Markenwelle historisch. Andere laufende Arbeitswellen bleiben erhalten.
 >>>>>>> origin/main
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0007
+updated: 2026-08-29T20:22:56+00:00
+actor: local-agent
+evidence-sha256: 9fced8fc1fea3a24766fb348dd92b1dafe1ce6cbdbc5e0178ebdaade6dd01a05
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0207
+updated: 2026-08-31T05:02:48+00:00
+actor: local-agent
+evidence-sha256: 1017a920b7cf8fe652672b1af34f77f91dc83e95bebdfd52e9a57ff31d931235
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0006
+updated: 2026-08-30T19:51:22+00:00
+actor: local-agent
+evidence-sha256: c06a0c08dd4aed8815e9506b2ece8b5ac94fae69f2372ca33649c3a92f9bbed0
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0206
+updated: 2026-08-31T03:37:41+00:00
+actor: local-agent
+evidence-sha256: 027117d24fef4b17a77dddd236c195d9b40586c3bc282dfd5c0aec2f9b5e54ee
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0208
+updated: 2026-08-31T15:17:38+00:00
+actor: local-agent
+evidence-sha256: 3c5ff2bd506025e42f53ea35964b6be662f201604fdd2d490f55ac7573da8fcb
+-->
