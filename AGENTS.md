@@ -274,9 +274,9 @@ evidence-sha256: d2ac93b376b977a7e8c1e97fa78f2e3cc4a6fa132413259427293fa43456d18
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0172
-updated: 2026-08-31T20:53:09+00:00
+updated: 2026-09-09T01:36:03+00:00
 actor: local-agent
-evidence-sha256: dcd867da25695f1168a7f176d082ca52bdc934dcb9e40f949e46251cbed16821
+evidence-sha256: daaa73300e8e73e245696aebf9a87df6fcda45e85b2000a58c1213f2145d5d71
 -->
 
 <!-- SIN-GPT-WEB-HANDOVER
@@ -902,5 +902,40 @@ Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren tec
 Für Shell, Provider-Onboarding und Team zuerst docs/brand/app-foundation/NEXT_AGENT.md lesen. Bestehende Vorlagen wiederverwenden; fehlende Workflows nicht selbst gestalten. Edition 2 bedeutet nicht vollständige App-Abdeckung.
 >>>>>>> origin/main
 
-## App-Komposition 2026-09-08: bisherige gestalterische Abnahme zurückgewiesen
-Jerry verlangt professionellen Neuaufbau innerhalb Atelier02. Verbindlicher Kandidat und Beweisgrenzen: docs/brand/workspace/NEXT_AGENT.md. Technische Gates und EH-Imports beweisen keine Produktgestaltung; keine neue visuelle Baseline ohne Begutachtung.
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0007
+updated: 2026-08-29T20:22:56+00:00
+actor: local-agent
+evidence-sha256: 9fced8fc1fea3a24766fb348dd92b1dafe1ce6cbdbc5e0178ebdaade6dd01a05
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0207
+updated: 2026-08-31T05:02:48+00:00
+actor: local-agent
+evidence-sha256: 1017a920b7cf8fe652672b1af34f77f91dc83e95bebdfd52e9a57ff31d931235
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0006
+updated: 2026-08-30T19:51:22+00:00
+actor: local-agent
+evidence-sha256: c06a0c08dd4aed8815e9506b2ece8b5ac94fae69f2372ca33649c3a92f9bbed0
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0206
+updated: 2026-08-31T03:37:41+00:00
+actor: local-agent
+evidence-sha256: 027117d24fef4b17a77dddd236c195d9b40586c3bc282dfd5c0aec2f9b5e54ee
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0208
+updated: 2026-08-31T15:17:38+00:00
+actor: local-agent
+evidence-sha256: 3c5ff2bd506025e42f53ea35964b6be662f201604fdd2d490f55ac7573da8fcb
+-->
+
+## Aktueller App-Umbau
+Verbindliche Umsetzung und Prüfgrenzen: docs/brand/workspace/NEXT_AGENT.md. Neue Workspace-Komposition erhalten; historische technische Abnahmen ersetzen keine aktuelle visuelle Bewertung.

@@ -2,6 +2,7 @@ import { isFeatureEnabled } from '@/lib/feature-flags';
 import { toggleFeatureFlagAction, requeueDeadNotificationAction } from '@/app/actions';
 import { requireAdmin } from '@/lib/admin-auth';
 import { db } from '@/lib/db';
+import Link from 'next/link';
 import { EHAppHeader } from '@/design-system';
 
 export default async function AdminOps({searchParams}:{searchParams:Promise<Record<string,string|undefined>>}){
@@ -23,7 +24,7 @@ export default async function AdminOps({searchParams}:{searchParams:Promise<Reco
     ORDER BY d.created_at DESC LIMIT 15`).all() as any[];
   return <main className="admin-page"><EHAppHeader eyebrow="Betriebsverwaltung" title="Operations" text="Lookup, Zustellstatus, Matching-Trace, Flags." />
     <section className="admin-panel"><h2>Intern</h2>
-      <div className="stack"><div className="admin-card"><a href="/docs-internal">Entwickler-Docs (intern)</a></div></div>
+      <div className="stack"><div className="admin-card"><Link href="/docs-internal">Entwickler-Docs (intern)</Link></div></div>
     </section>
     <section className="admin-panel"><h2>Feature-Flags</h2>
       <div className="stack">{['ki_chat','pilot_cohort_open'].map(flag=>{
