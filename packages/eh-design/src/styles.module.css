@@ -468,7 +468,7 @@
 @media(max-width:599px) { .conversation > header { align-items:flex-start;flex-direction:column; } .conversationMessages { padding:24px 16px; } .conversationMessages > li { max-width:95%; } }
 
 .detailHeading { display:flex;align-items:flex-start;justify-content:space-between;gap:24px; }
-.detailHeading h1 { font-size:clamp(2rem,3.5vw,3rem);line-height:1.1;letter-spacing:-.04em;margin:12px 0 16px;max-width:22ch; }
+.detailHeading h1,.detailHeading h2 { font-size:clamp(2rem,3.5vw,3rem);line-height:1.1;letter-spacing:-.04em;margin:12px 0 16px;max-width:22ch; }
 .detailHeading p { color:var(--eh-color-secondary);font-size:var(--eh-font-label); }
 .detailBrief { background:var(--eh-color-white);padding:32px;border-radius:var(--eh-shape-panel); }
 .detailBrief > span,.detailNext > span,.invoiceRecipient > span,.invoiceSummary > span { font-size:var(--eh-font-meta);font-weight:650;letter-spacing:.06em; }
@@ -525,3 +525,8 @@
  .attachmentList li { flex-wrap:wrap; }
  .attachmentList li > span:last-child { width:100%; }
 }
+
+.invoiceEditor { display:grid;gap:32px;min-width:0; }
+.invoiceEditor[data-embedded] { padding:24px; }
+.attachmentPanel form > section { display:grid;gap:20px; }
+@media(max-width:599px) { .invoiceEditor[data-embedded] { padding:16px; } }

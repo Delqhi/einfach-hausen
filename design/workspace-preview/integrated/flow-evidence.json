@@ -1,0 +1,6 @@
+{
+  "environment": "isolated development DB; no production data",
+  "uploadVisible": true,
+  "invoiceRedirect": true,
+  "totalGross": 15090
+}

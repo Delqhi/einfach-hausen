@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import {
   CalendarDays,
-  FileText,
   MapPin,
   MessageSquare,
   Phone,
@@ -37,7 +36,7 @@ import { DocumentForm } from './document-form';
 import { InvoiceForm } from './invoice-form';
 import { invoiceStatusLabel } from '@/lib/invoices';
 import { SubmitButton } from '@/components/ui/submit-button';
-import { EHAppHeader, EHErrorState, EHPanel, EHList, EHCallout, EHStatus, EHQuoteForm, EHAssignmentForm, EHJobMessageForm } from '@/design-system';
+import { EHAppHeader, EHErrorState, EHPanel, EHList, EHCallout, EHStatus, EHQuoteForm, EHAssignmentForm, EHJobMessageForm, EHAttachmentPanel, EHWorkspaceGrid, EHWorkSection } from '@/design-system';
 
 export default async function ProJob({
   params,
@@ -101,11 +100,13 @@ export default async function ProJob({
     >
       {sp.error && <EHErrorState text={sp.error} />}
 
+      <EHWorkspaceGrid main={<>
       <EHAppHeader
         eyebrow={isContact ? (isAccepted ? 'Verbunden' : 'Kontakt gesucht') : statusLabel(access.status)}
         title={access.title.replace(/^Ansprechpartner:\s*/, '')}
         text={access.description}
       />
+</>} aside={<EHWorkSection title="Auf einen Blick">
       <div className="meta-line">
           <span><MapPin />{isAccepted && access.address ? access.address : access.postcode}</span>
           {!isContact && <span><CalendarDays />{dateLabel(access.preferred_date)}</span>}
@@ -127,6 +128,8 @@ export default async function ProJob({
             </strong>
           </div>
         )}
+
+</EHWorkSection>} />
 
       <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
@@ -262,6 +265,8 @@ export default async function ProJob({
           {mine && !isContact && access.status === 'completed' && (
             <ProviderNextStep description="Rechnung prüfen, erstellen und dem Eigentümer senden.">
               <InvoiceForm
+                  buyer={`${access.homeowner_first} ${access.homeowner_last}`.trim()}
+                  job={access.title}
                 jobId={access.id}
                 defaultAmount={quote?.amount || access.budget_max || 0}
                 primary
@@ -353,31 +358,14 @@ export default async function ProJob({
               )}
               {access.status !== 'completed' && (
                 <InvoiceForm
+                  buyer={`${access.homeowner_first} ${access.homeowner_last}`.trim()}
+                  job={access.title}
                   jobId={access.id}
                   defaultAmount={quote?.amount || access.budget_max || 0}
                 />
               )}
 
-              <ProviderSectionHeader
-                title="Weitere Dokumente"
-                description="Leistungsnachweise, Garantien und weitere Unterlagen zum Auftrag."
-              />
-              {docs.length > 0 ? (
-                <EHList label="Weitere Dokumente" items={docs.map((document) => ({
-                  id: String(document.id),
-                  title: document.title,
-                  text: document.kind,
-                  href: `/api/documents/${document.id}`,
-                }))} />
-              ) : (
-                <ProviderState
-                  compact
-                  icon={<FileText size={20} />}
-                  title="Noch keine weiteren Dokumente"
-                  description="Leistungsnachweise oder Garantien kannst du bei Bedarf direkt am Auftrag ergänzen."
-                />
-              )}
-              <DocumentForm jobId={access.id} />
+              <EHAttachmentPanel files={docs.map((document) => ({id: String(document.id), name: document.title, kind: document.kind, detail: 'Unterlage zum Auftrag', href: `/api/documents/${document.id}`}))} upload={<DocumentForm jobId={access.id} />} />
             </>
           )}
         </>

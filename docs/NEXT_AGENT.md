@@ -1,3 +1,5 @@
+> **Aktuelle Integration 2026-09-09:** docs/brand/workspace/DETAIL-INTEGRATION.md; Branch fix/eh-detail-integration-20260909. Lokaler Agent integriert in seine laufende Arbeit; kein paralleler Produktionsdeploy.
+
 > **Aktuelle Nutzerkorrektur 2026-09-08:** App-Komposition gestalterisch nicht bestanden. Aktiver Übernahmeauftrag: docs/brand/workspace/NEXT_AGENT.md. Ältere Vollständigkeitsangaben unten sind keine aktuelle Design-Abnahme.
 
 > **Designkorrektur 2026-09-07:** Vor jeder Seitenmigration `docs/brand/system/COMPOSITION.md` lesen und `packages/eh-design/src/composition.tsx` verwenden. Vollständiger Code: `docs/brand/composition-repair/SOURCE.md`. Keine Produktillustration in einen Text-Slot stecken; Abschnittsüberschrift genau einmal; echte App-Bedienung nicht durch Marketingbeispiele ersetzen. Technische Prüfungen ersetzen keine visuelle Begutachtung.
