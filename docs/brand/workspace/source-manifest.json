@@ -1,5 +1,6 @@
 {
-  "base": "20b0965",
+  "base": "20b096517e97c5b532f57870bb7adf5e5b638f62",
+  "implementationCommit": "1dd60d5202b73b6426a74d649596ce0e26403059",
   "files": {
     "design/design-lock.json": {
       "sha256": "4790c1969706818a0fc352ab50e4b46133bf07ecab1230c78b37eb416d0fbb92",
@@ -86,16 +87,6 @@
       "bytes": 8023,
       "kind": "text"
     },
-    "scripts/.api-login-check.mjs": {
-      "sha256": "18befa038744327291e62ad8b3c7db737259cdce473e232557ab9cbc215412d4",
-      "bytes": 612,
-      "kind": "text"
-    },
-    "scripts/.tech-login-check.mjs": {
-      "sha256": "d778a99a2f71d0b3df001571678e509393e8f90ce142a792099be3ba8314b7db",
-      "bytes": 1713,
-      "kind": "text"
-    },
     "src/app/app/jobs/[id]/page.tsx": {
       "sha256": "a591569901068494c47e2cea579403af7a0a75529e366b66396d8fac8bfe33d1",
       "bytes": 16584,
@@ -116,6 +107,5 @@
       "bytes": 17605,
       "kind": "text"
     }
-  },
-  "deleted": []
+  }
 }
