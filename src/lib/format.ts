@@ -12,3 +12,9 @@ const STATUS_LABELS: Record<string,string> = {
   pending:'Offen', active:'Aktiv', suspended:'Pausiert', ended:'Beendet', approved:'Freigegeben', rejected:'Abgelehnt', reviewing:'In Prüfung', resolved:'Gelöst', withdrawn:'Zurückgezogen', confirmed:'Bestätigt', sent:'Gesendet', viewed:'Gesehen', declined:'Abgelehnt', closed:'Geschlossen', expired:'Abgelaufen', scheduled:'Geplant', past_due:'Zahlung offen', paid:'Bezahlt', failed:'Fehlgeschlagen', refunded:'Erstattet',
 };
 export const statusLabel = (status?: string | null) => status ? (STATUS_LABELS[status] ?? status) : '–';
+
+/** Exact monetary display for invoices and payment receipts; input remains cents. */
+export const euroExact = (cents: number | null | undefined) =>
+  typeof cents === 'number' && Number.isFinite(cents)
+    ? new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(cents / 100)
+    : '–';

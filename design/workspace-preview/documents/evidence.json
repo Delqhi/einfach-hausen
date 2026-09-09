@@ -1,0 +1,107 @@
+[
+  {
+    "name": "owner-invoice",
+    "width": 390,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true,
+    "lineOverflow": false
+  },
+  {
+    "name": "owner-invoice",
+    "width": 736,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true,
+    "lineOverflow": false
+  },
+  {
+    "name": "owner-invoice",
+    "width": 1536,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true,
+    "lineOverflow": false
+  },
+  {
+    "name": "owner-invoice",
+    "printControlsHidden": true
+  },
+  {
+    "name": "pro-invoice",
+    "width": 390,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true,
+    "lineOverflow": false
+  },
+  {
+    "name": "pro-invoice",
+    "width": 736,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true,
+    "lineOverflow": false
+  },
+  {
+    "name": "pro-invoice",
+    "width": 1536,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true,
+    "lineOverflow": false
+  },
+  {
+    "name": "pro-invoice",
+    "printControlsHidden": true
+  },
+  {
+    "name": "passport",
+    "width": 390,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true,
+    "lineOverflow": false
+  },
+  {
+    "name": "passport",
+    "width": 736,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true,
+    "lineOverflow": false
+  },
+  {
+    "name": "passport",
+    "width": 1536,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true,
+    "lineOverflow": false
+  },
+  {
+    "name": "passport",
+    "printControlsHidden": true
+  },
+  {
+    "name": "receipt",
+    "width": 390,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true
+  },
+  {
+    "name": "receipt",
+    "width": 736,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true
+  },
+  {
+    "name": "receipt",
+    "width": 1536,
+    "overflow": false,
+    "h1": 1,
+    "originalLogo": true
+  }
+]

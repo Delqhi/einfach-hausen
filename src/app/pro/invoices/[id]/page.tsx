@@ -1,3 +1,5 @@
+import { EHDocumentFrame } from "@/design-system";
+import { PrintButton } from "@/components/print-button";
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { FileText, XCircle } from 'lucide-react';
@@ -25,10 +27,10 @@ export default async function ProviderInvoice({
   if (!ctx || invoice.provider_id !== ctx.providerId) notFound();
 
   return (
-    <main className="invoice-page pro-invoice-page">
+    <EHDocumentFrame><main className="invoice-page pro-invoice-page">
       <div className="invoice-page-tools print-hide" aria-label="Rechnungsaktionen">
         <Link href={`/pro/jobs/${invoice.job_id}`} className="btn light"><FileText size={16} />Zum Auftrag</Link>
-        <span className="btn ghost pro-ghost">Drucken / PDF über Browsermenü</span>
+        <PrintButton />
         {invoice.status === 'sent' && (
           <form action={cancelInvoiceAction.bind(null, invoice.id)}>
             <button className="btn ghost pro-ghost"><XCircle size={16} />Rechnung stornieren</button>
@@ -38,6 +40,6 @@ export default async function ProviderInvoice({
       <div className="print-hide"><ProviderAccessBoundary canManageJobs={ctx.canManageJobs} /></div>
       {sp.sent && <div className="alert success print-hide" role="status">Rechnung wurde an den Eigentümer gesendet.</div>}
       <InvoiceView invoice={invoice} />
-    </main>
+    </main></EHDocumentFrame>
   );
 }

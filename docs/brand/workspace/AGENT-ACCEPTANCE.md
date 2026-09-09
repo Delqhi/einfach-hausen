@@ -1,3 +1,5 @@
+> Korrektur/Umsetzung: FINAL-DOCUMENTS.md. Die alte Logo-Komponente enthielt Nachbauten; deren Import allein war kein Original-Nachweis. Rechnung, Beleg und Hauspass sind jetzt auf EHLogo/EHDocumentFrame migriert; frühere Befundzeilen unten bleiben historische Evidenz.
+
 # Verbindliche Übernahme und verbleibende App-Abnahme
 
 Stand: 2026-09-09. Ergänzung zum bestehenden EH-BRAND-07-WORKSPACE, kein zweiter Taskplan. Produktstand der Prüfung: db70210; PR71 offen. Keine Aussage zum zwischenzeitlichen Deploy. Dieser Branch verändert keine Produktansichten und keine Backend-Logik.
