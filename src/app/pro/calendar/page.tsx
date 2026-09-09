@@ -1,7 +1,7 @@
 import { CalendarDays } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import { ProviderAccessBoundary, ProviderPageIntro, ProviderState } from '@/components/provider/workspace';
-import { EHPanel, EHList, EHStatus } from '@/design-system';
+import { EHWorkSection, EHScheduleList, EHStatus } from '@/design-system';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel, statusLabel } from '@/lib/format';
@@ -21,17 +21,20 @@ export default async function ProCalendar() {
       <ProviderPageIntro
         eyebrow="Planung"
         title="Termine"
-        description={ctx.canManageJobs ? 'Bestätigte Kundentermine des Betriebs in einer ruhigen Arbeitsliste.' : 'Nur bestätigte Termine, bei denen du als Ansprechpartner hinterlegt bist.'}
+        description={ctx.canManageJobs ? 'Kundentermine des Betriebs mit ihrem aktuellen Status.' : 'Termine, bei denen du als Ansprechpartner hinterlegt bist.'}
       />
       <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
-      <EHPanel title={`Bevorstehend · ${rows.length} ${rows.length === 1 ? 'Termin' : 'Termine'}`}>
-        <EHList label="Bevorstehende Termine" items={rows.map((row) => ({
+      <EHWorkSection title={`Termine · ${rows.length} ${rows.length === 1 ? 'Termin' : 'Termine'}`}>
+        <EHScheduleList label="Termine" items={rows.map((row) => ({
           id: String(row.id),
           title: row.title,
-          text: `${row.first_name} ${row.last_name}${ctx.canManageJobs && row.contact_first ? ` · ${row.contact_first} ${row.contact_last}` : ''} — ${dateLabel(row.start_at)}${row.contact_first ? ` · ${row.contact_first} ${row.contact_last}` : ''}`,
-          href: `/pro/jobs/${row.job_id}`,
-          meta: <EHStatus>{statusLabel(row.status)}</EHStatus>,
+          dateLabel:dateLabel(row.start_at),
+          day:new Intl.DateTimeFormat('de-DE',{day:'2-digit',timeZone:'Europe/Berlin'}).format(new Date(row.start_at)),
+          month:new Intl.DateTimeFormat('de-DE',{month:'short',timeZone:'Europe/Berlin'}).format(new Date(row.start_at)),
+          detail:`${row.first_name} ${row.last_name}${row.contact_first ? ` · Ansprechpartner: ${row.contact_first} ${row.contact_last}` : ''}`,
+          href:`/pro/jobs/${row.job_id}`,
+          status:statusLabel(row.status),
         }))} />
         {rows.length === 0 && (
           <ProviderState
@@ -40,14 +43,7 @@ export default async function ProCalendar() {
             description="Sobald ein bestätigter Kundentermin hinterlegt ist, erscheint er hier zusammen mit Auftrag und Ansprechpartner."
           />
         )}
-      </EHPanel>
-        {rows.length === 0 && (
-          <ProviderState
-            icon={<CalendarDays size={21} />}
-            title="Noch keine Termine"
-            description="Sobald ein bestätigter Kundentermin hinterlegt ist, erscheint er hier zusammen mit Auftrag und Ansprechpartner."
-          />
-        )}
+      </EHWorkSection>
     </AppShell>
   );
 }

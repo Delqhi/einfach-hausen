@@ -936,3 +936,6 @@ updated: 2026-08-31T15:17:38+00:00
 actor: local-agent
 evidence-sha256: 3c5ff2bd506025e42f53ea35964b6be662f201604fdd2d490f55ac7573da8fcb
 -->
+
+## Aktueller App-Umbau
+Verbindliche Umsetzung und Prüfgrenzen: docs/brand/workspace/NEXT_AGENT.md. Neue Workspace-Komposition erhalten; historische technische Abnahmen ersetzen keine aktuelle visuelle Bewertung.

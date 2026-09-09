@@ -144,27 +144,19 @@ export default async function DocPage({ params }: { params: Promise<{ doc: strin
   const html = mdToHtml(md);
   return (
     <div>
-      <p style={{ fontSize: "13px", marginBottom: "8px" }}>
+      <p>
         <Link
           href="/docs-internal"
-          style={{ color: "var(--eh-color-accent, #0b5fff)", textDecoration: "underline" }}
         >
           &larr; Alle Docs
         </Link>
       </p>
       <h1
-        style={{
-          fontSize: "24px",
-          marginBottom: "16px",
-          fontFamily: "monospace",
-          wordBreak: "break-all",
-        }}
       >
         {slug}.md
       </h1>
       <article
         className="docs-internal-body"
-        style={{ lineHeight: 1.7, fontSize: "15px", overflowWrap: "anywhere" }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>

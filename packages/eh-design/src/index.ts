@@ -8,3 +8,7 @@ export * from "./request-form";
 export * from "./workflow-layouts";
 export * from "./submit-button";
 export * from "./job-forms";
+export * from "./workspace";
+export * from "./workspace-records";
+export * from "./workspace-conversation";
+export * from "./workspace-detail";

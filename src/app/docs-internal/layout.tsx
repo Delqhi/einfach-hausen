@@ -1,3 +1,4 @@
+import { EHScope, EHSection } from "@/design-system";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -7,24 +8,15 @@ export const metadata: Metadata = {
 
 export default function DocsInternalLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main
-      style={{
-        maxWidth: "880px",
-        margin: "0 auto",
-        padding: "32px 20px 64px",
-        color: "var(--eh-color-ink, #1a1a1a)",
-        background: "var(--eh-color-paper, #fff)",
-      }}
-    >
-      <nav style={{ marginBottom: "24px", fontSize: "14px" }}>
+    <EHScope app><main><EHSection compact>
+      <nav>
         <Link
           href="/admin/ops"
-          style={{ color: "var(--eh-color-accent, #0b5fff)", textDecoration: "underline" }}
         >
           &larr; Zur&uuml;ck zu Admin / Ops
         </Link>
       </nav>
       {children}
-    </main>
+    </EHSection></main></EHScope>
   );
 }

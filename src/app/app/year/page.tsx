@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { AppShell } from '@/components/shell';
-import { EHAppHeader, EHPanel, EHList, EHEmptyState, EHButton, EHActions, EHStatus } from '@/design-system';
+import { EHAppHeader, EHWorkSection, EHScheduleList, EHRouteTabs, EHList, EHEmptyState, EHButton, EHActions, EHStatus } from '@/design-system';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel } from '@/lib/format';
@@ -23,15 +23,15 @@ export default async function YearPage({searchParams}:{searchParams:Promise<Reco
 
   return <AppShell role="homeowner" active="/app/home" title="Mein Jahr" subtitle="Wartung, Termine und Hausaufgaben">
     <EHAppHeader eyebrow={String(year)} title="Mein Jahr" text="Alles, was an deinem Zuhause ansteht – übersichtlich über das Jahr." actions={<EHButton href="/app/hausmeister" arrow>Neue Aufgabe planen</EHButton>} />
-    <div className="segmented-tabs" role="navigation" aria-label="Jahresansicht"><Link aria-current={view==='plan'?'page':undefined} className={view==='plan'?'active':''} href={`/app/year?view=plan&year=${year}`}>Plan</Link><Link aria-current={view==='history'?'page':undefined} className={view==='history'?'active':''} href={`/app/year?view=history&year=${year}`}>Historie</Link></div>
-    {overdue.length>0&&<EHPanel title={`Überfällig · ${overdue.length} ${overdue.length===1?'Aufgabe':'Aufgaben'} – fällig vor heute`}>
+    <EHRouteTabs label="Jahresansicht" items={[{href:`/app/year?view=plan&year=${year}`,label:'Plan',active:view==='plan'},{href:`/app/year?view=history&year=${year}`,label:'Historie',active:view==='history'}]}/>
+    {overdue.length>0&&<EHWorkSection title={`Überfällig · ${overdue.length} ${overdue.length===1?'Aufgabe':'Aufgaben'} – fällig vor heute`}>
       <EHList label="Überfällige Wartungen" items={overdue.slice(0,6).map((t:any)=>({ id: 'od-' + t.id, title: `${t.title} — fällig ${dateLabel(t.due_date)}`, text: t.category, meta: <EHStatus tone="error">überfällig</EHStatus> }))} />
       {overdue.length>6&&<p>+{overdue.length-6} weitere überfällige Aufgaben.</p>}
       <p>Plane sie über den <Link href="/app/hausmeister">Hausmeister</Link> oder erledige sie selbst.</p>
-    </EHPanel>}
-    {items.length===0?<EHEmptyState title={view==='plan'?'Noch nichts geplant':'Noch keine Historie'} text={view==='plan'?'Füge Technik in „Mein Haus“ hinzu oder plane etwas über den Hausservice.':'Erledigte Wartungen und Aufträge erscheinen hier.'} />:<EHList label={view==='plan'?'Jahresplan':'Jahreshistorie'} items={items.map(item=>{
+    </EHWorkSection>}
+    {items.length===0?<EHEmptyState title={view==='plan'?'Noch nichts geplant':'Noch keine Historie'} text={view==='plan'?'Füge Technik in „Mein Haus“ hinzu oder plane etwas über den Hausservice.':'Erledigte Wartungen und Aufträge erscheinen hier.'} />:<EHScheduleList label={view==='plan'?'Jahresplan':'Jahreshistorie'} items={items.map(item=>{
       const d=new Date(String(item.date).length===10?`${item.date}T12:00:00`:item.date); const month=monthFmt.format(d).replace('.','').toUpperCase();
-      return { id: item.id, title: `${month} · ${item.title}${item.status==='completed'?' · erledigt':''}`, text: `${dateLabel(item.date)} · ${item.meta}`, ...(item.kind==='job'?{ href: `/app/jobs/${item.jobId!}` }:{}), meta: item.status==='completed'?<EHStatus tone="success">erledigt</EHStatus>:null };
+      return {id:item.id,day:String(d.getDate()).padStart(2,'0'),month,dateLabel:dateLabel(item.date),title:item.title,detail:item.meta,...(item.kind==='job'?{href:`/app/jobs/${item.jobId!}`} : {}),status:item.status==='completed'?'Erledigt':undefined,tone:item.status==='completed'?'success' as const:undefined};
     })} />}
     <EHActions><EHButton href="/app/hausmeister" arrow>Neue Aufgabe planen</EHButton></EHActions>
   </AppShell>;

@@ -166,3 +166,6 @@ Siehe `docs/brand/system/COMPOSITION.md` und `packages/eh-design/src/composition
 
 ## Kontrastentscheidung 2026-09-07
 Badge-Text auf Sand nutzt Ink; Terra nur als ergänzender Icon-Akzent. Verbindlicher Umfang und Nachweis: docs/brand/contrast/DECISION.md. Kein offener Brand-Blocker für pillTerra/Lexikon-Badges.
+
+## App-Komposition 2026-09-08: bisherige gestalterische Abnahme zurückgewiesen
+Jerry verlangt professionellen Neuaufbau innerhalb Atelier02. Verbindlicher Kandidat und Beweisgrenzen: docs/brand/workspace/NEXT_AGENT.md. Technische Gates und EH-Imports beweisen keine Produktgestaltung; keine neue visuelle Baseline ohne Begutachtung.

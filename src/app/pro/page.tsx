@@ -1,5 +1,5 @@
 import { BadgeCheck, ClipboardList, Flame, Leaf, MapPin, Sprout } from 'lucide-react';
-import { EHPanel, EHList, EHButton } from '@/design-system';
+import { EHAppHeader, EHList, EHWorkSection, EHWorkspaceGrid, EHWorkMetrics, EHPriorityAction, EHRequestList } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { ProviderAccessBoundary, ProviderState } from '@/components/provider/workspace';
 import { requireUser } from '@/lib/auth';
@@ -82,50 +82,31 @@ export default async function Pro() {
     <AppShell role="provider" active="/pro" title="Arbeitsbereich" subtitle={`${ctx.businessName} · ${ctx.jobTitle || 'Ansprechpartner'}`}>
       <ProviderAccessBoundary canManageJobs={ctx.canManageJobs} />
 
-      {/* Hero: Klare, professionelle Kopfzeile */}
-      <section className="pdx-hero">
-        <div className="pdx-hero-copy">
-          <h1>{greeting()}, {u.first_name}!</h1>
-          <p className="pdx-person">{u.first_name} {u.last_name} · <strong>{ctx.businessName}</strong></p>
-          <p className="pdx-region"><MapPin size={14} /> Radius: {p?.radius_km || 25} km um {p?.postcode || 'deine Region'}</p>
-        </div>
-        <div className="pdx-avatar" aria-hidden="true">
-          <span className="pdx-avatar-circle">{`${u.first_name?.[0] || ''}${u.last_name?.[0] || ''}`.toUpperCase()}</span>
-          {p?.verified && <span className="pdx-avatar-dot" title="Geprüfter Meisterbetrieb" />}
-        </div>
-      </section>
-
-      {/* Ruhige Arbeitsleiste statt überladener KPI-Raster */}
-      <section className="mb-6 flex flex-wrap items-center gap-4 rounded-2xl border border-[var(--eh-border)] bg-[var(--eh-surface)] p-4 shadow-sm" aria-label="Statusübersicht">
-        <div className="flex items-center gap-2 pr-4">
-          <span className="inline-flex h-2.5 w-2.5 rounded-full bg-[var(--eh-green-600)] animate-pulse"></span>
-          <span className="text-xs font-bold text-[var(--eh-text)]">System aktiv</span>
-        </div>
-        <div className="flex items-center gap-6 text-xs text-[var(--eh-text-secondary)]">
-          <span><strong className="font-bold text-[var(--eh-text)]">{newRequestsCount}</strong> neue Anfragen</span>
-          <span><strong className="font-bold text-[var(--eh-text)]">{companyOpen}</strong> laufende Aufträge</span>
-          <span><strong className="font-bold text-[var(--eh-text)]">{upcoming.length}</strong> anstehende Termine</span>
-          {messages > 0 && <span className="font-bold text-[var(--eh-terra)]"><strong className="text-[var(--eh-terra)]">{messages}</strong> neue Nachrichten</span>}
-        </div>
-      </section>
-
+      <EHAppHeader eyebrow={ctx.businessName} title={`${greeting()}, ${u.first_name}.`} text={ctx.canManageJobs ? "Anfragen prüfen. Arbeit planen. Den nächsten Auftrag voranbringen." : "Deine zugewiesene Arbeit und die nächsten Termine im Überblick."}/>
+      <p>{ctx.jobTitle || 'Ansprechpartner'} · {p?.radius_km || 25} km um {p?.postcode || 'deine Region'}</p>
+      <EHWorkMetrics items={[
+        ...(ctx.canManageJobs ? [{label:"Neue Anfragen",value:newRequestsCount,href:"/pro/orders",hint:"In den zuletzt geladenen Anfragen"},{label:"Laufende Aufträge",value:companyOpen,href:"/pro/orders"}] : []),
+        {label:"Nächste Termine",value:upcoming.length,href:"/pro/calendar",hint:"Vorschau der nächsten zwei Termine"},
+        {label:"Ungelesene Nachrichten",value:messages,href:"/pro/messages"},
+      ]}/>
       {/* Nächster Arbeitsschritt: Prominent hervorgehoben */}
       {ctx.canManageJobs && quoteCandidates > 0 && (
-        <EHPanel title="Nächster Schritt: Angebot erstellen">
-          <p>Bei {quoteCandidates} passenden Kundenanfragen liegen alle Informationen für einen Richtpreis vor.</p>
-          <EHButton href={`/pro/jobs/${requests.find((job) => !job.my_quote && job.request_kind !== 'contact')?.id}`} arrow>Angebot öffnen</EHButton>
-        </EHPanel>
+        <EHPriorityAction eyebrow="Als Nächstes" title="Dein nächstes Angebot" text={`${quoteCandidates} Anfragen ohne eigenes Angebot warten auf deine Prüfung.`} href={`/pro/jobs/${requests.find((job) => !job.my_quote && job.request_kind !== 'contact')?.id}`} label="Anfrage prüfen"/>
       )}
-
+      <EHWorkspaceGrid main={<>
       {/* Arbeitsliste: Klare Auftragszeilen */}
-      <EHPanel title="Passende Kundenanfragen" footer={requests.length > 5 ? { href: '/pro/orders', text: `Alle ${requests.length} Anfragen einsehen` } : { href: '/pro/orders', text: 'Alle ansehen' }}>
-        <EHList label="Passende Kundenanfragen" items={requests.slice(0, 5).map((job) => {
+      <EHWorkSection title="Passende Kundenanfragen" link={{href:"/pro/orders",label:"Alle ansehen"}}>
+        <EHRequestList items={requests.slice(0, 5).map((job) => {
           const badge = requestBadge(job);
           const price = job.my_quote ? euro(job.my_quote) : job.budget_min && job.budget_max ? `ca. ${euro((job.budget_min + job.budget_max) / 2)}` : job.budget_max ? `ca. ${euro(job.budget_max)}` : null;
           return {
             id: String(job.dispatch_id),
-            title: `${badge.label} · ${job.title.replace(/^Ansprechpartner:\s*/, '')}`,
-            text: `${job.description.length > 95 ? `${job.description.slice(0, 95)}…` : job.description} — ${job.postcode || 'Region'}${job.distance_km ? ` · ${Math.round(job.distance_km)} km` : ''}${price ? ` · ${price}` : ''} · ${timeAgo(job.sent_at)}`,
+            kind: badge.label,
+            title: job.title.replace(/^Ansprechpartner:\s*/, ''),
+            description: job.description,
+            location: `${job.postcode || 'Region'}${job.distance_km ? ` · ${Math.round(job.distance_km)} km` : ''}`,
+            price,
+            time: timeAgo(job.sent_at),
             href: `/pro/jobs/${job.id}`,
           };
         })} />
@@ -136,9 +117,8 @@ export default async function Pro() {
             description="Neue Anfragen erscheinen hier automatisch, sobald passende Vorhaben in deinem PLZ-Bereich freigegeben werden."
           />
         )}
-      </EHPanel>
-
-      <EHPanel title="Kommende Vor-Ort-Termine" footer={{ href: '/pro/calendar', text: 'Kalender' }}>
+      </EHWorkSection>
+      </>} aside={<EHWorkSection title="Deine nächsten Termine" link={{href:"/pro/calendar",label:"Kalender"}}>
         <EHList label="Kommende Vor-Ort-Termine" items={upcoming.map((appointment) => {
           const start = new Date(appointment.start_at + 'Z');
           const sameDay = start.toDateString() === new Date().toDateString();
@@ -150,7 +130,7 @@ export default async function Pro() {
           };
         })} />
         {upcoming.length === 0 && <p>Keine anstehenden Termine.</p>}
-      </EHPanel>
+      </EHWorkSection>}/>
     </AppShell>
   );
 }

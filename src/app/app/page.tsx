@@ -1,6 +1,7 @@
+import {MessageCircle, ShieldCheck, FileText} from "lucide-react";
 import Link from 'next/link';
 import { HomeownerHausmeisterComposer } from '@/components/homeowner/homeowner-hausmeister-composer';
-import { EHAppHeader, EHPanel, EHList, EHCallout, EHTextLink } from '@/design-system';
+import { EHAppHeader, EHList, EHCallout, EHTextLink, EHWorkspaceGrid, EHWorkSection, EHPriorityAction, EHServiceDirectory } from '@/design-system';
 import { AppShell } from '@/components/shell';
 
 import { requireUser } from '@/lib/auth';
@@ -40,7 +41,7 @@ export default async function Dashboard() {
 
   return (
     <AppShell role="homeowner" active="/app" title="Mein Zuhause" subtitle="Dein Haus-Copilot">
-      <div className="own-dash ehn-dash">
+      <>
         <EHAppHeader eyebrow="Übersicht" title={`Hallo ${user.first_name}.`} text={houseContext ? `${houseContext}` : 'Dein Zuhause im Überblick.'} />
 
         {onboardingPending && (
@@ -50,16 +51,13 @@ export default async function Dashboard() {
           </EHCallout>
         )}
 
-        {/* 1. Primärer Fokus: Hausmeister-Composer ganz oben */}
-        <EHPanel title="Frag einfachhausen">
-          <p>KI-Hausmeister — Schildere dein Anliegen oder Projekt. Wir finden den passenden Fachbetrieb oder organisieren sofortige Unterstützung. <Link href="/app/hausmeister" aria-label="Hausmeister-Assistent öffnen">Mehr</Link></p>
-          <div id="dashboard-composer">
-            <HomeownerHausmeisterComposer starterHint="Was gibt es an deinem Haus zu tun?" />
-          </div>
-        </EHPanel>
-
-        {/* 2. Als Nächstes (Aufgaben, Termine, Entscheidungen) */}
-        <EHPanel title="Als Nächstes">
+        <EHWorkspaceGrid main={<>
+          {openDecision && <EHPriorityAction eyebrow="Deine Entscheidung" title={openDecision.title} text={openDecisionQuotes > 0 ? `${openDecisionQuotes} Angebote liegen zur Prüfung vor.` : 'Sieh dir den aktuellen Stand deines Vorgangs an.'} href={`/app/jobs/${openDecision.id}`} label="Angebot prüfen"/>}
+          <EHWorkSection title="Was steht bei deinem Haus an?" link={{href:"/app/hausmeister",label:"Zum Hausmeister"}}>
+            <p>Beschreibe dein Anliegen. Wir helfen dir, den nächsten Schritt zu organisieren.</p>
+            <div id="dashboard-composer"><HomeownerHausmeisterComposer starterHint="Was gibt es an deinem Haus zu tun?"/></div>
+          </EHWorkSection>
+        </>} aside={<EHWorkSection title="Dein nächster Überblick">
         {nextSteps.length === 0 ? (
           <div className="empty compact" role="status">
             <p>Aktuell steht kein Termin an. Plane Wartungen über <Link href="/app/year">Mein Jahr</Link> oder starte oben eine Anfrage.</p>
@@ -71,19 +69,13 @@ export default async function Dashboard() {
             ...(dueMaintenance ? [{ id: 'maint', title: 'Fällige Wartung', text: `${dueMaintenance.title} · ${dateLabel(dueMaintenance.due_date)}`, href: '/app/year' }] : []),
           ]} />
         )}
-        </EHPanel>
+        </EHWorkSection>}/>
 
-        {/* 3. Schnellzugriff / Weitere Services: dezent untergeordnet */}
-        <EHPanel title="Weitere Services">
-          <EHList label="Weitere Services" items={[
-            { id: 'qa-beratung', title: 'Beratung', text: 'Fachliche Unterstützung & Modernisierung.', href: '/app/consultation' },
-            { id: 'qa-notfall', title: 'Notfall', text: 'Soforthilfe bei Rohrbruch, Heizausfall & Co.', href: '/app/emergency' },
-            { id: 'qa-dokumente', title: 'Dokumente', text: 'Pläne, Rechnungen & Hausakte einsehen.', href: '/app/documents' },
-          ]} />
-        </EHPanel>
-
-        <div className="home-indicator" aria-hidden="true" />
-      </div>
+        <EHServiceDirectory groups={[{title:"Für dein Zuhause",items:[
+          {href:"/app/consultation",title:"Beratung",text:"Vorhaben besprechen und Möglichkeiten klären.",icon:<MessageCircle/>},
+          {href:"/app/emergency",title:"Notfall",text:"Hinweise und Unterstützung für dringende Anliegen.",icon:<ShieldCheck/>},
+        ]},{title:"Deine Hausakte",items:[{href:"/app/documents",title:"Dokumente",text:"Pläne, Rechnungen und Nachweise wiederfinden.",icon:<FileText/>}]}]}/>
+        </>
     </AppShell>
   );
 }

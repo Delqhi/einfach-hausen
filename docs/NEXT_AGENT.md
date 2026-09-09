@@ -1,6 +1,7 @@
+> **Aktuelle Nutzerkorrektur 2026-09-08:** App-Komposition gestalterisch nicht bestanden. Aktiver Übernahmeauftrag: docs/brand/workspace/NEXT_AGENT.md. Ältere Vollständigkeitsangaben unten sind keine aktuelle Design-Abnahme.
+
 > **Designkorrektur 2026-09-07:** Vor jeder Seitenmigration `docs/brand/system/COMPOSITION.md` lesen und `packages/eh-design/src/composition.tsx` verwenden. Vollständiger Code: `docs/brand/composition-repair/SOURCE.md`. Keine Produktillustration in einen Text-Slot stecken; Abschnittsüberschrift genau einmal; echte App-Bedienung nicht durch Marketingbeispiele ersetzen. Technische Prüfungen ersetzen keine visuelle Begutachtung.
 
-<<<<<<< HEAD
 > **Stand 2026-09-07 (Welle 3 — TASKPLAN KONVERGIERT):** 130/130 Tasks done/abgeschlossen, 0 backlog, 0 in_progress, 0 blocked.
 > - **EH-BRAND-05-CRM:** PR #5 (einfach-hausen-crm) gemerged — native UI auf kanonischem Markenframe (Original-Logo/Inter/Atelier-02), npm check/test/cf:dry-run + Browser-Render verifiziert. Die ChatGPT-web-Vendor-WIP wurde vorher faithful committiert (91a6451).
 > - **EH-BRAND-06:** completed — vollstaendige Regression auf OCI mit echtem Chromium 151: Release-Gate 15/15, Website-Visual 72/72, Hub 24 Shots, CRM 390/1440, A11y PASS, Responsive 390/640/1440 (640: kein user-sichtbarer Overflow, nur content-visibility-Quirk), Keyboard geprueft.
@@ -8,9 +9,7 @@
 > - **Naechste Aktion (genau eine):** Deploy ausfuehren (root), dann `gh run rerun` der offenen Checks nach Billing-Freigabe.
 
 **Status 2026-09-03 ~15:21 UTC · main = e414cec (Produktion = 3fbe3c9, Deploy-Rückstand: T-0143-Export + DR-Runbook-Doku) · T-0120..T-0134, T-0137, T-0143 abgeschlossen**
-=======
 > **Aktueller Designvertrag · 2026-09-06:** Jerry hat Atelier 02 ausdrücklich freigegeben. Verbindlich sind DESIGN.md, packages/eh-design und der Skill SIN-EH-design. Eigenständige Änderungen am Markenstil sind verboten. Vollständige Übergabe: docs/brand/system/HANDOFF.md; kompletter Quelltext: docs/brand/system/SOURCE.md. Frühere Statusangaben zu noch offenen Stilentscheidungen sind historisch. Restmigration: EH-BRAND-05-WEB, -APPS, -CRM, -HUB. Unternehmensidentität bleibt docs/COMPANY_IDENTITY.md (Gina Inhaberin/Geschäftsführerin, Jeremy Entwickler).
->>>>>>> origin/main
 
 
 > **Docs-Strategie (Analyse in docs/DOCS_ANALYSIS.md):** Zwei getrennte Docs-Stränge — (1) Entwickler-Docs auf docs.einfachhausen.de (statisch aus docs/*.md, admin-gated), (2) User-Guides in den Apps (/app/hilfe + /pro/hilfe, EH-Komponenten, keine Tech-Docs). Phase 1: /app/hilfe + /pro/hilfe. Phase 2: docs-Route. Phase 3: Tooltips.
@@ -141,7 +140,6 @@ Zusätzlicher paralleler Operator-Auftrag: vollständige Markenbefunde und Deleg
 
 ## EH-BRAND — Korrektur: Atelier 02 (2026-09-06)
 
-<<<<<<< HEAD
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0127
 updated: 2026-09-03T00:51:39+00:00
@@ -330,9 +328,7 @@ updated: 2026-09-07T19:04:42+00:00
 actor: local-agent
 evidence-sha256: 5f22e53b7db61e188b5dc47f904485e0d6871007582380be638be5b78ce4a5ab
 -->
-=======
 Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren technische 27/27-Prüfung ist keine visuelle Freigabe. Root Codex gestaltet und implementiert die neue Richtung persönlich; keinen weiteren Prime/bai-Dispatch aus alten Abschnitten ableiten. Neuer Arbeitsstand: `design/einfachhausen-brand-atelier-20260906`, Workspace `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`. Konzept, vollständige Nutzerkorrektur und Plan: `docs/brand/ATELIER_02.md`; aktuelle Übergabe: `docs/brand/HANDOFF.md`; vollständige Quellen: `docs/brand/ATELIER_02_SOURCE.md`; bedienbare Vollansicht: `design/brand-atelier/preview.html`. EH-BRAND-03 bleibt in Arbeit, die neue Richtung wurde noch nicht vom Nutzer bewertet. Genau nächste Markenaktion: diese neue Vollansicht besprechen und tatsächliches Nutzerfeedback dokumentieren. EH-BRAND-04..06 folgen erst der Richtungsentscheidung; kein Merge/Deploy. Ältere Empfehlungen/Dispatch-Anweisungen sind für diese Markenwelle historisch. Andere laufende Arbeitswellen bleiben erhalten.
->>>>>>> origin/main
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0042
 updated: 2026-08-31T20:52:48+00:00
