@@ -1,0 +1,23 @@
+{
+  "base": "db70210dc34c94a833328e79958e12121d8e9a27",
+  "implementationCommit": "cfe9eca957410c69c5641c61b40941a8c3c2c3b5",
+  "files": {
+    "docs/brand/workspace/AGENT-ACCEPTANCE.md": {
+      "sha256": "1aa8d8c8ea699e642259ce628de474a9712ebebe37bbc50b05eab2ce8d59d408",
+      "bytes": 6165,
+      "kind": "text"
+    },
+    "docs/brand/workspace/NEXT_AGENT.md": {
+      "sha256": "de62bc6175f6b6ff81c31b2b188c175f60ddf54e3d1b952be18ed95fb4319468",
+      "bytes": 7851,
+      "kind": "text"
+    },
+    "scripts/eh-design-source.py": {
+      "sha256": "89b487792e48bf861bcb5a5511aa9b6edfe96a231dabb801da4f231270a6af90",
+      "bytes": 3049,
+      "kind": "text"
+    }
+  },
+  "deleted": [],
+  "symlinks": {}
+}
