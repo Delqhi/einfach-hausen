@@ -12,3 +12,4 @@ export * from "./workspace";
 export * from "./workspace-records";
 export * from "./workspace-conversation";
 export * from "./workspace-detail";
+export * from "./documents";

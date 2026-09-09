@@ -1,3 +1,5 @@
+> **Abschlussintegration 2026-09-09:** docs/brand/workspace/FINAL-DOCUMENTS.md lesen. Dokumente verwenden EHDocumentFrame, EHLogo und euroExact; Centbeträge nicht runden. Produktivzustand/Authentifizierungsblocker separat prüfen.
+
 > **Aktuelle Integration 2026-09-09:** docs/brand/workspace/DETAIL-INTEGRATION.md; Branch fix/eh-detail-integration-20260909. Lokaler Agent integriert in seine laufende Arbeit; kein paralleler Produktionsdeploy.
 
 > **Aktuelle Nutzerkorrektur 2026-09-08:** App-Komposition gestalterisch nicht bestanden. Aktiver Übernahmeauftrag: docs/brand/workspace/NEXT_AGENT.md. Ältere Vollständigkeitsangaben unten sind keine aktuelle Design-Abnahme.

@@ -530,3 +530,38 @@
 .eh-invoiceEditor[data-embedded] { padding:24px; }
 .eh-attachmentPanel form > section { display:grid;gap:20px; }
 @media(max-width:599px) { .eh-invoiceEditor[data-embedded] { padding:16px; } }
+
+.eh-documentFrame { font-family:var(--eh-font-family);color:var(--eh-color-ink);background:var(--eh-color-paper);font-size:var(--eh-font-app);line-height:1.6; }
+.eh-documentFrame main { background:var(--eh-color-paper);padding:32px 20px; }
+.eh-documentFrame main article { background:var(--eh-color-white);border:1px solid var(--eh-color-line);border-radius:var(--eh-shape-panel);box-shadow:none;padding:40px;max-width:1000px;margin-inline:auto;overflow-wrap:anywhere; }
+.eh-documentFrame main article :is(p,span,strong,b,time) { font-size:var(--eh-font-app);line-height:1.6; }
+.eh-documentFrame main article small { font-size:var(--eh-font-meta);line-height:1.5;color:var(--eh-color-secondary); }
+.eh-documentFrame main article h1 { font-size:clamp(1.75rem,4vw,2.5rem);line-height:1.15;letter-spacing:-.035em; }
+.eh-documentFrame main article h2 { font-size:1.5rem;line-height:1.3;margin-block:28px 16px; }
+.eh-documentFrame [class~="invoice-page-tools"] { max-width:1000px;flex-wrap:wrap;gap:12px;margin-bottom:24px; }
+.eh-documentFrame [class~="invoice-table-head"],.eh-documentFrame [class~="invoice-table-row"] { font-size:var(--eh-font-label);gap:16px; }
+.eh-documentFrame [class~="invoice-grand"] strong,.eh-documentFrame [class~="receipt-total"] strong { font-size:2rem;color:var(--eh-color-petrol); }
+.eh-documentFrame [class~="invoice-meta"] { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.eh-documentFrame [class~="invoice-paper-head"] > div { min-width:0; }
+@media(max-width:599px) {
+ .eh-documentFrame main { padding:16px 12px; }
+ .eh-documentFrame main article { padding:24px 16px; }
+ .eh-documentFrame [class~="invoice-paper-head"],.eh-documentFrame [class~="receipt-title"] { flex-direction:column;gap:24px; }
+ .eh-documentFrame [class~="invoice-paper-head"] > div:last-child { text-align:left; }
+ .eh-documentFrame [class~="invoice-parties"],.eh-documentFrame [class~="receipt-grid"] { grid-template-columns:minmax(0,1fr);gap:24px; }
+ .eh-documentFrame [class~="invoice-table-head"],.eh-documentFrame [class~="invoice-table-row"] { grid-template-columns:minmax(0,2fr) repeat(4,minmax(0,1fr));gap:8px; }
+ .eh-documentFrame [class~="invoice-table-head"] { display:none; }
+ .eh-documentFrame [class~="invoice-table-row"] { min-width:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding-block:24px; }
+ .eh-documentFrame [class~="invoice-table-row"] > span:first-child { grid-column:1/-1; }
+ .eh-documentFrame [class~="invoice-table-row"] > [data-label]::before { content:attr(data-label);display:block;font-size:var(--eh-font-meta);color:var(--eh-color-secondary);margin-bottom:4px; }
+ .eh-documentFrame [class~="passport-history"] { display:grid;grid-template-columns:minmax(0,1fr);gap:8px; }
+}
+@media print {
+ .eh-documentFrame,.eh-documentFrame main { background:white;padding:0;min-height:0; }
+ .eh-documentFrame main article { border:0;box-shadow:none;border-radius:0;max-width:none;padding:0; }
+ .eh-documentFrame [class~="print-hide"] { display:none; }
+ .eh-documentFrame [class~="invoice-table"] { overflow:visible; }
+ .eh-documentFrame [class~="invoice-table-head"],.eh-documentFrame [class~="invoice-table-row"] { min-width:0;break-inside:avoid; }
+ .eh-documentFrame :is(h1,h2,h3) { break-after:avoid; }
+ .eh-documentFrame [class~="invoice-totals"],.eh-documentFrame [class~="passport-row"],.eh-documentFrame [class~="receipt-total"] { break-inside:avoid; }
+}
