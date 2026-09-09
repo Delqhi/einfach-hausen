@@ -466,3 +466,62 @@
 .eh-conversationComposer { padding:20px 24px;border-top:1px solid var(--eh-color-line); }
 @media(max-width:999px) { .eh-inbox { grid-template-columns:minmax(0,1fr); } .eh-inboxContacts { grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); } }
 @media(max-width:599px) { .eh-conversation > header { align-items:flex-start;flex-direction:column; } .eh-conversationMessages { padding:24px 16px; } .eh-conversationMessages > li { max-width:95%; } }
+
+.eh-detailHeading { display:flex;align-items:flex-start;justify-content:space-between;gap:24px; }
+.eh-detailHeading h1 { font-size:clamp(2rem,3.5vw,3rem);line-height:1.1;letter-spacing:-.04em;margin:12px 0 16px;max-width:22ch; }
+.eh-detailHeading p { color:var(--eh-color-secondary);font-size:var(--eh-font-label); }
+.eh-detailBrief { background:var(--eh-color-white);padding:32px;border-radius:var(--eh-shape-panel); }
+.eh-detailBrief > span,.eh-detailNext > span,.eh-invoiceRecipient > span,.eh-invoiceSummary > span { font-size:var(--eh-font-meta);font-weight:650;letter-spacing:.06em; }
+.eh-detailBrief h2 { font-size:1.5rem;margin:12px 0 16px; }
+.eh-detailBrief p { font-size:var(--eh-font-app);line-height:1.7;max-width:65ch; }
+.eh-detailTimeline { list-style:none;padding:0;display:grid;gap:24px; }
+.eh-detailTimeline li { display:flex;gap:20px; }
+.eh-detailTimeline li > span { color:var(--eh-color-petrol);font-size:1.25rem;font-weight:650; }
+.eh-detailTimeline h3 { font-size:1.0625rem; }
+.eh-detailTimeline p { color:var(--eh-color-secondary);font-size:var(--eh-font-label);margin-top:4px; }
+.eh-detailNext { display:grid;gap:20px;padding:28px;background:var(--eh-color-petrol);color:var(--eh-color-white);border-radius:var(--eh-shape-panel); }
+.eh-detailNext h2 { font-size:1.5rem;line-height:1.3; }
+.eh-detailContact { display:grid;gap:8px;padding:24px;border-left:3px solid var(--eh-color-petrol); }
+.eh-detailContact p,.eh-detailContact span { font-size:var(--eh-font-label);color:var(--eh-color-secondary); }
+.eh-detailContact strong { font-size:1.25rem; }
+.eh-detailContact a { color:var(--eh-color-petrol);font-weight:600;margin-top:12px; }
+.eh-attachmentPanel { display:grid;gap:24px; }
+.eh-attachmentPanel > header { display:flex;align-items:baseline;justify-content:space-between;gap:20px; }
+.eh-attachmentPanel h2 { font-size:1.375rem; }
+.eh-attachmentPanel header p,.eh-attachmentPanel header > span { font-size:var(--eh-font-label);color:var(--eh-color-secondary);margin-top:6px; }
+.eh-attachmentDrop { display:grid;justify-items:center;text-align:center;gap:12px;padding:32px;border:1px dashed var(--eh-color-petrol);background:var(--eh-color-white);border-radius:var(--eh-shape-panel);cursor:pointer; }
+.eh-attachmentDrop svg { width:32px;height:32px;color:var(--eh-color-petrol); }
+.eh-attachmentDrop > span { color:var(--eh-color-secondary);font-size:var(--eh-font-label); }
+.eh-attachmentDrop input { max-width:100%;font-size:var(--eh-font-input); }
+.eh-attachmentList { list-style:none;display:grid;gap:12px;padding:0; }
+.eh-attachmentList li { display:flex;align-items:center;gap:16px;padding:20px;background:var(--eh-color-white);border-radius:var(--eh-shape-panel); }
+.eh-attachmentKind { display:flex;align-items:center;justify-content:center;min-width:48px;height:52px;background:var(--eh-color-sand);color:var(--eh-color-petrol);font-size:var(--eh-font-meta);font-weight:650; }
+.eh-attachmentList li > div { flex:1;min-width:0;overflow-wrap:anywhere; }
+.eh-attachmentList small { display:block;color:var(--eh-color-secondary);font-size:var(--eh-font-meta);margin-top:4px; }
+.eh-attachmentList li > span:last-child,.eh-attachmentList a { font-size:var(--eh-font-meta);color:var(--eh-color-secondary); }
+.eh-invoiceRecipient { background:var(--eh-color-white);padding:24px 28px;border-radius:var(--eh-shape-panel); }
+.eh-invoiceRecipient h2 { font-size:1.375rem;margin:8px 0; }
+.eh-invoiceRecipient p { color:var(--eh-color-secondary);font-size:var(--eh-font-label); }
+.eh-invoiceDates { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
+.eh-invoiceLines { display:grid;gap:20px; }
+.eh-invoiceLines fieldset { display:grid;gap:20px;border:1px solid var(--eh-color-line);padding:24px;background:var(--eh-color-white);border-radius:var(--eh-shape-panel);min-width:0;margin:0; }
+.eh-invoiceLines legend { padding:0 8px;font-size:var(--eh-font-label);font-weight:650; }
+.eh-invoiceNumbers { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px; }
+.eh-invoiceLines footer { display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:var(--eh-font-label);color:var(--eh-color-secondary); }
+.eh-invoiceSummary { padding:28px;background:var(--eh-color-sand);border-radius:var(--eh-shape-panel);display:grid;gap:24px; }
+.eh-invoiceSummary h2 { font-size:1.5rem; }
+.eh-invoiceSummary dl { display:grid;gap:16px; }
+.eh-invoiceSummary dl > div { display:flex;justify-content:space-between;gap:20px; }
+.eh-invoiceSummary dd { margin:0;font-variant-numeric:tabular-nums; }
+.eh-invoiceSummary dl > div:last-child { border-top:1px solid var(--eh-color-secondary);padding-top:24px;flex-direction:column;gap:8px; }
+.eh-invoiceSummary dl > div:last-child dd { font-size:2.5rem;font-weight:650;letter-spacing:-.04em;color:var(--eh-color-petrol); }
+.eh-invoiceSummary p { font-size:var(--eh-font-label);line-height:1.6; }
+@media(max-width:599px) {
+ .eh-detailHeading { flex-direction:column;gap:12px; }
+ .eh-detailBrief,.eh-detailNext,.eh-invoiceSummary { padding:24px; }
+ .eh-invoiceDates { grid-template-columns:minmax(0,1fr); }
+ .eh-invoiceNumbers { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .eh-attachmentPanel > header { align-items:flex-start;flex-direction:column;gap:8px; }
+ .eh-attachmentList li { flex-wrap:wrap; }
+ .eh-attachmentList li > span:last-child { width:100%; }
+}
