@@ -1,0 +1,248 @@
+[
+  {
+    "route": "team",
+    "width": 390,
+    "url": "/pro/team",
+    "h1": 1,
+    "checkboxDirections": [
+      "row",
+      "row",
+      "row",
+      "row",
+      "row"
+    ],
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "jobTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "canManageJobs",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "active",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "jobTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "canManageJobs",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "active",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "firstName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "lastName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "jobTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "email",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "phone",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "password",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "canManageJobs",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "team",
+    "width": 736,
+    "url": "/pro/team",
+    "h1": 1,
+    "checkboxDirections": [
+      "row",
+      "row",
+      "row",
+      "row",
+      "row"
+    ],
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "jobTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "canManageJobs",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "active",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "jobTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "canManageJobs",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "active",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "firstName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "lastName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "jobTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "email",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "phone",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "password",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "canManageJobs",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "team",
+    "width": 1536,
+    "url": "/pro/team",
+    "h1": 1,
+    "checkboxDirections": [
+      "row",
+      "row",
+      "row",
+      "row",
+      "row"
+    ],
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "jobTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "canManageJobs",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "active",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "jobTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "canManageJobs",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "active",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "firstName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "lastName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "jobTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "email",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "phone",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "password",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "canManageJobs",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  }
+]
