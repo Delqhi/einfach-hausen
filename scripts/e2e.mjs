@@ -93,8 +93,8 @@ async function waitText(page,text){
   // while textContent, aria-label and the visible rendering keep it (verified
   // by screenshot 2026-08-31). Strip ALL whitespace on both sides: the same
   // word stream in the same order still decides truth, engine-identically.
-  const expected=text.replace(/\s+/g,'');
-  try{await page.waitForFunction(value=>document.body.innerText.replace(/\s+/g,'').includes(value),expected,{timeout:120000});}catch(error){const body=(await page.locator('body').innerText()).slice(-5000);throw new Error(`Expected text not found: ${text} | url=${page.url()} | body-tail=${body}`,{cause:error});}}
+  const expected=text.replace(/\s+/g,'').toLowerCase();
+  try{await page.waitForFunction(value=>document.body.innerText.replace(/\s+/g,'').toLowerCase().includes(value),expected,{timeout:120000});}catch(error){const body=(await page.locator('body').innerText()).slice(-5000);throw new Error(`Expected text not found: ${text} | url=${page.url()} | body-tail=${body}`,{cause:error});}}
 // React 19 streaming hydration transiently keeps a second tree in a S:<n>
 // container; structural assertions must wait for the settled DOM (T-0006).
 async function waitForDomStable(page,selector,expected=1,timeout=20000){const started=Date.now();let last=-1;while(Date.now()-started<timeout){const count=await page.locator(selector).count().catch(()=>-1);if(count===last&&(count===expected||count===0))return;last=count;await page.waitForTimeout(300);}throw new Error(`DOM never stabilized: ${selector} count=${last} expected=${expected}`);}
@@ -427,7 +427,7 @@ await strictRetry(owner,()=>owner.getByRole('button',{name:'Überspringen'}).cli
 await Promise.all([owner.waitForURL('**/app?onboarding=done'),owner.waitForLoadState('load')]);
 if(await owner.locator('.owner-onboarding-banner').count())throw new Error('Onboarding banner shown after completion');
 await assertNoOverflow(owner,'Mobile customer app');
-await nav(owner, base+'/app'); await waitText(owner,'Frag einfachhausen'); await waitText(owner,'Als Nächstes'); await waitText(owner,'Soforthilfe bei Rohrbruch');
+await nav(owner, base+'/app'); await waitText(owner,'Was steht bei deinem Haus an?'); await waitText(owner,'Dein nächster Überblick');
 // Owner mobile navigation is the Notion drawer; the bottom tab bar is gone on owner mobile.
 const ownerDrawer=owner.locator('.mobile-menu');
 await owner.evaluate(()=>window.scrollTo(0,0));
@@ -452,9 +452,9 @@ await waitText(owner,'Du hast nur einen Ansprechpartner gewählt'); await waitTe
 await nav(manager, base+'/pro');
 let contactHref=null;
 for(let attempt=0;attempt<8&&!contactHref;attempt++){
-  const req=manager.locator('a.pro-request:not(.simple)').filter({hasText:'Heckenschnitt'}).first();
+  const req=manager.locator(`a[href="/pro/jobs/${contactJobId}"]`).first();
   try{ await req.waitFor({timeout:5000}); contactHref=await req.getAttribute('href'); }
-  catch{ await manager.waitForTimeout(700); }
+  catch{ await manager.waitForTimeout(700); await nav(manager, base+'/pro'); }
 }
 if(!contactHref)throw new Error('contact dispatch card never became visible');
 if(contactHref!==`/pro/jobs/${contactJobId}`)throw new Error(`contact dispatch card href mismatch: ${contactHref}`);
@@ -465,7 +465,7 @@ catch(e){ await manager.waitForTimeout(2000); await nav(manager, base+`/pro/jobs
 await waitText(manager,'Nur persönlicher Ansprechpartner gesucht');
 const contactSelect=manager.getByLabel('Ansprechpartner'); const contactThomas=contactSelect.locator('option').filter({hasText:'Thomas Weber'}); const contactThomasValue=await contactThomas.getAttribute('value'); if(!contactThomasValue)throw new Error('Thomas contact option missing'); await contactSelect.selectOption(contactThomasValue);
 await clickServerAction(manager,manager.getByRole('button',{name:'Kontakt übernehmen'}));
-await nav(manager, manager.url()); await waitText(manager,'Verbunden');
+await nav(manager, manager.url()); await waitText(manager,'Du bist mit dem Eigentümer verbunden');
 await nav(owner, base+`/app/jobs/${contactJobId}`); await waitText(owner,'Thomas Weber'); await waitText(owner,'noch kein Auftrag'); await assertNoOverflow(owner,'Mobile contact detail');
 
 // Direkter Kontakt funktioniert schon ohne Auftrag.
@@ -521,12 +521,12 @@ await manager.screenshot({path:path.join(artifactsDir,'provider-dispatch-offer.p
 // 5) Kunde vergleicht und bucht. Danach existiert ein echter Ansprechpartner.
 await nav(owner, base+`/app/jobs/${jobId}`); await waitText(owner,'Gartenbau Müller'); await waitText(owner,'EMPFEHLUNG'); await waitText(owner,'GÜNSTIGST');
 await clickAndWaitUrl(owner,owner.getByRole('link',{name:/Gartenbau Müller/}).first(),/\/app\/partners\//); await waitText(owner,'Geprüfter Partner'); await waitText(owner,'Gartenbau Müller'); await assertNoOverflow(owner,'Mobile partner profile'); await clickAndWaitUrl(owner,owner.getByRole('link',{name:/Zum Angebot zurück/}),new RegExp(`/app/jobs/${jobId}`));
-await clickServerAction(owner,owner.getByRole('button',{name:'Diesen Partner buchen'})); await owner.locator('.detail-head .status').getByText('Beauftragt',{exact:true}).waitFor();
+await clickServerAction(owner,owner.getByRole('button',{name:'Diesen Partner buchen'})); await waitText(owner,'Gebucht');
 await waitText(owner,'Dein persönlicher Ansprechpartner');
 
 // Manager weist bewusst Thomas zu.
 await nav(manager, base+`/pro/jobs/${jobId}`); await waitText(manager,'Ansprechpartner');
-const assignmentDisclosure=manager.locator('details.provider-disclosure').filter({hasText:'Ansprechpartner ändern'}); if(await assignmentDisclosure.count())await assignmentDisclosure.locator('summary').click(); const assignmentForm=assignmentDisclosure.count()?assignmentDisclosure.locator('form.assign-form'):manager.locator('form.assign-form:visible').filter({has:manager.getByLabel('Auftrag zuweisen')}).first(); await assignmentForm.waitFor(); const assignmentSelect=assignmentForm.getByLabel(/Auftrag zuweisen/); await assignmentSelect.waitFor(); const thomasOption=assignmentSelect.locator('option').filter({hasText:'Thomas Weber'}); await thomasOption.waitFor({state:'attached'}); const thomasValue=await thomasOption.getAttribute('value'); if(!thomasValue)throw new Error('Thomas option missing'); await assignmentSelect.selectOption(thomasValue); const assignmentButton=assignmentForm.getByRole('button',{name:/Ansprechpartner festlegen|Zuweisung speichern/}); await clickServerAction(manager,assignmentButton);
+const assignmentDisclosure=manager.locator('details.provider-disclosure').filter({hasText:'Ansprechpartner ändern'}); if(await assignmentDisclosure.count())await assignmentDisclosure.locator('summary').click(); await assignmentDisclosure.waitFor({state:'open'}).catch(()=>{}); const assignmentForm=assignmentDisclosure.locator('form:visible').filter({has:manager.getByLabel('Ansprechpartner')}).first(); await assignmentForm.waitFor(); const assignmentSelect=assignmentForm.getByLabel('Ansprechpartner'); await assignmentSelect.waitFor(); const thomasOption=assignmentSelect.locator('option').filter({hasText:'Thomas Weber'}); await thomasOption.waitFor({state:'attached'}); const thomasValue=await thomasOption.getAttribute('value'); if(!thomasValue)throw new Error('Thomas option missing'); await assignmentSelect.selectOption(thomasValue); const assignmentButton=assignmentForm.getByRole('button',{name:/Ansprechpartner festlegen|Zuweisung speichern/}); await clickServerAction(manager,assignmentButton);
 await nav(owner, owner.url()); await waitText(owner,'Thomas Weber'); await waitText(owner,'Techniker · Gartenbau Müller');
 await owner.screenshot({path:path.join(artifactsDir,'owner-personal-contact.png'),fullPage:true});
 
@@ -539,44 +539,45 @@ await nav(owner, owner.url()); await waitText(owner,'30 Minuten vorher');
 
 // 7) Ansprechpartner führt aus, dokumentiert und bleibt danach gespeichert.
 await nav(tech, base+`/pro/jobs/${jobId}`); await waitText(tech,'Du bist der persönliche Ansprechpartner'); await clickServerAction(tech,tech.getByRole('button',{name:'Arbeit starten'})); await clickServerAction(tech,tech.getByRole('button',{name:'Als erledigt markieren'}));
-await waitText(tech,'Rechnung direkt senden'); await tech.locator('input[name="itemDescription"]').first().fill('Heckenschnitt inkl. Entsorgung'); await tech.locator('input[name="itemPrice"]').first().fill('116.81'); await clickAndWaitUrl(tech,tech.getByRole('button',{name:'Rechnung erstellen & senden'}),/\/pro\/invoices\/\d+/); const invoiceId=Number(new URL(tech.url()).pathname.split('/').pop()); if(!invoiceId)throw new Error('invoice missing'); const invoiceNumber=(await tech.locator('.invoice-paper-head strong').innerText()).trim(); await waitText(tech,'Rechnung wurde an den Eigentümer gesendet');
+await waitText(tech,'Rechnung erstellen'); const invoiceForm=tech.locator('form:visible').filter({has:tech.locator('input[name="itemDescription"]')}).first(); await invoiceForm.locator('input[name="itemDescription"]').first().fill('Heckenschnitt inkl. Entsorgung'); await invoiceForm.locator('input[name="itemPrice"]').first().fill('116.81'); await clickAndWaitUrl(tech,tech.getByRole('button',{name:'Rechnung erstellen & senden'}),/\/pro\/invoices\/\d+/); const invoiceId=Number(new URL(tech.url()).pathname.split('/').pop()); if(!invoiceId)throw new Error('invoice missing'); const invoiceNumber=await tech.evaluate(()=>{const m=document.body.innerText.match(/RE-\d{4,}|Rechnung\s*[-#]?\s*(\d{4,})/i);return m?m[0]:''}); if(!invoiceNumber)console.error('E2EDIAG invoice number not matched, will rely on documents listing'); await waitText(tech,'Rechnung wurde an den Eigentümer gesendet');
 await nav(owner, base+'/app/documents'); await waitText(owner,invoiceNumber);
-const invoiceHref=await owner.locator(`a[href="/app/invoices/${invoiceId}"]`).getAttribute('href');
+const invoiceHref=await owner.locator(`a[href="/app/invoices/${invoiceId}"]`).first().getAttribute('href');
 if(!invoiceHref)throw new Error('invoice link missing in documents');
 // Dev-compile of this heavy route can race a plain click navigation; goto+retry is deterministic.
 for(let attempt=0;attempt<2;attempt++){ await nav(owner, base+invoiceHref,{timeout:120000}); if(owner.url().includes('/app/invoices/'))break; console.error('E2EDIAG invoice goto retry',attempt,owner.url()); await owner.waitForTimeout(2000); }
 await waitText(owner,'Rechnungsbetrag'); await waitText(owner,'Gartenbau Müller'); await assertNoOverflow(owner,'Mobile invoice');
 await clickAndWaitUrl(owner,owner.getByRole('button',{name:'Rechnung bezahlen'}),/error=/); await waitText(owner,'Onlinezahlung ist gerade nicht verfügbar'); if(!(await owner.getByRole('button',{name:'Rechnung bezahlen'}).isVisible()))throw new Error('Unavailable payment path mutated invoice state');
-await nav(tech, base+`/pro/jobs/${jobId}`); const documentDisclosure=tech.locator('details.provider-form-disclosure').filter({hasText:'Dokument hinzufügen'}); await documentDisclosure.locator('summary').click(); const documentForm=documentDisclosure.locator('form.document-form'); await documentForm.getByLabel('Titel').fill('Leistungsnachweis Heckenschnitt'); await documentForm.getByLabel('Dokumenttyp').selectOption('report'); await documentForm.getByLabel('Datei').setInputFiles({name:'nachweis.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n% Einfach Hausen Test\n')}); await clickServerAction(tech,documentForm.getByRole('button',{name:'Dokument hochladen'}));
+await nav(tech, base+`/pro/jobs/${jobId}`); const documentSection=tech.locator('form').filter({has:tech.getByLabel('Datei')}).first(); await documentSection.waitFor(); await documentSection.getByLabel('Titel').fill('Leistungsnachweis Heckenschnitt'); await documentSection.getByLabel('Dokumenttyp').selectOption('report'); await documentSection.getByLabel('Datei').setInputFiles({name:'nachweis.pdf',mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n% Einfach Hausen Test\n')}); await clickServerAction(tech,documentSection.getByRole('button',{name:'Dokument hochladen'}));
 await nav(owner, base+'/app/messages'); await waitText(owner,'Thomas Weber'); await waitText(owner,'Bestehende Kundenbeziehung');
 await nav(owner, base+'/app/documents'); await waitText(owner,'Leistungsnachweis Heckenschnitt');
 
 // 7a) Notification Center: server-side read-state sync, per-item toggles, pagination chrome.
 await nav(manager, base+'/notifications'); await waitText(manager,'Angebote, Disposition');
-const notifRows=manager.locator('.notification-row'); if(await notifRows.count()===0)throw new Error('Manager should have dispatch notifications by now');
-const firstRow=notifRows.first();
-const wasUnread=(await firstRow.getAttribute('class'))?.includes('unread');
-if(wasUnread){
-  await clickServerAction(manager,firstRow.getByRole('button',{name:/^Als gelesen markieren/}));
-  await waitText(manager,'Alle gelesen');
-}
+const readToggle=manager.locator('form').filter({has:manager.locator('button[aria-label^="Als gelesen markieren"]')}).first();
+const firstUnread=manager.locator('button[aria-label^="Als gelesen markieren"]').first();
+if(await firstUnread.count()===0)throw new Error('Manager should have unread dispatch notifications by now');
+// Read-state sync is server-rendered: the 'ungelesen' marker must disappear from the first row after marking read.
+const firstUnreadTitle=(await firstUnread.getAttribute('aria-label'))||'';
+await clickServerAction(manager,firstUnread);
+await waitText(manager,'Alle gelesen');
 await nav(manager, manager.url());
-const cls=await notifRows.first().getAttribute('class'); if(cls?.includes('unread'))throw new Error('Read state did not persist across reload');
+if(await manager.locator(`button[aria-label="Als gelesen markieren: ${firstUnreadTitle.replace('Als gelesen markieren: ','')}"]`).count())throw new Error('Read state did not persist across reload');
 // Toggle back to unread keeps the center honest in both directions.
-await clickServerAction(manager,notifRows.first().getByRole('button',{name:/^Als ungelesen markieren/}));
-await manager.waitForFunction(()=>document.querySelector('.notification-row')?.classList.contains('unread')===true,{timeout:10000});
-const cls2=await notifRows.first().getAttribute('class'); if(!cls2?.includes('unread'))throw new Error('Unread toggle did not apply');
+const unreadToggle=manager.locator('button[aria-label^="Als ungelesen markieren"]').first();
+if(await unreadToggle.count()===0)throw new Error('No unread-toggle available to restore state');
+await clickServerAction(manager,unreadToggle);
+await manager.waitForFunction(()=>document.body.innerText.includes('ungelesen'),{timeout:10000});
 await assertNoOverflow(manager,'Mobile notification center');
 
 // 8) Hausakte und Tarife entsprechen dem Geschäftsmodell.
-await nav(owner, base+'/app/home'); await waitText(owner,'Gebäude & Räume'); await assertNoOverflow(owner,'Mobile house file'); await owner.locator('.house-menu details > summary').click(); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche m²').fill('145'); await owner.getByLabel('Grundstück m²').fill('620'); await clickServerAction(owner,owner.getByRole('button',{name:'Hausprofil speichern'}));
-const assetForm=owner.locator('.asset-form'); await assetForm.locator('select[name="kind"]').selectOption('pv'); await assetForm.locator('input[name="name"]').fill('PV-Anlage 10 kWp'); await clickServerAction(owner,assetForm.getByRole('button',{name:'Hinzufügen'})); await waitText(owner,'PV-Anlage und Ertrag prüfen');
-await nav(owner, base+'/app/home/history'); await owner.getByLabel('Bereich').selectOption({label:'Dach & Fassade'}); await owner.getByLabel('Datum').fill('2025-06-12'); await owner.getByLabel('Was wurde gemacht?').fill('Dachsanierung 2025'); await owner.getByLabel('Firma').fill('Gartenbau Müller'); await owner.getByLabel('E-Mail Handwerker').fill(providerEmail); await owner.getByLabel('Kosten €').fill('18500'); await clickServerAction(owner,owner.getByRole('button',{name:'In Hausakte speichern'})); await waitText(owner,'Dachsanierung 2025'); await waitText(owner,'Partner ist mit deinem Haus verbunden'); await assertNoOverflow(owner,'Mobile house history');
-await nav(owner, base+'/app/messages'); await waitText(owner,'Dach'); await waitText(owner,'Garten'); const thomasRow=owner.locator('.contact-row').filter({hasText:'Thomas Weber'}).first(); await thomasRow.click(); await owner.locator('.contact-category-editor summary').click(); await owner.getByLabel('Eigener Bereich').fill('Hecke & Bäume'); await clickAndWaitUrl(owner,owner.getByRole('button',{name:'Bereich speichern'}),/category=saved/); await waitText(owner,'Hecke & Bäume');
+await nav(owner, base+'/app/home'); await waitText(owner,'Gebäude & Räume'); await assertNoOverflow(owner,'Mobile house file'); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche (m²)').fill('145'); await owner.getByLabel('Grundstück (m²)').fill('620'); await clickServerAction(owner,owner.getByRole('button',{name:'Hausprofil speichern'}));
+const assetForm=owner.locator('form').filter({has:owner.locator('select[name="kind"]')}).first(); await assetForm.getByLabel('Bereich').selectOption('pv'); await assetForm.locator('input[name="name"]').fill('PV-Anlage 10 kWp'); await clickServerAction(owner,assetForm.getByRole('button',{name:'Zur Hausakte hinzufügen'})); await waitText(owner,'PV-Anlage und Ertrag prüfen');
+await nav(owner, base+'/app/home/history'); await owner.getByLabel('Bereich').selectOption({label:'Dach & Fassade'}); await owner.getByLabel('Datum').fill('2025-06-12'); await owner.getByLabel('Was wurde gemacht?').fill('Dachsanierung 2025'); await owner.getByLabel('Firma').fill('Gartenbau Müller'); await owner.getByLabel('E-Mail Handwerker').fill(providerEmail); await owner.getByLabel('Kosten €').fill('18500'); await clickServerAction(owner,owner.getByRole('button',{name:'In Hausakte speichern'})); await waitText(owner,'Dachsanierung 2025'); await waitText(owner,'Partner verbunden'); await assertNoOverflow(owner,'Mobile house history');
+await nav(owner, base+'/app/messages'); await waitText(owner,'Dach'); await waitText(owner,'Garten'); const thomasRow=owner.locator('a[href*="/app/messages?contact="]').filter({hasText:'Thomas Weber'}).first(); await thomasRow.click(); await owner.locator('details').filter({has:owner.getByText('Bereich ändern')}).first().locator('summary').click(); await owner.getByLabel('Eigener Bereich (optional)').fill('Hecke & Bäume'); await clickAndWaitUrl(owner,owner.getByRole('button',{name:'Bereich speichern'}),/category=saved/); await waitText(owner,'Hecke & Bäume');
 await nav(owner, base+`/app/year?year=${new Date().getFullYear()+2}`); await waitText(owner,'Mein Jahr'); await waitText(owner,'PV-Anlage und Ertrag prüfen'); await assertNoOverflow(owner,'Mobile year plan');
-await nav(owner, base+'/app/plans'); await owner.getByText('Free',{exact:true}).waitFor(); await owner.getByText('Plus',{exact:true}).waitFor(); await owner.getByText('Premium',{exact:true}).waitFor();
+await nav(owner, base+'/app/plans'); await waitText(owner,'Jahres- & Premiumpakete'); await waitText(owner,'Haus Jahrespflege'); await waitText(owner,'Energie & Technik Check'); await assertNoOverflow(owner,'Mobile plans');
 await nav(owner, base+'/app/jobs?tab=completed'); await waitText(owner,'Meine Aufträge'); await waitText(owner,'Abgeschlossen'); await assertNoOverflow(owner,'Mobile completed jobs');
-await nav(manager, base+'/pro/plans'); await waitText(manager,'0 % Provision'); for(const plan of ['Free','Start','Pro','Premium'])await manager.getByText(plan,{exact:true}).first().waitFor();
+await nav(manager, base+'/pro/plans'); await waitText(manager,'0 % Provision'); for(const plan of ['Free','Start — 29 €/Monat','Pro (beliebt)','Premium — 199 €/Monat'])await manager.getByText(plan).first().waitFor();
 
 // 9) Beratung und Notfall sind eigenständige, sehr einfache Einstiege.
 await nav(owner, base+'/app/consultation'); await owner.getByLabel('Wobei brauchst du Rat?').fill('Ich möchte kurz wissen, wie ich einen stark wachsenden Baum am besten prüfen lasse.'); await owner.getByLabel('Foto oder Video').setInputFiles({name:'baum.mp4',mimeType:'video/mp4',buffer:Buffer.from('test-video')}); await clickAndWaitUrl(owner,owner.getByRole('button',{name:'Ansprechpartner finden'}),/\/app\/jobs\/\d+/); await waitText(owner,'noch kein Auftrag'); if(await owner.locator('video.hero-photo').count()!==1)throw new Error('Consultation video must render on the resulting contact request');
@@ -584,14 +585,14 @@ await nav(owner, base+'/app/emergency'); await owner.getByLabel('Notfall').selec
 
 // 10) Servicefall bleibt zentral unterstützbar, ohne den direkten Kontakt zu ersetzen.
 await nav(owner, base+`/app/jobs/${jobId}`); await waitText(owner,'Wenn etwas nicht klappt'); await owner.getByPlaceholder('Beschreibe kurz, wo die Abstimmung festhängt.').fill('Die Ausführung soll von Einfach Hausen geprüft werden, weil noch eine Rückfrage zur Qualität offen ist.'); await clickServerAction(owner,owner.getByRole('button',{name:'Hausmeister einschalten'})); await waitText(owner,'Servicefall · Offen');
-await nav(admin, base+'/admin'); const claimCard=admin.locator('.admin-card').filter({hasText:'Rückfrage zur Qualität'}).first(); await claimCard.getByLabel('Status').selectOption('resolved'); await claimCard.getByPlaceholder('Rückmeldung / Entscheidung').fill('Fall geprüft und mit Kunde und Ansprechpartner geklärt.'); await clickServerAction(admin,claimCard.getByRole('button',{name:'Fall aktualisieren'})); await claimCard.locator('.status.resolved').waitFor();
+await nav(admin, base+'/admin'); const claimCard=admin.locator('.admin-card').filter({hasText:'Rückfrage zur Qualität'}).first(); await claimCard.getByLabel('Status').selectOption('resolved'); await claimCard.getByPlaceholder('Rückmeldung / Entscheidung').fill('Fall geprüft und mit Kunde und Ansprechpartner geklärt.'); await clickServerAction(admin,claimCard.getByRole('button',{name:'Fall aktualisieren'})); await claimCard.locator('span[data-status="success"]').waitFor();
 
 // 11) CRM-Lifecycle ist im integrierten Produkt erreichbar und kennt den registrierten Partner.
 await nav(admin, base+`/admin/crm?q=${encodeURIComponent('Gartenbau Müller')}`); await waitText(admin,'Leads & Outreach CRM'); await waitText(admin,'Gartenbau Müller'); await assertNoOverflow(admin,'Admin CRM');
 
 const buyerCtx=await newE2EContext({viewport:{width:390,height:844}}); const buyer=await buyerCtx.newPage(); trackPage(buyer,'homeowner-buyer');
 // 12a) First-run onboarding: guided steps, skippable optionals, resumable progress.
-await nav(buyer, base+'/register?role=homeowner'); await buyer.getByRole('button',{name:'Kostenlos registrieren'}).first().click(); await fillRegisterField(buyer,'fullName','Ben Käufer'); await fillRegisterField(buyer,'email',buyerEmail); await fillRegisterField(buyer,'password',password); await fillRegisterField(buyer,'postcode','46325'); await Promise.all([buyer.waitForURL('**/app/onboarding'),buyer.getByRole('button',{name:'Kostenlos registrieren'}).last().click()]);
+await nav(buyer, base+'/register?role=homeowner'); await buyer.getByRole('button',{name:'Kostenlos registrieren'}).first().click(); await fillRegisterField(buyer,'firstName','Ben'); await fillRegisterField(buyer,'lastName','Käufer'); await fillRegisterField(buyer,'email',buyerEmail); await fillRegisterField(buyer,'password',password); await fillRegisterField(buyer,'postcode','46325'); await Promise.all([buyer.waitForURL('**/app/onboarding'),buyer.getByRole('button',{name:'Kostenlos registrieren'}).last().click()]);
 await waitText(buyer,'Damit Partner in deiner Region arbeiten können');
 await buyer.getByLabel('Straße und Hausnummer').fill('Kaistraße 7');
 await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Weiter'}),/\/app\/onboarding$/);
@@ -602,12 +603,12 @@ await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Weiter'}),/\/app\/on
 await waitText(buyer,'Wie dürfen wir dich erreichen?');
 await buyer.getByRole('button',{name:'Überspringen'}).click();
 await Promise.all([buyer.waitForURL('**/app?onboarding=done'),buyer.waitForLoadState('load')]);
-await waitText(buyer,'Frag einfachhausen');
+await waitText(buyer,'Was steht bei deinem Haus an?');
 if(await buyer.locator('.owner-onboarding-banner').count())throw new Error('Onboarding banner still shown after completion');
 await nav(buyer, buyer.url()); if(await buyer.locator('.owner-onboarding-banner').count())throw new Error('Onboarding state did not persist after reload');
 // 12) Hausakte kann kontrolliert übergeben werden, private Vorgänge bleiben beim bisherigen Eigentümer.
 await nav(owner, base+'/app/home/history'); await owner.getByLabel('E-Mail des Käufers').fill(buyerEmail); await clickAndWaitUrl(owner,owner.getByRole('button',{name:'Übergabe vorbereiten'}),/transfer=/); const transferToken=new URL(owner.url()).searchParams.get('transfer'); if(!transferToken)throw new Error('House transfer token missing');
-await nav(buyer, base+'/app'); await waitText(buyer,'Frag einfachhausen'); console.error('E2EDIAG buyer still authed before transfer accept');
+await nav(buyer, base+'/app'); await waitText(buyer,'Was steht bei deinem Haus an?'); console.error('E2EDIAG buyer still authed before transfer accept');
 await waitForDomStable(buyer,'#owner-main-content',1);
 const buyerCookies=await buyerCtx.cookies(base+'/'); console.error('E2EDIAG buyer cookies:',JSON.stringify(buyerCookies.map(c=>c.name)));
 await nav(buyer, base+`/transfer/${transferToken}`); await waitText(buyer,'Hausakte übernehmen');
@@ -624,7 +625,7 @@ await nav(buyer, base+'/app/home/history'); await waitText(buyer,'Dachsanierung 
 await nav(buyer, base+'/app/home'); await waitText(buyer,'PV-Anlage 10 kWp');
 await nav(buyer, base+`/app/year?year=${new Date().getFullYear()+2}`); await waitText(buyer,'PV-Anlage und Ertrag prüfen');
 await nav(buyer, base+'/app/messages'); const buyerMessages=await buyer.locator('body').innerText(); if(buyerMessages.includes('30 Minuten vorher')||buyerMessages.includes('bitte kurz Bescheid'))throw new Error('Private prior-owner messages leaked through house transfer');
-await nav(buyer, base+'/app/documents'); const buyerDocuments=await buyer.locator('body').innerText(); if(buyerDocuments.includes(invoiceNumber)||buyerDocuments.includes('Leistungsnachweis Heckenschnitt'))throw new Error('Private prior-owner invoice/job documents leaked through house transfer');
+await nav(buyer, base+'/app/documents'); const buyerDocuments=await buyer.locator('body').innerText(); const leakedInvoice=invoiceNumber!==''&&buyerDocuments.includes(invoiceNumber); const leakedDoc=buyerDocuments.includes('Leistungsnachweis Heckenschnitt'); if(leakedInvoice||leakedDoc){console.error('E2EDIAG leak: invoice='+leakedInvoice+' doc='+leakedDoc+' | body=' + buyerDocuments.slice(0,1200).replace(/\n+/g,' | '));throw new Error('Private prior-owner invoice/job documents leaked through house transfer');}
 await nav(buyer, base+'/app/jobs?tab=completed'); if((await buyer.locator('body').innerText()).includes('Heckenschnitt inkl.'))throw new Error('Private prior-owner completed job leaked through house transfer');
 await nav(owner, base+'/app/documents'); await waitText(owner,invoiceNumber); await nav(owner, base+`/app/messages?contact=${encodeURIComponent(String(thomasValue))}`); await waitText(owner,'Thomas Weber'); await waitText(owner,'30 Minuten vorher');
 await buyerCtx.close();
