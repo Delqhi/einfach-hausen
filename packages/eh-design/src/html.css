@@ -160,7 +160,7 @@
 .eh-appHeader { display: flex; gap: 28px; justify-content: space-between; align-items: flex-end; padding-bottom: 32px; border-bottom: 1px solid var(--eh-rule); margin-bottom: 32px; }
 .eh-appHeader > div:first-child { display: grid; gap: 14px; }
 .eh-field { display: grid; gap: 9px; min-width: 0; }
-.eh-field label { font-size: var(--eh-font-label); line-height: 1.5; font-weight: 650; }
+.eh-field label { display: block; font-size: var(--eh-font-label); line-height: 1.5; font-weight: 650; }
 .eh-field label span { font-size: var(--eh-font-meta); font-weight: 400; color: var(--eh-muted); }
 .eh-fieldHint { font-size: var(--eh-font-meta); color: var(--eh-muted); line-height: 1.55; }
 .eh-fieldError { font-size: var(--eh-font-label); color: var(--eh-color-error); line-height: 1.5; }
@@ -169,7 +169,7 @@
 .eh-input::placeholder, .eh-textarea::placeholder { color: var(--eh-color-secondary); opacity: 1; }
 :is(.eh-input,.eh-textarea,.eh-select)[aria-invalid="true"] { border-color: var(--eh-color-error); }
 :is(.eh-input,.eh-textarea,.eh-select):disabled { background: var(--eh-color-paper); opacity: .7; cursor: not-allowed; }
-.eh-checkbox { display: flex; align-items: flex-start; gap: 12px; min-height: 44px; padding: 8px 0; font-size: var(--eh-font-label); line-height: 1.6; cursor: pointer; }
+.eh-checkbox { display: flex; flex-direction: row; align-items: flex-start; gap: 12px; min-height: 44px; padding: 8px 0; font-size: var(--eh-font-label); line-height: 1.6; cursor: pointer; }
 .eh-checkbox input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--eh-color-petrol); flex: 0 0 auto; }
 .eh-tabList { display: flex; border-bottom: 1px solid var(--eh-rule); overflow-x: auto; gap: 6px; padding: 4px; }
 .eh-tabList button { flex: 0 0 auto; background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: 0; color: var(--eh-color-secondary); padding: 14px 18px; min-height: 48px; font: 600 var(--eh-font-label)/1.4 var(--eh-font-family); cursor: pointer; }

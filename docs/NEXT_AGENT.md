@@ -1,3 +1,7 @@
+> **PR75 erweitert:** `docs/brand/team-workspace/HANDOFF.md` zuerst lesen. Zusätzlich Team-Arbeitsbereich und zwei kanonische Label-/Checkbox-Vererbungsfixes. Aktuellen gesamten PR-Head integrieren; frühere Aussage „keine Stiländerung“ gilt nur für die erste Hausakte-Lieferung. Kein paralleler Deploy.
+
+> **Neue Frontend-Lieferung 2026-09-09:** `docs/brand/house-workspace/HANDOFF.md` enthält Hausakte/Hausgeschichte, vollständige Quellen und lokale Integrationsschritte. Produktionsblocker aus früheren Notizen sind seit direkter Prüfung 18:32 UTC überholt: e45812e, Health200/ready. Gesamtprodukt nicht vollständig abgenommen.
+
 > **Abschlussintegration 2026-09-09:** docs/brand/workspace/FINAL-DOCUMENTS.md lesen. Dokumente verwenden EHDocumentFrame, EHLogo und euroExact; Centbeträge nicht runden. Produktivzustand/Authentifizierungsblocker separat prüfen.
 
 > **Aktuelle Integration 2026-09-09:** docs/brand/workspace/DETAIL-INTEGRATION.md; Branch fix/eh-detail-integration-20260909. Lokaler Agent integriert in seine laufende Arbeit; kein paralleler Produktionsdeploy.

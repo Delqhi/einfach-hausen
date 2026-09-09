@@ -1,0 +1,452 @@
+[
+  {
+    "route": "home",
+    "width": 390,
+    "url": "/app/home",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "kind",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "name",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "installedYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "details",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "address",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "postcode",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "houseType",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "buildYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "livingArea",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "plotArea",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home",
+    "width": 736,
+    "url": "/app/home",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "kind",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "name",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "installedYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "details",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "address",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "postcode",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "houseType",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "buildYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "livingArea",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "plotArea",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home",
+    "width": 1536,
+    "url": "/app/home",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "kind",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "name",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "installedYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "details",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "address",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "postcode",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "houseType",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "buildYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "livingArea",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "plotArea",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home/history",
+    "width": 390,
+    "url": "/app/home/history",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "category",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "performedAt",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "title",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "companyName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "cost",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactEmail",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactPhone",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "guaranteeUntil",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "maintenanceDue",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "notes",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "beforePhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "afterPhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "document",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "documentTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "targetEmail",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home/history",
+    "width": 736,
+    "url": "/app/home/history",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "category",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "performedAt",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "title",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "companyName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "cost",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactEmail",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactPhone",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "guaranteeUntil",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "maintenanceDue",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "notes",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "beforePhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "afterPhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "document",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "documentTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "targetEmail",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home/history",
+    "width": 1536,
+    "url": "/app/home/history",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "category",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "performedAt",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "title",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "companyName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "cost",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactEmail",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactPhone",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "guaranteeUntil",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "maintenanceDue",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "notes",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "beforePhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "afterPhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "document",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "documentTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "targetEmail",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  }
+]
