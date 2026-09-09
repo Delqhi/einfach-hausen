@@ -102,3 +102,26 @@ security/fixtures/build/a11y/visual/perf ab.
 
 Production: `/srv/einfach-hausen` @ `b04b5e3` (= main), Gate 15/15, Health
 ready, auth reachable.
+
+
+## Live-QA-Sweep 2026-09-09 Nacht II (93 Views, 0 Findings)
+
+Playwright-Live-Audit gegen https://einfachhausen.de: 16 öffentliche Routen +
+15 App-Routen (Owner/Pro) x 390/736/1536 — konsolen-fehler, 4xx/5xx, defekte
+Bilder, Overflow, h1-Checks, Screenshots. Gefundene und behobene Fehler
+(commit `abf1d8a`):
+
+1. `/preise` 390-Overflow: Ledger-Root ohne min-width:0 ließ das Grid auf die
+   620px-Tabelle aufblähen → Wrapper-Klasse `wrapper` (min-width:0).
+2. `/agb`-Familie 390-Overflow: langes Wort „Geschäftsbedingungen" sprengte den
+   Hero-Grid-Track → `hyphens:auto`/`overflow-wrap:anywhere` im EH-Hero,
+   `min-width:0` auf heroCopy; design-lock + debt für die kanonische Änderung
+   erneuert.
+3. `/login` + `/register` mobil ohne h1 → sr-only h1 im mobilen Login-Tab
+   (Desktop behält den Hero-h1).
+4. `/pro/jobs` (Listen-Namespace existiert nicht) 404 für angemeldete Partner →
+   Redirect auf `/pro/orders`.
+
+Re-Audit nach Deploy: **0 Findings über alle 93 Views**. UX-Flow-Probe (Login →
+Drawer → Aktive Aufträge) ohne Page-Errors. main = Produktion = `abf1d8a`,
+Release-Gate 15/15.
