@@ -1,0 +1,1591 @@
+# Vollständige Quelldateien der Lieferung
+
+Basiscommit: e45812e29a786d233727d89599e46bacac7afdf4. Implementierungscommit: d846442368c4aa764fe672717c76a76df1403b7d.
+Ausschließlich versionierte Dateien dieses Commits. Änderungen im Arbeitsverzeichnis und unversionierte Dateien werden niemals übernommen.
+Textdateien stehen vollständig in Codeblöcken; Binärdateien im Manifest mit SHA256. Gelöschte Dateien sind gesondert ausgewiesen.
+
+## design/workspace-preview/house/evidence.json
+
+`````json
+[
+  {
+    "route": "home",
+    "width": 390,
+    "url": "/app/home",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "kind",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "name",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "installedYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "details",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "address",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "postcode",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "houseType",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "buildYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "livingArea",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "plotArea",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home",
+    "width": 736,
+    "url": "/app/home",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "kind",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "name",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "installedYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "details",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "address",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "postcode",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "houseType",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "buildYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "livingArea",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "plotArea",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home",
+    "width": 1536,
+    "url": "/app/home",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "kind",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "name",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "installedYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "details",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "address",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "postcode",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "houseType",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "buildYear",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "livingArea",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "plotArea",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home/history",
+    "width": 390,
+    "url": "/app/home/history",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "category",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "performedAt",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "title",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "companyName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "cost",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactEmail",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactPhone",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "guaranteeUntil",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "maintenanceDue",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "notes",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "beforePhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "afterPhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "document",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "documentTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "targetEmail",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home/history",
+    "width": 736,
+    "url": "/app/home/history",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "category",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "performedAt",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "title",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "companyName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "cost",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactEmail",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactPhone",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "guaranteeUntil",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "maintenanceDue",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "notes",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "beforePhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "afterPhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "document",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "documentTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "targetEmail",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  },
+  {
+    "route": "home/history",
+    "width": 1536,
+    "url": "/app/home/history",
+    "h1": 1,
+    "overflow": false,
+    "offenders": [],
+    "inputs": [
+      {
+        "name": "category",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "performedAt",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "title",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "companyName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "cost",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactName",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactEmail",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "contactPhone",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "guaranteeUntil",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "maintenanceDue",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "notes",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "beforePhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "afterPhoto",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "document",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "documentTitle",
+        "font": "16px",
+        "label": true
+      },
+      {
+        "name": "targetEmail",
+        "font": "16px",
+        "label": true
+      }
+    ]
+  }
+]
+`````
+
+## docs/NEXT_AGENT.md
+
+`````markdown
+> **Neue Frontend-Lieferung 2026-09-09:** `docs/brand/house-workspace/HANDOFF.md` enthält Hausakte/Hausgeschichte, vollständige Quellen und lokale Integrationsschritte. Produktionsblocker aus früheren Notizen sind seit direkter Prüfung 18:32 UTC überholt: e45812e, Health200/ready. Gesamtprodukt nicht vollständig abgenommen.
+
+> **Abschlussintegration 2026-09-09:** docs/brand/workspace/FINAL-DOCUMENTS.md lesen. Dokumente verwenden EHDocumentFrame, EHLogo und euroExact; Centbeträge nicht runden. Produktivzustand/Authentifizierungsblocker separat prüfen.
+
+> **Aktuelle Integration 2026-09-09:** docs/brand/workspace/DETAIL-INTEGRATION.md; Branch fix/eh-detail-integration-20260909. Lokaler Agent integriert in seine laufende Arbeit; kein paralleler Produktionsdeploy.
+
+> **Aktuelle Nutzerkorrektur 2026-09-08:** App-Komposition gestalterisch nicht bestanden. Aktiver Übernahmeauftrag: docs/brand/workspace/NEXT_AGENT.md. Ältere Vollständigkeitsangaben unten sind keine aktuelle Design-Abnahme.
+
+> **Designkorrektur 2026-09-07:** Vor jeder Seitenmigration `docs/brand/system/COMPOSITION.md` lesen und `packages/eh-design/src/composition.tsx` verwenden. Vollständiger Code: `docs/brand/composition-repair/SOURCE.md`. Keine Produktillustration in einen Text-Slot stecken; Abschnittsüberschrift genau einmal; echte App-Bedienung nicht durch Marketingbeispiele ersetzen. Technische Prüfungen ersetzen keine visuelle Begutachtung.
+
+> **Stand 2026-09-07 (Welle 3 — TASKPLAN KONVERGIERT):** 130/130 Tasks done/abgeschlossen, 0 backlog, 0 in_progress, 0 blocked.
+> - **EH-BRAND-05-CRM:** PR #5 (einfach-hausen-crm) gemerged — native UI auf kanonischem Markenframe (Original-Logo/Inter/Atelier-02), npm check/test/cf:dry-run + Browser-Render verifiziert. Die ChatGPT-web-Vendor-WIP wurde vorher faithful committiert (91a6451).
+> - **EH-BRAND-06:** completed — vollstaendige Regression auf OCI mit echtem Chromium 151: Release-Gate 15/15, Website-Visual 72/72, Hub 24 Shots, CRM 390/1440, A11y PASS, Responsive 390/640/1440 (640: kein user-sichtbarer Overflow, nur content-visibility-Quirk), Keyboard geprueft.
+> - **Verbleibend (extern, EXTERNAL-BLOCKERS.md):** (1) GitHub-Actions-Billing auf Delqhi (Jerry) — CI laeuft seit 2026-09-06 nicht; (2) Production-Deploy der gemergten Welle (root: bash deploy/update-on-oci.sh in /srv); (3) T-0151-CI-Teil folgt aus (1).
+> - **Naechste Aktion (genau eine):** Deploy ausfuehren (root), dann `gh run rerun` der offenen Checks nach Billing-Freigabe.
+
+**Status 2026-09-03 ~15:21 UTC · main = e414cec (Produktion = 3fbe3c9, Deploy-Rückstand: T-0143-Export + DR-Runbook-Doku) · T-0120..T-0134, T-0137, T-0143 abgeschlossen**
+> **Aktueller Designvertrag · 2026-09-06:** Jerry hat Atelier 02 ausdrücklich freigegeben. Verbindlich sind DESIGN.md, packages/eh-design und der Skill SIN-EH-design. Eigenständige Änderungen am Markenstil sind verboten. Vollständige Übergabe: docs/brand/system/HANDOFF.md; kompletter Quelltext: docs/brand/system/SOURCE.md. Frühere Statusangaben zu noch offenen Stilentscheidungen sind historisch. Restmigration: EH-BRAND-05-WEB, -APPS, -CRM, -HUB. Unternehmensidentität bleibt docs/COMPANY_IDENTITY.md (Gina Inhaberin/Geschäftsführerin, Jeremy Entwickler).
+
+
+> **Docs-Strategie (Analyse in docs/DOCS_ANALYSIS.md):** Zwei getrennte Docs-Stränge — (1) Entwickler-Docs auf docs.einfachhausen.de (statisch aus docs/*.md, admin-gated), (2) User-Guides in den Apps (/app/hilfe + /pro/hilfe, EH-Komponenten, keine Tech-Docs). Phase 1: /app/hilfe + /pro/hilfe. Phase 2: docs-Route. Phase 3: Tooltips.
+# NEXT AGENT — Handoff & Handback
+
+> **Stand 2026-09-07 (Welle 2, nach Dispatcher-Fix + Browser-Durchbruch):**
+> - **Produktions-Fix:** PR #55 (`75bca45`) repariert `einfach-hausen-dispatch.service` (Zustellung + Retention-Sweep standen seit 2026-09-06 19:47 UTC still). Timer seit 15:37 UTC grün.
+> - **Neu abgeschlossen:** T-0133 (Produktmetriken & SLOs — PR #57, live 7/7 Probes ok, Business-Raten in Kestra-Zeitreihe), T-0139 (Feature-Flag Lifecycle Gate — PR #58, in Release-Gate Layer 1), T-0146 (Datenschutz-Dateninventar + Gate — PR #59), **EH-BRAND-05-HUB** (portalhub PR #1, inkl. echter 390/736/1440-Abnahme: 24 Shots, 3 Overflow-Bugs gefunden+behoben, `b779122`), EH-BRAND-05-WEB.
+> - **Browser-Durchbruch:** Playwright-Chromium 151 läuft auf OCI (`playwright-core` install → ~/.cache). test:visual 72/72 PASS gegen Produktions-Build. Der frühere „kein Browser"-Blocker ist entfallen.
+> - **Weiterhin extern blockiert:** GitHub-CI auf `Delqhi/einfach-hausen` (Actions-Billing, Issue #33 — nur Jerry), 05-CRM (ChatGPT web, Mac i9). T-0151 bleibt solange blockiert (CI-Teil; Runner+Baselines laufen lokal/Deploy im Release-Gate).
+> - **Nächste Aktion (genau eine):** EH-BRAND-05-CRM, sobald ChatGPT web Zugang hat — oder auf Operator-Anweisung hin durch lokalen Agenten übernehmen (CRM-Worktree enthält unveröffentlichte Vendor-Sync-Änderungen von ChatGPT web; vorher abstimmen, nicht überschreiben).
+
+
+**Stand:** 2026-09-05 (Abend)
+**Kanonischer Abschlussstand:** Public Website Finish auf `main`; EH-01..EH-05 abgeschlossen. **Offen: Branch `feat/lexikon-enterprise-redesign` → PR → Merge nach Repo-Verifikation auf OCI-VM.**
+
+## 0. Aktueller Kontinuationspunkt (zuerst lesen)
+
+**Stand 2026-09-07 (Admin-Familie / 05-HUB Welle):**
+
+- **EH-BRAND-05-HUB (portalphub):** Code-Migration abgeschlossen — PR https://github.com/einfachhausen-de/portalhub/pull/1 (CI grün). Siegel auf Edition-2-Vendor (`0efea86`) konsolidiert; `/brand`-Assets byte-identisch ausgeliefert. Offen: visuelle Abnahme 390/736/1440 (blockiert, kein funktionsfähiger Browser auf OCI — identisch zu `docs/brand/live-audit`).
+- **Admin-Familie (dieses Repo):** Branch `design/eh-admin-family-20260907` → PR #53. Login via `EHAccessPage`, Ops/Admin/CRM-Köpfe via `EHAppHeader`, Status-Chips via `EHStatus`. Typecheck/Lint/Build/Design-Gate grün; E2E-Smoke gegen Prod-Build mit echter DB (Probezeile, entfernt). Gleiche Browser-Blockade für Screenshots.
+- **Rest:** EH-BRAND-05-CRM (ChatGPT web, Mac i9-Zugang), EH-BRAND-06 Final-Gates (nach 05 komplett), Lexikon-Branch-Finish (unten).
+
+Operator-Anforderung (2026-09-05): „Lexikon-Seite und Unterseiten wirken nicht enterprise/überzeugend; Pro-Designer-Modus, kräftiges Motion-Design, fehlende Seiten ergänzen, Docs + Handoff.“
+
+Umgesetzt auf Branch **`feat/lexikon-enterprise-redesign`** (Details: `docs/LEXIKON.md`):
+
+- `/lexikon` → Explorer-Archetyp: Hero mit Wort-Stagger + Parallax-Kartenstapel, Suche (`/`-Shortcut, Synonyme), Sticky-Register (7 Bereiche + A–Z), Layout-animiertes Raster, Bereichs-Bento, „So nutzt du das Lexikon“.
+- `/lexikon/[begriff]` → Entscheidungs-Archetyp: Lesefortschritt, Breadcrumb inkl. Kategorie, Relevanz-Badge, sticky „Auf einen Blick“-Panel (Kennzahlen + Gauges + Wann handeln), Scroll-Spy-TOC, nummerierte Blöcke, gescrubbte Ablauf-Timeline, abhakbare Prüfpunkte mit Anliegen-CTA, verwandte Begriffe, Vor/Zurück-Navigator.
+- **Neue Seiten:** `/lexikon/kategorie/[kategorie]` (7 Stück) und `src/app/lexikon/not-found.tsx`.
+- **Inhalt:** 4 → 18 Einträge, 7 Kategorien, neues Modell `src/lib/lexikon.ts` (Relevanz, Stufen, Kennzahlen, Synonyme, Verknüpfungen) mit Build-Zeit-Integritätsprüfung.
+- Sitemap erweitert; JSON-LD `DefinedTermSet` / `DefinedTerm` / `ItemList` ergänzt.
+- Design-System unangetastet: nur `--eh-*`-Tokens, CSS-Module, kein neuer Token-Satz, keine Gradients/Glas/Stripes. `motion/react` (bereits Dependency) ergänzt die GSAP-Schicht für Zustands-/Layout-Motion.
+
+**Verifiziert (Sandbox/Klon):** `tsc` PASS, `eslint` PASS (inkl. `react-hooks/set-state-in-effect`), `next build` PASS (18 Begriffs- + 7 Kategorieseiten SSG), SSR-Smoke 200/404 inkl. Umlaut-Slug `lüftungsanlage`.
+
+**Noch NICHT ausgeführt (fehlende Native-Deps in der Sandbox):** `npm run build` im Repo-Kontext, `test:public-site`, `test:visual`, `test:a11y`, `test:responsive`, `test:e2e`.
+
+### Nächste Aktion (genau eine)
+
+Auf OCI-VM: Branch auschecken → `npm ci && npm run lint && npm run build` → `npm run test:public-site && npm run test:public-nav` → `npm run test:visual:update` (Lexikon-Baselines bewusst neu) → `npm run test:visual && npm run test:a11y && npm run test:responsive` → PR mergen. Bei einem Fehler: Evidenz in den PR schreiben, nicht neu designen.
+
+Danach gilt wieder: keinen weiteren Website-Redesign-Track ohne reproduzierbaren Acceptance-Fehler oder explizite Operator-Anforderung starten.
+
+## 1. Was ist fertig und frisch verifiziert? (Stand main, 2026-09-05)
+
+- Public Website: bestehendes Design-System beibehalten, kein Rebranding.
+- Desktop-Megamenü + mobile Leistungs-Disclosure mit allen 12 Leistungsbereichen.
+- 12 Service-Detailrouten aus `service-catalog.tsx` + gemeinsamem `ServiceDetailPage`-Archetyp.
+- Produkt-Erklärseiten: `/beratung`, `/notfall`, `/versicherung`, `/immobilienverkauf`.
+- Discovery-Finish auf Startseite, Hilfe, Hausakte, Eigenheimbesitzer, So funktioniert's und Partner.
+- Sitemap/Metadata/Structured Data für die neuen öffentlichen Flächen.
+- `npm run build`: PASS, 115/115 statische Seiten (main). Mit Lexikon-Branch: +14 Begriffe, +7 Kategorien.
+- `npm run test:public-site`: PASS (main).
+- `npm run test:public-nav`: PASS (main).
+- `npm run test:e2e`: PASS mit zero browser runtime errors (main).
+- `npm run test:visual`: 72/72 PASS (main) — **Lexikon-Baselines werden durch den Branch absichtlich ungültig.**
+- `npm run lint`: 0 Fehler (24 bestehende Warnungen).
+
+## 2. Source of truth
+
+- Unternehmensrollen: `docs/COMPANY_IDENTITY.md` — Gina Schulze ist Inhaberin/Geschäftsführerin; Jeremy Schulze ist ausschließlich Developer/technische Entwicklung.
+- Design: `DESIGN.md` + `src/components/marketing/tokens.css`.
+- **Lexikon:** `docs/LEXIKON.md` + `src/lib/lexikon.ts` (Inhalt) + `src/components/marketing/lexikon/` (UI).
+- Website-Spec: `docs/superpowers/specs/2026-09-05-public-website-finish-design.md`.
+- Implementierungsplan: `docs/superpowers/plans/2026-09-05-public-website-finish.md`.
+- Service-Katalog: `src/components/marketing/service-catalog.tsx`.
+- Kanonischer Taskstatus: `.sin-gpt-web/taskplan.sqlite3` / `.sin-gpt-web/TASKPLAN.md`.
+
+## 3. Nächster Schritt
+
+Siehe Abschnitt 0. Erst `sin-gpt-web-state --repo . next` prüfen; den Lexikon-Branch als kanonischen Task erfassen, falls noch nicht geschehen (Operator-Anforderung vom 2026-09-05). Produktion/Deploy nur nach `docs/PRODUCTION_HANDOVER.md` und frischer Live-Verifikation.
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-01
+updated: 2026-09-05T02:00:41+00:00
+actor: chatgpt-web
+evidence-sha256: 223ddabf850fcb56047dafd0834c4648fe0356286d14630d790002d451660459
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-02
+updated: 2026-09-05T02:19:47+00:00
+actor: chatgpt-web
+evidence-sha256: d3169b9afa465be4ab22588b73903be33178b28010810633f5fb6546dc51f563
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-03
+updated: 2026-09-05T04:33:10+00:00
+actor: local-agent
+evidence-sha256: b9300da9b1e348fc386da08fda11e75c105f6db589d60a0f190ae0af25041437
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-04
+updated: 2026-09-05T06:26:03+00:00
+actor: chatgpt-web
+evidence-sha256: 0bf6db00102a87441e641b95f92d629df17ac5aa3144da80eeb67f83cab48460
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-05
+updated: 2026-09-05T09:09:00+00:00
+actor: chatgpt-web
+evidence-sha256: e072648f313eb7d38b0daa3a917b5f8b9cfbee90f62754f8cef486aa6b258c03
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-06 (Lexikon Enterprise Redesign, Branch feat/lexikon-enterprise-redesign)
+updated: 2026-09-05T18:00:00+00:00
+actor: claude-sandbox-agent
+evidence: docs/LEXIKON.md §6 · PR-Beschreibung · tsc/eslint/build PASS in Sandbox
+-->
+
+## EH-BRAND — Operator-Auftrag vom 06.09.2026
+
+Zusätzlicher paralleler Operator-Auftrag: vollständige Markenbefunde und Delegation. Der bestehende Handoff oben bleibt als historische/andere Arbeitswelle erhalten; seinen Stand vor Wiederaufnahme live verifizieren. Für EH-BRAND ist die nächste Aktion exakt: Handoff lesen und die aktuelle Studie mit Prime Agent bai/glm-5.3-flash auf sinsupabase ausführen bzw. anhand des Worker-Reports fortsetzen. Keine abgeschlossenen Lexikon- oder Präsentationsaufgaben ungeprüft wiederholen.
+
+- Spezifikation: `docs/superpowers/specs/2026-09-06-einfachhausen-brand-system-design.md`
+- Ausführungsplan: `docs/superpowers/plans/2026-09-06-einfachhausen-brand-system.md`
+- Handoff: `docs/brand/HANDOFF.md`
+- Vollständiger Zielquelltext: `docs/brand/SOURCE_PACKET.md`
+- Tasks: EH-BRAND-01 bis EH-BRAND-06; vorhandenes T-0151 und Issue #33 berücksichtigen.
+- Ausführung: `/home/ubuntu/orca/workspaces/einfach-hausen-brand-system-20260906`, Branch `design/einfachhausen-brand-system-20260906`, Node 22.23.0.
+- Stand 2026-09-06 (prime-agent, sinsupabase): EH-BRAND-01/02 done — verify pass 27/27, Commit 4a33e4cc, Draft-PR #40, Issue #39 kommentiert. Nächste Aktion: sichtbare Richtungsentscheidung an den drei Studien (EH-BRAND-03, Design-Lead/User), kein Merge/Deploy vorher. Operator 2026-09-06: bai-Pfad tot — dispatch_prime.py nie mehr nutzen, alles in der Operator-Session selbst ausführen.
+
+
+## EH-BRAND — Korrektur: Atelier 02 (2026-09-06)
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0127
+updated: 2026-09-03T00:51:39+00:00
+actor: local-agent
+evidence-sha256: 0640af1175d4cd871685513652419379eec835cf543aed5dfc69b0bfcadc4a29
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0128
+updated: 2026-09-03T00:54:04+00:00
+actor: local-agent
+evidence-sha256: 52a6748748dfe2d958322ba6584bcd9e8cd8284ed731054bf7f3d48948bf4d4a
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0131
+updated: 2026-09-03T12:19:04+00:00
+actor: local-agent
+evidence-sha256: 95b14cf53c5f2030d04c08f2b5dd9dfbb343623139fc5ce9e720d09533c6be38
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0129
+updated: 
+actor: local-agent
+evidence-sha256: a2028224c451c9d493976891e8e4061d8fbe7cbe6e5155f21be5f251a13b16be
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0130
+updated: 
+actor: local-agent
+evidence-sha256: db4bfd0327fb8cd3dcc011d26631b8b064c1a6b0952880d4fbb8d34877b61b84
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0132
+updated: 2026-09-03T13:48:49+00:00
+actor: local-agent
+evidence-sha256: 7e0b781bd511bf7c78d504be2551763dc8d69cb587488ebbb271c6ea9297cc0b
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0134
+updated: 2026-09-03T14:38:08+00:00
+actor: local-agent
+evidence-sha256: 3ad2590c9c31b9a8bcfe0e7212d85d446458c4690bf1ff152b848245aa2ab81c
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0137
+updated: 2026-09-03T14:57:29+00:00
+actor: local-agent
+evidence-sha256: 73bd2d6844b5aeaef8c0a753fb3ffc143ba55ec8b8a6ea80d0937f17d8d01123
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0143
+updated: 2026-09-03T15:20:03+00:00
+actor: local-agent
+evidence-sha256: d669bf8aeac2f37f703094ffd9db570e6d658293f99d7995729a5420ac2b89c7
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0144
+updated: 2026-09-03T16:36:34+00:00
+actor: local-agent
+evidence-sha256: 765f10be899bb7edd6395df543b8cdc5f0d0ef9c4670d5dc185d848f11bbcb39
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-01
+updated: 2026-09-06T00:46:30+00:00
+actor: prime-agent
+evidence-sha256: aa823be75191650b55367801543a3d6f9565f6acc4023427e89de00885b7ab9b
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-02
+updated: 2026-09-06T00:46:30+00:00
+actor: prime-agent
+evidence-sha256: aa823be75191650b55367801543a3d6f9565f6acc4023427e89de00885b7ab9b
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-03
+updated: 2026-09-06T08:05:25+00:00
+actor: chatgpt-web
+evidence-sha256: 4507a81925e57caf5947f5cf5489e0d59dc2921fba11a6902bf52d2baf09c4f4
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-04
+updated: 2026-09-06T20:09:19+00:00
+actor: chatgpt-web
+evidence-sha256: 5114f14401e6e23ddd983775a51c5a8e1db89c2d6092a28b3304c59c45dd65ae
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-APP-COVERAGE
+updated: 2026-09-06T22:40:19+00:00
+actor: local-agent
+evidence-sha256: 5ade9dc3a11113a69057f1a7fd3d37828c6dffa092c335a17ec41dc127fba1dc
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-04-R2
+updated: 2026-09-06T22:58:55+00:00
+actor: local-agent
+evidence-sha256: 5297533580034decc51d043ff1cc0c19fd189e3b8666af8eca66a56d7fe78106
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05-APPS
+updated: 2026-09-07T09:46:06+00:00
+actor: local-agent
+evidence-sha256: aa25baaa016bcf64563c1194b16402bbf2f70099674c2fed3050e31cad982da5
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0145
+updated: 2026-09-07T15:40:44+00:00
+actor: local-agent
+evidence-sha256: 8a0d123d7986ce23d4b44a81962d5c80f660962912df8aa6ca3a80d4fb971ff1
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05-WEB
+updated: 2026-09-07T15:42:00+00:00
+actor: local-agent
+evidence-sha256: 5d479d537dc1a308fb33c559a4ebed39b7d29eb42929fcec65af97e584a85625
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0133
+updated: 2026-09-07T16:11:04+00:00
+actor: local-agent
+evidence-sha256: bf8f5935018f755d0889723675beae705dcbf68623bb749f02ea254b258714e1
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0139
+updated: 2026-09-07T16:22:19+00:00
+actor: local-agent
+evidence-sha256: 46135bd1f7765e7da6d9c33f49df38f730beb056f428a98d8d598e7ae3239275
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0146
+updated: 2026-09-07T16:33:33+00:00
+actor: local-agent
+evidence-sha256: 1bc3466f4209a88e0e08b805d40e1ea395406db8d735bae99df68e6a25e4aae0
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05-HUB
+updated: 2026-09-07T16:56:33+00:00
+actor: local-agent
+evidence-sha256: 904cd87db9d3e5092e50dc56992e8758987a4477a8153ade6eed0f1985389888
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0151
+updated: 2026-09-07T17:11:32+00:00
+actor: local-agent
+evidence-sha256: 1aff41d46d74a7fadab58ab6f600da298c53f5177c45bb9dff7cd4b077055aaa
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05-CRM
+updated: 2026-09-07T18:57:23+00:00
+actor: local-agent
+evidence-sha256: f05b5cb9a79e1d9a720fb63db01722b1fa2fb1103f5d916d9e79e42e72ba1567
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-05
+updated: 2026-09-07T18:57:39+00:00
+actor: local-agent
+evidence-sha256: 75d41828db93f7f1cf0319cb62b4555505145aa7e350e3f76b5e54e3998e980b
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: EH-BRAND-06
+updated: 2026-09-07T19:04:42+00:00
+actor: local-agent
+evidence-sha256: 5f22e53b7db61e188b5dc47f904485e0d6871007582380be638be5b78ce4a5ab
+-->
+Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren technische 27/27-Prüfung ist keine visuelle Freigabe. Root Codex gestaltet und implementiert die neue Richtung persönlich; keinen weiteren Prime/bai-Dispatch aus alten Abschnitten ableiten. Neuer Arbeitsstand: `design/einfachhausen-brand-atelier-20260906`, Workspace `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`. Konzept, vollständige Nutzerkorrektur und Plan: `docs/brand/ATELIER_02.md`; aktuelle Übergabe: `docs/brand/HANDOFF.md`; vollständige Quellen: `docs/brand/ATELIER_02_SOURCE.md`; bedienbare Vollansicht: `design/brand-atelier/preview.html`. EH-BRAND-03 bleibt in Arbeit, die neue Richtung wurde noch nicht vom Nutzer bewertet. Genau nächste Markenaktion: diese neue Vollansicht besprechen und tatsächliches Nutzerfeedback dokumentieren. EH-BRAND-04..06 folgen erst der Richtungsentscheidung; kein Merge/Deploy. Ältere Empfehlungen/Dispatch-Anweisungen sind für diese Markenwelle historisch. Andere laufende Arbeitswellen bleiben erhalten.
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0042
+updated: 2026-08-31T20:52:48+00:00
+actor: local-agent
+evidence-sha256: b0522c720f2d26ef171afa4f8b0bd77eb82cd987694ae7791144c8df2c9124fd
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0043
+updated: 2026-08-31T20:52:48+00:00
+actor: local-agent
+evidence-sha256: 7690208a2287a2d7d24bc2b266c299ac0cdbdaac3e76839323fb142c4ea23138
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0049
+updated: 2026-08-31T20:52:49+00:00
+actor: local-agent
+evidence-sha256: 0d6781d978ed15bc779a17b686785e5efe3810adb2563c2731c51acc8f2f82c7
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0100
+updated: 2026-08-31T20:52:50+00:00
+actor: local-agent
+evidence-sha256: f42a70c09249785cee78d453593730b02e462563c2ea52dd3f96ff13d447e5a6
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0101
+updated: 2026-08-31T20:52:50+00:00
+actor: local-agent
+evidence-sha256: ad159f2cc950ebf498af6d9f88b455def41b635fe25d5b965a5a13b3ca89b222
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0102
+updated: 2026-08-31T20:52:51+00:00
+actor: local-agent
+evidence-sha256: 2e7357efbd529ac1f58e185753fb74a4020585d1823d89156e4b2506b6f36dc2
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0103
+updated: 2026-08-31T20:52:52+00:00
+actor: local-agent
+evidence-sha256: 9f513f7079d3261f78b90b6bd9147004c81eee2c312db6be84f3df048cbcd64a
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0104
+updated: 2026-08-31T20:52:52+00:00
+actor: local-agent
+evidence-sha256: baeb3b5cc21ca5732de76caf6600b1e9e796a5df3a459eb6ee6aa3c10927d7e1
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0105
+updated: 2026-08-31T20:53:01+00:00
+actor: local-agent
+evidence-sha256: 8f8c2cb7dbb63a32f95b7554a3432704679483f51eb02ca0a1876028014cadc5
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0106
+updated: 2026-08-31T20:53:02+00:00
+actor: local-agent
+evidence-sha256: 28e3a69bfc9528cee8757764023da67b82126fb41f50201e9db1a69ef64db976
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0107
+updated: 2026-08-31T20:53:02+00:00
+actor: local-agent
+evidence-sha256: a4d0746af463ce97c8c6bfd1c870936634047e723fc48a76bca188862de4567d
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0108
+updated: 2026-08-31T20:52:52+00:00
+actor: local-agent
+evidence-sha256: 8b95638cc3257cbeb6b6c700584c9d1c131e195a1a2cdb0831b6d5633cfb338f
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0109
+updated: 2026-08-31T20:53:03+00:00
+actor: local-agent
+evidence-sha256: b7ba6dde2f1cca415fa54b2d0c4f96699805deca3a08c09163dee092774c63f6
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0110
+updated: 2026-08-31T20:52:53+00:00
+actor: local-agent
+evidence-sha256: a73593c023c7d82fc6306ea2fce3f45eaac6fe94ff94c60589a048581736f648
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0111
+updated: 2026-09-01T12:44:55+00:00
+actor: local-agent
+evidence-sha256: 87e072d5e2c574dbf26ce3c530c85fb1d6a5a871034892d6adf8dc40ec8a3ae9
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0112
+updated: 2026-09-01T12:44:55+00:00
+actor: local-agent
+evidence-sha256: f193fa11049f920c888558209118f7b7592a95a4e86ace0c92274995b906db8d
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0113
+updated: 2026-09-01T13:55:36+00:00
+actor: local-agent
+evidence-sha256: 07b6275707f950b590ed96ec928ab841e01791e4761d591f616d20f0fc5e80cc
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0114
+updated: 2026-09-01T13:57:24+00:00
+actor: local-agent
+evidence-sha256: db6e60f478405d43372683fbf7d760ddb32ef5fb7c5c608ca152e3115cca052b
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0115
+updated: 2026-09-01T03:30:25+00:00
+actor: local-agent
+evidence-sha256: ef7edcae3cf6bd3ad470c34205fa815916c109e4709b0298ac4f0a4068e48968
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0116
+updated: 2026-09-01T17:55:42+00:00
+actor: local-agent
+evidence-sha256: cfbef8fb88b67a309e81fa923357ecfc6f2a6808005e9d697e457401171f9ce5
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0117
+updated: 2026-09-01T17:55:42+00:00
+actor: local-agent
+evidence-sha256: 32b178026b6612aa0bc5ea8813b094a8e7b84293e8c9f8a5706a02435767ed03
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0118
+updated: 2026-09-01T20:51:22+00:00
+actor: local-agent
+evidence-sha256: c55fee22cf93a7578d26053014ef8e42b4a7534775e5e1a5d1fd60053eb1d405
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0119
+updated: 2026-09-01T22:14:14+00:00
+actor: local-agent
+evidence-sha256: 0acd76be267c23dd81333e674d9c0eee29d42c3f07154718697fae9f793a26b6
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0120
+updated: 2026-09-02T23:49:07+00:00
+actor: local-agent
+evidence-sha256: 73903ba5ee89d8c893c1f1fd2a10d42aeeba247966ba2045494555aa353d28e5
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0121
+updated: 2026-09-02T23:56:26+00:00
+actor: local-agent
+evidence-sha256: 01f5f6cb64432cac1825787493c591f7d4d2c263eff4860738564f29f1259336
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0122
+updated: 2026-09-03T00:15:44+00:00
+actor: local-agent
+evidence-sha256: dca081a3188c1676492cf6cfd60f6b5d044444af48a818ae6173c43636c209fb
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0123
+updated: 2026-09-03T00:23:19+00:00
+actor: local-agent
+evidence-sha256: d05fdcb413b5af3832a99bb11e2726eab2c7c3682e25b7c74203edb5e4bd3544
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0124
+updated: 2026-09-03T00:32:12+00:00
+actor: local-agent
+evidence-sha256: 7b56927949e37e438aa734d75f4b3eed9bd85a667118aa51838decfaccecfcb7
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0125
+updated: 2026-09-03T00:40:53+00:00
+actor: local-agent
+evidence-sha256: 24ead3c1a5c517e9724996338b7426ad3e8e2c18cd519e08d1f683f72f4d788b
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0126
+updated: 2026-09-03T00:45:23+00:00
+actor: local-agent
+evidence-sha256: 1acbbc8c9d9ec3b87035c8d0521fa2c3622fa697e6d719310f61795b15fda6e8
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0135
+updated: 2026-08-31T20:52:54+00:00
+actor: local-agent
+evidence-sha256: 8cc3663b0397c2fbcef390d333845930ad753ab448184830a67735e6b2b43ac0
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0136
+updated: 2026-09-01T18:06:52+00:00
+actor: local-agent
+evidence-sha256: 766040d87c6e2dbae195442af395ea3b2fddc2c114f4fbe4a7963f3a4d6463ea
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0147
+updated: 2026-09-01T19:19:57+00:00
+actor: local-agent
+evidence-sha256: 4149908d9dda7f1397ce06f9aadccce2ae5c038d469a1adeb8e1e3f02d0a2ff9
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0138
+updated: 2026-09-01T13:24:20+00:00
+actor: local-agent
+evidence-sha256: 0ab111892a30d55ad46e7f6232b32f64656dee72cc4b9937613c3f2a3d9c925a
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0140
+updated: 2026-08-31T20:52:55+00:00
+actor: local-agent
+evidence-sha256: 9a98b49675963b2ea908a68a789931a1ce3a120c18862d3fba049bda0fb087c7
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0141
+updated: 2026-08-31T20:52:55+00:00
+actor: local-agent
+evidence-sha256: d2ac93b376b977a7e8c1e97fa78f2e3cc4a6fa132413259427293fa43456d185
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0142
+updated: 2026-09-01T13:24:20+00:00
+actor: local-agent
+evidence-sha256: bceab63e963dd389c859027e3e4221a6a50386a99dfad656912ed9445f0038fe
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0148
+updated: 2026-08-31T20:52:56+00:00
+actor: local-agent
+evidence-sha256: 4ef622af886af3eec0fcee15e0c9b6f3701562e2b54c557679f7865d0015c705
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0149
+updated: 2026-08-31T20:52:56+00:00
+actor: local-agent
+evidence-sha256: ee7dd33a827a4186797e2e9fd11b46d1d34b100736afd7c3edb1ecccd9661465
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0150
+updated: 2026-08-31T20:52:57+00:00
+actor: local-agent
+evidence-sha256: 8408674ed32c856ac5fa4c249f081c989efe634068d4e1c18a36080b76426a4d
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0152
+updated: 2026-09-01T01:03:10+00:00
+actor: local-agent
+evidence-sha256: 75fc109f1509113951e589eae987093b5e6ae117d9fd29e758a6c673897685d3
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0153
+updated: 2026-09-01T01:03:10+00:00
+actor: local-agent
+evidence-sha256: 08da5c23cd9a4bb84512af6dc432989154d9da35f011f18bf9ef15fb7a650193
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0154
+updated: 2026-09-01T00:56:58+00:00
+actor: local-agent
+evidence-sha256: 83e5ed487aff86dee8b825d9f06d859654d292349ec6538442ac1f725c3dbe1b
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0155
+updated: 2026-09-01T01:47:14+00:00
+actor: local-agent
+evidence-sha256: 02c7cb988ff4f3990fdd17d9a4772d50152245ab2becbbd66f768202ec391bc8
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0156
+updated: 2026-09-01T03:30:24+00:00
+actor: local-agent
+evidence-sha256: 994ea2169cfa09d65fa7fa4e2b29c4f8e02de905c613b7d24ebd946ec7c7d4b0
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0157
+updated: 2026-08-31T21:16:05+00:00
+actor: local-agent
+evidence-sha256: 7f99e3ef8bfd11d211e6dbda80fa766914a185971e4f6883515209aba957fb5f
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0158
+updated: 2026-08-31T20:52:57+00:00
+actor: local-agent
+evidence-sha256: 1334808461c1eefcd702dde2d78c41249acef0f3a9ad16fb200938bea3b44d16
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0159
+updated: 2026-08-31T20:52:58+00:00
+actor: local-agent
+evidence-sha256: 4f805b7450d7a6291c49d70fbd741f091ce1c5cbd8e5e3de65e85b8daa1590aa
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0160
+updated: 2026-08-31T22:25:51+00:00
+actor: local-agent
+evidence-sha256: a0374312071e4a6d50a86e2706a720cb563cff292dd03c20102c6c0ac8b63098
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0161
+updated: 2026-08-31T22:54:54+00:00
+actor: local-agent
+evidence-sha256: 8347892ea96120456d7b66b9aba1440561a66d689fce427bda41928e3e8003b4
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0162
+updated: 2026-08-31T22:54:54+00:00
+actor: local-agent
+evidence-sha256: ff5ccd0484ed2266c6ce264e4b9f21b41f1bd97f7e8c73ff4c98e9216edf19cd
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0163
+updated: 2026-08-31T22:56:47+00:00
+actor: local-agent
+evidence-sha256: fb1882e2df32385413315728fdb2731a84376c39873250aa2cf0335a2c913c98
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0164
+updated: 2026-08-31T20:52:58+00:00
+actor: local-agent
+evidence-sha256: 6e808dd8296359a6ed71a9bc0233622843628ce933fabc8f2bd6be9c18a06087
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0165
+updated: 2026-08-31T20:52:59+00:00
+actor: local-agent
+evidence-sha256: 35e2db2bb0dd5858f605cfd6057a51bd5a2cc1733437cbe03b37f501140d5259
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0167
+updated: 2026-08-31T20:53:05+00:00
+actor: local-agent
+evidence-sha256: fbb81df390757352fa4b5eef8a9d588c872e51e967bf063af55523cd0790203a
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0168
+updated: 2026-08-31T20:53:05+00:00
+actor: local-agent
+evidence-sha256: cddef743ddcbea9daa1ac14e2f401c5e68470280862077bedb48542798d521e3
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0169
+updated: 2026-08-31T20:53:06+00:00
+actor: local-agent
+evidence-sha256: 9e54c89cf783fdec3bfac2b296c5cf87812231375dc96e2f9f25c4b4aa627210
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0170
+updated: 2026-08-31T20:53:08+00:00
+actor: local-agent
+evidence-sha256: 3301600a2ffff136c37ca355c7a51268296d9f2959e02ab5de8480a77935685f
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0171
+updated: 2026-08-31T20:53:08+00:00
+actor: local-agent
+evidence-sha256: fd8973c6f65fbc9de171997c767818934e0bcd1b2dd47cb00d312955bb498efa
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0172
+updated: 2026-09-09T01:36:03+00:00
+actor: local-agent
+evidence-sha256: daaa73300e8e73e245696aebf9a87df6fcda45e85b2000a58c1213f2145d5d71
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0173
+updated: 2026-08-31T20:53:06+00:00
+actor: local-agent
+evidence-sha256: 3b42e8e7560437f09e36c1c1afc42223cc10fc5140880d68b9edab0e386d9c4d
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0174
+updated: 2026-08-31T20:53:07+00:00
+actor: local-agent
+evidence-sha256: e1e1520308294faa680b6bcbe176f96dc1d6131f95d218cc19ab176a39d3e9e9
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0175
+updated: 2026-08-31T20:53:07+00:00
+actor: local-agent
+evidence-sha256: da531fc298590aed92dd381b806c51d629170dc0414b589bddcdb3ac7a92d208
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0176
+updated: 2026-08-31T20:53:09+00:00
+actor: local-agent
+evidence-sha256: 48a6469d9986ed404e1e7aeabe1156491db410f54682f13015cd57bb8a212e48
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0177
+updated: 2026-08-31T20:52:59+00:00
+actor: local-agent
+evidence-sha256: 9b8b11fb86f4f29f8111ff8159cfd63f0d8147ad9c9fe8172abe609087578c9e
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0210
+updated: 2026-09-02T23:18:15+00:00
+actor: local-agent
+evidence-sha256: 80f9aad504a029dbe80faed7a0cf4c152de5bf88a4b1880edf60f754211dea51
+-->
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0211
+updated: 2026-09-02T23:18:41+00:00
+actor: local-agent
+evidence-sha256: 60f232b4e4d8bb71c603011e8a96ba47b0b2b4f04b45106ed5ab759dbc9d69a0
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0004
+updated: 2026-08-29T05:56:51+00:00
+actor: local-agent
+evidence-sha256: 4aaa04f685e833bd81528668f15ce9ca3bd1e3e37227af5d8e2fb1df720a513a
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0005
+updated: 2026-08-29T08:50:05+00:00
+actor: local-agent
+evidence-sha256: fa183425e21f31b54cdc90edc511fb1218cf517590a404b9fb51fd05e56fb6da
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0200
+updated: 2026-08-30T04:10:43+00:00
+actor: local-agent
+evidence-sha256: 425e861d61478080b23cc52ad6b64973eb901e909bbe35dd7fb24a555e299358
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0201
+updated: 2026-08-30T04:29:48+00:00
+actor: local-agent
+evidence-sha256: c5758386de9a32943594941ee15b2faf7dd48bcd822565e0419448383e33c180
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0202
+updated: 2026-08-30T04:39:54+00:00
+actor: local-agent
+evidence-sha256: 0bc75649da580b92e8c385c0ce01f150f9b48f18b1ac0d2c9ee40525373e504f
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0203
+updated: 2026-08-30T04:59:52+00:00
+actor: local-agent
+evidence-sha256: b734c3298856af57db7cbd01c11010da44ffcc25472c8142ae1011378a1a4699
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0204
+updated: 2026-08-30T12:37:24+00:00
+actor: local-agent
+evidence-sha256: 26d2c37b44b0e2ecdd412fa38e9987742b09de7fdb3d65324b840eee1997f5d8
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0007
+updated: 2026-08-29T20:22:56+00:00
+actor: local-agent
+evidence-sha256: 9fced8fc1fea3a24766fb348dd92b1dafe1ce6cbdbc5e0178ebdaade6dd01a05
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0205
+updated: 2026-08-30T12:37:24+00:00
+actor: local-agent
+evidence-sha256: f1288185ef3bec19c87d3ccaf8e935f8a33480e8db7f734bae58d6874f3a4d43
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0207
+updated: 2026-08-31T05:02:48+00:00
+actor: local-agent
+evidence-sha256: 1017a920b7cf8fe652672b1af34f77f91dc83e95bebdfd52e9a57ff31d931235
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0006
+updated: 2026-08-30T19:51:22+00:00
+actor: local-agent
+evidence-sha256: c06a0c08dd4aed8815e9506b2ece8b5ac94fae69f2372ca33649c3a92f9bbed0
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0206
+updated: 2026-08-31T03:37:41+00:00
+actor: local-agent
+evidence-sha256: 027117d24fef4b17a77dddd236c195d9b40586c3bc282dfd5c0aec2f9b5e54ee
+-->
+
+<!-- SIN-GPT-WEB-HANDOVER
+task: T-0208
+updated: 2026-08-31T15:17:38+00:00
+actor: local-agent
+evidence-sha256: 3c5ff2bd506025e42f53ea35964b6be662f201604fdd2d490f55ac7573da8fcb
+-->
+
+`````
+
+## docs/brand/house-workspace/HANDOFF.md
+
+`````markdown
+# Hausakte und Hausgeschichte · Frontend-Lieferung 2026-09-09
+
+Host: OCI sin-supabase. Repo: Delqhi/einfach-hausen. Worktree: /home/ubuntu/orca/workspaces/eh-house-workspace-20260909. Branch: fix/eh-house-workspace-20260909. Basis: e45812e29a786d233727d89599e46bacac7afdf4. Kanonischer Task: EH-BRAND-07-WORKSPACE; kein zweiter Taskplan.
+
+## Geliefert
+
+- /app/home: EHRecordCover, klare nächste Schritte, drei echte Bestandszahlen, Technikbestand und Erfassung in einem Arbeitsbereich; Hausprofil in Feldgruppen; fachlich gruppierte Navigation. Deutsche Techniknamen. Bestehende Notiz-Ankündigung bleibt als nicht verfügbare Funktion erkennbar.
+- src/components/homeowner/house-profile-forms.tsx: wiederverwendbare HouseProfileForm und HouseAssetForm aus EH-Komponenten, native Action-Props, unveränderte Formularnamen, EHSubmitButton-Pendingzustände. Kein neues Designpaket, CSS oder Token.
+- /app/home/history: vier konkrete Formulargruppen, kanonische Datei-Controls, verbundenes Hinweislabel, Pflichtfelder, Pending, getrennter Übergabebereich mit geltenden Einschränkungen. Historienkosten mit euroExact. Existierende Datenabfragen, Backend-Aktionen, Autorisierung, private Downloadlinks und Übergabelebenzyklus erhalten.
+- Screenshots und technische Rendernachweise: design/workspace-preview/house/. Zwei echte Routen bei 390/736/1536. Daten sind isolierte lokale Fixtures, keine Produktionskonten.
+
+## Tatsächliche Prüfung
+
+ESLint der drei Produktdateien: PASS. npm run typecheck: PASS. Sechs Browseransichten: eine h1, alle sichtbaren Eingaben beschriftet und 16px, kein Seitenoverflow. Desktop-Ausschnitt der Hausgeschichte und Desktop/Mobile-Hausakte visuell begutachtet. Keine vollständige Zustands- oder produktive Rollenabnahme behaupten.
+
+Die installierte wiederverwendete Dependency-Kopie meldet Next 16.3.1, package.json fordert ^16.3.4. Daher ersetzt diese Prüfung nicht npm ci und den Releasebuild mit dem aktuellen Lockfile. Keine Dependencies oder Lockfiles geändert.
+
+Design-Guard scheitert bereits an der übernommenen Basis: Protected design file changed: src/app/design-system.css. Ursprung ist der mobile Drawer-Fix aus 3c0cab3, nicht diese Lieferung. Kein Siegel/Guard/Baseline verändert. Lokaler Agent muss die berechtigte kanonische Integration dieses Fixes klären; nicht einfach Schutz abschalten. Auf dem mobilen Screenshot zeigt der bestehende Drawer zusätzlich ein natives Dreieck über dem Menü-Icon; als gesonderter Shell-Befund prüfen, nicht diese Hausakte zurückbauen.
+
+GitNexus impact wurde für MyHome und HouseHistory ausgeführt: UNKNOWN, Index veraltet. detect-changes meldet im registrierten älteren Index keine Änderungen und ist deshalb kein Nachweis für diesen neuen Worktree. Direkter Git-Diff und die tatsächlichen Aktionsverbraucher wurden geprüft; keine gemeinsame Backend-Funktion geändert.
+
+## Aktuelle Produktion – frühere Blocker überholt
+
+2026-09-09T18:32:54Z direkt gelesen: /srv/einfach-hausen HEAD e45812e; /api/health HTTP200, state ready, auth_authority reachable, database/storage ready. Vorherige Aussagen f554939/HTTP503 sind historische Befunde. Keine Anmeldung oder vollständige Live-Abnahme durch diesen Renderlauf belegt.
+
+## Genau nächste Integration durch laufenden lokalen Agenten
+
+1. Aktuellen eigenen Branch/Status prüfen, fremde Dateien erhalten. Diesen Branch regulär integrieren; kein reset/clean/force oder blindes Überschreiben. Er berührt keine Shell-/Backend-Dateien.
+2. Integrierten Stand mit npm ci, typecheck, lint, Build, Design-Guard und bestehenden relevanten E2E prüfen. Den Basis-Guard-Befund fachgerecht beheben.
+3. Isolierte Owner-Fixtures prüfen: Hausprofil speichern und wiederladen; Gerät hinzufügen samt Wartung; Wartung abschließen; historische Arbeit mit/ohne Fotos/PDF speichern; geschützte Downloads; Pflicht-/Fehler-/Pendingzustände; lange Inhalte und leere Akte. Hausübergabe nur mit Wegwerfkonten durchspielen, niemals reale Eigentümerschaft für QA ändern. Keine echten Benachrichtigungen versenden.
+4. Mobilen Drawer-Marker und Fokus separat kontrollieren. Aktuelle Screenshots mit sichtbarem Viewport und echter Schriftdarstellung prüfen. Alte Full-page-Bilder fixierter Navigation nicht als Positionsbeweis verwenden.
+5. Erst nach Integration und Prüfungen über den vorhandenen Standardprozess releasen. Produktionscommit, Health und Rollenansichten belegen. Verbleibende Familien aus NEXT-AGENT-CURRENT.md bleiben offen, solange keine aktuelle Evidenz vorliegt.
+
+## Reproduzierbare Frontend-Vorschau
+
+Nur gegen eigenen lokalen Devserver auf 127.0.0.1:4199 mit AUTH_MODE=local und separater DATABASE_PATH. Fixture-JSON enthält sessions.owner. Datei privat halten, nie einchecken. Keine Produktionssession kopieren.
+
+```bash
+cd /home/ubuntu/orca/workspaces/eh-house-workspace-20260909
+export PATH="/home/ubuntu/.nvm/versions/node/v22.23.0/bin:$PATH"
+EH_REVIEW_FIXTURE=/tmp/eh-final-review-fixture.json node scripts/eh-house-visual-review.mjs
+```
+
+Vollständiger versionierter Code einschließlich dieser Anleitung und Screenshot-Hashes: SOURCE.md und source-manifest.json in diesem Verzeichnis. Git-Integration ist maßgeblich; Codeblöcke erklären den kompletten Stand, ersetzen aber keinen Dreiwege-Merge.
+
+`````
+
+## scripts/eh-house-visual-review.mjs
+
+`````js
+import {chromium} from 'playwright-core';
+import fs from 'node:fs';
+if (!process.env.EH_REVIEW_FIXTURE) throw new Error('EH_REVIEW_FIXTURE must point to an isolated local fixture JSON; never use production sessions.');
+const fixture=JSON.parse(fs.readFileSync(process.env.EH_REVIEW_FIXTURE,'utf8'));
+const out='design/workspace-preview/house';fs.mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({executablePath:'/home/ubuntu/.local/share/eh-brand-browser/chromium-1234/chrome-linux/chrome',headless:true,args:['--no-sandbox']});
+const evidence=[];
+for(const route of ['home','home/history']) for(const width of [390,736,1536]) {
+ const context=await browser.newContext({viewport:{width,height:1000},locale:'de-DE'});
+ await context.addCookies([{name:'mh_session',value:fixture.sessions.owner,url:'http://127.0.0.1:4199',httpOnly:true,sameSite:'Lax'}]);
+ const page=await context.newPage();await page.goto('http://127.0.0.1:4199/app/'+route,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready);
+ const check=await page.evaluate(()=>({url:location.pathname,h1:document.querySelectorAll('h1').length,overflow:document.documentElement.scrollWidth>innerWidth,offenders:[...document.querySelectorAll('main *')].filter(e=>{const r=e.getBoundingClientRect();return r.width&&r.right>innerWidth+1}).slice(0,8).map(e=>({tag:e.tagName,cls:e.className,text:e.textContent.slice(0,80),right:e.getBoundingClientRect().right})),inputs:[...document.querySelectorAll('main input:not([type=hidden]), main select, main textarea')].map(e=>({name:e.name,font:getComputedStyle(e).fontSize,label:!!e.labels?.length}))}));
+ await page.screenshot({path:`${out}/${route.replaceAll('/','-')}-${width}.png`,fullPage:true});evidence.push({route,width,...check});await context.close();
+}
+fs.writeFileSync(out+'/evidence.json',JSON.stringify(evidence,null,2));await browser.close();console.log(JSON.stringify(evidence.map(({route,width,h1,overflow})=>({route,width,h1,overflow}))));
+if (evidence.some(e=>e.url!=='/app/'+e.route || e.h1!==1 || e.overflow || e.inputs.some(i=>!i.label || parseFloat(i.font)<16))) process.exitCode=1;
+
+`````
+
+## src/app/app/home/history/page.tsx
+
+`````tsx
+import { EHAppHeader, EHWorkSection, EHWorkspaceGrid, EHWorkflowStack, EHWorkflowForm, EHFormSection, EHFieldGrid, EHSubmitButton, EHFormFeedback, EHText, EHList, EHEmptyState, EHButton, EHStatus, EHField, EHInput, EHSelect, EHTextarea } from '@/design-system';
+import { AppShell } from '@/components/shell';
+import { requireUser } from '@/lib/auth';
+import { db } from '@/lib/db';
+import { addHouseHistoryAction,createHouseTransferAction } from '@/app/actions';
+import { euroExact } from '@/lib/format';
+import { HOUSE_TRANSFER_TTL_DAYS,houseTransferExpiresAt,houseTransferLifecycleStatus,primaryProperty } from '@/lib/properties';
+
+export default async function HouseHistory({searchParams}:{searchParams:Promise<Record<string,string>>}){
+  const user=await requireUser('homeowner'); const sp=await searchParams; const property=primaryProperty(user.id);
+  if (!property) return <AppShell role="homeowner" active="/app/home" title="Haus-Historie">
+    <EHAppHeader title="Haus-Historie" text="Die Geschichte deines Zuhauses." />
+    <EHEmptyState title="Keine aktive Hausakte" text="Lege zuerst dein Zuhause an. Danach kannst du frühere Arbeiten, Wartungen und Dokumente hier sammeln." action={<EHButton href="/app/home">Mein Haus einrichten</EHButton>} />
+  </AppShell>;
+  const entries=db.prepare(`SELECT h.*,p.business_name linked_business,(SELECT COUNT(*) FROM house_history_documents d WHERE d.entry_id=h.id) document_count FROM house_history_entries h LEFT JOIN provider_profiles p ON p.user_id=h.provider_id WHERE h.property_id=? ORDER BY h.performed_at DESC,h.id DESC`).all(property.id) as any[];
+  const invites=db.prepare(`SELECT * FROM provider_invites WHERE property_id=? AND status='pending' ORDER BY created_at DESC`).all(property.id) as any[];
+  const transfers=db.prepare(`SELECT * FROM house_transfers WHERE property_id=? ORDER BY created_at DESC LIMIT 5`).all(property.id) as any[];
+  const ownerships=db.prepare(`SELECT o.*,u.first_name,u.last_name FROM property_ownerships o JOIN users u ON u.id=o.homeowner_id WHERE o.property_id=? ORDER BY o.started_at DESC,o.id DESC`).all(property.id) as any[];
+  return <AppShell role="homeowner" active="/app/home" title="Haus-Historie" subtitle="Die Geschichte deines Hauses">
+    <EHWorkflowStack>
+    <EHAppHeader eyebrow="Lebenslange Hausakte" title="Was wurde wann am Haus gemacht?" text="Auch Arbeiten aus der Zeit vor Einfach Hausen gehören hier hinein – mit Kosten, Garantie, Dokumenten und Ansprechpartnern." actions={<EHButton href="#historie-anlegen" arrow>Arbeit dokumentieren</EHButton>} />
+    {sp.transfer&&<EHFormFeedback kind="success">Übergabelink erstellt. Nur die angegebene Käufer-E-Mail kann ihn innerhalb von {HOUSE_TRANSFER_TTL_DAYS} Tagen annehmen.</EHFormFeedback>}
+    <EHWorkSection title="Dokumentierte Arbeiten">
+    <EHList label="Haus-Historie" items={entries.map(e=>({ id: String(e.id), title: `${new Date(e.performed_at+'T12:00:00').getFullYear()} · ${e.title}`, text: `${e.category} · ${e.company_name||'Eigenleistung / unbekannt'}${e.contact_name?` · ${e.contact_name}`:''}${e.cost_amount!=null?` · ${euroExact(e.cost_amount)}`:''}${e.guarantee_until?` · Garantie bis ${new Date(e.guarantee_until+'T12:00:00').toLocaleDateString('de-DE')}`:''}${e.maintenance_due?` · Wartung ${new Date(e.maintenance_due+'T12:00:00').toLocaleDateString('de-DE')}`:''} · ${e.job_id?'Über Einfach Hausen dokumentiert':'Manuell eingetragen'}${e.notes?` — ${e.notes}`:''}`, meta: e.provider_id?<EHStatus tone="success">Partner verbunden</EHStatus>:e.contact_email?<EHStatus>Einladung vorgemerkt</EHStatus>:null, action: (e.before_photo||e.after_photo||e.document_count>0)?<span>{e.before_photo&&<a href={`/api/house-history-files/${e.id}/before`} target="_blank" rel="noreferrer">Vorher</a>}{e.after_photo&&<span> · </span>}{e.after_photo&&<a href={`/api/house-history-files/${e.id}/after`} target="_blank" rel="noreferrer">Nachher</a>}{e.document_count>0&&(db.prepare(`SELECT id,title FROM house_history_documents WHERE entry_id=?`).all(e.id) as any[]).map(d=><a key={d.id} href={`/api/house-history-documents/${d.id}`} target="_blank" rel="noreferrer"> · {d.title}</a>)}</span>:null }))} />
+    {entries.length===0&&<EHEmptyState title="Noch keine Historie" text="Trag frühere Sanierungen, Wartungen, Technik oder Gartenarbeiten ein. Abgeschlossene Aufträge bleiben zusätzlich in deinen Aufträgen und Dokumenten nachvollziehbar." />}
+    </EHWorkSection>
+
+    <section id="historie-anlegen" aria-label="Frühere Arbeit eintragen"><EHWorkflowForm action={addHouseHistoryAction}>
+      <EHFormSection title="Arbeit & Zeitpunkt" description="Was wurde gemacht und wann? Alle weiteren Angaben sind optional."><EHFieldGrid>
+        <EHField id="hist-category" label="Bereich"><EHSelect id="hist-category" name="category" defaultValue="Haus & Allgemein"><option>Haus & Allgemein</option><option>Garten & Außen</option><option>Dach & Fassade</option><option>Elektro</option><option>Sanitär & Heizung</option><option>Fenster & Türen</option><option>Reinigung & Pflege</option><option>Technik & Energie</option><option>Renovierung & Innenausbau</option><option>Sonstiges</option></EHSelect></EHField>
+        <EHField id="hist-date" label="Datum" required><EHInput id="hist-date" name="performedAt" type="date" required/></EHField>
+        <EHField id="hist-title" label="Was wurde gemacht?" required><EHInput id="hist-title" name="title" required placeholder="z. B. Dach komplett saniert"/></EHField>
+      </EHFieldGrid></EHFormSection>
+      <EHFormSection title="Betrieb & Kosten"><EHFieldGrid>
+        <EHField id="hist-company" label="Firma"><EHInput id="hist-company" name="companyName" placeholder="z. B. Müller Dach GmbH"/></EHField>
+        <EHField id="hist-cost" label="Kosten €"><EHInput id="hist-cost" name="cost" type="number" min="0" step="0.01"/></EHField>
+        <EHField id="hist-cname" label="Ansprechpartner"><EHInput id="hist-cname" name="contactName"/></EHField>
+        <EHField id="hist-cemail" label="E-Mail Handwerker" hint="Ist der Betrieb noch nicht dabei, wird die Verknüpfung für eine spätere Registrierung vorgemerkt."><EHInput id="hist-cemail" name="contactEmail" type="email" aria-describedby="hist-cemail-hint"/></EHField>
+        <EHField id="hist-cphone" label="Telefon"><EHInput id="hist-cphone" name="contactPhone" type="tel"/></EHField>
+      </EHFieldGrid></EHFormSection>
+      <EHFormSection title="Garantie & nächste Wartung"><EHFieldGrid>
+        <EHField id="hist-guar" label="Garantie bis"><EHInput id="hist-guar" name="guaranteeUntil" type="date"/></EHField>
+        <EHField id="hist-maint" label="Nächste Wartung"><EHInput id="hist-maint" name="maintenanceDue" type="date"/></EHField>
+      </EHFieldGrid></EHFormSection>
+      <EHFormSection title="Notizen & Nachweise" description="Ergänze Fotos und Unterlagen zu dieser Arbeit.">
+        <EHField id="hist-notes" label="Notizen"><EHTextarea id="hist-notes" name="notes" rows={4} maxLength={3000}/></EHField>
+      <EHFieldGrid>
+        <EHField id="hist-before" label="Foto vorher"><EHInput id="hist-before" name="beforePhoto" type="file" accept="image/*"/></EHField>
+        <EHField id="hist-after" label="Foto nachher"><EHInput id="hist-after" name="afterPhoto" type="file" accept="image/*"/></EHField>
+        <EHField id="hist-doc" label="Rechnung / Dokument"><EHInput id="hist-doc" name="document" type="file" accept="application/pdf,image/*"/></EHField>
+        <EHField id="hist-doctitle" label="Dokumenttitel"><EHInput id="hist-doctitle" name="documentTitle" placeholder="z. B. Rechnung Dachsanierung 2025"/></EHField>
+      </EHFieldGrid>
+      <EHSubmitButton pendingLabel="Arbeit wird gespeichert …">In Hausakte speichern</EHSubmitButton>
+      </EHFormSection></EHWorkflowForm></section>
+
+    {invites.length>0&&<EHWorkSection title="Vorgemerkte Betriebe"><EHList label="Vorgemerkte Betriebe" items={invites.map(i=>({ id: String(i.id), title: i.company_name||i.email, text: `${i.email} · wird automatisch verbunden, sobald sich der Betrieb registriert.`, href: `/partner-invite/${i.token}` }))} /></EHWorkSection>}
+
+    <EHWorkSection title="Eigentümerhistorie"><EHList label="Eigentümerhistorie" items={ownerships.map(o=>({ id: String(o.id), title: `${o.first_name} ${o.last_name}`, text: `${new Date(o.started_at).toLocaleDateString('de-DE')} – ${o.active?'heute':o.ended_at?new Date(o.ended_at).toLocaleDateString('de-DE'):'beendet'}`, meta: o.active?<EHStatus tone="success">Aktuell</EHStatus>:null }))} /></EHWorkSection>
+
+    <EHWorkspaceGrid main={<EHWorkSection title="Hausakte an Käufer übergeben">
+      <EHText>Es wird dieselbe Immobilie mit ihrer Historie weitergeführt. Hausprofil, Anlagen, offene Wartungen und hausbezogene Ansprechpartner gehen mit. Private alte Nachrichten, Zahlungen und Aufträge bleiben beim bisherigen Eigentümer.</EHText>
+      <EHFormFeedback kind="info">Der Übergabelink ist {HOUSE_TRANSFER_TTL_DAYS} Tage gültig. Nur die angegebene Käufer-E-Mail kann ihn annehmen. Danach wird die Freigabe automatisch ungültig.</EHFormFeedback>
+      <EHButton href="/app/home/passport" variant="secondary">Hauspass ansehen</EHButton>
+    </EHWorkSection>} aside={<EHWorkflowForm action={createHouseTransferAction}>
+      <EHFormSection title="Übergabe vorbereiten" description="Die Hausakte wechselt erst nach Annahme durch den Käufer den Eigentümer.">
+        <EHField id="hist-targetemail" label="E-Mail des Käufers" required><EHInput id="hist-targetemail" name="targetEmail" type="email" required placeholder="käufer@example.de" /></EHField>
+        <EHSubmitButton pendingLabel="Übergabe wird vorbereitet …">Übergabe vorbereiten</EHSubmitButton>
+      </EHFormSection>
+    </EHWorkflowForm>} />
+    {transfers.length>0&&<EHList label="Übergabe-Verlauf" items={transfers.map(t=>{const lifecycle=houseTransferLifecycleStatus(t);const expiresAt=houseTransferExpiresAt(t.created_at);const label=lifecycle==='accepted'?'Übergeben':lifecycle==='expired'?'Abgelaufen':lifecycle==='revoked'?'Widerrufen':'Bereit';return { id: String(t.id), title: t.target_email, text: lifecycle==='active'&&expiresAt?`gültig bis ${expiresAt.toLocaleDateString('de-DE')}`:label, meta: <EHStatus tone={lifecycle==='accepted'?'success':lifecycle==='active'?'info':'neutral'}>{label}</EHStatus> };})} />}
+    </EHWorkflowStack>
+  </AppShell>;
+}
+
+`````
+
+## src/app/app/home/page.tsx
+
+`````tsx
+import { CalendarDays, FileText, History, House, NotebookPen, TrendingUp, Wrench } from 'lucide-react';
+import { AppShell } from '@/components/shell';
+import {
+  EHAppHeader, EHList, EHEmptyState, EHButton, EHText, EHRecordCover,
+  EHWorkspaceGrid, EHWorkSection, EHWorkMetrics, EHWorkflowStack,
+  EHServiceDirectory, EHSubmitButton,
+} from '@/design-system';
+import { HouseProfileForm, HouseAssetForm, HOUSE_ASSET_KINDS } from '@/components/homeowner/house-profile-forms';
+import { requireUser } from '@/lib/auth';
+import { db } from '@/lib/db';
+import { addHouseAssetAction, completeMaintenanceTaskAction, saveHouseProfileAction } from '@/app/actions';
+import { dateLabel } from '@/lib/format';
+import { primaryProperty } from '@/lib/properties';
+
+export default async function MyHome() {
+  const u=await requireUser('homeowner'); const p=db.prepare('SELECT * FROM homeowner_profiles WHERE user_id=?').get(u.id) as any; const property=primaryProperty(u.id);
+  const assets=property?db.prepare('SELECT * FROM house_assets WHERE property_id=? ORDER BY created_at DESC').all(property.id) as any[]:[];
+  const tasks=property?db.prepare("SELECT * FROM maintenance_tasks WHERE property_id=? AND status='open' ORDER BY due_date LIMIT 8").all(property.id) as any[]:[];
+  const appointments=db.prepare(`SELECT a.*,j.title,p.business_name FROM appointments a JOIN jobs j ON j.id=a.job_id JOIN provider_profiles p ON p.user_id=a.provider_id WHERE a.homeowner_id=? AND a.status='confirmed' ORDER BY a.start_at LIMIT 3`).all(u.id) as any[];
+  const docs=db.prepare(`SELECT COUNT(*) c FROM documents d JOIN jobs j ON j.id=d.job_id WHERE j.homeowner_id=?`).get(u.id) as any;
+  const invoiceCount=(db.prepare(`SELECT COUNT(*) c FROM invoices WHERE homeowner_id=?`).get(u.id) as {c:number}).c;
+  const historyCount=property?(db.prepare(`SELECT COUNT(*) c FROM house_history_entries WHERE property_id=?`).get(property.id) as {c:number}).c:0;
+  return <AppShell role="homeowner" active="/app/home" title="Mein Haus" subtitle="Deine digitale Hausakte">
+    <EHWorkflowStack>
+      <EHAppHeader eyebrow="Digitale Hausakte" title="Mein Haus" text="Dein Gebäude, deine Technik und die nächsten Schritte im Überblick."
+        actions={<EHButton href="#technik-anlegen" arrow>Technik hinzufügen</EHButton>} />
+      <EHWorkspaceGrid main={<EHRecordCover eyebrow="Dein Zuhause" title={p?.address || 'Deine Hausakte.'}
+        subtitle={[p?.postcode, p?.house_type].filter(Boolean).join(' · ') || 'Ergänze die Grunddaten deines Zuhauses.'}>
+        <EHText>{[p?.build_year ? `Baujahr ${p.build_year}` : null, p?.living_area ? `${p.living_area} m² Wohnfläche` : null].filter(Boolean).join(' · ') || 'Gebäude, Ausstattung und Hausgeschichte bleiben hier zusammen.'}</EHText>
+        <EHButton href="#hausprofil" variant="on-dark">Hausprofil bearbeiten</EHButton>
+      </EHRecordCover>} aside={<EHWorkSection title="Als Nächstes" link={{ href: '/app/year', label: 'Mein Jahr' }}>
+        {tasks.length > 0 ? <EHList label="Nächste Wartungen" items={tasks.slice(0, 4).map(t => ({
+          id: String(t.id), title: t.title, text: `Fällig ${dateLabel(t.due_date)}`, href: '/app/year',
+        }))} /> : <EHEmptyState title="Keine offene Wartung hinterlegt" text="Dein Jahresplan sammelt anstehende Arbeiten und Wartungen."
+          action={<EHButton href="/app/year" variant="secondary">Jahresplan öffnen</EHButton>} />}
+        {appointments.length > 0 && <EHList label="Bestätigte Termine" items={appointments.map(a => ({
+          id: String(a.id), title: a.title, text: `${a.business_name} · ${dateLabel(a.start_at)}`, href: `/app/jobs/${a.job_id}`,
+        }))} />}
+      </EHWorkSection>} />
+      <EHWorkMetrics items={[
+        { label: 'Technik & Geräte', value: assets.length, href: '#technik' },
+        { label: 'Dokumente & Rechnungen', value: docs.c + invoiceCount, href: '/app/documents' },
+        { label: 'Frühere Arbeiten', value: historyCount, href: '/app/home/history' },
+      ]} />
+      <section id="technik" aria-label="Technik und Ausstattung">
+        <EHWorkspaceGrid main={<EHWorkSection title="Technik & Ausstattung">
+          {assets.length > 0 ? <EHList label="Hinterlegte Technik" items={assets.map(a => ({
+            id: String(a.id), title: a.name,
+            text: [HOUSE_ASSET_KINDS[a.kind] || a.kind, a.installed_year ? `Installiert ${a.installed_year}` : null, a.details].filter(Boolean).join(' · '),
+          }))} /> : <EHEmptyState title="Deine Ausstattung ist noch nicht erfasst" text="Beginne zum Beispiel mit deiner Heizung oder PV-Anlage. Hersteller und Modell kannst du direkt ergänzen." />}
+          {tasks.length > 0 && <EHWorkSection title="Wartungen erledigen">
+            <EHList label="Offene Wartungen" items={tasks.slice(0, 4).map(t => ({
+              id: String(t.id), title: t.title, text: `Fällig ${dateLabel(t.due_date)}`,
+              action: <form action={completeMaintenanceTaskAction.bind(null, t.id)} aria-label={`${t.title} abschließen`}>
+                <EHSubmitButton pendingLabel="Wird abgeschlossen …">Erledigt</EHSubmitButton>
+              </form>,
+            }))} />
+          </EHWorkSection>}
+        </EHWorkSection>} aside={<div id="technik-anlegen"><HouseAssetForm action={addHouseAssetAction} /></div>} />
+      </section>
+      <section id="hausprofil" aria-label="Hausprofil bearbeiten">
+        <HouseProfileForm action={saveHouseProfileAction} profile={p} />
+      </section>
+      <EHWorkSection title="Deine Hausakte weiterführen">
+          <EHServiceDirectory groups={[{ title: 'Wissen & Unterlagen', items: [
+            { href: '/app/home/history', title: 'Hausgeschichte', text: 'Frühere Arbeiten, Kosten und Ansprechpartner dokumentieren.', icon: <History /> },
+            { href: '/app/documents', title: 'Dokumente & Rechnungen', text: 'Nachweise und Unterlagen wiederfinden.', icon: <FileText /> },
+            { href: '/app/home/passport', title: 'Hauspass', text: 'Deine Hausdaten als druckbare Übersicht ansehen.', icon: <House /> },
+          ] }, { title: 'Planen & Vorbereiten', items: [
+            { href: '/app/year', title: 'Mein Jahr', text: 'Anstehende Arbeiten und Wartungen im Blick behalten.', icon: <CalendarDays /> },
+            { href: '#technik', title: 'Technik & Geräte', text: 'Ausstattung und Modellangaben nachschlagen.', icon: <Wrench /> },
+            { href: '/app/home/sale', title: 'Verkauf & Bewertung', text: 'Hauswert festhalten und einen möglichen Verkauf vorbereiten.', icon: <TrendingUp /> },
+          ] }]} />
+          <EHText muted><NotebookPen aria-hidden="true" size={18} /> Notizen: noch nicht verfügbar. Hinweise zu Geräten kannst du bereits bei der Technik hinterlegen.</EHText>
+        </EHWorkSection>
+    </EHWorkflowStack>
+  </AppShell>;
+}
+
+`````
+
+## src/components/homeowner/house-profile-forms.tsx
+
+`````tsx
+import type { ComponentProps } from 'react';
+import {
+  EHField, EHInput, EHSelect, EHFieldGrid, EHFormSection,
+  EHWorkflowForm, EHSubmitButton,
+} from '@/design-system';
+
+type FormAction = ComponentProps<'form'>['action'];
+export type HouseProfileValues = {
+  address?: string | null; postcode?: string | null; house_type?: string | null;
+  build_year?: number | null; living_area?: number | null; plot_area?: number | null;
+};
+
+export const HOUSE_ASSET_KINDS: Readonly<Record<string, string>> = {
+  heating: 'Heizung / Wärmepumpe', pv: 'PV-Anlage', storage: 'Batteriespeicher',
+  wallbox: 'Wallbox', roof: 'Dach / Dachrinne', windows: 'Fenster / Türen',
+  garden: 'Garten', smarthome: 'Smart Home / Sicherheit',
+};
+
+/** Presentation only: keep the existing authorized server action and field names. */
+export function HouseProfileForm({ action, profile }: { action: FormAction; profile: HouseProfileValues | null }) {
+  return <EHWorkflowForm action={action}>
+    <EHFormSection title="Gebäude & Räume" description="Die Grunddaten deines Zuhauses. Ergänze, was du bereits weißt.">
+      <EHField id="home-address" label="Adresse"><EHInput id="home-address" name="address" autoComplete="street-address" defaultValue={profile?.address ?? ''} placeholder="Straße, Hausnummer, Ort" /></EHField>
+      <EHFieldGrid>
+        <EHField id="home-postcode" label="Postleitzahl"><EHInput id="home-postcode" name="postcode" autoComplete="postal-code" defaultValue={profile?.postcode ?? ''} /></EHField>
+        <EHField id="home-type" label="Haustyp"><EHSelect id="home-type" name="houseType" defaultValue={profile?.house_type ?? ''}>
+          <option value="">Bitte wählen</option>
+          {['Einfamilienhaus', 'Doppelhaushälfte', 'Reihenhaus', 'Mehrfamilienhaus', 'Sonstiges'].map(type => <option key={type} value={type}>{type}</option>)}
+        </EHSelect></EHField>
+        <EHField id="home-buildyear" label="Baujahr"><EHInput id="home-buildyear" name="buildYear" type="number" defaultValue={profile?.build_year ?? ''} /></EHField>
+        <EHField id="home-living" label="Wohnfläche (m²)"><EHInput id="home-living" name="livingArea" type="number" step="0.1" defaultValue={profile?.living_area ?? ''} /></EHField>
+        <EHField id="home-plot" label="Grundstück (m²)"><EHInput id="home-plot" name="plotArea" type="number" step="0.1" defaultValue={profile?.plot_area ?? ''} /></EHField>
+      </EHFieldGrid>
+      <EHSubmitButton pendingLabel="Hausprofil wird gespeichert …">Hausprofil speichern</EHSubmitButton>
+    </EHFormSection>
+  </EHWorkflowForm>;
+}
+
+export function HouseAssetForm({ action }: { action: FormAction }) {
+  return <EHWorkflowForm action={action}>
+    <EHFormSection title="Technik hinzufügen" description="Halte Geräte und Ausstattung fest, damit das Wissen über dein Haus erhalten bleibt.">
+      <EHField id="asset-kind" label="Bereich" required><EHSelect id="asset-kind" name="kind" required defaultValue="">
+        <option value="" disabled>Bereich auswählen</option>
+        {Object.entries(HOUSE_ASSET_KINDS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+      </EHSelect></EHField>
+      <EHField id="asset-name" label="Bezeichnung" required><EHInput id="asset-name" name="name" placeholder="z. B. Wärmepumpe im Keller" required /></EHField>
+      <EHField id="asset-year" label="Installationsjahr (optional)"><EHInput id="asset-year" name="installedYear" type="number" placeholder="z. B. 2024" /></EHField>
+      <EHField id="asset-details" label="Modell / Hinweise (optional)"><EHInput id="asset-details" name="details" maxLength={1000} placeholder="Hersteller, Modell oder ein wichtiger Hinweis" /></EHField>
+      <EHSubmitButton pendingLabel="Technik wird gespeichert …">Zur Hausakte hinzufügen</EHSubmitButton>
+    </EHFormSection>
+  </EHWorkflowForm>;
+}
+
+`````

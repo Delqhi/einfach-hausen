@@ -1,0 +1,73 @@
+{
+  "base": "e45812e29a786d233727d89599e46bacac7afdf4",
+  "implementationCommit": "d846442368c4aa764fe672717c76a76df1403b7d",
+  "files": {
+    "design/workspace-preview/house/evidence.json": {
+      "sha256": "154331d8873e3341efdde64a4c0bda70abcde22ed836bb32c3918336eca9637b",
+      "bytes": 8143,
+      "kind": "text"
+    },
+    "design/workspace-preview/house/home-1536.png": {
+      "sha256": "1d364c29b2bf28b7cb2dd3adbc82105add325e38447d49df4d409aa0549a67ea",
+      "bytes": 281578,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-390.png": {
+      "sha256": "182bb8fc382bc7596663d67b6bdfdde3162cb43a1c237098be54f4281925bf9e",
+      "bytes": 258756,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-736.png": {
+      "sha256": "ec18386d8fa709e14f3bf69123b7cbe9ac06fa04f99ebea2fc350ab558844764",
+      "bytes": 262680,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-history-1536.png": {
+      "sha256": "89703b560a3a23f2285fcdfd6352f27ae9f3005fc7396a046959148d76ca7b3d",
+      "bytes": 269420,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-history-390.png": {
+      "sha256": "fc00643d8fe60097b59ac72cd9a272378966bdcabd0d85cd9a393dbd7b63fdaf",
+      "bytes": 242584,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-history-736.png": {
+      "sha256": "823057d909431a0d1ce5a4369128e747a3e028be53e0ee6a2a5e848579199fbf",
+      "bytes": 250545,
+      "kind": "binary"
+    },
+    "docs/NEXT_AGENT.md": {
+      "sha256": "7b669d8086ae359769f112e2eba789f005b0629a675792885f85f05ca2bf798d",
+      "bytes": 33497,
+      "kind": "text"
+    },
+    "docs/brand/house-workspace/HANDOFF.md": {
+      "sha256": "601a0a4b457d531e0bb2d9e4b7eab14636503d45453b78b90fe41ccea86fc509",
+      "bytes": 5261,
+      "kind": "text"
+    },
+    "scripts/eh-house-visual-review.mjs": {
+      "sha256": "40011b8d033b44d55fb6facf9ef2d3334ef566cf488d5e0300b2ed5c569357b9",
+      "bytes": 2138,
+      "kind": "text"
+    },
+    "src/app/app/home/history/page.tsx": {
+      "sha256": "ea42e159c426def6c9487eecd774fea257f48476a883afff376966ad88416400",
+      "bytes": 10392,
+      "kind": "text"
+    },
+    "src/app/app/home/page.tsx": {
+      "sha256": "53ede2ff1fae1e95ec6a7d7b00f788bb60853993c45404d6d64ab322d89b5053",
+      "bytes": 6796,
+      "kind": "text"
+    },
+    "src/components/homeowner/house-profile-forms.tsx": {
+      "sha256": "ddb32b4f1202eab73ec5db715f13c529699155374030bfd56b70c1c0698be8de",
+      "bytes": 3846,
+      "kind": "text"
+    }
+  },
+  "deleted": [],
+  "symlinks": {}
+}
