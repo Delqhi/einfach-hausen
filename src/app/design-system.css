@@ -387,6 +387,10 @@ button,a,input,textarea,select{touch-action:manipulation}
 .app-shell-v3 .btn.primary,.app-shell-v3 .send-action{background:var(--eh-accent);border-color:var(--eh-accent);color:#fff}
 .app-shell-v3 .btn.primary:hover,.app-shell-v3 .send-action:hover{background:var(--eh-accent-hover)}
 .mobile-menu{display:none}
+/* Workspace frame (Atelier-02 shell) shows the drawer hamburger via the packaged
+   .workspaceMobile slot at <=999px; only the legacy .app-shell-v3 re-enables it. */
+[class*="workspaceMobile"] .mobile-menu{display:block}
+@media(min-width:1000px){[class*="workspaceMobile"] .mobile-menu{display:none}}
 @media(max-width:720px){
   .app-shell-v3 .workspace-shell{grid-template-columns:1fr}
   .app-shell-v3 .topbar-v3{gap:10px;justify-content:flex-start}

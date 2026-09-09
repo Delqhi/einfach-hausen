@@ -26,7 +26,7 @@ const adminPassword=`FullE2E!${randomBytes(18).toString('base64url')}`;
 // use a dedicated test domain and get collected for final cleanup.
 const password=`UserE2E!${randomBytes(18).toString('base64url')}`;
 const stamp=`${Date.now()}-${randomBytes(5).toString('hex')}`;
-const providerEmail=`firma-${stamp}@example.test`;
+const providerEmail=`ehprov-${stamp}@example.test`;
 const techEmail=`thomas-${stamp}@example.test`;
 const ownerEmail=`maria-${stamp}@example.test`;
 const buyerEmail=`buyer-${stamp}@example.test`;
@@ -207,16 +207,19 @@ try {
 // 0) Öffentliche Website ist mobile-first, nutzenorientiert und als PWA installierbar.
 const publicCtx=await newE2EContext({viewport:{width:390,height:844}}); const publicPage=await publicCtx.newPage(); trackPage(publicPage,'public-mobile');
 await nav(publicPage, base+'/')
-// Canonical root is the public lead-magnet homepage (premium redesign spec §9, T-0210).
-await publicPage.getByRole('heading',{name:/Die Betriebszentrale/i}).waitFor();
-await waitText(publicPage,'für dein Zuhause.');
+// Canonical root is the approved Atelier-02 landing (sealed capsule docs/brand/system, commit 714dcb9):
+// hero h1 "Dein Haus. Einfach geregelt." and the benefit-first intake composer.
+await publicPage.getByRole('heading',{name:/Dein Haus\./i}).waitFor();
+await waitText(publicPage,'Einfach');
+await waitText(publicPage,'Dein Anliegen in deinen Worten');
 const hero=publicPage.locator('#anliegen');
-for(const removedText of ['Was steht bei deinem Haus an?','kostenlos & unverbindlich','Hauskonto kostenlos','unverbindlich starten','kein Auftrag ohne deine Entscheidung','Nichts wird ohne dich beauftragt']){
+for(const removedText of ['Was steht bei deinem Haus an?','kostenlos & unverbindlich','unverbindlich starten','kein Auftrag ohne deine Entscheidung','Nichts wird ohne dich beauftragt']){
   if(await hero.getByText(removedText,{exact:true}).count())throw new Error(`Landing hero still contains removed copy: ${removedText}`);
 }
-const heroRequest=publicPage.locator('form[action="/register"] input[name="request"]');
+const heroRequest=publicPage.locator('form[action="/register"] input[name="request"]').first();
 if(!(await heroRequest.count()))throw new Error('Landing intake composer missing');
-if((await heroRequest.getAttribute('aria-label'))!=='Anliegen beschreiben')throw new Error('Landing intake composer missing neutral aria-label');
+const composerLabel=await heroRequest.getAttribute('aria-label');
+if(composerLabel!=='Anliegen beschreiben' && !(await publicPage.locator('label[for="'+(await heroRequest.getAttribute('id'))+'"]').count()))throw new Error('Landing intake composer missing accessible label');
 if(/KI-Hausmeister/i.test(await publicPage.locator('body').innerText()))throw new Error('Landing page still foregrounds AI instead of customer benefit');
 await assertNoOverflow(publicPage,'Mobile landing');
 // T-0129 v2: every canonical public route (DESIGN.md §5.1, 16 routes incl.
@@ -262,9 +265,10 @@ await waitText(publicPage,'dass du da bist!'); await waitText(publicPage,'Als Ei
 await nav(publicPage, base+'/register?role=homeowner')
 await publicPage.getByRole('button',{name:'Kostenlos registrieren'}).first().waitFor();
 await publicPage.getByRole('button',{name:'Kostenlos registrieren'}).first().click();
-if(!(await publicPage.getByLabel('Vollständiger Name').count()))throw new Error('Owner registration missing Name field');
+if(!(await publicPage.getByLabel(/Vorname/).count()))throw new Error('Owner registration missing Vorname field');
+if(!(await publicPage.getByLabel(/Nachname/).count()))throw new Error('Owner registration missing Nachname field');
 if(!(await publicPage.locator('input[name="password"]').count()))throw new Error('Owner registration missing Passwort field');
-if(!(await publicPage.getByLabel('Postleitzahl').count()))throw new Error('Owner registration missing PLZ field');
+if(!(await publicPage.getByLabel(/Postleitzahl/).count()))throw new Error('Owner registration missing PLZ field');
 if(!(await publicPage.getByRole('button',{name:'Kostenlos registrieren'}).last().count()))throw new Error('Owner registration missing submit action');
 if(!(await publicPage.locator('#btn-demo-kunde').count()))throw new Error('Owner registration missing demo fill');
 await nav(publicPage, base+'/')
@@ -294,7 +298,7 @@ manager.on('console',(m)=>{if(m.type()==='error')pageErrors.push(m.text());});
 manager.on('pageerror',(e)=>pageErrors.push('pageerror: '+e.message));
 await nav(manager, base+'/register?role=provider')
 await manager.getByRole('button',{name:'Kostenlos registrieren'}).first().click();
-await fillRegisterField(manager,'fullName','Gartenbau Müller'); await fillRegisterField(manager,'contactName','Daniel Müller');
+await fillRegisterField(manager,'businessName','Gartenbau Müller'); await fillRegisterField(manager,'firstName','Daniel'); await fillRegisterField(manager,'lastName','Müller');
 await fillRegisterField(manager,'email',providerEmail); await fillRegisterField(manager,'password',password);
 await fillRegisterField(manager,'postcode','46325');
 await fillRegisterField(manager,'trades','Garten- und Landschaftsbau, Heckenschnitt, Hausmeisterservice');
@@ -328,7 +332,7 @@ await Promise.all([admin.waitForURL('**/admin'),admin.getByRole('button',{name:'
 await admin.getByRole('heading',{name:'Betriebsübersicht'}).waitFor(); await waitText(admin,'Nutzer'); await waitText(admin,'Anfragen'); await waitText(admin,'Bookings'); await waitText(admin,'MATCHING'); await waitText(admin,'BENACHRICHTIGUNGEN'); await admin.getByRole('heading',{name:'Bewertungen'}).waitFor();
 let companyCard=admin.locator('.admin-card').filter({hasText:'Gartenbau Müller'}).first();
 await clickServerAction(admin,companyCard.getByRole('button',{name:'Unternehmen freigeben'}));
-try { await companyCard.locator('.status.approved').waitFor({timeout:30000}); } catch(e) {
+try { await companyCard.getByText(/Prüfung Freigegeben/).waitFor({timeout:30000}); } catch(e) {
   console.error('E2EDIAG url=',admin.url());
   console.error('E2EDIAG body=',(await admin.locator('body').innerText()).slice(0,600).replace(/\n+/g,' | '));
   console.error('E2EDIAG serverLog tail:\n'+serverLog.slice(-40).join(''));
@@ -348,9 +352,9 @@ try { await companyCard.getByText(/Vertrag Aktiv/).waitFor({timeout:60000}); } c
   throw e;
 }
 await nav(manager, base+'/pro/profile'); await waitText(manager,'Aktiver Einfach-Hausen-Vertragspartner'); await waitText(manager,'0 % Provision');
-await waitForDomStable(manager,'.app-page',1);
+await waitForDomStable(manager,'#provider-content',1);
 try{
-  const providerCanvas=await manager.locator('.app-page').evaluate(el=>getComputedStyle(el).backgroundColor); if(providerCanvas==='rgb(17, 21, 18)')throw new Error('Provider app must use shared light canvas');
+  const providerCanvas=await manager.evaluate(()=>getComputedStyle(document.body).backgroundColor); if(providerCanvas==='rgb(17, 21, 18)')throw new Error('Provider app must use shared light canvas');
 }catch(canvasError){
   const dom=await manager.evaluate(()=>[...document.querySelectorAll('.app-page')].map(m=>({
     parentChain:(()=>{let c=[],e=m;for(let i=0;i<5&&e;i++){c.push(e.tagName+(e.id?'#'+e.id:'')+(e.className&&typeof e.className==='string'?'.'+e.className.split(' ')[0]:''));e=e.parentElement;}return c.join('<');})(),
@@ -371,7 +375,7 @@ try{
   const afterWait=await manager.evaluate(()=>document.querySelectorAll('.app-page').length).catch(()=>-1);
   console.error('E2EDIAG app-page count after 3s:',afterWait);
   throw canvasError;
-} const providerMenu=manager.locator('.mobile-menu'); await providerMenu.locator('summary').click(); if(!(await providerMenu.locator('.mobile-menu-panel').isVisible()))throw new Error('Provider mobile menu did not open'); await providerMenu.locator('summary').click();
+} await manager.evaluate(()=>window.scrollTo(0,0)); const providerMenu=manager.locator('.mobile-menu'); await providerMenu.locator('summary').click(); if(!(await providerMenu.locator('.mobile-menu-panel').isVisible()))throw new Error('Provider mobile menu did not open'); await providerMenu.evaluate(el=>{el.open=false;});
 await manager.getByLabel('Firmenanschrift').fill('Gartenstraße 12, 46325 Borken'); await manager.getByLabel('Steuernummer').fill('307/1234/5678');
 // Partner onboarding completeness: region radius, weekly capacity, availability, team.
 const radiusInput=manager.getByLabel(/Einsatzradius/); if(await radiusInput.count())await radiusInput.fill('40');
@@ -383,16 +387,16 @@ const capacityAfterReload=await strictRetry(manager,()=>manager.getByLabel('Wöc
 const radiusAfterReload=await manager.getByLabel(/Einsatzradius/).inputValue(); if(radiusAfterReload!=='40')throw new Error(`Service radius did not persist, got ${radiusAfterReload}`);
 
 // 2) Firma legt einen echten Ansprechpartner an. Nur ein Schalter für Auftragsverwaltung.
-await nav(manager, base+'/pro/team'); await manager.getByRole('heading',{name:'Menschen statt Rollenmatrix'}).waitFor(); await waitText(manager,'Aufträge verwalten AN'); await assertNoOverflow(manager,'Mobile partner team');
+await nav(manager, base+'/pro/team'); await manager.getByRole('heading',{name:'Dein Team. Klare Zuständigkeiten.'}).waitFor(); await waitText(manager,'Aufträge verwalten'); await assertNoOverflow(manager,'Mobile partner team');
 await manager.getByLabel('Vorname').last().fill('Thomas'); await manager.getByLabel('Nachname').last().fill('Weber');
 await manager.getByLabel('Funktion').fill('Techniker'); await manager.locator('input[name="email"]').last().fill(techEmail); await manager.getByLabel('Telefon').last().fill('+49 151 12345678'); await manager.getByLabel('Startpasswort').fill(password);
 await clickAndWaitUrl(manager,manager.getByRole('button',{name:'Ansprechpartner anlegen'}),/member=created/); await waitText(manager,'Thomas Weber');
-let thomasCard=manager.locator('.member-card').filter({hasText:'Thomas Weber'});
+let thomasCard=manager.locator('form').filter({has:manager.getByLabel('Bezeichnung')}).filter({hasText:'Thomas Weber'});
 try{
   if(await thomasCard.getByLabel('Aufträge verwalten').isChecked())throw new Error('Technician must not manage new jobs by default');
 }catch(teamError){
   const diag=await manager.evaluate(()=>({
-    cards:document.querySelectorAll('.member-card').length,
+    cards:document.querySelectorAll('form').length,
     checkboxes:document.querySelectorAll('input[name="canManageJobs"]').length,
     sContainers:[...document.querySelectorAll('body > div[id^="S:"]')].length,
     bodyTail:document.body.innerText.slice(-400),
@@ -401,14 +405,14 @@ try{
   console.error('E2EDIAG serverLog tail:\n'+serverLog.slice(-30).join(''));
   throw teamError;
 }
-await thomasCard.getByLabel('Aufträge verwalten').check(); await clickServerAction(manager,thomasCard.getByRole('button',{name:'Änderungen speichern'})); await nav(manager, manager.url()); thomasCard=manager.locator('.member-card').filter({hasText:'Thomas Weber'}); if(!(await thomasCard.getByLabel('Aufträge verwalten').isChecked()))throw new Error('Provider manage-jobs AN did not persist');
-await thomasCard.getByLabel('Aufträge verwalten').uncheck(); await clickServerAction(manager,thomasCard.getByRole('button',{name:'Änderungen speichern'})); await nav(manager, manager.url()); thomasCard=manager.locator('.member-card').filter({hasText:'Thomas Weber'}); if(await thomasCard.getByLabel('Aufträge verwalten').isChecked())throw new Error('Provider manage-jobs AUS did not persist'); await waitText(manager,'Aufträge verwalten AUS');
+await thomasCard.getByLabel('Aufträge verwalten').check(); await clickServerAction(manager,thomasCard.getByRole('button',{name:'Änderungen speichern'})); await nav(manager, manager.url()); thomasCard=manager.locator('form').filter({has:manager.getByLabel('Bezeichnung')}).filter({hasText:'Thomas Weber'}); if(!(await thomasCard.getByLabel('Aufträge verwalten').isChecked()))throw new Error('Provider manage-jobs AN did not persist');
+await thomasCard.getByLabel('Aufträge verwalten').uncheck(); await clickServerAction(manager,thomasCard.getByRole('button',{name:'Änderungen speichern'})); await nav(manager, manager.url()); thomasCard=manager.locator('form').filter({has:manager.getByLabel('Bezeichnung')}).filter({hasText:'Thomas Weber'}); if(await thomasCard.getByLabel('Aufträge verwalten').isChecked())throw new Error('Provider manage-jobs AUS did not persist');
 
 // 3) Kunde startet beim Hausmeisterservice und entscheidet danach bewusst: Mensch oder Auftrag.
 const ownerCtx=await newE2EContext({viewport:{width:390,height:844}}); const owner=await ownerCtx.newPage(); trackPage(owner,'homeowner');
 await nav(owner, base+'/register?role=homeowner')
 await owner.getByRole('button',{name:'Kostenlos registrieren'}).first().click();
-await fillRegisterField(owner,'fullName','Maria Test'); await fillRegisterField(owner,'email',ownerEmail); await fillRegisterField(owner,'password',password); await fillRegisterField(owner,'postcode','46325');
+await fillRegisterField(owner,'firstName','Maria'); await fillRegisterField(owner,'lastName','Test'); await fillRegisterField(owner,'email',ownerEmail); await fillRegisterField(owner,'password',password); await fillRegisterField(owner,'postcode','46325');
 await Promise.all([owner.waitForURL('**/app/onboarding'),owner.getByRole('button',{name:'Kostenlos registrieren'}).last().click()]);
 await waitText(owner,'Damit Partner in deiner Region arbeiten können');
 // Resume works: leaving mid-onboarding and returning keeps the saved step.
@@ -426,6 +430,7 @@ await assertNoOverflow(owner,'Mobile customer app');
 await nav(owner, base+'/app'); await waitText(owner,'Frag einfachhausen'); await waitText(owner,'Als Nächstes'); await waitText(owner,'Soforthilfe bei Rohrbruch');
 // Owner mobile navigation is the Notion drawer; the bottom tab bar is gone on owner mobile.
 const ownerDrawer=owner.locator('.mobile-menu');
+await owner.evaluate(()=>window.scrollTo(0,0));
 await ownerDrawer.locator('summary').click();
 const drawerPanel=ownerDrawer.locator('.side-menu.ehn-drawer');
 if(!(await drawerPanel.isVisible()))throw new Error('Mobile owner menu did not open');
@@ -603,10 +608,10 @@ await nav(buyer, buyer.url()); if(await buyer.locator('.owner-onboarding-banner'
 // 12) Hausakte kann kontrolliert übergeben werden, private Vorgänge bleiben beim bisherigen Eigentümer.
 await nav(owner, base+'/app/home/history'); await owner.getByLabel('E-Mail des Käufers').fill(buyerEmail); await clickAndWaitUrl(owner,owner.getByRole('button',{name:'Übergabe vorbereiten'}),/transfer=/); const transferToken=new URL(owner.url()).searchParams.get('transfer'); if(!transferToken)throw new Error('House transfer token missing');
 await nav(buyer, base+'/app'); await waitText(buyer,'Frag einfachhausen'); console.error('E2EDIAG buyer still authed before transfer accept');
-await waitForDomStable(buyer,'.app-page',1);
+await waitForDomStable(buyer,'#owner-main-content',1);
 const buyerCookies=await buyerCtx.cookies(base+'/'); console.error('E2EDIAG buyer cookies:',JSON.stringify(buyerCookies.map(c=>c.name)));
 await nav(buyer, base+`/transfer/${transferToken}`); await waitText(buyer,'Hausakte übernehmen');
-await waitForDomStable(buyer,'.app-page',1);
+await waitForDomStable(buyer,'#owner-main-content',1);
 try{
   await clickAndWaitUrl(buyer,buyer.getByRole('button',{name:'Hausakte jetzt übernehmen'}),/\/app\/home\?transfer=accepted/);
 }catch(error){
