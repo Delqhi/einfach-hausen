@@ -1,0 +1,44 @@
+[
+  {
+    "scene": "detail",
+    "width": 1536,
+    "h1": 1,
+    "overflow": false,
+    "font": "Inter, Arial, sans-serif"
+  },
+  {
+    "scene": "detail",
+    "width": 390,
+    "h1": 1,
+    "overflow": false,
+    "font": "Inter, Arial, sans-serif"
+  },
+  {
+    "scene": "attachments",
+    "width": 1536,
+    "h1": 1,
+    "overflow": false,
+    "font": "Inter, Arial, sans-serif"
+  },
+  {
+    "scene": "attachments",
+    "width": 390,
+    "h1": 1,
+    "overflow": false,
+    "font": "Inter, Arial, sans-serif"
+  },
+  {
+    "scene": "invoice",
+    "width": 1536,
+    "h1": 1,
+    "overflow": false,
+    "font": "Inter, Arial, sans-serif"
+  },
+  {
+    "scene": "invoice",
+    "width": 390,
+    "h1": 1,
+    "overflow": false,
+    "font": "Inter, Arial, sans-serif"
+  }
+]
