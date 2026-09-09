@@ -75,3 +75,30 @@ security/fixtures/build/a11y/visual/perf ab.
   schon an die neue Shell angeglichen; Rest der Journey ungetestet).
 - Visuelle Abnahme Owner/Pro 390/736/1536 + mehrseitiger Druck.
 - Taskplan: EH-BRAND-07-WORKSPACE (aktuell `blocked` mit Verweis auf dieses Dok).
+
+
+## Abnahme 2026-09-09 Nacht (abgeschlossen)
+
+1. **Demo-Schutz:** DB-Trigger `auth.protect_eh_demo_users` verhindert jetzt die
+   Löschung von `*@demo.einfachhausen.de`-GoTrue-Identities (DELETE antwortet
+   500; bewusster Override via `SET app.allow_demo_delete=on` im Seed-Kontext
+   möglich). Der externe Sweeper (92.5.60.87) kann Demo-Logins damit nicht mehr
+   kappen. Getestet: DELETE-Versuch via Admin-API -> 500, Account existiert.
+2. **Login-Redesign übernommen:** AuthShell nutzt wieder das
+   professional-login-page-redesign-Layout von mac-i9 (Topbar, HeroPanel,
+   7/5-Split, mobile Anmelden/Vorteile-Tabs) mit EH-Design-Tokens und der
+   bestehenden Auth-Logik (nextPath, Register-Modi, Demo-Box). Baselines
+   erneuert; Gate 15/15. Deploy `584df02`.
+3. **Komplette Verhaltens-E2E grün:** `npm run test:e2e` -> ok:true; Gruppen:
+   isolated production build/server, public multipage 390/1320, PWA offline
+   shell, keyboard focus, provider verification/contract, provider AN/AUS,
+   contact-only -> job conversion, matching/quote/booking/assignment,
+   cross-role messaging, invoice + unavailable payment truth, house history +
+   maintenance, consultation + emergency, admin claim + CRM, house transfer
+   privacy, zero browser runtime errors.
+4. **Visuelle Restabnahme:** 48 Echtrollen-Screenshots (Owner + Pro, 16 Routen,
+   390/736/1536) in `docs/brand/workspace/acceptance-20260909/` — überall genau
+   eine sichtbare h1 und kein horizontaler Overflow.
+
+Production: `/srv/einfach-hausen` @ `b04b5e3` (= main), Gate 15/15, Health
+ready, auth reachable.
