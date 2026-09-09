@@ -60,3 +60,10 @@ T-0100 Homeowner onboarding: first-session to first useful outcome (höchster el
 - main-HEAD: `13496d7 feat(seo): GSC FILE verification token`; T-0131 Convergence done (`3fbe3c9`, 2026-09-03).
 - Gate 11/11 (`scripts/release-gate.mjs`), Visual 66 Baseline-Shots (`tests/visual-baselines`), E2E 15 Checks (`scripts/e2e.mjs`-Summary), Smoke 18 Routen (`scripts/production-smoke.mjs`).
 - Obige SHAs/Gate-Zahlen bleiben Stichtag 2026-08-30/31 und werden nicht überschrieben.
+
+## Fortschreibung 2026-09-09 (T-0172 Premium Card Visual System + Deploy)
+- Taskplan: done=17, backlog=0, valid. T-0172 complete (contract PASS, lint 0 errors, tsc/build grün).
+- main-HEAD: `f554939` (SHA-Gleichheit local==remote bewiesen, ff-only, kein Force).
+- Production-Deploy @ OCI: Branch main bis `f554939`, `npm ci`, Release-Gate **15/15 passed**, Restart, Health `state:ready`, Smoke **18/18 Routen PASS** @ https://einfachhausen.de.
+- Deploy-Sonderfall dokumentiert: `deploy/update-on-oci.sh` braucht sudo (systemctl) und läuft nicht in sudo-losen Sandboxes — repliziert 1:1 ohne sudo (`/var/tmp/deploy-nosudo.sh`): Backup, ff-merge, npm ci, release-gate, Restart via MainPID-Kill bei `Restart=always`, Health-Loop. Service-User ubuntu, alle Pfade ubuntu-owned.
+- Nächster Schritt: neue Operator-Vorgabe (kein offener Task im Plan).
