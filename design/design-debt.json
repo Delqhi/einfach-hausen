@@ -959,17 +959,19 @@
   },
   "src/components/auth-v2/AuthShell.tsx": {
     "literal-color\u0000#e4e2dc": 8,
-    "literal-color\u0000#c8623a": 3,
+    "literal-color\u0000#c8623a": 4,
     "literal-color\u0000#edf5f5": 3,
-    "literal-color\u0000#1c2129": 10,
+    "literal-color\u0000#1c2129": 12,
     "literal-color\u0000#dcebec": 5,
     "literal-color\u0000#f2f5f5": 2,
     "literal-color\u0000#105258": 2,
-    "small-type\u0000text-xs": 7,
+    "small-type\u0000text-xs": 8,
     "small-type\u0000text-[11px]": 1,
     "decorative-effect\u0000rounded-full": 2,
-    "visual-utility\u0000text-stone-600": 5,
+    "decorative-effect\u0000shadow-xl": 1,
+    "visual-utility\u0000text-stone-600": 6,
     "visual-utility\u0000text-stone-400": 2,
+    "visual-utility\u0000bg-stone-200": 1,
     "visual-utility\u0000text-stone-900": 2
   },
   "src/components/auth-v2/ForgotPasswordModal.tsx": {

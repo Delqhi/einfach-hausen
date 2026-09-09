@@ -247,6 +247,7 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde", ne
               transition={{ duration: 0.18, ease: "easeOut" }}
               className="w-full max-w-md my-auto py-1"
             >
+              <h1 className="sr-only">{initialAuthMode === "register" ? "Konto anlegen" : "Anmelden — Einfach Hausen"}</h1>
               {mobileTab === "login" ? (
                 <>
                   <LoginForm

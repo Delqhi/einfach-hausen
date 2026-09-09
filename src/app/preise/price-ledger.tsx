@@ -42,7 +42,7 @@ export function PriceLedger({ owner, partner }: { owner: LedgerView; partner: Le
   }
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       <div className={styles.tabs} role="tablist" aria-label="Zielgruppe wählen" onKeyDown={onTabListKeyDown}>
         <button
           type="button"

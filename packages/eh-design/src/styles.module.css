@@ -79,8 +79,9 @@
 .divider { border: 0; border-top: 1px solid var(--eh-rule); margin-block: 32px; }
 .hero { display: grid; gap: clamp(36px,6vw,96px); align-items: center; }
 .hero[data-has-media="true"] { grid-template-columns: minmax(0,1.08fr) minmax(0,1fr); }
-.heroCopy { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; }
-.heroCopy .heading { max-width: 16ch; }
+.heroCopy { display: flex; flex-direction: column; gap: 28px; align-items: flex-start; min-width: 0; }
+.heroCopy .text { overflow-wrap: anywhere; }
+.heroCopy .heading { max-width: 16ch; overflow-wrap: anywhere; hyphens: auto; }
 .heroCopy .heading[data-scale="display"] { max-width: 10ch; }
 .heroCopy .actions { margin-top: 8px; }
 .heroMedia { min-width: 0; }

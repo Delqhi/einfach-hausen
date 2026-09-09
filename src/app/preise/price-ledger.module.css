@@ -184,3 +184,8 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+.wrapper {
+  min-width: 0;
+  max-width: 100%;
+}
