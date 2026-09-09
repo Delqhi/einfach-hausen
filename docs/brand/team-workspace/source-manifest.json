@@ -1,0 +1,98 @@
+{
+  "base": "f033dfc2393f5f87d83b7ec2040e6aff8654be0e",
+  "implementationCommit": "85b224513d02cc272055ada3048ee10019f77892",
+  "files": {
+    "design/design-lock.json": {
+      "sha256": "e0bb37013621794a75581ebb36be5c0c8f9dc7511fc555944840b0f4a0513dea",
+      "bytes": 5174,
+      "kind": "text"
+    },
+    "design/workspace-preview/house/home-1536.png": {
+      "sha256": "18415d5e5eeb4ec16729f2807a750a96a27af280fed7081056bd808810d1e6ec",
+      "bytes": 281316,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-390.png": {
+      "sha256": "094e621103d6de1296e8c25f020250ef6502298048ec9eadceaa6248f3837161",
+      "bytes": 259249,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-736.png": {
+      "sha256": "3ff8c15ba83d6b51ddafa9b02326d6ac933a3005530baa5735016c1db0765f68",
+      "bytes": 262428,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-history-1536.png": {
+      "sha256": "e4fe255282ae82122a0efeb7e8b920c0582b9799db3f0e4637f9ae36b7a02520",
+      "bytes": 268209,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-history-390.png": {
+      "sha256": "866c6945b89c986886e31201e69ea33321002e01480b7254b4c72a4e2c528209",
+      "bytes": 242368,
+      "kind": "binary"
+    },
+    "design/workspace-preview/house/home-history-736.png": {
+      "sha256": "4bd47a6da18fc39a8aba67bbe04e1c828ef6b1f72a90b4c11a3cb37954a6a45e",
+      "bytes": 250247,
+      "kind": "binary"
+    },
+    "design/workspace-preview/team/evidence.json": {
+      "sha256": "c19ffd71622feb937f0ad3e8efb0b35232ff7607e976deba8fb3df2a60a45eb4",
+      "bytes": 4317,
+      "kind": "text"
+    },
+    "design/workspace-preview/team/team-1536.png": {
+      "sha256": "ef1f5177d275b16fb1e5f9c1bfafbdff3775893cb8e5705c26197a21d6c20a5e",
+      "bytes": 217413,
+      "kind": "binary"
+    },
+    "design/workspace-preview/team/team-390.png": {
+      "sha256": "b6b026bd583ccaa47ea08d2547b79c1d9b5bf99ab18314e6c1a115de7f25c2c5",
+      "bytes": 192818,
+      "kind": "binary"
+    },
+    "design/workspace-preview/team/team-736.png": {
+      "sha256": "f0e2fe6c97c43a976273a534e1dd81cceadddffc36a8d27190ff5721c024b89b",
+      "bytes": 192537,
+      "kind": "binary"
+    },
+    "docs/NEXT_AGENT.md": {
+      "sha256": "ccb5a308257845f33c78ac08e83f72a58bfbaa845d50901ead9f0b5bf4c3a740",
+      "bytes": 33809,
+      "kind": "text"
+    },
+    "docs/brand/team-workspace/HANDOFF.md": {
+      "sha256": "5aa91ab624f755fed597617eb60a2ec566b8e7c3048ea410cdb9d19cd138c4f1",
+      "bytes": 4458,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html-style.mjs": {
+      "sha256": "a4611952180acf68938417c3d1be8cbf16b3cf5172cd2d95b0fa9c99d9b05877",
+      "bytes": 297453,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html.css": {
+      "sha256": "1526fae030872b27b238d161bed0fc12b3e40e92878decc84fef7968c4a32c7e",
+      "bytes": 50873,
+      "kind": "text"
+    },
+    "packages/eh-design/src/styles.module.css": {
+      "sha256": "22e3de71e20f74e0d75d0cdc3bb60ff219aaadc8415586d9625c3a0c18495001",
+      "bytes": 49121,
+      "kind": "text"
+    },
+    "scripts/eh-team-visual-review.mjs": {
+      "sha256": "71571632bfc05ad9d94179e98ad9e45676233c278cb6711ab48dcebc802cfb4f",
+      "bytes": 2301,
+      "kind": "text"
+    },
+    "src/app/pro/team/page.tsx": {
+      "sha256": "6127c75fd150a2522d8d8ff5d6f0a0e6fcbcbec55f030e7952dd1fd76a7fed5b",
+      "bytes": 5912,
+      "kind": "text"
+    }
+  },
+  "deleted": [],
+  "symlinks": {}
+}
