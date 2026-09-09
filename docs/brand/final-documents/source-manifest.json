@@ -1,0 +1,178 @@
+{
+  "base": "e9c95c4269de830bfeea229aa657d512166d5520",
+  "implementationCommit": "b6d5686c768dde71c7bd8df1b1bdcdb63b0a0749",
+  "files": {
+    "AGENTS.md": {
+      "sha256": "48ba1bd0700d822984b2a0496700c04fbdb70af0624e0191f1bac5384a2d5f48",
+      "bytes": 38120,
+      "kind": "text"
+    },
+    "design/design-lock.json": {
+      "sha256": "bf9148bab45e7637c1cbcce54d5f24c201ebc4972be0b6871cd06453941383d5",
+      "bytes": 5174,
+      "kind": "text"
+    },
+    "design/workspace-preview/documents/evidence.json": {
+      "sha256": "d3230825a94dd1c2bc8ff0bc3ec2b639d56c220a7baeebf715e90dbd1b6c1504",
+      "bytes": 1817,
+      "kind": "text"
+    },
+    "design/workspace-preview/documents/owner-invoice-1536.png": {
+      "sha256": "6c306f5fb6bde9746c9687efd2c61eb00b5ffe85ee8a95475a25d54df2bdd871",
+      "bytes": 131761,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/owner-invoice-390.png": {
+      "sha256": "3063f739e9e7dcd5f35f8b1294484e3d494ca44d561e86ae281f0e8bdbcc888e",
+      "bytes": 126304,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/owner-invoice-736.png": {
+      "sha256": "2cd3035bec7bce13ba63ec687d3f60b8497ab33a9aa265cf403b55d94123db71",
+      "bytes": 122445,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/owner-invoice.pdf": {
+      "sha256": "cedbcc8219a52f1d9f616c0f498372dcfe0f042191fd360a137a9d86da426aac",
+      "bytes": 251336,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/passport-1536.png": {
+      "sha256": "3ce110486f71d8716c08479f189a7bd7eebcbbd10caf1ecdc8317548786b6e0e",
+      "bytes": 67310,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/passport-390.png": {
+      "sha256": "24c3fde9bf90556ce2264a357237f47a367f7926d1976cd1f85e8ea2ae271fb5",
+      "bytes": 55761,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/passport-736.png": {
+      "sha256": "40e15ef198b9450c11105cb64be41a69a9ba67a6fd1487d0411ced3093240cf4",
+      "bytes": 57922,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/passport.pdf": {
+      "sha256": "507011012b0d73b02be2aaa818299e2059b1ae57ab6354bc3188effb328e4afa",
+      "bytes": 226082,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/pro-invoice-1536.png": {
+      "sha256": "73e0eb6e4b2224bb6bdd7e9d627862c3ea5055a80548bf055d98b8af7e8fbf35",
+      "bytes": 136158,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/pro-invoice-390.png": {
+      "sha256": "1f05d3ea888d8904dbb4c108ddd7ff66cd6ed3667624d0f120a79a913221b1f9",
+      "bytes": 130479,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/pro-invoice-736.png": {
+      "sha256": "826ae1882e35a310d5e1176cc251fcd1c5bca359dc54181372c4a033ff3ac015",
+      "bytes": 126990,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/pro-invoice.pdf": {
+      "sha256": "f357408b547ab878343b3042598078d8b0fb6cdbdfe4492a3352428e783c20ca",
+      "bytes": 258917,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/receipt-1536.png": {
+      "sha256": "3e02136c8f05a9b343a8c050c9fadde35b7d3c4bc053ec055b80fad1032122cd",
+      "bytes": 81145,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/receipt-390.png": {
+      "sha256": "075d38d7a71e0f418841deda063fcc5d66826f1efc9e78016883baa84e7abf5f",
+      "bytes": 74909,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/receipt-736.png": {
+      "sha256": "3c367800948c3df2ff826c457e89bf00a64f22d2d2e105b11bc8e02302ec52d0",
+      "bytes": 76388,
+      "kind": "binary"
+    },
+    "design/workspace-preview/documents/receipt.pdf": {
+      "sha256": "b7a113f77505e7b5d4efd7acf757c2f97d10d7ee2b00c736531210fdba42fbbc",
+      "bytes": 211015,
+      "kind": "binary"
+    },
+    "docs/NEXT_AGENT.md": {
+      "sha256": "41764eecf685c6fe40fc466f77d0f06d96e81d72db4730fb8fc9b2bb0664e180",
+      "bytes": 33164,
+      "kind": "text"
+    },
+    "docs/brand/workspace/AGENT-ACCEPTANCE.md": {
+      "sha256": "3879e2b875c66b5da4648ab39dd9be7de12e56f5063b96f2c9da428dbbf31325",
+      "bytes": 6437,
+      "kind": "text"
+    },
+    "docs/brand/workspace/FINAL-DOCUMENTS.md": {
+      "sha256": "95735477a83a44126d7e06ed1f8e82c3c369d928fef2a9ee25e20cf774e8e308",
+      "bytes": 3386,
+      "kind": "text"
+    },
+    "packages/eh-design/src/documents.tsx": {
+      "sha256": "b9140f0fbbb09071c6d7b034492662a3f65a60bd54aa66102408ffea027abeed",
+      "bytes": 281,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html-style.mjs": {
+      "sha256": "afe460f77e8864deec7a014031d0d681107402d69a3ba6fa81e7a94e6356d006",
+      "bytes": 297416,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html.css": {
+      "sha256": "512f7075efc5cc4c62a168130dfcf79a54863000a251174416b41798d9bb0109",
+      "bytes": 50836,
+      "kind": "text"
+    },
+    "packages/eh-design/src/index.ts": {
+      "sha256": "089ccde5aff27c2aa22db13d8567b10d89de69788c3d34bedc4970648f380ca8",
+      "bytes": 473,
+      "kind": "text"
+    },
+    "packages/eh-design/src/styles.module.css": {
+      "sha256": "5380afcb60d5f91ce4f6a194ce93716a39c4e68421b9e79ebc39aec06ed11eea",
+      "bytes": 49084,
+      "kind": "text"
+    },
+    "src/app/app/documents/[jobId]/receipt/page.tsx": {
+      "sha256": "4e864b7eef46a066c2fd9d1dc00278d5c0f6b8bcee448511bd2a62e474ab9350",
+      "bytes": 2055,
+      "kind": "text"
+    },
+    "src/app/app/home/passport/page.tsx": {
+      "sha256": "f7374f716b6e5695ed5bd82523b816788221ec350fff57fcfa19e749876bc159",
+      "bytes": 2771,
+      "kind": "text"
+    },
+    "src/app/app/invoices/[id]/page.tsx": {
+      "sha256": "4b1c6abcfd2662312e867b0f5c5b8e13439cd5d6e760008a20962b8ddf3d5530",
+      "bytes": 1802,
+      "kind": "text"
+    },
+    "src/app/pro/invoices/[id]/page.tsx": {
+      "sha256": "94f9dd489646a2ceb28083d61cb15fcbb44f44d29c478eaacd7390446e257c71",
+      "bytes": 1908,
+      "kind": "text"
+    },
+    "src/components/invoice-view.tsx": {
+      "sha256": "66623ba6e61fc5662b8d4c9a17657c25d373ee13f05c74571a1c5bf297147055",
+      "bytes": 2884,
+      "kind": "text"
+    },
+    "src/components/print-button.tsx": {
+      "sha256": "ab5b269f4a185447ace859d9eaf78fe96978dc88b5335cc117ba4c33c68eb965",
+      "bytes": 271,
+      "kind": "text"
+    },
+    "src/lib/format.ts": {
+      "sha256": "250e3a91a810b4d4ec73d075fc6095bfa6cf14f23f4f7b23e5d55e0a8e7e605f",
+      "bytes": 1638,
+      "kind": "text"
+    }
+  },
+  "deleted": [],
+  "symlinks": {}
+}
