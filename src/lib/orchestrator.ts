@@ -21,6 +21,16 @@ import { createNotification } from './notifications';
 import { getProviderManagerIds } from './provider';
 import { primaryProperty } from './properties';
 
+// CEO-Audit R6c: ehrliche Fehler/Quota-Hinweise für /app/hausmeister.
+// - 401: nicht angemeldet → Anmeldung erforderlich (requireUser, kein Entwurf-Verlust).
+// - 402: Gratis-Kontingent aufgebraucht → BYOK oder Bonus (Entwurf bleibt erhalten).
+// - 429: zu viele Anfragen → später erneut (Rate-Limit in actions, Entwurf bleibt erhalten).
+// Bestehende 401/402/429-Semantik bleibt; Entwürfe werden bei Fehlern nie gelöscht.
+export const HAUSMEISTER_LIMIT_HINTS = {
+  unauthenticated: 'Bitte melde dich an, um den Hausmeister zu nutzen (401).',
+  quotaExhausted: 'KI-Kontingent aufgebraucht (402). Lege einen eigenen API-Key an oder warte auf den nächsten Monat. Dein Entwurf bleibt erhalten.',
+  rateLimited: 'Zu viele Anfragen (429). Bitte warte kurz und versuche es erneut. Dein Entwurf bleibt erhalten.',
+} as const;
 export type HausmeisterIntent='service'|'contact';
 export type HausmeisterResult = { jobId:number; threadId:number; reply:string; providerCount:number; intent:HausmeisterIntent };
 export type HausmeisterAnswer = { threadId:number; reply:string };
@@ -139,7 +149,7 @@ export async function answerHausmeisterQuestion(userId:number,body:string,channe
   }else if(consumeCloudAction(userId).ok){
     reply=await answerHouseQuestion(body,context);
   }else{
-    reply='Dein kostenloses KI-Kontingent für diesen Monat ist aufgebraucht. Du kannst in den Einstellungen einen eigenen API-Key hinterlegen (die Limits deines Anbieterkontos gelten) oder über eine Werbeanzeige 10 weitere Aktionen freischalten. Für konkrete Aufträge kannst du natürlich jederzeit eine Anfrage stellen.';
+    reply='Dein kostenloses KI-Kontingent für diesen Monat ist aufgebraucht (402 – keine weiteren Gratis-Aktionen). Du kannst in den Einstellungen einen eigenen API-Key hinterlegen (die Limits deines Anbieterkontos gelten) oder – sobald verfügbar – über eine Werbeanzeige 10 weitere Aktionen freischalten. Für konkrete Aufträge kannst du natürlich jederzeit eine Anfrage stellen. Dein Entwurf bleibt erhalten.';
   }
   addAgentMessage(threadId,'assistant',reply,{assistantOnly:true});
   return {threadId,reply};

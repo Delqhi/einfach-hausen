@@ -120,7 +120,7 @@ export function OwnerMobileMenu({ active }: { active: string }) {
       onToggle={(event) => setOpen((event.target as HTMLDetailsElement).open)}
     >
       <summary aria-label="Hauptmenü öffnen"><HamburgerIcon /><span>Menü</span></summary>
-      <div className="menu-overlay open" onClick={() => setOpen(false)} aria-hidden="true" />
+      {open ? <div className="menu-overlay open" onClick={() => setOpen(false)} aria-hidden="true" data-testid="owner-menu-overlay" /> : null}
       <aside
         className="side-menu ehn-drawer"
         aria-label="Hauptnavigation"
@@ -160,7 +160,7 @@ export function OwnerMobileMenu({ active }: { active: string }) {
                 {s.subs.map((sub) =>
                   sub.logout ? (
                     <form key={sub.label} action={logoutAction} className="ehn-acc-row">
-                      <button type="submit" className="ehn-acc-link"><span className="ehn-acc-ico">{sub.icon}</span><span>{sub.label}</span></button>
+                      <button type="submit" className="ehn-acc-link" data-testid="owner-logout-menu" aria-label="Abmelden"><span className="ehn-acc-ico">{sub.icon}</span><span>{sub.label}</span></button>
                     </form>
                   ) : (
                     <button key={sub.label} type="button" className={`ehn-acc-link${active === sub.href ? " ehn-acc-active" : ""}`} onClick={() => go(sub.href!)}>
@@ -180,7 +180,7 @@ export function OwnerMobileMenu({ active }: { active: string }) {
           <ArrowRightThin />
         </button>
         <form action={logoutAction}>
-          <button type="submit" className="sm-logout"><LogoutIcon /> Abmelden</button>
+          <button type="submit" className="sm-logout" data-testid="owner-logout-drawer" aria-label="Abmelden"> <LogoutIcon /> Abmelden</button>
         </form>
         <div className="sm-footer">Version 1.0.0 &nbsp;•&nbsp; <Link href="/datenschutz">Datenschutz</Link> &nbsp;•&nbsp; <Link href="/impressum">Impressum</Link></div>
       </aside>
