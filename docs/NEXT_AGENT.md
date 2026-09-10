@@ -1,3 +1,10 @@
+> **iOS App Store 2026-09-10:** Task **EH-APP-01** (Capacitor-Hülle + TestFlight-Pipeline,
+> backlog/high, local-agent) angelegt. Docs-Branch `docs/eh-appstore-20260910`,
+> Handoff: `docs/brand/appstore/HANDOFF.md`. Code-Track parallel auf
+> `feat/eh-appstore-ios-20260910` (eigener Agent/Worktree, Taskplan für ihn read-only).
+> Offene Entscheidungen: Apple Developer/Bundle-ID (Gina), T-0206 B7 Notion-Login, IAP-vs-Stripe.
+> Folge-Build nur via GitHub-Transfergrenze (xcodebuild braucht macOS/Xcode).
+
 > **Integration 2026-09-10 Finisher-2: main=a25ae3f deployed** - REVIEW-20260910 1-8 integriert, PR76-Launcher, Gates 15/15, Health ok/ready. Stash in /srv: superseded Auth-WIP, wiederherstellbar.  Naechste Aktion (genau eine): PR #76 als superseded schliessen und EH-BRAND-07/08 mit Evidence formal completen.
 
 > **Audit 10.09: zuerst `docs/brand/assistant/REVIEW-20260910.md` lesen.** Zusätzliche belegte Auth-/Cookie-/Notfall-/KI-Settings-Befunde. Aufgaben EH-BRAND-07-WORKSPACE und EH-BRAND-08-ASSISTANT; laufende Produktions-WIP erhalten, keine Testlockerung.
