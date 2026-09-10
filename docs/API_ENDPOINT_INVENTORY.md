@@ -129,3 +129,8 @@ Stand: 2026-09-05. Kanonisches Inventar aus src/app.
 - Client-Verträge werden durch `scripts/eh02-api-contract-regression.mjs` geprüft.
 - TODO/FIXME/STUB-Kommentare bzw. echte not-implemented-Throws im TypeScript-Quellbaum sind im Gate verboten.
 - Build muss grün sein.
+
+## Verifikation 2026-09-10
+
+`find src/app/api -name route.ts | wc -l` → **27**. Alle 27 Handler sind oben
+gelistet; keine Lücke zwischen Dateisystem und Inventar.

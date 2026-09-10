@@ -23,7 +23,7 @@ Verbindliche Rollenquelle: [`docs/COMPANY_IDENTITY.md`](docs/COMPANY_IDENTITY.md
 
 Alle Agents arbeiten in diesem Repository **am selben Ziel**. Es gibt keinen zweiten Engineering-Taskplan in README, Issues oder Worker-Reports. Der verbindliche Einstieg ist [`docs/NEXT_AGENT.md`](docs/NEXT_AGENT.md); der transaktionale Taskstatus liegt in `.sin-gpt-web/taskplan.sqlite3` und wird nach `.sin-gpt-web/TASKPLAN.md` gerendert.
 
-Aktueller Endpfad: **T-0131 Convergence abgeschlossen (2026-09-03, `3fbe3c9`) → main-HEAD `13496d7 feat(seo): GSC FILE verification token`**. Live verifiziert: UI-Wellen A-E, Supabase-App-Schema + RLS, öffentliche Demo-Logins, GSC-Verifikation sowie Blog/Lexikon-Cluster. Bereits erledigte oder abgelöste Wellen werden nicht erneut begonnen. Neue Implementierungsarbeit entsteht nur aus einem reproduzierbaren Acceptance-Fehler und wird als kanonischer Remediation-Task erfasst.
+Aktueller Stand (verifiziert 2026-09-10): **Repo-HEAD `0503da3` („docs(handoff): Finisher-2 Integration 2026-09-10, main=`a25ae3f` deployed“), Vorgänger `a25ae3f` („integ(auth+assistant)“). Historisch: T-0131 Convergence (2026-09-03, `3fbe3c9`) → `13496d7`; UI-Wellen A-E, Supabase-App-Schema + RLS, Demo-Logins, GSC-Verifikation sowie Blog/Lexikon-Cluster waren deren Stichtagswerte. Bereits erledigte oder abgelöste Wellen werden nicht erneut begonnen. Neue Implementierungsarbeit entsteht nur aus einem reproduzierbaren Acceptance-Fehler und wird als kanonischer Remediation-Task erfasst.
 
 ### Public Website Finish — Stand 2026-09-05
 
@@ -875,7 +875,6 @@ evidence-sha256: 52a6748748dfe2d958322ba6584bcd9e8cd8284ed731054bf7f3d48948bf4d4
 -->
 
 <!-- SIN-GPT-WEB-HANDOVER
-<<<<<<< HEAD
 task: T-0132
 updated: 2026-09-03T13:48:49+00:00
 actor: local-agent
@@ -1078,7 +1077,6 @@ Die eigenständige einfachhausen-Markenstudie wird auf einem isolierten Branch e
 ## EH-BRAND — Korrektur: Atelier 02 (2026-09-06)
 
 Der Nutzer hat die drei Stilproben aus PR #40 ausdrücklich verworfen. Deren technische 27/27-Prüfung ist keine visuelle Freigabe. Root Codex gestaltet und implementiert die neue Richtung persönlich; keinen weiteren Prime/bai-Dispatch aus alten Abschnitten ableiten. Neuer Arbeitsstand: `design/einfachhausen-brand-atelier-20260906`, Workspace `/home/ubuntu/orca/workspaces/einfach-hausen-brand-atelier-20260906`. Konzept, vollständige Nutzerkorrektur und Plan: `docs/brand/ATELIER_02.md`; aktuelle Übergabe: `docs/brand/HANDOFF.md`; vollständige Quellen: `docs/brand/ATELIER_02_SOURCE.md`; bedienbare Vollansicht: `design/brand-atelier/preview.html`. EH-BRAND-03 bleibt in Arbeit, die neue Richtung wurde noch nicht vom Nutzer bewertet. Genau nächste Markenaktion: diese neue Vollansicht besprechen und tatsächliches Nutzerfeedback dokumentieren. EH-BRAND-04..06 folgen erst der Richtungsentscheidung; kein Merge/Deploy. Ältere Empfehlungen/Dispatch-Anweisungen sind für diese Markenwelle historisch. Andere laufende Arbeitswellen bleiben erhalten.
->>>>>>> origin/main
 
 <!-- SIN-GPT-WEB-HANDOVER
 task: T-0007

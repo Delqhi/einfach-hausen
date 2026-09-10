@@ -2,19 +2,21 @@
 
 **Datum:** 2026-09-08 · **Auftrag:** Operator-Anfrage „docs für Team und User"
 
-## Ist-Zustand
+> **Richtigstellung 2026-09-10 (HEAD `0503da3`):** `/app/hilfe`, `/pro/hilfe` und `/docs-internal` (inkl. `/docs-internal/[doc]`, admin-gated) existieren — die gegenteilige Ist-Aussage vom 2026-09-08 war falsch und ist unten korrigiert. Empfehlungs-Phasen 1 und 2 sind damit umgesetzt.
+
+## Ist-Zustand (korrigiert 2026-09-10)
 
 | Fläche | Doku-Status | Zielgruppe |
 |--------|-------------|------------|
 | einfachhausen.de | `/hilfe` = FAQ (4 Kategorien), keine strukturierte Doku | Öffentlich |
-| Owner-App (`/app/*`) | 24 Routen, Onboarding-Flow vorhanden, **keine Guides/Help-Seite** | Eigentümer |
-| Partner-App (`/pro/*`) | 11 Routen, Onboarding-Wizard vorhanden, **keine Guides/Help-Seite** | Handwerker |
+| Owner-App (`/app/*`) | 25 Routen (Stand 2026-09-10, HEAD `0503da3`), Onboarding-Flow + **`/app/hilfe`-Guide vorhanden** | Eigentümer |
+| Partner-App (`/pro/*`) | 13 Routen (Stand 2026-09-10, HEAD `0503da3`), Onboarding-Wizard + **`/pro/hilfe`-Guide vorhanden** | Handwerker |
 | PortalHub (`/docs`) | API-Referenz für das interne Projekthub-API (19 Endpunkte) | Entwickler (intern) |
 | CRM (Cloudflare) | RUNBOOK, ARCHITECTURE, agent-sop in Git | CRM-Team |
 | docs/*.md (Hauptrepo) | 32 Dateien (14 Ops/Tech + 18 Strategie/Design) | Entwickler |
-| docs.einfachhausen.de | **Existiert nicht** | — |
-| API-Doku einfachhausen.de | **Existiert nicht** (27 API-Routen undokumentiert) | Entwickler |
-| User-Guides in Apps | **Existieren nicht** | — |
+| docs.einfachhausen.de | **Umgesetzt als `/docs-internal`-Route** (admin-gated, rendert `docs/*.md`; Stand 2026-09-10) | Team (admin) |
+| API-Doku einfachhausen.de | **Teils umgesetzt:** `/docs-internal` rendert Repo-Docs; 27 API-Routen (23 Bereiche) weiter ohne separate API-Referenz | Entwickler |
+| User-Guides in Apps | **Umgesetzt:** `/app/hilfe` + `/pro/hilfe` (Stand 2026-09-10) | Eigentümer / Handwerker |
 
 ## Empfehlung: 2 getrennte Docs-Stränge
 
@@ -39,6 +41,6 @@
 
 ## Umsetzungsreihenfolge
 
-1. **Phase 1 (sofort):** `/app/hilfe` + `/pro/hilfe` als EH-Komponenten-Seiten
-2. **Phase 2:** docs.einfachhausen.de Route (Markdown-Renderer, admin-gated)
+1. **Phase 1: ERLEDIGT (Stand 2026-09-10)** — `/app/hilfe` + `/pro/hilfe` existieren
+2. **Phase 2: ERLEDIGT (Stand 2026-09-10)** — `/docs-internal`-Route (admin-gated Markdown-Renderer, inkl. `/docs-internal/[doc]`)
 3. **Phase 3:** Kontextuelle Tooltips/Empty-States in den Apps

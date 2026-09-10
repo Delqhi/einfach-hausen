@@ -1,5 +1,7 @@
 # EXTERNAL-BLOCKERS — Stand 2026-09-08 (Welle 4420880 deployed)
 
+> **Einordnung 2026-09-10:** Kanonisch ist `docs/EXTERNAL-BLOCKERS.md`. Diese Datei beschreibt den Wellen-Stand 2026-09-08 als historische Momentaufnahme und wird inhaltlich nicht doppelt gepflegt.
+
 ## Verbleibende externe Gates
 
 1. **GitHub-Actions-Billing** auf Konto `Delqhi` (nur Jerry) — alle Runs seit 2026-09-06 ohne Steps failed (Issue #33). Blockiert: CI auf einfach-hausen, T-0151-CI-Teil. **Danach:** `gh run rerun` der offenen Checks.

@@ -8,7 +8,7 @@ const sections = [
     text: 'Hier l\u00e4uft dein Tagesgesch\u00e4ft: Anfragen pr\u00fcfen, Angebote schreiben und gebuchte Auftr\u00e4ge bis zur Fertigstellung begleiten. Jeder Vorgang zeigt dir den aktuellen Stand und den n\u00e4chsten sinnvollen Schritt.',
     links: [
       { href: '/pro/orders', label: 'Zu Auftr\u00e4ge & Kontakte' },
-      { href: '/pro/jobs', label: 'Zu den Auftragsdeteils' },
+      { href: '/pro/jobs', label: 'Zu den Auftragsdetails' },
     ],
   },
   {
@@ -40,6 +40,16 @@ const sections = [
     title: 'Mitgliedschaft',
     text: 'Planbar statt Provision: 100 % des Auftragswerts bleiben beim Betrieb. Hier w\u00e4hlst du den passenden Monatstarif \u2013 ein Tarif kauft niemals eine bessere Platzierung.',
     links: [{ href: '/pro/plans', label: 'Zu den Tarifen' }],
+  },
+  {
+    title: 'Leads & Eingehende Anfragen',
+    text: 'Neue Kundenkontakte landen hier: Anfragen prüfen, annehmen oder ablehnen und den Status pflegen. Nur freigegebene Kontakte werden mit allen Details angezeigt.',
+    links: [{ href: '/pro/leads', label: 'Zu den Leads' }],
+  },
+  {
+    title: 'Offene Anfragen',
+    text: 'Alle passenden offenen Anfragen aus deinem Gebiet in einer Liste. Filtern nach Dringlichkeit und direkt zum Vorgang springen.',
+    links: [{ href: '/anfragen-pro', label: 'Zu den offenen Anfragen' }],
   },
   {
     title: 'Onboarding',
