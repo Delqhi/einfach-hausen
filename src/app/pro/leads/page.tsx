@@ -52,7 +52,7 @@ export default async function ProLeads() {
               <option value="sold">Verkauft</option>
               <option value="rejected">Nicht passend</option>
             </EHSelect></EHField>
-            <button>Status speichern</button>
+            <button className="btn primary">Status speichern</button>
           </form>
         </EHPanel>
       ))}

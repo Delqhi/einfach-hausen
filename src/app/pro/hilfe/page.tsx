@@ -8,7 +8,6 @@ const sections = [
     text: 'Hier l\u00e4uft dein Tagesgesch\u00e4ft: Anfragen pr\u00fcfen, Angebote schreiben und gebuchte Auftr\u00e4ge bis zur Fertigstellung begleiten. Jeder Vorgang zeigt dir den aktuellen Stand und den n\u00e4chsten sinnvollen Schritt.',
     links: [
       { href: '/pro/orders', label: 'Zu Auftr\u00e4ge & Kontakte' },
-      { href: '/pro/jobs', label: 'Zu den Auftragsdeteils' },
     ],
   },
   {
@@ -29,7 +28,7 @@ const sections = [
   {
     title: 'Rechnungen',
     text: 'Abgeschlossene Arbeit sauber abrechnen: Rechnungen erstellen, \u00fcberblicken und den Zahlungsstand verfolgen. So bleibt der Geldfluss deines Betriebs nachvollziehbar.',
-    links: [{ href: '/pro/invoices', label: 'Zu den Rechnungen' }],
+    links: [{ href: '/pro/orders', label: 'Zu Rechnungen in den Aufträgen' }],
   },
   {
     title: 'F\u00e4higkeiten & Profil',
@@ -51,12 +50,12 @@ const sections = [
 export default async function ProHilfe() {
   await requireUser('provider');
   return (
-    <AppShell role="provider" active="/pro/hilfe" title="Hilfe" subtitle="Anleitungen f\u00fcr den Partnerbereich">
+    <AppShell role="provider" active="/pro/hilfe" title="Hilfe" subtitle="Anleitungen für den Partnerbereich">
       <EHWorkflowStack>
         <EHAppHeader
           eyebrow="Hilfe"
           title="Dein Betrieb. Einfach geregelt."
-          text="Kurze Wege zu allen wichtigen Bereichen der Partner-App. W\u00e4hle ein Thema, lies in zwei S\u00e4tzen, worum es geht, und springe direkt dorthin."
+          text="Kurze Wege zu allen wichtigen Bereichen der Partner-App. Wähle ein Thema, lies in zwei Sätzen, worum es geht, und springe direkt dorthin."
         />
         {sections.map((section) => (
           <EHPanel key={section.title} title={section.title}>
