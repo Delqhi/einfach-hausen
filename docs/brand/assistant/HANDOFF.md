@@ -1,3 +1,5 @@
+> **Aktueller Folgeaudit:** REVIEW-20260910.md vor Integration lesen. Die UI-Tests dieser Lieferung sind keine Freigabe des bestehenden Auth-/KI-Backends.
+
 # Kunden-Hausassistent · 2026-09-10
 
 Expliziter Auftrag Jerry: dezenter Chat-Einstieg rechts unten mit eigenem Logo, passend zu DESIGN.md. OCI sin-supabase; /home/ubuntu/orca/workspaces/eh-assistant-20260910; Branch feat/eh-assistant-launcher-20260910; Basis e28a983. Laufende Login-Reparatur nicht anfassen. Keine fremde Arbeit löschen oder überschreiben.
