@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { ChevronRight,FileText,House,MessageCircle,Settings,ShieldCheck,UserRound,WalletCards,Wrench } from 'lucide-react';
+import { FileText,House,MessageCircle,ShieldCheck,UserRound,WalletCards,Wrench } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { EHAppHeader, EHServiceDirectory, EHCallout } from '@/design-system';

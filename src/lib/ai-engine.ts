@@ -166,7 +166,7 @@ export function consumeCloudAction(userId: number, action = 'chat', now = new Da
     if (!credit) return { ok: false as const, source: 'blocked' as const, usageId: null };
     const info = db.prepare('INSERT INTO ai_usage(user_id,period,action,credit_id) VALUES(?,?,?,?)').run(userId, period, action, credit.id);
     return { ok: true as const, source: 'credit' as const, usageId: Number(info.lastInsertRowid) };
-  })();
+  }).immediate();
 }
 
 // Refund a reservation when the upstream gateway call fails before delivering
@@ -189,5 +189,5 @@ export function grantAdCreditsOnce(userId: number, amount: number, source: strin
     if (existing) return null;
     const info = db.prepare('INSERT INTO ai_credits(user_id,granted,mode,source) VALUES(?,?,?,?)').run(userId, amount, 'ad', source.slice(0, 200));
     return Number(info.lastInsertRowid);
-  })();
+  }).immediate();
 }

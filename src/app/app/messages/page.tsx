@@ -1,12 +1,10 @@
-import { ChevronDown, Layers3, MessageSquare, Phone, UserRound } from 'lucide-react';
-import { EHInbox, EHContactGroup, EHConversation, EHWorkflowForm, EHSubmitButton, EHFormFeedback, EHAppHeader, EHPanel, EHList, EHEmptyState, EHErrorState, EHCallout, EHButton, EHField, EHSelect, EHInput, EHStatus } from '@/design-system';
-import { AppShell, SectionTitle } from '@/components/shell';
+import { EHInbox, EHContactGroup, EHConversation, EHWorkflowForm, EHSubmitButton, EHFormFeedback, EHAppHeader, EHEmptyState, EHErrorState, EHCallout, EHButton, EHField, EHSelect, EHInput } from '@/design-system';
+import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { updateContactCategoryAction } from '@/app/actions';
 import { groupContactsByCategory, normalizeContactCategory, STANDARD_CONTACT_CATEGORIES } from '@/lib/contact-categories';
 import { OwnerMessageComposer } from './thread-client';
-import styles from './messages.module.css';
 
 type ThreadMessage = {
   source: 'direct' | 'job';

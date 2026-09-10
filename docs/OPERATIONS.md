@@ -154,7 +154,9 @@ sudo journalctl -u einfach-hausen.service -n 120 --no-pager
 
 Do not delete SQLite, WAL/SHM files, private media, or uploads as a troubleshooting step. Do not remove the old public fallback until the canonical domain/tunnel/Stripe/mail acceptance in `PRODUCTION_HANDOVER.md` is complete.
 
-## Post-convergence production live check (2026-08-25, task T-0003)
+## Post-convergence production live check — historisch, Stand 2026-08-25 (Task T-0003)
+
+> **Stand-Hinweis 2026-09-10 (Repo-HEAD `0503da3`):** Der Abschnitt unten ist eine historische Momentaufnahme vom 2026-08-25 (Release `dcd53ca1`, Konvergenz-Commit `f0198ee`). OCI `/srv/einfach-hausen` steht lesend verifiziert ebenfalls auf `0503da3` („Finisher-2 Integration 2026-09-10“). Live-Aussagen vor Wiederverwendung frisch gegen `/api/health` und Smoke prüfen.
 
 Verified live state after repository convergence to `f0198ee`:
 

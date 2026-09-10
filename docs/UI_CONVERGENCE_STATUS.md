@@ -1,6 +1,6 @@
-# UI & Frontend Convergence Status
+# UI & Frontend Convergence Status — historisch, Stand September 2026
 
-Stand: September 2026
+Stand: September 2026 (historische Momentaufnahme, Einordnung 2026-09-10)
 
 ## 1. Erledigte Meilensteine
 

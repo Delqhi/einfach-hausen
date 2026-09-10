@@ -1,4 +1,3 @@
-import { ChevronRight, UserRound } from 'lucide-react';
 import { EHAppHeader, EHList, EHCallout, EHField, EHInput, EHWorkspaceGrid, EHIdentitySummary, EHWorkflowForm, EHFormSection, EHFieldGrid, EHSubmitButton, EHWorkSection } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { InstallAppCard } from '@/components/install-app-card';
@@ -27,15 +26,20 @@ export default async function Profile(){
     <EHList label="Profilbereiche" items={[
       { id: 'plans', title: 'Zahlungen & Mitgliedschaft', href: '/app/plans' },
       { id: 'notifications', title: 'Benachrichtigungen', href: '/notifications' },
-      { id: 'security', title: 'Sicherheit', text: 'Geschützte Sitzung' },
-      { id: 'help', title: 'Hilfe & Support', text: 'Direkte Unterstützung' },
-      { id: 'settings', title: 'App-Einstellungen', text: 'Installation & Gerät' },
+      { id: 'security', title: 'Sicherheit', text: 'Geschützte Sitzung', href: '/app/settings' },
+      { id: 'help', title: 'Hilfe & Support', text: 'Direkte Unterstützung', href: '/app/hilfe' },
+      { id: 'settings', title: 'App-Einstellungen', text: 'Installation & Gerät', href: '/app/settings' },
     ]} />
 
     </EHWorkSection>
+    <div data-testid="owner-logout-section">
+    <EHWorkflowForm action={logoutAction}><EHSubmitButton pendingLabel="Wird abgemeldet …">Ausloggen</EHSubmitButton></EHWorkflowForm>
+    <form action={logoutAction}>
+      <button type="submit" className="sm-logout" data-testid="owner-logout-profile" aria-label="Abmelden">Abmelden</button>
+    </form>
+    </div>
     <InstallAppCard/>
     <EHCallout title="WhatsApp ist noch nicht freigeschaltet"><p>In der App kannst du den Hausmeister bereits nutzen. Der WhatsApp-Kanal wird erst angeboten, sobald der Business-Kanal tatsächlich verfügbar ist.</p></EHCallout>
     <EHCallout title="Deine Hausdaten bleiben privat."><p>Partner sehen nur die Informationen, die für einen konkreten Kontakt oder Auftrag notwendig sind.</p></EHCallout>
-    <EHWorkflowForm action={logoutAction}><EHSubmitButton pendingLabel="Wird abgemeldet …">Ausloggen</EHSubmitButton></EHWorkflowForm>
   </AppShell>;
 }

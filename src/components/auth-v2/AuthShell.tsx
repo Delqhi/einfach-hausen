@@ -102,7 +102,6 @@ export function AuthShell({
               initialAuthMode={initialAuthMode}
               nextPath={nextPath}
               onRoleChange={setRole}
-              onOpenLegalModal={setActiveLegalModal}
             />
           </div>
         </div>

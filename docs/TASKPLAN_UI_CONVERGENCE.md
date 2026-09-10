@@ -1,4 +1,4 @@
-# Taskplan: UI Convergence & CSS Consolidation (100% Status)
+# Taskplan: UI Convergence & CSS Consolidation (100% Status — historisch, Stand September 2026)
 
 ## Status: Abgeschlossen & Konvergiert (September 2026)
 

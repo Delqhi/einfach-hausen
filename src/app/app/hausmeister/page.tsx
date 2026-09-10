@@ -5,6 +5,9 @@ import { startHausmeisterRouteAction } from '@/app/actions';
 import { requireUser } from '@/lib/auth';
 import { EHAppHeader, EHPanel, EHErrorState } from '@/design-system';
 import { db } from '@/lib/db';
+import { aiQuotaSnapshot } from '@/lib/ai-engine';
+import { HAUSMEISTER_LIMIT_HINTS } from '@/lib/orchestrator';
+import { HausmeisterQuotaStatus } from '@/components/homeowner/hausmeister-quota-status';
 
 export default async function Hausmeister({searchParams}:{searchParams:Promise<Record<string,string>>}){
   const user=await requireUser('homeowner'); const sp=await searchParams;
@@ -17,10 +20,20 @@ export default async function Hausmeister({searchParams}:{searchParams:Promise<R
   const starterHints:Record<string,string>={garten:'Was soll draußen oder im Garten gemacht werden?',reparatur:'Was ist kaputt oder muss repariert werden?',pflege:'Was soll gereinigt oder gepflegt werden?',technik:'Wobei brauchst du Hilfe mit Technik oder Installation?'};
   const starterHint=sp.topic?starterHints[sp.topic]:undefined;
 
+  const quota = aiQuotaSnapshot(user.id);
   return <AppShell role="homeowner" active="/app" title="Hausmeister" subtitle="Fragen klären oder etwas organisieren">
     <div className="housemaster-panel">
       <EHAppHeader eyebrow="Hausmeister · bereit" title={`Hallo ${user.first_name}.`} text="Beschreib einfach, was los ist. Wir klären zuerst die Frage. Erst danach entscheidest du bewusst zwischen weiter fragen, einem persönlichen Ansprechpartner oder einem echten Auftrag." />
       {sp.error&&<EHErrorState text={sp.error} />}
+      <EHPanel title="KI-Kontingent & Limits">
+        <div data-testid="hausmeister-quota" role="status" aria-live="polite">
+          <p>KI-Kontingent: {quota.freemiumRemaining} von {quota.freemiumAllowed} frei · {quota.credits} Bonus-Aktionen{quota.byok ? ' · eigener Key aktiv' : ''}.</p>
+          <p data-testid="hausmeister-limit-401">{HAUSMEISTER_LIMIT_HINTS.unauthenticated}</p>
+          <p data-testid="hausmeister-limit-402">{HAUSMEISTER_LIMIT_HINTS.quotaExhausted}</p>
+          <p data-testid="hausmeister-limit-429">{HAUSMEISTER_LIMIT_HINTS.rateLimited}</p>
+        </div>
+        <HausmeisterQuotaStatus />
+      </EHPanel>
       <div className="agent-chat housemaster-chat">
         {messages.length===0&&<div className="agent-message assistant"><div className="message-head"><Sparkles size={14}/> Einfach Hausen</div><p>Beschreib einfach, was los ist. Ich helfe beim Einordnen und du entscheidest danach, ob du nur einen Ansprechpartner möchtest oder einen Auftrag organisieren willst.</p></div>}
         {messages.map(m=><div className={`agent-message ${m.role}`} key={m.id}><div className="message-head">{m.role==='user'?'Du':<><Sparkles size={14}/> Einfach Hausen</>}</div><p>{m.body}</p></div>)}

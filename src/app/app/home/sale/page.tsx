@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { Building2, CheckCircle2, ChevronRight, KeyRound, LockKeyhole, MessageCircle, RefreshCw, ShieldCheck, TrendingUp, UserRound } from 'lucide-react';
+import { Building2, CheckCircle2, ChevronRight, LockKeyhole, MessageCircle, RefreshCw, ShieldCheck, UserRound } from 'lucide-react';
 import { AppShell, SectionTitle } from '@/components/shell';
-import { EHAppHeader, EHPanel, EHList, EHEmptyState, EHCallout, EHField, EHSelect, EHTextarea, EHInput, EHStatus } from '@/design-system';
+import { EHAppHeader, EHPanel, EHList, EHEmptyState, EHField, EHSelect, EHTextarea, EHInput, EHStatus, EHSubmitButton } from '@/design-system';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { primaryProperty } from '@/lib/properties';
@@ -80,7 +80,7 @@ export default async function Sale() {
       <form action={requestPropertyValuationAction}>
         <EHField id="sale-type" label="Gewünschte Art"><EHSelect id="sale-type" name="valuationType" defaultValue="orientation"><option value="orientation">Orientierungswert</option><option value="expert">Sachverständigenbewertung</option><option value="market">Makler-Marktwert</option></EHSelect></EHField>
         <EHField id="sale-notes" label="Hinweis"><EHTextarea id="sale-notes" name="notes" rows={3} placeholder="Optional: Besonderheiten oder Modernisierungen" /></EHField>
-        <button>Bewertung anfragen</button>
+        <EHSubmitButton>Bewertung anfragen</EHSubmitButton>
       </form>
     </EHPanel>
     <EHPanel title="Vorhandene Einschätzung">
@@ -91,7 +91,7 @@ export default async function Sale() {
         <EHField id="sale-max" label="Bis €"><EHInput id="sale-max" name="estimatedMax" type="number" min="0" step="1000" required /></EHField>
         <EHField id="sale-src" label="Quelle / Art"><EHSelect id="sale-src" name="valuationType" defaultValue="market"><option value="orientation">Orientierungswert</option><option value="expert">Sachverständigenbewertung</option><option value="market">Makler-Marktwert</option></EHSelect></EHField>
         <EHField id="sale-note" label="Hinweis"><EHTextarea id="sale-note" name="notes" rows={3} placeholder="Optional: Quelle, Datum oder Besonderheiten" /></EHField>
-        <button>Vorhandene Bewertung speichern</button>
+        <EHSubmitButton>Vorhandene Bewertung speichern</EHSubmitButton>
       </form>
     </EHPanel>
 

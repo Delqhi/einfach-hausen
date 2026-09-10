@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { AlertCircle, RotateCcw } from 'lucide-react';
 
-export default function HomeownerError({ retry }: { retry: () => void }) {
+export default function HomeownerError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const stateRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function HomeownerError({ retry }: { retry: () => void }) {
       <span className="owner-state-kicker">Das hat nicht geklappt</span>
       <h1 id="owner-error-title">Diese Ansicht konnte nicht geladen werden.</h1>
       <p>Deine Daten wurden dadurch nicht verändert. Versuch die Ansicht noch einmal zu laden.</p>
-      <button className="owner-state-action" type="button" onClick={retry}>
+      <button className="owner-state-action" type="button" onClick={reset}>
         <RotateCcw aria-hidden="true" /> Erneut versuchen
       </button>
     </main>

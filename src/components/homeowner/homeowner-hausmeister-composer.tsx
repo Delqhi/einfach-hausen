@@ -55,7 +55,7 @@ export function HomeownerHausmeisterComposer({
       // digest - it must bubble so the router navigates.
       const digest = (error as { digest?: string })?.digest ?? '';
       if (typeof digest === 'string' && digest.startsWith('NEXT_REDIRECT')) throw error;
-      setSubmitError('Senden fehlgeschlagen. Dein Text bleibt erhalten - versuch es erneut, sobald du wieder online bist.');
+      setSubmitError('Senden fehlgeschlagen (mögliche 429 – zu viele Anfragen). Dein Text bleibt erhalten - versuch es erneut, sobald du wieder online bist.');
     } finally {
       setSubmitting(false);
     }

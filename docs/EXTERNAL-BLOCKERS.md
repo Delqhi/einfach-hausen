@@ -1,8 +1,10 @@
 # Externe Blocker — verifizierte Fakten
 
-Stand: 2026-09-04 (T-0131 Convergence done, main `13496d7`)
+Stand: 2026-09-10 (Repo-HEAD `0503da3`, Vorgänger `a25ae3f`; T-0131 Convergence vom 2026-09-03 ist historisch)
 
-Technischer Abschluss (Wellen A-E, T-0129/T-0130/T-0131, Supabase-, Demo-, GSC-, Blog/Lexikon-Stände) ist durch diese Liste
+T-Nummern unten sind historische Task-Referenzen als Verifikationsbeleg, keine offenen Tasks.
+
+Technischer Abschluss (historische Wellen A-E, T-0129/T-0130/T-0131, Supabase-, Demo-, GSC-, Blog/Lexikon-Stände) ist durch diese Liste
 nicht blockiert. Die folgenden Punkte sind externe Betriebs-/Rechts-Faktoren, die
 der technische Abschluss weder erfinden noch erledigen kann:
 
@@ -24,7 +26,7 @@ der technische Abschluss weder erfinden noch erledigen kann:
    einem echten Postfach (z. B. Antwort-Handling) benötigt ein betreibereitens
    gepflegtes Postfach und ist deshalb nicht agentenseitig beweisbar.
 
-6. **GitHub Actions fuer dieses private Repo nicht nutzbar (T-0157, 2026-08-31 verifiziert)** —
+6. **GitHub Actions für dieses private Repo nicht nutzbar (T-0157, 2026-08-31 verifiziert)** —
    alle 90 letzten Runs `startup_failure` mit 0 Jobs (Actions-Minuten/Plan-Sache des Accounts).
    Der einheitliche Release-Gate greift deshalb repo-seitig als Pflichtschritt in
    `deploy/update-on-oci.sh`; `quality.yml` ist vorbereitet (inkl. Supabase-Secrets) und
@@ -47,6 +49,6 @@ Pflege-Regel: Nur verifizierte Fakten eintragen. Technische Abschlusswellen
 autorisiert keine Legal-/Business-Fakten.
 8. **Google/Apple-SSO in den App-Registrierungen (T-0206 B7)** — die
    Notion-Referenz zeigt „Mit Google/Apple anmelden"-Buttons. Echte
-   OAuth-Credentials (Google Cloud + Apple Developer, verifyte Domains) sind
-   Betriebervollmacht; Fake-Buttons ohne funktionierendes Backend sind
+   OAuth-Credentials (Google Cloud + Apple Developer, verifizierte Domains) sind
+   Betreibervollmacht; Fake-Buttons ohne funktionierendes Backend sind
    verboten. Erst nach Credential-Bereitstellung umsetzbar.

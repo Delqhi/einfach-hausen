@@ -81,7 +81,7 @@ const SECTIONS: Section[] = [
     subs: [
       hist("Alle Ereignisse", ico(BookIco, 16)),
       hist("Renovierungen & Reparaturen", ico(HammerIco, 16)),
-      hist("Neu Installation oder Zubauen", ico(HomeMenuIcon)),
+      hist("Neuinstallation oder Anbau", ico(HomeMenuIcon)),
       hist("Wartungen", ico(GearMenuIcon)),
       { label: "Ereignis hinzufügen", href: "/app/home/history", icon: ico(PlusIco, 16) },
     ],
@@ -92,7 +92,7 @@ const SECTIONS: Section[] = [
       { label: "Mein Profil", href: "/app/profile", icon: <PersonSmallIcon /> },
       { label: "Benachrichtigungen", href: "/notifications", icon: ico(BellIco, 16) },
       { label: "Datenschutz", href: "/datenschutz", icon: <ShieldIcon /> },
-      { label: "Hilfe & Kontakt", href: "/hilfe", icon: ico(HelpIco, 16) },
+      { label: "Hilfe & Kontakt", href: "/app/hilfe", icon: ico(HelpIco, 16) },
       { label: "Über einfachhausen", href: "/ueber-uns", icon: ico(InfoIco, 16) },
       { label: "Abmelden", logout: true, icon: <LogoutIcon /> },
     ],
@@ -120,7 +120,7 @@ export function OwnerMobileMenu({ active }: { active: string }) {
       onToggle={(event) => setOpen((event.target as HTMLDetailsElement).open)}
     >
       <summary aria-label="Hauptmenü öffnen"><HamburgerIcon /><span>Menü</span></summary>
-      <div className="menu-overlay open" onClick={() => setOpen(false)} aria-hidden="true" />
+      {open ? <div className="menu-overlay open" onClick={() => setOpen(false)} aria-hidden="true" data-testid="owner-menu-overlay" /> : null}
       <aside
         className="side-menu ehn-drawer"
         aria-label="Hauptnavigation"
@@ -151,7 +151,7 @@ export function OwnerMobileMenu({ active }: { active: string }) {
         <nav className="sm-nav ehn-acc">
           {SECTIONS.map((s) => (
             <div key={s.n} className={`ehn-acc-sec${(openSections[s.n] ?? s.open) ? " ehn-acc-open" : ""}`}>
-              <button type="button" className="sm-item ehn-acc-head" aria-expanded={Boolean(openSections[s.n])} onClick={() => toggleSection(s.n)}>
+              <button type="button" className="sm-item ehn-acc-head" aria-expanded={openSections[s.n] ?? s.open} onClick={() => toggleSection(s.n)}>
                 <span className="sm-icon">{s.icon}</span>
                 <span className="sm-label">{s.n} {s.label}</span>
                 <span className="ehn-acc-chevron" aria-hidden="true"><ArrowRightThin /></span>
@@ -160,7 +160,7 @@ export function OwnerMobileMenu({ active }: { active: string }) {
                 {s.subs.map((sub) =>
                   sub.logout ? (
                     <form key={sub.label} action={logoutAction} className="ehn-acc-row">
-                      <button type="submit" className="ehn-acc-link"><span className="ehn-acc-ico">{sub.icon}</span><span>{sub.label}</span></button>
+                      <button type="submit" className="ehn-acc-link" data-testid="owner-logout-menu" aria-label="Abmelden"><span className="ehn-acc-ico">{sub.icon}</span><span>{sub.label}</span></button>
                     </form>
                   ) : (
                     <button key={sub.label} type="button" className={`ehn-acc-link${active === sub.href ? " ehn-acc-active" : ""}`} onClick={() => go(sub.href!)}>
@@ -180,7 +180,7 @@ export function OwnerMobileMenu({ active }: { active: string }) {
           <ArrowRightThin />
         </button>
         <form action={logoutAction}>
-          <button type="submit" className="sm-logout"><LogoutIcon /> Abmelden</button>
+          <button type="submit" className="sm-logout" data-testid="owner-logout-drawer" aria-label="Abmelden"> <LogoutIcon /> Abmelden</button>
         </form>
         <div className="sm-footer">Version 1.0.0 &nbsp;•&nbsp; <Link href="/datenschutz">Datenschutz</Link> &nbsp;•&nbsp; <Link href="/impressum">Impressum</Link></div>
       </aside>

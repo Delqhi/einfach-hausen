@@ -74,7 +74,47 @@ export default async function HilfePage() {
         footer={{ href: '/app/emergency', text: 'Zum Notfallbereich' }}
       >
         <p>Wenn es eilig ist – zum Beispiel ein Rohrbruch oder ein Stromausfall – hilft dir dieser Bereich weiter.</p>
-        <p>Du findest dort die wichtigsten Schritte und Kontakte, damit schnell jemand helfen kann.</p>
+        <p>Bei Lebensgefahr, Brand oder Gasgeruch rufe zuerst die 112 an. Wir suchen nach verfügbaren Helfern in deiner Nähe, versprechen aber keine Betreuung rund um die Uhr.</p>
+      </EHPanel>
+
+      <EHPanel
+        title="Beratung"
+        footer={{ href: '/app/consultation', text: 'Zur Beratung' }}
+      >
+        <p>Du hast eine Frage rund ums Haus und willst erst einen Fachmann fragen? Schidere dein Problem und finde einen passenden Ansprechpartner.</p>
+        <p>Daraus entsteht noch kein Auftrag und kein Preis. Erst wenn du willst, wird daraus eine Anfrage.</p>
+      </EHPanel>
+
+      <EHPanel
+        title="Versicherung"
+        footer={{ href: '/app/insurance', text: 'Zur Versicherung' }}
+      >
+        <p>Bei einem Schadenfall bereitest du hier alles sauber vor: Fotos, Belege und den Ablauf zum bereits beauftragten Vorgang.</p>
+        <p>Wichtig: Wir kontaktieren deine Versicherung nicht automatisch. Du entscheidest, was du weitergibst.</p>
+      </EHPanel>
+
+      <EHPanel
+        title="Hausverkauf"
+        footer={{ href: '/app/home/sale', text: 'Zum Hausverkauf' }}
+      >
+        <p>Du denkst ans Verkaufen? Hier siehst du die Schritte: Verkaufsinteresse, passende Makler, Besichtigung und Abschluss.</p>
+        <p>Deine Kontaktdaten gibst du nur frei, wenn du es ausdrücklich erlaubst.</p>
+      </EHPanel>
+
+      <EHPanel
+        title="Mein Jahr"
+        footer={{ href: '/app/year', text: 'Zu Mein Jahr' }}
+      >
+        <p>Hier siehst du das ganze Jahr im Überblick: anstehende Wartungen, Termine und erledigte Arbeiten.</p>
+        <p>Überfällige Aufgaben stehen oben, damit du nichts vergisst.</p>
+      </EHPanel>
+
+      <EHPanel
+        title="KI-Assistent"
+        footer={{ href: '/app/hausmeister', text: 'Zum KI-Assistenten' }}
+      >
+        <p>Der Assistent hilft dir beim Organisieren: Fragen klären, Aufgaben planen und den nächsten Schritt vorschlagen.</p>
+        <p>Er gibt keine Garantien. Das kostenlose Kontingent ist begrenzt – wer mehr braucht, kann einen eigenen API-Schlüssel hinterlegen oder per Werbeanzeige weitere Aktionen freischalten.</p>
       </EHPanel>
 
       <EHPanel

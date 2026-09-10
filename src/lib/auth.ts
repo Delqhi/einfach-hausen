@@ -241,7 +241,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     if (updated.changes !== 1) return null;
     row = db.prepare('SELECT id,email,role,first_name,last_name,phone FROM users WHERE auth_subject=?').get(identity.id) as CurrentUser | undefined;
   }
-  if (!row) { console.error('[auth-debug] getCurrentUser null: no app row after bind attempt for', identity.email); return null; }
+  if (!row) { console.error('[auth-debug] getCurrentUser null: no app row after bind attempt'); return null; }
   return row || null;
 }
 

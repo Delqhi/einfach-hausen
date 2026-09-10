@@ -142,8 +142,8 @@ export function AiSettings() {
       )}
 
       <div className={styles.blockGap}>
-        <button className="btn-ghost" type="button" disabled aria-disabled="true" title="Werbeclips sind noch nicht angebunden — aktuell kein Guthaben über diese Schaltfläche.">Werbeclip ansehen: +10 KI-Aktionen (bald verfügbar)</button>
-        <p className={styles.noteSoft}>Werbeclips sind noch nicht angebunden. Solange bleibt diese Schaltfläche deaktiviert — es wird kein Guthaben gebucht und keine Anfrage gesendet.</p>
+        <button className="btn-ghost" type="button" data-testid="watch-ad-button" disabled={true} aria-disabled="true" aria-label="Werbeclip ansehen noch nicht verfügbar" title="Werbeclips sind noch nicht angebunden — aktuell kein Guthaben über diese Schaltfläche.">Werbeclip ansehen: +10 KI-Aktionen (noch nicht verfügbar)</button>
+        <p className={styles.noteSoft}>Werbeclips sind noch nicht verfügbar. Solange bleibt diese Schaltfläche deaktiviert — es wird kein Guthaben gebucht und keine Anfrage gesendet.</p>
       </div>
     </div>
   );

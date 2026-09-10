@@ -1,4 +1,4 @@
-# Wave-Report 2026-09-03 — Website-Repo-Umzug, Gate-Verifikation, Live-Deploy
+# Wave-Report 2026-09-03 — Website-Repo-Umzug, Gate-Verifikation, Live-Deploy — historisch, Stand 2026-09-03
 
 **Ergebnis in einem Satz:** GitHub `main` = neue Website-Codebasis (`51667f0`), alter App-Stand archiviert als `website-old`, Release-Gate 11/11 lokal und auf OCI grün, https://einfachhausen.de liefert den neuen Build live, T-0129/T-0130 im kanonischen Taskplan auf done.
 
@@ -20,7 +20,7 @@
 
 ## Was noch zu tun ist (genaue Anweisungen)
 
-### 1. T-0131 "Final technical completion v2" (kanonischer nächster Task)
+### 1. T-0131 "Final technical completion v2" (am 2026-09-03 kanonischer nächster Task — erledigt, historisch)
 - Ort: OCI `/home/ubuntu/dev/einfach-hausen` (kanonischer Taskplan-DB-Pfad: `.sin-gpt-web/taskplan.sqlite3` dort)
 - Start: `sin-gpt-web-state claim T-0131 --owner local-agent`
 - Inhalt: Konvergenz-Nachweis fahren (`npm run release-gate` + `npm run test:e2e` + `npm run test:smoke`), Restgaps klassifizieren, dann `sin-gpt-web-state complete T-0131 --owner local-agent --evidence '...'`.
