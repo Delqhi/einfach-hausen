@@ -101,8 +101,8 @@ function reconcileSubscriptionState(event:Stripe.Event){
 
 function reconcileRefund(charge:Stripe.Charge){
   const paymentIntentId=typeof charge.payment_intent==='string'?charge.payment_intent:charge.payment_intent?.id;
-  if(!paymentIntentId)return;
-  db.prepare(`UPDATE payments SET status='refunded',updated_at=CURRENT_TIMESTAMP WHERE stripe_session_id=? OR id IN (SELECT id FROM payments WHERE stripe_session_id LIKE ?)`).run(paymentIntentId,`%${paymentIntentId}%`);
+  if(!paymentIntentId||paymentIntentId.length>255)return;
+  db.prepare(`UPDATE payments SET status='refunded',updated_at=CURRENT_TIMESTAMP WHERE stripe_session_id=?`).run(paymentIntentId);
 }
 
 export async function POST(req:NextRequest){

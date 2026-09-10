@@ -12,6 +12,9 @@ function getTransporter() {
       host: process.env.SMTP_HOST || "",
       port,
       secure: port === 465,
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 10000,
       auth: process.env.SMTP_USER && process.env.SMTP_PASS
         ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
         : undefined,
@@ -51,7 +54,7 @@ export async function sendMail(to: string, subject: string, html: string) {
     await getTransporter().sendMail({ from, to, subject, html });
     return true;
   } catch (e) {
-    console.error("Mail-Fehler:", e);
+    console.error("Mail-Fehler:", e instanceof Error ? e.message.slice(0, 200) : "send failed");
     return false;
   }
 }
