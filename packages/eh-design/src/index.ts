@@ -13,3 +13,4 @@ export * from "./workspace-records";
 export * from "./workspace-conversation";
 export * from "./workspace-detail";
 export * from "./documents";
+export * from "./assistant";

@@ -1,0 +1,113 @@
+{
+  "base": "e28a98368b83c3233af739c43e54336cf885be59",
+  "implementationCommit": "7e9a9d853bd317694e0c03cc775661fde274c0dc",
+  "files": {
+    "design/assistant-preview/evidence.json": {
+      "sha256": "14c9098b467cf8cf86948e3df98c298623c9e4ef5220395451ea9f81fb4a268d",
+      "bytes": 747,
+      "kind": "text"
+    },
+    "design/assistant-preview/launcher-1536.png": {
+      "sha256": "503775e48344ff4740c715cf05f91112cb40ae884df77954cc6e0e8de99e4cc3",
+      "bytes": 719934,
+      "kind": "binary"
+    },
+    "design/assistant-preview/launcher-390.png": {
+      "sha256": "029b5944288a2ec93fafc68579702088756b0d278d1e9c29dd46c1a7635b7c0d",
+      "bytes": 202285,
+      "kind": "binary"
+    },
+    "design/assistant-preview/launcher-736.png": {
+      "sha256": "0cd325be1f81510d0ae5344fc38633dc807f9149de957f4778509f86c3d30b4d",
+      "bytes": 461315,
+      "kind": "binary"
+    },
+    "design/assistant-preview/open-1536.png": {
+      "sha256": "e2ae64ee1b657ab65897cba453a0cc7893b57bdc27acb1b3da495880187f4096",
+      "bytes": 359788,
+      "kind": "binary"
+    },
+    "design/assistant-preview/open-390.png": {
+      "sha256": "85de6b616136f00ccb7f20742116012e437763c8446bd0c7963bafa8cc9a9810",
+      "bytes": 52669,
+      "kind": "binary"
+    },
+    "design/assistant-preview/open-736.png": {
+      "sha256": "8bbd029952e7397c5beb845e96b888e5f50110d987c44c9d1639dff84960292d",
+      "bytes": 261133,
+      "kind": "binary"
+    },
+    "design/assistant-preview/reply-1536.png": {
+      "sha256": "2141ead814512ab3e3fcb40eb3c638fde87c3563ef3896e124b812fede7e760c",
+      "bytes": 360506,
+      "kind": "binary"
+    },
+    "design/assistant-preview/reply-390.png": {
+      "sha256": "32a0992c5688e86d17d374970d2b225dc965ea918714eb9d1e80215479550e84",
+      "bytes": 64093,
+      "kind": "binary"
+    },
+    "design/assistant-preview/reply-736.png": {
+      "sha256": "7658b36b931e466d96d05f636eff81af8a984608106cc432f234a798923d479f",
+      "bytes": 261947,
+      "kind": "binary"
+    },
+    "design/design-lock.json": {
+      "sha256": "7698fe6388fc13f145075dbe018f648bf4637367b03c9a86d8146693eded0813",
+      "bytes": 5286,
+      "kind": "text"
+    },
+    "docs/NEXT_AGENT.md": {
+      "sha256": "d5af1baf137781651fdd79951804b2f484e0232002450adf6bfcadc1545b6f2c",
+      "bytes": 34084,
+      "kind": "text"
+    },
+    "docs/brand/assistant/HANDOFF.md": {
+      "sha256": "fe515dc127e027cb7ffd9b9571178544c47b5978d0a05e87c90e68d80db67008",
+      "bytes": 5367,
+      "kind": "text"
+    },
+    "packages/eh-design/src/assistant.tsx": {
+      "sha256": "3b4e211a777cfd9911f601630ba2df50063a6d0d75cfc1e813924594df76f1ed",
+      "bytes": 5233,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html-style.mjs": {
+      "sha256": "23beb0cb420d6f6f23f48cb5692aaf17435ec3846e4759d2c0738618aa348187",
+      "bytes": 301704,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html.css": {
+      "sha256": "e03b7eb33b86def055494c394b6b17677ec9473f30aba60d894f00d82daf1336",
+      "bytes": 55081,
+      "kind": "text"
+    },
+    "packages/eh-design/src/index.ts": {
+      "sha256": "67eaf8d00bb29ea97ab8d17cf26063e5468e8ba88f9e271228527148597c5f72",
+      "bytes": 502,
+      "kind": "text"
+    },
+    "packages/eh-design/src/styles.module.css": {
+      "sha256": "8e6234f22420cf4b218a983345ed359401d1d1fbd5483a47d4315afc1c2e8873",
+      "bytes": 53203,
+      "kind": "text"
+    },
+    "scripts/eh-assistant-review.mjs": {
+      "sha256": "864fda4d6994d96ddb172d6784e1fae110259f0b90122cd1df94b8d92a663bca",
+      "bytes": 3077,
+      "kind": "text"
+    },
+    "src/app/layout.tsx": {
+      "sha256": "6ddfa83912717227b5fdb1b1cbf44fc79c1a947ae3dfe670dbeb011fa1ed0370",
+      "bytes": 2795,
+      "kind": "text"
+    },
+    "src/components/house-assistant.tsx": {
+      "sha256": "79bb2d742e71409e79efdbe15b6ac1761ebc6dd327cb9706f88e2bb98054e2d8",
+      "bytes": 1472,
+      "kind": "text"
+    }
+  },
+  "deleted": [],
+  "symlinks": {}
+}

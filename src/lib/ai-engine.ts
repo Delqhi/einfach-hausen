@@ -9,8 +9,8 @@ import { db } from './db';
 //
 // Stage 2 (BYOK): the user supplies an OpenAI-compatible key (Google AI
 // Studio / OpenRouter / ...). Calls run through the server proxy against the
-// user's own gateway — unlimited for them, 0 € for the operator. The key is
-// never logged and never sent back to any client.
+// user's own gateway — unmetered by the operator, the user's provider limits
+// and costs apply. The key is never logged and never sent back to any client.
 //
 // Stage 3 (freemium): without BYOK, cloud calls consume the monthly free
 // allowance (FREEMIUM_MONTHLY) first, then granted ai_credits (rewarded ad
@@ -146,16 +146,33 @@ export function aiQuotaSnapshot(userId: number, now = new Date()) {
 }
 
 // Consume one cloud action: freemium allowance first, then credits.
-// Returns false when the user is exhausted (caller answers with honest UX).
-export function consumeCloudAction(userId: number, action = 'chat', now = new Date()): { ok: boolean; source: 'freemium' | 'credit' | 'blocked' } {
-  if (freemiumUsedThisMonth(userId, now) < FREEMIUM_MONTHLY) {
-    db.prepare('INSERT INTO ai_usage(user_id,period,action) VALUES(?,?,?)').run(userId, currentPeriod(now), action);
-    return { ok: true, source: 'freemium' };
-  }
-  const credit = db.prepare('SELECT id FROM ai_credits WHERE user_id=? ORDER BY id ASC LIMIT 1').get(userId) as { id: number } | undefined;
-  if (!credit) return { ok: false, source: 'blocked' };
-  db.prepare('INSERT INTO ai_usage(user_id,period,action,credit_id) VALUES(?,?,?,?)').run(userId, currentPeriod(now), action, credit.id);
-  return { ok: true, source: 'credit' };
+// The check and the insert run in a single transaction so parallel requests
+// cannot overspend the allowance. Credits are granted in bulk (SUM) and spent
+// per action (COUNT); a non-positive balance blocks honestly.
+// Returns the usage id so callers can refund (voidCloudAction) when the
+// upstream gateway fails before delivering value.
+export function consumeCloudAction(userId: number, action = 'chat', now = new Date()): { ok: boolean; source: 'freemium' | 'credit' | 'blocked'; usageId: number | null } {
+  return db.transaction(() => {
+    const period = currentPeriod(now);
+    const used = (db.prepare('SELECT COUNT(*) c FROM ai_usage WHERE user_id=? AND period=?').get(userId, period) as { c: number }).c;
+    if (used < FREEMIUM_MONTHLY) {
+      const info = db.prepare('INSERT INTO ai_usage(user_id,period,action) VALUES(?,?,?)').run(userId, period, action);
+      return { ok: true as const, source: 'freemium' as const, usageId: Number(info.lastInsertRowid) };
+    }
+    const granted = (db.prepare('SELECT COALESCE(SUM(granted),0) g FROM ai_credits WHERE user_id=?').get(userId) as { g: number }).g;
+    const spent = (db.prepare(`SELECT COUNT(*) c FROM ai_usage WHERE user_id=? AND action='chat' AND credit_id IS NOT NULL`).get(userId) as { c: number }).c;
+    if (granted - spent <= 0) return { ok: false as const, source: 'blocked' as const, usageId: null };
+    const credit = db.prepare('SELECT id FROM ai_credits WHERE user_id=? ORDER BY id ASC LIMIT 1').get(userId) as { id: number } | undefined;
+    if (!credit) return { ok: false as const, source: 'blocked' as const, usageId: null };
+    const info = db.prepare('INSERT INTO ai_usage(user_id,period,action,credit_id) VALUES(?,?,?,?)').run(userId, period, action, credit.id);
+    return { ok: true as const, source: 'credit' as const, usageId: Number(info.lastInsertRowid) };
+  })();
+}
+
+// Refund a reservation when the upstream gateway call fails before delivering
+// value. Users are never charged for failed attempts.
+export function voidCloudAction(usageId: number, userId: number): void {
+  db.prepare('DELETE FROM ai_usage WHERE id=? AND user_id=?').run(usageId, userId);
 }
 
 export function grantAdCredits(userId: number, amount = AD_CREDIT_GRANT, source = 'rewarded-ad'): number {

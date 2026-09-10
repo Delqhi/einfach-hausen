@@ -20,10 +20,13 @@ const AuthContext = createContext<Ctx>({
 // the authorization authority. It therefore protects ONLY the known private
 // app surfaces (client-side UX bounce to /login) and never touches unknown
 // routes (404s must render, not redirect) or public marketing pages.
+// /notfall is a PUBLIC product explainer (no session required); the
+// authenticated emergency flow lives at /app/emergency and is protected on
+// the server via requireUser('homeowner'). Never bounce public /notfall.
 const PRIVATE_PREFIXES = [
   "/auftraege", "/meine-angebote", "/mein-haus", "/historie", "/ki-chat",
   "/profil", "/einstellungen", "/benachrichtigungen", "/notifications",
-  "/notfall", "/ansprechpartner", "/dashboard", "/anfragen-pro",
+  "/ansprechpartner", "/dashboard", "/anfragen-pro",
 ];
 // Canonical app/pro pages resolve Supabase identity and application role on
 // the server. The browser guard must never replace that authority with metadata.
@@ -37,6 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
+    let subscription: { unsubscribe: () => void } | null = null;
     // T-0118: the browser Supabase client is lazy (async chunk) — await it.
     // Without Supabase env vars (local preview) the promise rejects; the app
     // degrades to logged-out instead of crashing with an unhandled rejection.
@@ -46,18 +50,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (cancelled) return;
         setSession(data.session);
         setLoading(false);
+      }).catch(() => {
+        // getSession rejection must never leave loading stuck (Befund 5).
+        if (cancelled) return;
+        setSession(null);
+        setLoading(false);
       });
       const { data: sub } = supabase.auth.onAuthStateChange((_e: any, s: any) => {
         if (cancelled) return;
         setSession(s);
+        setLoading(false);
       });
-      if (cancelled) sub.subscription.unsubscribe();
+      subscription = sub?.subscription ?? null;
+      // Unmount happened while the client promise resolved: clean up now.
+      if (cancelled && subscription) {
+        try { subscription.unsubscribe(); } catch {}
+        subscription = null;
+      }
     }).catch(() => {
       if (cancelled) return;
       setSession(null);
       setLoading(false);
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+      if (subscription) {
+        try { subscription.unsubscribe(); } catch {}
+        subscription = null;
+      }
+    };
   }, []);
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { applyRateLimitLockout, checkRateLimit, consumeRateLimitAttempt } from "@/lib/security/rate-limit";
-import { aiQuotaSnapshot, byokEnabled, byokKeyEnc, byokGateway, consumeCloudAction, FREEMIUM_MONTHLY, grantAdCreditsOnce, AD_CREDIT_GRANT } from "@/lib/ai-engine";
+import { aiQuotaSnapshot, byokEnabled, byokKeyEnc, byokGateway, consumeCloudAction, voidCloudAction, FREEMIUM_MONTHLY, grantAdCreditsOnce, AD_CREDIT_GRANT } from "@/lib/ai-engine";
 import { verifyAdReceipt } from "@/lib/ad-receipt";
 import { decryptSecret } from "@/lib/security/secret-box";
 
@@ -11,6 +11,7 @@ Antworte kurz (max. 4 Sätze), auf Deutsch, praktisch. Schließe ab mit einer ge
 und schlage bei Bedarf vor, eine konkrete Anfrage zu erstellen ("Auftrag", "Beratung", "Notfall").`;
 
 const RATE_LIMITED = "Du hast gerade sehr viele Fragen gestellt. Bitte versuch es später erneut.";
+const UPSTREAM_TIMEOUT_MS = 25000;
 const EXHAUSTED = `Dein kostenloses KI-Kontingent (${FREEMIUM_MONTHLY} pro Monat) ist aufgebraucht.`;
 
 function sanitize(messages: unknown): Array<{ role: "user" | "assistant"; content: string }> {
@@ -31,7 +32,8 @@ function operatorGateway() {
 
 // EH T-0207: 3-stage AI access.
 // 1) BYOK: with a stored personal key the call runs against the user's own
-//    OpenAI-compatible gateway — unmetered for them, 0 € for the operator.
+//    OpenAI-compatible gateway — unmetered by the operator, the user's
+//    provider limits and costs apply.
 //    The key never appears in logs or responses.
 // 2) Freemium: operator gateway with a monthly allowance + ai_credits
 //    (rewarded ads / purchases). Exhausted => honest, actionable UX.
@@ -66,9 +68,13 @@ export async function POST(req: Request) {
     : operatorGateway();
 
   if (!gateway) {
-    return NextResponse.json({ reply: "KI ist gerade nicht konfiguriert. Du kannst trotzdem über 'Neuen Auftrag' direkt starten." });
+    return NextResponse.json({ reply: "KI ist gerade nicht konfiguriert. Du kannst trotzdem über 'Neuen Auftrag' direkt starten." }, { status: 503 });
   }
 
+  // Reserve quota BEFORE the gateway call so parallel requests cannot
+  // overspend the allowance. The reservation is refunded when upstream fails
+  // before delivering value.
+  let usageId: number | null = null;
   if (!byokKey) {
     const verdict = consumeCloudAction(user.id);
     if (!verdict.ok) {
@@ -80,22 +86,42 @@ export async function POST(req: Request) {
         options: ["ad", "purchase", "byok"],
       }, { status: 402 });
     }
+    usageId = verdict.usageId;
   }
 
+  const userId = user.id;
+  function refund() {
+    if (usageId !== null) voidCloudAction(usageId, userId);
+  }
+
+  const upstreamSignal = req.signal
+    ? AbortSignal.any([req.signal, AbortSignal.timeout(UPSTREAM_TIMEOUT_MS)])
+    : AbortSignal.timeout(UPSTREAM_TIMEOUT_MS);
   try {
     const res = await fetch(`${gateway.base}/chat/completions`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${gateway.key}` },
       body: JSON.stringify({ model: gateway.model, stream: false, messages: [{ role: "system", content: SYSTEM }, ...history], max_tokens: 300 }),
+      signal: upstreamSignal,
     });
+    if (!res.ok) {
+      refund();
+      return NextResponse.json({ reply: "Die KI ist gerade nicht erreichbar. Deine Frage bleibt erhalten — versuche es später erneut oder erstelle direkt eine Anfrage." }, { status: 502 });
+    }
     const data = await res.json();
     const reply = data.choices?.[0]?.message?.content;
+    if (typeof reply !== "string" || !reply.trim()) {
+      refund();
+      return NextResponse.json({ reply: "Die KI hat gerade keine verwertbare Antwort geliefert. Deine Frage bleibt erhalten — versuche es später erneut." }, { status: 502 });
+    }
     return NextResponse.json({
-      reply: reply ?? "Entschuldigung, ich habe dich nicht verstanden.",
+      reply,
       quota: byokKey ? { byok: true } : aiQuotaSnapshot(user.id),
     });
-  } catch {
-    return NextResponse.json({ reply: "Ups, KI nicht erreichbar. Versuch es später oder erstelle direkt eine Anfrage." });
+  } catch (e) {
+    refund();
+    const timedOut = e instanceof Error && e.name === "TimeoutError";
+    return NextResponse.json({ reply: timedOut ? "Die KI-Anfrage hat zu lange gedauert. Deine Frage bleibt erhalten — versuche es später erneut." : "Ups, KI nicht erreichbar. Versuch es später oder erstelle direkt eine Anfrage." }, { status: timedOut ? 504 : 503 });
   }
 }
 

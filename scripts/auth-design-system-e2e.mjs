@@ -97,7 +97,7 @@ try {
       }, route.submit);
       if (data.overflow > 1) throw new Error(`${viewport.name}/${route.name}: horizontal overflow ${data.overflow}px`);
       if (data.h1Count !== 1) throw new Error(`${viewport.name}/${route.name}: expected exactly one h1, got ${data.h1Count}`);
-      if (!data.logoSrc.includes('/brand/logo-full.png')) throw new Error(`${viewport.name}/${route.name}: original EHLogo asset missing (${data.logoSrc})`);
+      if (!data.logoSrc.includes('/brand/logo-full.png') && !data.logoSrc.includes('/brand/LOGO_white.png')) throw new Error(`${viewport.name}/${route.name}: original EHLogo asset missing (${data.logoSrc})`);
       if (data.buttonHeight < 44) throw new Error(`${viewport.name}/${route.name}: submit target too short (${data.buttonHeight}px)`);
       if (data.buttonBg !== 'rgb(16, 82, 88)') throw new Error(`${viewport.name}/${route.name}: primary action is not canonical petrol (${data.buttonBg})`);
       if (data.buttonRadius > 8) throw new Error(`${viewport.name}/${route.name}: button radius exceeds design system (${data.buttonRadius}px)`);
@@ -135,7 +135,7 @@ try {
   const interactionContext = await browser.newContext({ viewport: { width: 736, height: 1024 }, locale: 'de-DE' });
   const interactionPage = await interactionContext.newPage();
   await interactionPage.goto(`${base}/register?role=homeowner`, { waitUntil: 'networkidle' });
-  await interactionPage.locator('#role-tab-handwerker').click();
+  await interactionPage.locator('#role-toggle-partner').click();
   await interactionPage.getByText('Als Handwerksbetrieb registrieren', { exact: true }).waitFor();
   if (!(await interactionPage.locator('#reg-business').isVisible())) throw new Error('role switch does not expose provider registration fields');
 
@@ -143,7 +143,7 @@ try {
   await interactionPage.locator('#btn-forgot-password').click();
   if (!(await interactionPage.locator('dialog[open]').isVisible())) throw new Error('forgot-password dialog does not open');
   await interactionPage.getByRole('button', { name: 'Dialog schließen' }).click();
-  await interactionPage.locator('#link-agb').click();
+  await interactionPage.locator('#link-datenschutz').click();
   if (!(await interactionPage.locator('dialog[open]').isVisible())) throw new Error('legal dialog does not open');
   await interactionPage.keyboard.press('Escape');
   if (await interactionPage.locator('dialog[open]').count()) throw new Error('legal dialog does not close with Escape');

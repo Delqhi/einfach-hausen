@@ -139,7 +139,7 @@ export async function answerHausmeisterQuestion(userId:number,body:string,channe
   }else if(consumeCloudAction(userId).ok){
     reply=await answerHouseQuestion(body,context);
   }else{
-    reply='Dein kostenloses KI-Kontingent für diesen Monat ist aufgebraucht. Du kannst in den Einstellungen einen eigenen API-Key hinterlegen (unbegrenzt) oder über eine Werbeanzeige 10 weitere Aktionen freischalten. Für konkrete Aufträge kannst du natürlich jederzeit eine Anfrage stellen.';
+    reply='Dein kostenloses KI-Kontingent für diesen Monat ist aufgebraucht. Du kannst in den Einstellungen einen eigenen API-Key hinterlegen (die Limits deines Anbieterkontos gelten) oder über eine Werbeanzeige 10 weitere Aktionen freischalten. Für konkrete Aufträge kannst du natürlich jederzeit eine Anfrage stellen.';
   }
   addAgentMessage(threadId,'assistant',reply,{assistantOnly:true});
   return {threadId,reply};

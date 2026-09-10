@@ -1,3 +1,7 @@
+> **Audit 10.09: zuerst `docs/brand/assistant/REVIEW-20260910.md` lesen.** Zusätzliche belegte Auth-/Cookie-/Notfall-/KI-Settings-Befunde. Aufgaben EH-BRAND-07-WORKSPACE und EH-BRAND-08-ASSISTANT; laufende Produktions-WIP erhalten, keine Testlockerung.
+
+> **Neuer Kunden-Chat-Einstieg 2026-09-10:** `docs/brand/assistant/HANDOFF.md` lesen. Isolierte Lieferung auf feat/eh-assistant-launcher-20260910, bestehendes /api/ki, keine Login-Reparatur oder Backendänderung. Fullcode/Screenshots daneben; Integration/Liveabnahme offen.
+
 > **PR75 erweitert:** `docs/brand/team-workspace/HANDOFF.md` zuerst lesen. Zusätzlich Team-Arbeitsbereich und zwei kanonische Label-/Checkbox-Vererbungsfixes. Aktuellen gesamten PR-Head integrieren; frühere Aussage „keine Stiländerung“ gilt nur für die erste Hausakte-Lieferung. Kein paralleler Deploy.
 
 > **Neue Frontend-Lieferung 2026-09-09:** `docs/brand/house-workspace/HANDOFF.md` enthält Hausakte/Hausgeschichte, vollständige Quellen und lokale Integrationsschritte. Produktionsblocker aus früheren Notizen sind seit direkter Prüfung 18:32 UTC überholt: e45812e, Health200/ready. Gesamtprodukt nicht vollständig abgenommen.

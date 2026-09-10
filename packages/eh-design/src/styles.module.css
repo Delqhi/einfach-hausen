@@ -566,3 +566,43 @@
  .documentFrame :is(h1,h2,h3) { break-after:avoid; }
  .documentFrame [class~="invoice-totals"],.documentFrame [class~="passport-row"],.documentFrame [class~="receipt-total"] { break-inside:avoid; }
 }
+
+/* Customer assistant: one quiet launcher; native modal owns focus and Escape. */
+.assistantLauncher { position:fixed;right:24px;bottom:24px;z-index:40;display:flex;align-items:center;gap:14px;max-width:calc(100vw - 32px);min-height:64px;padding:12px 18px;border:1px solid var(--eh-color-line);border-radius:var(--eh-shape-panel);background:var(--eh-color-white);color:var(--eh-color-ink);text-align:left;font:inherit;cursor:pointer; }
+.assistantLauncher img,.assistantHeader img { object-fit:contain;flex-shrink:0; }
+.assistantLauncher strong { display:block;font-size:var(--eh-font-label);line-height:1.4; }
+.assistantLauncher small { display:block;font-size:var(--eh-font-meta);color:var(--eh-color-secondary);line-height:1.5; }
+.assistantLauncher:focus-visible { outline:3px solid var(--eh-color-petrol);outline-offset:3px; }
+.assistantDialog { position:fixed;inset:auto 24px 24px auto;margin:0;width:min(460px,calc(100vw - 32px));max-width:none;height:min(740px,calc(100dvh - 48px));max-height:none;padding:0;border:1px solid var(--eh-color-line);border-radius:var(--eh-shape-panel);background:var(--eh-color-paper);color:var(--eh-color-ink);overflow:hidden; }
+.assistantDialog[open] { display:flex;flex-direction:column; }
+.assistantDialog::backdrop { background:var(--eh-color-ink);opacity:.25; }
+.assistantHeader { display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--eh-color-white);border-bottom:1px solid var(--eh-color-line);flex-shrink:0; }
+.assistantHeader > div { flex:1;min-width:0; }
+.assistantHeader h2 { margin:0;font-weight:700;font-size:18px;line-height:1.4;letter-spacing:-.02em; }
+.assistantHeader span { font-size:var(--eh-font-meta);color:var(--eh-color-secondary); }
+.assistantHeader button { min-width:44px;font-size:24px;padding:0; }
+.assistantMessages { min-height:0;flex:1;overflow:auto;overscroll-behavior:contain;padding:24px 20px;display:flex;flex-direction:column;gap:20px; }
+.assistantWelcome h3 { font-weight:750;font-size:24px;line-height:1.2;letter-spacing:-.025em;margin:0 0 14px; }
+.assistantWelcome p + p { margin-top:12px; }
+.assistantMessage { max-width:100%;padding:14px 16px;border:1px solid var(--eh-color-line);border-radius:var(--eh-shape-panel);background:var(--eh-color-white);overflow-wrap:anywhere; }
+.assistantMessage[data-role="user"] { margin-left:24px;background:var(--eh-color-deep);color:var(--eh-color-paper); }
+.assistantMessage strong { font-size:var(--eh-font-meta); }
+.assistantMessage p,.assistantNotice p { margin:8px 0 0;font-size:16px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere; }
+.assistantNotice { padding:16px;border:1px solid var(--eh-color-line);background:var(--eh-color-sand);border-radius:var(--eh-shape-panel); }
+.assistantNotice p { margin:0 0 12px; }
+.assistantComposer { flex-shrink:0;display:grid;gap:14px;padding:16px 20px;background:var(--eh-color-white);border-top:1px solid var(--eh-color-line); }
+.assistantComposer textarea { max-height:160px;resize:vertical; }
+.assistantActions { display:flex;align-items:center;justify-content:space-between;gap:12px; }
+.assistantActions > a { font-size:var(--eh-font-meta);text-decoration:underline;text-underline-offset:3px; }
+@media(max-width:600px) {
+ .assistantLauncher { right:16px;bottom:calc(16px + env(safe-area-inset-bottom));padding:10px 14px;gap:10px; }
+ .assistantLauncher[data-above-nav] { bottom:calc(88px + env(safe-area-inset-bottom)); }
+ .assistantLauncher img { width:48px;height:34px; }
+ .assistantLauncher small { display:none; }
+ .assistantDialog { inset:8px;width:calc(100vw - 16px);height:calc(100dvh - 16px); }
+ .assistantComposer { padding-bottom:calc(16px + env(safe-area-inset-bottom)); }
+ .assistantHeader,.assistantComposer,.assistantMessages { padding-inline:16px; }
+}
+@media print { .assistantLauncher,.assistantDialog { display:none!important; } }
+
+@media(min-width:601px) and (max-width:999px) { .assistantLauncher[data-above-nav] { bottom:calc(88px + env(safe-area-inset-bottom)); } }

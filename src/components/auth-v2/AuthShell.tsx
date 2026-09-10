@@ -1,232 +1,102 @@
 "use client";
 
-import React, { useState, useSyncExternalStore } from "react";
-
-// Ein einzelnes LoginForm im DOM (keine doppelten IDs, keine Strict-Violations):
-// Desktop (>=1024px, wie .eh-auth-desktop/.eh-auth-mobile in auth-shell.css)
-// zeigt Hero+Formular, darunter die Tab-Ansicht. SSR rendert mobil.
-function useIsDesktop() {
-  return useSyncExternalStore(
-    (cb) => {
-      const mq = window.matchMedia("(min-width: 1024px)");
-      mq.addEventListener("change", cb);
-      return () => mq.removeEventListener("change", cb);
-    },
-    () => window.matchMedia("(min-width: 1024px)").matches,
-    () => false,
-  );
-}
+import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "motion/react";
-import { HeroPanel } from "@/components/auth-v2/HeroPanel";
-import { LoginForm, Role, AuthMode } from "@/components/auth-v2/LoginForm";
-import { Logo } from "@/components/auth-v2/Logo";
-import { LegalModal } from "@/components/auth-v2/LegalModal";
-import "@/components/auth-v2/auth-shell.css";
-import { HelpCircle, Sparkles, Home, Wrench, Award, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { LoginForm, type AuthMode, type Role } from "./LoginForm";
+import { LegalModal } from "./LegalModal";
+import "./auth-shell.css";
 
-export function AuthShell({ initialAuthMode = "login", initialRole = "kunde", nextPath }: { initialAuthMode?: AuthMode; initialRole?: Role; nextPath?: string }) {
-  const [mobileTab, setMobileTab] = useState<"login" | "vorteile">("login");
+type LegalType = "agb" | "datenschutz" | "impressum" | "sicherheit" | "partnerkriterien";
+
+const FEATURES = [
+  {
+    title: "Hausakte",
+    text: "Dokumente, Wartung und Historie bleiben dauerhaft beim Haus – nicht in E-Mail-Postfächern.",
+  },
+  {
+    title: "Termine & Aufträge",
+    text: "Angebote nach Preis, Termin und Qualität vergleichen und bewusst buchen.",
+  },
+  {
+    title: "Ansprechpartner",
+    text: "Ein konkreter Mensch, der dein Haus kennt – erreichbar auch ohne neuen Auftrag.",
+  },
+] as const;
+
+export function AuthShell({
+  initialAuthMode = "login",
+  initialRole = "kunde",
+  nextPath,
+}: {
+  initialAuthMode?: AuthMode;
+  initialRole?: Role;
+  nextPath?: string;
+}) {
   const [role, setRole] = useState<Role>(initialRole);
-  const isDesktop = useIsDesktop();
-  const [showHelpToast, setShowHelpToast] = useState(false);
-  const [activeLegalModal, setActiveLegalModal] = useState<"agb" | "datenschutz" | "impressum" | "sicherheit" | "partnerkriterien" | null>(null);
-
-  const handleRoleSelectFromHero = (newRole: Role) => {
-    setRole(newRole);
-    if (mobileTab === "vorteile") {
-      setMobileTab("login");
-    }
-  };
+  const [activeLegalModal, setActiveLegalModal] = useState<LegalType | null>(null);
 
   return (
-    <div
-      id="main-app-container"
-      className="eh-auth font-sans"
-    >
-      <header
-        id="top-brand-bar"
-        className="eh-auth-topbar"
-      >
-        <div className="flex items-center gap-2.5 sm:gap-3">
-          <Link href="/" aria-label="Zur Startseite"><Logo variant="dark" size="sm" /></Link>
-          <div className="eh-auth-brand-context hidden sm:flex items-center gap-2 border-l border-[var(--eh-border,#e4e2dc)] pl-3">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={role}
-                initial={{ opacity: 0, y: -3 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 3 }}
-                transition={{ duration: 0.15 }}
-                className="flex items-center gap-2"
-              >
-                <span className="hidden md:inline-flex text-xs sm:text-[13px] text-stone-600 font-medium">
-                  {role === "kunde" ? "Dein Zuhause. Organisiert." : "Aufträge & Partnernetzwerk."}
-                </span>
-                <span
-                  className={`text-[11px] font-bold px-2 py-0.5 rounded-md border transition-colors ${
-                    role === "kunde"
-                      ? "bg-white text-[var(--eh-terra,#c8623a)] border-[var(--eh-border,#e4e2dc)]"
-                      : "bg-[var(--eh-green-50,#edf5f5)] text-[var(--eh-text,#1c2129)] border-[var(--eh-green-100,#dcebec)]"
-                  }`}
-                >
-                  {role === "kunde" ? "Eigentümer-Portal" : "Handwerker-Portal"}
-                </span>
-              </motion.div>
-            </AnimatePresence>
+    <div className="arena-auth">
+      <aside className="arena-hero" aria-label="Über Einfach Hausen">
+        <div className="arena-hero-inner">
+          <div>
+            <Link href="/" aria-label="Zur Startseite" className="arena-brand-link">
+              <img src="/brand/LOGO_white.png" alt="einfachhausen" width={172} height={115} className="arena-brand-logo" />
+              <span className="arena-brand-tag">EIN ANSPRECHPARTNER FÜR ALLE</span>
+            </Link>
+          </div>
+
+          <div>
+            <p className="arena-eyebrow"><span className="arena-eyebrow-num">01</span><span>DEIN EINFACHHAUSEN-KONTO</span></p>
+            <h1>Du sagst, was dein Haus braucht. Wir kümmern uns um den Rest.</h1>
+            <p className="arena-hero-sub">Ein Konto für dein ganzes Zuhause: Hausakte, Termine, Aufträge und die Menschen, die dein Haus kennen – an einem Ort.</p>
+          </div>
+
+          <ol className="arena-features">
+            {FEATURES.map((item, index) => (
+              <li key={item.title}>
+                <span className="num" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <strong>{item.title}</strong>
+                  <p>{item.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          <div className="arena-hero-foot">
+            <span>© 2026 Einfach Hausen</span>
+            <nav aria-label="Rechtliches">
+              <button type="button" id="link-impressum" className="arena-link-btn" onClick={() => setActiveLegalModal("impressum")}>Impressum</button>
+              <button type="button" id="link-datenschutz" className="arena-link-btn" onClick={() => setActiveLegalModal("datenschutz")}>Datenschutz</button>
+            </nav>
           </div>
         </div>
+      </aside>
 
-        <div className="eh-auth-topbar-role-switch hidden lg:flex items-center p-0.5 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] text-xs font-semibold">
-          <button
-            id="topbar-role-kunde"
-            type="button"
-            onClick={() => handleRoleSelectFromHero("kunde")}
-            className={`relative px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
-              role === "kunde" ? "text-[var(--eh-text,#1c2129)] font-bold" : "text-stone-600 hover:text-[var(--eh-text,#1c2129)]"
-            }`}
-          >
-            {role === "kunde" && (
-              <motion.div
-                layoutId="topbarActiveRole"
-                className="absolute inset-0 bg-white rounded-lg shadow-2xs border border-[var(--eh-border,#e4e2dc)]"
-                transition={{ type: "spring", stiffness: 480, damping: 36 }}
-              />
-            )}
-            <span className="relative z-10 flex items-center gap-1.5">
-              <Home className={`w-3.5 h-3.5 ${role === "kunde" ? "text-[var(--eh-terra,#c8623a)]" : "text-stone-400"}`} />
-              <span>Eigentümer</span>
+      <main className="arena-main">
+        <div className="arena-topbar">
+          <Link href="/" aria-label="Zur Startseite" className="arena-topbar-link">
+            <img src="/brand/logo-full.png" alt="einfachhausen" width={120} height={83} className="arena-topbar-logo" />
+            <span className="arena-topbar-label">
+              <ArrowLeft size={16} aria-hidden="true" /> Zur Website
             </span>
-          </button>
-          <button
-            id="topbar-role-handwerker"
-            type="button"
-            onClick={() => handleRoleSelectFromHero("handwerker")}
-            className={`relative px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
-              role === "handwerker" ? "text-[var(--eh-text,#1c2129)] font-bold" : "text-stone-600 hover:text-[var(--eh-text,#1c2129)]"
-            }`}
-          >
-            {role === "handwerker" && (
-              <motion.div
-                layoutId="topbarActiveRole"
-                className="absolute inset-0 bg-white rounded-lg shadow-2xs border border-[var(--eh-border,#e4e2dc)]"
-                transition={{ type: "spring", stiffness: 480, damping: 36 }}
-              />
-            )}
-            <span className="relative z-10 flex items-center gap-1.5">
-              <Wrench className={`w-3.5 h-3.5 ${role === "handwerker" ? "text-[var(--eh-text,#1c2129)]" : "text-stone-400"}`} />
-              <span>Handwerksbetrieb</span>
-            </span>
-          </button>
-        </div>
-
-        <div className="eh-auth-topbar-actions flex items-center gap-2 sm:gap-3 text-xs sm:text-[13px]">
-          <AnimatePresence mode="wait">
-            <motion.button
-              key={role}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.15 }}
-              type="button"
-              onClick={() => setActiveLegalModal("partnerkriterien")}
-              title={role === "kunde" ? "Qualitätsstandards einsehen" : "Aufnahmekriterien für Partnerbetriebe einsehen"}
-              className={`eh-auth-network-badge hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-all cursor-pointer group ${
-                role === "kunde"
-                  ? "bg-[var(--eh-green-50,#edf5f5)] hover:bg-[var(--eh-green-100,#dcebec)] text-[var(--eh-green-700,#105258)] border-[var(--eh-green-100,#dcebec)]"
-                  : "bg-[var(--eh-green-50,#edf5f5)] hover:bg-[var(--eh-green-100,#dcebec)] text-[var(--eh-text,#1c2129)] border-[var(--eh-green-100,#dcebec)]"
-              }`}
-            >
-              {role === "kunde" ? (
-                <>
-                  <Users className="w-4 h-4 text-[var(--eh-green-700,#105258)] group-hover:scale-105 transition-transform" />
-                  <span>Qualität im Netzwerk</span>
-                </>
-              ) : (
-                <>
-                  <Award className="w-4 h-4 text-[var(--eh-text,#1c2129)] group-hover:scale-105 transition-transform" />
-                  <span>Region & Vertrauen</span>
-                </>
-              )}
-            </motion.button>
-          </AnimatePresence>
-
-          <button
-            id="btn-header-help"
-            type="button"
-            aria-label="Hilfe"
-            onClick={() => {
-              setShowHelpToast(true);
-              setTimeout(() => setShowHelpToast(false), 3500);
-            }}
-            className="px-3 py-1.5 text-stone-600 hover:text-[var(--eh-text,#1c2129)] hover:bg-stone-200/50 rounded-lg font-medium text-xs sm:text-[13px] flex items-center gap-1.5 transition-colors cursor-pointer"
-          >
-            <HelpCircle className="w-4 h-4" />
-            <span className="hidden sm:inline">Hilfe</span>
-          </button>
-
-          {!isDesktop && (
-          <div className="eh-auth-mobile-tabs lg:hidden flex items-center p-1 bg-[var(--eh-surface-subtle,#f2f5f5)] rounded-xl border border-[var(--eh-border,#e4e2dc)] shadow-inner">
-            <button
-              type="button"
-              onClick={() => setMobileTab("login")}
-              className={`relative px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                mobileTab === "login" ? "text-[var(--eh-text,#1c2129)]" : "text-stone-600 hover:text-stone-900"
-              }`}
-            >
-              {mobileTab === "login" && (
-                <motion.div
-                  layoutId="mobileTabPill"
-                  className="absolute inset-0 bg-white rounded-lg shadow-sm border border-[var(--eh-border,#e4e2dc)]"
-                  transition={{ type: "spring", stiffness: 500, damping: 38 }}
-                />
-              )}
-              <span className="relative z-10 flex items-center gap-1.5">
-                <span>{initialAuthMode === "register" ? "Registrieren" : "Anmelden"}</span>
-              </span>
+          </Link>
+          {role === "kunde" ? (
+            <button type="button" id="role-toggle-partner" className="arena-link-btn arena-role-toggle" onClick={() => setRole("handwerker")}>
+              Partner-Login <ArrowRight size={16} aria-hidden="true" />
             </button>
-            <button
-              type="button"
-              onClick={() => setMobileTab("vorteile")}
-              className={`relative px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                mobileTab === "vorteile" ? "text-[var(--eh-text,#1c2129)]" : "text-stone-600 hover:text-stone-900"
-              }`}
-            >
-              {mobileTab === "vorteile" && (
-                <motion.div
-                  layoutId="mobileTabPill"
-                  className="absolute inset-0 bg-white rounded-lg shadow-sm border border-[var(--eh-border,#e4e2dc)]"
-                  transition={{ type: "spring", stiffness: 500, damping: 38 }}
-                />
-              )}
-              <span className="relative z-10 flex items-center gap-1.5">
-                <span>Vorteile</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--eh-terra,#c8623a)]" />
-              </span>
+          ) : (
+            <button type="button" id="role-toggle-kunde" className="arena-link-btn arena-role-toggle" onClick={() => setRole("kunde")}>
+              <ArrowLeft size={16} aria-hidden="true" /> Kunden-Login
             </button>
-          </div>
           )}
         </div>
-      </header>
 
-      {showHelpToast && (
-        <div className="fixed top-16 right-4 z-50 p-3 bg-[var(--eh-text,#1c2129)] text-white text-xs rounded-xl shadow-xl border border-white/20 flex items-center gap-2 animate-in fade-in duration-150">
-          <Sparkles className="w-4 h-4 text-[var(--eh-terra,#c8623a)] shrink-0" />
-          <span>Hilfe & Antworten: <Link href="/hilfe" className="underline font-semibold">Zur Hilfe-Seite</Link></span>
-        </div>
-      )}
-
-      <main className="eh-auth-main">
-        {isDesktop ? (
-        <div className="eh-auth-grid eh-auth-desktop">
-          <section className="eh-auth-hero">
-            <HeroPanel
-              role={role}
-              onSelectRole={handleRoleSelectFromHero}
-              onOpenLegalModal={setActiveLegalModal}
-            />
-          </section>
-          <section className="eh-auth-form">
+        <div className="arena-formcol">
+          <div className="arena-forminner">
+            <p className="arena-eyebrow"><span className="arena-eyebrow-num">02</span><span>ANMELDUNG</span></p>
             <LoginForm
               role={role}
               initialAuthMode={initialAuthMode}
@@ -234,49 +104,8 @@ export function AuthShell({ initialAuthMode = "login", initialRole = "kunde", ne
               onRoleChange={setRole}
               onOpenLegalModal={setActiveLegalModal}
             />
-          </section>
+          </div>
         </div>
-        ) : (
-        <div className="eh-auth-mobile">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={mobileTab}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.18, ease: "easeOut" }}
-              className="w-full max-w-md my-auto py-1"
-            >
-              <h1 className="sr-only">{initialAuthMode === "register" ? "Konto anlegen" : "Anmelden — Einfach Hausen"}</h1>
-              {mobileTab === "login" ? (
-                <>
-                  <LoginForm
-                    role={role}
-                    initialAuthMode={initialAuthMode}
-                    nextPath={nextPath}
-                    onRoleChange={setRole}
-                    onOpenLegalModal={setActiveLegalModal}
-                  />
-                  <button
-                    type="button"
-                    className="eh-auth-mobile-benefits-link"
-                    onClick={() => setMobileTab("vorteile")}
-                  >
-                    Warum einfachhausen? Vorteile ansehen
-                  </button>
-                </>
-              ) : (
-                <HeroPanel
-                  role={role}
-                  onSelectRole={handleRoleSelectFromHero}
-                  onOpenLegalModal={setActiveLegalModal}
-                  onSwitchToLogin={() => setMobileTab("login")}
-                />
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-        )}
       </main>
 
       <LegalModal

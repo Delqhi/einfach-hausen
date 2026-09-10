@@ -4,6 +4,7 @@ import './globals.css';
 import '../../packages/eh-design/src/tokens.css';
 import './design-system.css';
 import '@/components/marketing/tokens.css';
+import { HouseAssistant } from '@/components/house-assistant';
 import { PwaRegister } from '@/components/pwa-register';
 import { AuthProvider } from '@/components/AuthContext';
 import NativeInit from '@/components/NativeInit';
@@ -45,5 +46,5 @@ export default async function RootLayout({children}:{children:React.ReactNode}){
     const { headers } = await import('next/headers');
     correlationId = (await headers()).get('x-correlation-id') ?? '';
   } catch { /* static render: no correlation id */ }
-  return <html lang="de" data-scroll-behavior="smooth" data-correlation-id={correlationId} className={interVariable.variable}><body><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(orgWebsiteJsonLd())}} /><NativeInit><AuthProvider><PwaRegister/><CwvTelemetry/>{children}</AuthProvider></NativeInit></body></html>;
+  return <html lang="de" data-scroll-behavior="smooth" data-correlation-id={correlationId} className={interVariable.variable}><body><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(orgWebsiteJsonLd())}} /><NativeInit><AuthProvider><PwaRegister/><CwvTelemetry/>{children}<HouseAssistant/></AuthProvider></NativeInit></body></html>;
 }
