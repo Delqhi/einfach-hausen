@@ -57,6 +57,8 @@
     "test:inventory": "node scripts/data-inventory-check.mjs"
   },
   "dependencies": {
+    "@capacitor/core": "^8.5.1",
+    "@capacitor/ios": "^8.5.1",
     "@capacitor/keyboard": "^8.0.5",
     "@capacitor/status-bar": "^8.0.3",
     "@gsap/react": "^2.1.2",
