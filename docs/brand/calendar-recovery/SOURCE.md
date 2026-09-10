@@ -1,3 +1,10 @@
+# Vollständiger Quelltext
+
+## src/app/pro/calendar/page.tsx
+
+SHA256: c7499e126b47540978f18cae24b24072d1845a4d5bc5b51779c1a939463344f8
+
+```tsx
 import { CalendarDays } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import { ProviderAccessBoundary, ProviderPageIntro, ProviderState } from '@/components/provider/workspace';
@@ -58,3 +65,4 @@ export default async function ProCalendar() {
     </AppShell>
   );
 }
+```
