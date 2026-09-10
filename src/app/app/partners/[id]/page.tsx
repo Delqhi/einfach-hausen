@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { ArrowLeft, BadgeCheck, ChevronRight } from 'lucide-react';
-import { EHAppHeader, EHPanel, EHList, EHEmptyState, EHErrorState, EHButton, EHField, EHInput } from '@/design-system';
+import { BadgeCheck, ChevronRight } from 'lucide-react';
+import { EHAppHeader, EHPanel, EHList, EHEmptyState, EHErrorState, EHButton, EHField, EHInput, EHFormFeedback, EHSubmitButton } from '@/design-system';
 import { notFound } from 'next/navigation';
 import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
@@ -14,7 +14,7 @@ export default async function PartnerProfile({params,searchParams}:{params:Promi
   const trades=String(provider.trades||'').split(',').map((x:string)=>x.trim()).filter(Boolean).slice(0,6);
   const returnHref=sp.job?`/app/jobs/${Number(sp.job)}`:'/app/jobs';
   return <AppShell role="homeowner" active="/app/jobs" title="Partnerprofil" subtitle="Geprüfter Einfach-Hausen-Partner">
-    {sp.message&&<div className="alert success" role="status">{String(sp.message)}</div>}
+    {sp.message&&<EHFormFeedback kind="success">{String(sp.message)}</EHFormFeedback>}
     {sp.error&&<EHErrorState text={String(sp.error)} />}
     <EHButton href={returnHref} variant="secondary">Zurück</EHButton>
     <EHAppHeader eyebrow="Geprüfter Partner" title={provider.business_name} text={`${Number(provider.rating||0).toFixed(1)} von 5 aus ${provider.rating_count||0} Bewertungen — ${provider.description||'Zuverlässiger regionaler Vertragspartner für Arbeiten rund ums Eigenheim.'}`} />
@@ -31,7 +31,7 @@ export default async function PartnerProfile({params,searchParams}:{params:Promi
       { id: 'qualitaet', title: provider.quality_standard_verified?'Bestätigt':'In Prüfung', text: 'Qualitätsstandard' },
     ]} />
     <EHPanel title={`Bewertungen · ${provider.rating_count||0} insgesamt`}>
-    {reviews.map((r:any,i:number)=><article key={`${r.created_at}-${i}`}><div><strong>{r.first_name||'Kunde'}</strong><span>★ {r.rating}/5</span></div><p>{r.comment||'Zuverlässig ausgeführt.'}</p><details><summary>Melden</summary><form action={reportReviewAction.bind(null,r.id)}><EHField id={`report-${r.id}`} label="Grund der Meldung"><EHInput id={`report-${r.id}`} name="reason" maxLength={500} placeholder="Was stimmt an dieser Bewertung nicht?" aria-label="Grund der Meldung" required/></EHField><button>Bewertung melden</button></form></details></article>)}
+    {reviews.map((r:any,i:number)=><article key={`${r.created_at}-${i}`}><div><strong>{r.first_name||'Kunde'}</strong><span>★ {r.rating}/5</span></div><p>{r.comment||'Zuverlässig ausgeführt.'}</p><details><summary>Melden</summary><form action={reportReviewAction.bind(null,r.id)}><EHField id={`report-${r.id}`} label="Grund der Meldung"><EHInput id={`report-${r.id}`} name="reason" maxLength={500} placeholder="Was stimmt an dieser Bewertung nicht?" aria-label="Grund der Meldung" required/></EHField><EHSubmitButton pendingLabel="Meldung wird gesendet …">Bewertung melden</EHSubmitButton></form></details></article>)}
     {reviews.length===0&&<EHEmptyState title="Noch keine öffentliche Bewertung" text="Der Betrieb ist geprüft und neu im Netzwerk." />}
     </EHPanel>
     <Link href={returnHref} className="btn primary wide partner-return">{sp.job?'Zum Angebot zurück':'Aufträge ansehen'} <ChevronRight size={16}/></Link>

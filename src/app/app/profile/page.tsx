@@ -1,4 +1,3 @@
-import { ChevronRight, UserRound } from 'lucide-react';
 import { EHAppHeader, EHList, EHCallout, EHField, EHInput, EHWorkspaceGrid, EHIdentitySummary, EHWorkflowForm, EHFormSection, EHFieldGrid, EHSubmitButton, EHWorkSection } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { InstallAppCard } from '@/components/install-app-card';
@@ -27,9 +26,9 @@ export default async function Profile(){
     <EHList label="Profilbereiche" items={[
       { id: 'plans', title: 'Zahlungen & Mitgliedschaft', href: '/app/plans' },
       { id: 'notifications', title: 'Benachrichtigungen', href: '/notifications' },
-      { id: 'security', title: 'Sicherheit', text: 'Geschützte Sitzung' },
-      { id: 'help', title: 'Hilfe & Support', text: 'Direkte Unterstützung' },
-      { id: 'settings', title: 'App-Einstellungen', text: 'Installation & Gerät' },
+      { id: 'security', title: 'Sicherheit', text: 'Geschützte Sitzung', href: '/app/settings' },
+      { id: 'help', title: 'Hilfe & Support', text: 'Direkte Unterstützung', href: '/app/hilfe' },
+      { id: 'settings', title: 'App-Einstellungen', text: 'Installation & Gerät', href: '/app/settings' },
     ]} />
 
     </EHWorkSection>

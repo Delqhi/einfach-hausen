@@ -10,7 +10,7 @@ import { acceptQuoteAction,cancelJobAction,createCheckoutAction,createClaimActio
 import { dateLabel,euro,statusLabel } from '@/lib/format';
 import { getQuoteRecommendations } from '@/lib/orchestrator';
 import { SubmitButton } from '@/components/ui/submit-button';
-import { EHAppHeader, EHPanel, EHEmptyState, EHErrorState, EHStatus, EHWorkspaceGrid, EHWorkSection } from '@/design-system';
+import { EHAppHeader, EHPanel, EHEmptyState, EHErrorState, EHStatus, EHWorkspaceGrid, EHWorkSection, EHFormFeedback } from '@/design-system';
 
 function emergencyAvailability(value?:string|null){
   if(!value)return 'Zeit nach Rückmeldung';
@@ -63,7 +63,7 @@ export default async function JobDetail({params,searchParams}:{params:Promise<{i
   return <AppShell role="homeowner" active="/app/jobs">
     <EHWorkspaceGrid main={<>     <EHAppHeader eyebrow={job.category} title={job.title} text={job.description} actions={<><EHStatus tone="neutral">{statusLabel(job.status)}</EHStatus>{job.urgency==='emergency'&&<EHStatus tone="error">NOTFALL</EHStatus>}</>} /> </>} aside={<EHWorkSection title="Dein Auftrag"><div className="meta-line"><span><MapPin/>{job.postcode}</span><span><CalendarDays/>{dateLabel(job.preferred_date)}</span></div>{job.photo_id&&<JobMedia src={`/api/job-media/${job.photo_id}`} alt="Foto, Video oder Sprachnachricht zum Auftrag" kind={mediaKindFromPath(job.photo_path)}/> }
 </EHWorkSection>} />
-    {sp.error&&<EHErrorState text={sp.error} />}{sp.cancelled==='1'&&<div className="alert success" role="status" aria-live="polite">Auftrag wurde storniert.</div>}{sp.payment==='processing'&&<div className="alert success" role="status" aria-live="polite">Zahlung eingegangen. Der endgültige Status wird sicher über Stripe bestätigt.</div>}{sp.payment==='unavailable'&&<div className="alert error" role="alert">Onlinezahlung ist derzeit nicht vollständig konfiguriert. Es wurde kein Zahlungsstatus geändert. Stimme die Zahlung direkt mit deinem Ansprechpartner ab oder versuche es später erneut.</div>}{sp.payment==='cancelled'&&<div className="alert error" role="alert">Zahlung wurde abgebrochen. Es wurde nichts belastet.</div>}
+    {sp.error&&<EHErrorState text={sp.error} />}{sp.cancelled==='1'&&<EHFormFeedback kind="success">Auftrag wurde storniert.</EHFormFeedback>}{sp.payment==='processing'&&<EHFormFeedback kind="success">Zahlung eingegangen. Der endgültige Status wird sicher über Stripe bestätigt.</EHFormFeedback>}{sp.payment==='unavailable'&&<EHErrorState text="Onlinezahlung ist derzeit nicht vollständig konfiguriert. Es wurde kein Zahlungsstatus geändert. Stimme die Zahlung direkt mit deinem Ansprechpartner ab oder versuche es später erneut." />}{sp.payment==='cancelled'&&<EHErrorState text="Zahlung wurde abgebrochen. Es wurde nichts belastet." />}
 
     <div className={job.urgency==='emergency'?"ai-summary emergency-summary":"ai-summary"}><Sparkles/><div><strong>{job.urgency==='emergency'?'Wir suchen jetzt verfügbare Hilfe':'Einfach Hausen organisiert'}</strong><p>Richtpreis {job.budget_min&&job.budget_max?`${euro(job.budget_min)}–${euro(job.budget_max)}`:'wird ermittelt'}. {dispatches.total||0} vertragliche Partner wurden angefragt. Qualität und Kundenzufriedenheit haben Vorrang — kein Partner kann sich im Matching nach oben kaufen.</p></div></div>
 

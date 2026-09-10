@@ -19,7 +19,6 @@ interface LoginFormProps {
   initialAuthMode?: AuthMode;
   nextPath?: string;
   onRoleChange?: (role: Role) => void;
-  onOpenLegalModal?: (type: LegalType) => void;
 }
 
 type LegalType = "agb" | "datenschutz" | "impressum" | "sicherheit" | "partnerkriterien";
@@ -30,7 +29,6 @@ export function LoginForm({
   initialAuthMode = "login",
   nextPath,
   onRoleChange,
-  onOpenLegalModal,
 }: LoginFormProps = {}) {
   const router = useRouter();
   const [internalRole, setInternalRole] = useState<Role>(initialRole);
@@ -50,11 +48,6 @@ export function LoginForm({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
   const [legalModalType, setLegalModalType] = useState<LegalType | null>(null);
-
-  const openLegal = (type: LegalType) => {
-    if (onOpenLegalModal) onOpenLegalModal(type);
-    else setLegalModalType(type);
-  };
 
   // Pending lock: no competing role/mode changes while a request is in flight.
   const setRole = (value: Role) => {
@@ -76,7 +69,7 @@ export function LoginForm({
       const supabase = await getLoginSupabase(remember);
       const { error } = await supabase.auth.signInWithPassword({ email: demoEmailFor(email), password: pw });
       if (error) {
-        setErrorMessage(error.message === "Invalid login credentials" ? "E-Mail oder Passwort falsch." : error.message);
+        setErrorMessage(error.message === "Invalid login credentials" ? "E-Mail oder Passwort falsch." : "Anmeldung fehlgeschlagen. Bitte versuch es erneut.");
         setIsLoading(false);
         return;
       }

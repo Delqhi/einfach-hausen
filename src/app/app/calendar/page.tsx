@@ -1,5 +1,5 @@
 import { AppShell } from '@/components/shell';
-import { EHAppHeader, EHWorkSection, EHScheduleList, EHList, EHEmptyState, EHButton, EHStatus } from '@/design-system';
+import { EHAppHeader, EHWorkSection, EHScheduleList, EHList, EHEmptyState, EHButton } from '@/design-system';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { dateLabel,statusLabel } from '@/lib/format';
