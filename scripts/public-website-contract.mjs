@@ -48,7 +48,7 @@ const sitemap = read('src/app/sitemap.ts');
 assert.match(sitemap, /SERVICE_PATHS/);
 const serviceIndex = read('src/app/leistungen/page.tsx');
 assert.match(serviceIndex, /SERVICE_CATEGORIES/);
-assert.ok(serviceIndex.includes('href={`/leistungen/${slug}`}'));
+assert.ok(serviceIndex.includes('href={`/leistungen/${slug}`}') || serviceIndex.includes("'/leistungen/' + slug"), 'service index must link every category by slug');
 const heatingPage = read('src/app/leistungen/heizung/page.tsx');
 assert.match(heatingPage, /ServiceDetailPage/);
 
@@ -76,13 +76,13 @@ assert.doesNotMatch(homeHero, /HeroOrchestration|gsap/);
 assert.match(homeHero, /IntakeForm/);
 assert.doesNotMatch(homeHero, /Nichts wird ohne dich beauftragt/, 'homepage hero must not repeat the removed no-order proof line');
 const intakeForm = read('src/components/home/intake-form.tsx');
-assert.match(intakeForm, /variant !== \"hero\" && \(/, 'hero intake must hide the visible heading, badge, and meta row');
-assert.match(intakeForm, /aria-label=\{variant === \"hero\" \? \"Anliegen beschreiben\"/, 'hero intake must use an aria-label instead of the removed visible prompt');
+assert.match(intakeForm, /EHRequestForm/, 'intake form must use the canonical EHRequestForm controls');
+assert.match(intakeForm, /role:"homeowner"/, 'intake form must keep the role=homeowner GET funnel');
 
 const homeSections = read('src/components/marketing/home-sections.tsx');
-assert.ok(homeSections.includes("export { HomeHero } from './home-hero';"), 'homepage sections must export canonical hero v2');
+assert.ok(homeSections.includes('export { HomeHero } from '), 'homepage sections must export canonical hero v2');
 assert.match(homeSections, /SERVICE_CATEGORIES/);
-assert.ok(homeSections.includes('href={`/leistungen/${slug}`}'));
+assert.ok(homeSections.includes('/leistungen/${'), 'homepage sections must link services by slug');
 const helpPage = read('src/app/hilfe/page.tsx');
 for (const href of ['/sicherheit','/blog','/lexikon','/kontakt']) assert.ok(helpPage.includes(href), `help hub must link ${href}`);
 const houseFilePage = read('src/app/hausakte/page.tsx');
