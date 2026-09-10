@@ -32,6 +32,7 @@ export default async function Plans({ searchParams }: { searchParams: Promise<Re
     {(sp.checkout === 'success' || sp.checkout === 'processing') && <EHFormFeedback kind="info">Du bist vom Abschluss zurückgekehrt. Entscheidend ist der bestätigte Status deiner Mitgliedschaft oder Paketbuchung unten; die Rückkehr allein bestätigt keine Zahlung.</EHFormFeedback>}
     {sp.checkout === 'cancelled' && <EHFormFeedback kind="info">Der Bezahlvorgang wurde abgebrochen. Prüfe unten deinen aktuellen Status, bevor du erneut startest.</EHFormFeedback>}
     {sp.checkout === 'unavailable' && <EHErrorState text="Onlinezahlung ist gerade nicht verfügbar. Bitte versuche es später erneut." />}
+    {sp.switch === 'done' && <EHFormFeedback kind="success">Deine bezahlte Mitgliedschaft wurde beendet und der Wechsel auf Free bestätigt. Dein Hauskonto bleibt kostenlos nutzbar.</EHFormFeedback>}
 
     <EHWorkspaceGrid main={<EHPanel title={current ? current.title : 'Dein kostenloses Hauskonto'} label="Aktueller Stand">
       <EHStatus tone={current?.status === 'past_due' ? 'warning' : current?.status === 'active' ? 'success' : 'neutral'}>{current ? stateLabel[current.status] || 'Status prüfen' : 'Ohne bezahlte Mitgliedschaft'}</EHStatus>
