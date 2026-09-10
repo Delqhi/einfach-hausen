@@ -74,8 +74,8 @@ try {
   await wideLogin.goto(`${base}/login`, { waitUntil: 'networkidle' });
   const wideGeometry = await wideLogin.evaluate(() => {
     const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect();
-    const grid = rect('.eh-auth-grid');
-    const hero = rect('#website-hero-panel');
+    const grid = rect('.arena-auth');
+    const hero = rect('.arena-hero');
     const card = rect('#login-card-container');
     return { gridWidth: grid?.width || 0, heroWidth: hero?.width || 0, cardWidth: card?.width || 0 };
   });
