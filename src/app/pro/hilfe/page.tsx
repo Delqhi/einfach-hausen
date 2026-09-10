@@ -8,6 +8,7 @@ const sections = [
     text: 'Hier l\u00e4uft dein Tagesgesch\u00e4ft: Anfragen pr\u00fcfen, Angebote schreiben und gebuchte Auftr\u00e4ge bis zur Fertigstellung begleiten. Jeder Vorgang zeigt dir den aktuellen Stand und den n\u00e4chsten sinnvollen Schritt.',
     links: [
       { href: '/pro/orders', label: 'Zu Auftr\u00e4ge & Kontakte' },
+      { href: '/pro/jobs', label: 'Zu den Auftragsdetails' },
     ],
   },
   {
