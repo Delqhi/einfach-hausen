@@ -46,7 +46,7 @@ export default async function Hausmeister({searchParams}:{searchParams:Promise<R
           </div>
         </div></EHPanel>}
         {draft&&<div className="route-progress" role="status" aria-live="polite"><span>{draft.intent==='contact'?<MessageCircle/>:<ClipboardCheck/>}</span><div><strong>{draft.intent==='contact'?'Ansprechpartner finden':'Auftrag organisieren'}</strong><small>{draft.intent==='contact'?'Nur noch eine kurze Info, dann suchen wir den passenden Menschen.':'Nur noch eine kurze Info, dann können passende Partner angefragt werden.'}</small></div></div>}
-        <div id="hausmeister-composer" className="owner-housemaster-composer"><HomeownerHausmeisterComposer continuingIntent={draft?.intent} starterHint={starterHint}/></div>
+        <div id="hausmeister-composer" className="owner-housemaster-composer"><HomeownerHausmeisterComposer continuingIntent={draft?.intent} starterHint={starterHint} incomingDraft={typeof sp.draft === 'string' ? sp.draft : undefined}/></div>
       </div>
       <div className="trust-strip housemaster-trust"><span><HelpCircle/> Frage klären</span><span><MessageCircle/> Ansprechpartner auf Wunsch</span><span><Wrench/> Auftrag nur nach Freigabe</span></div>
     </div>
