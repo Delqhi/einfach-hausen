@@ -6,7 +6,6 @@ interface ForgotPasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultEmail?: string;
-  onPasswordResetSuccess?: (email: string, newPassword?: string) => void;
 }
 
 export function ForgotPasswordModal({

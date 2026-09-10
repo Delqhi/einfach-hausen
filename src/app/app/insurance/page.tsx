@@ -1,10 +1,9 @@
 import Link from 'next/link';
-import { FileWarning, ShieldCheck } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import { HausmeisterAssistant } from '@/components/homeowner/hausmeister-assistant';
 import { createInsuranceSupportAction } from '@/app/actions';
 import { requireUser } from '@/lib/auth';
-import { EHAppHeader, EHPanel, EHEmptyState, EHErrorState, EHButton, EHField, EHTextarea } from '@/design-system';
+import { EHAppHeader, EHPanel, EHEmptyState, EHErrorState, EHButton, EHField, EHTextarea, EHSubmitButton, EHFormFeedback } from '@/design-system';
 import { db } from '@/lib/db';
 
 type InsuranceJob = {
@@ -38,7 +37,7 @@ export default async function InsuranceSupport({ searchParams }: { searchParams:
   return <AppShell role="homeowner" active="/app" title="Versicherungsunterstützung" subtitle="Schadenfall sauber vorbereiten und weitergeben">
     <EHAppHeader eyebrow="Versicherung" title="Unterstützung bei einem Schadenfall." text="Du kannst zu einem bereits beauftragten Vorgang einen Servicefall an Einfach Hausen übergeben. Wir dokumentieren und koordinieren den Fall intern. Eine Meldung an deine Versicherung wird nicht automatisch versendet." />
     {sp.error && <EHErrorState text={sp.error} />}
-    {submitted && <div className="alert success" role="status" aria-live="polite">Servicefall übernommen. Einfach Hausen und der zuständige Partner sehen den Vorgang jetzt im bestehenden Auftragskontext. Deine Versicherung wurde dadurch nicht automatisch kontaktiert.</div>}
+    {submitted && <EHFormFeedback kind="success">Servicefall übernommen. Einfach Hausen und der zuständige Partner sehen den Vorgang jetzt im bestehenden Auftragskontext. Deine Versicherung wurde dadurch nicht automatisch kontaktiert.</EHFormFeedback>}
 
     {jobs.length === 0 ? (
       <EHEmptyState title="Noch kein passender Auftrag vorhanden" text="Versicherungsunterstützung lässt sich hier nur an einen eigenen, bereits angenommenen Auftrag hängen. So werden keine fremden Vorgänge oder losen Schadendaten zugeordnet."  action={<><EHButton href="/app/jobs">Aufträge ansehen</EHButton><EHButton href="/app/consultation" variant="secondary">Erst Ansprechpartner fragen</EHButton></>} />
@@ -50,7 +49,7 @@ export default async function InsuranceSupport({ searchParams }: { searchParams:
             <form action={createInsuranceSupportAction.bind(null, job.id)}>
               <EHField id={`ins-desc-${job.id}`} label="Was soll für den Schadenfall geklärt werden?"><EHTextarea id={`ins-desc-${job.id}`} name="description" rows={4} minLength={20} maxLength={4000} required placeholder="Zum Beispiel: Nach dem Wasserschaden brauche ich eine nachvollziehbare Zusammenfassung der ausgeführten Arbeiten und möchte wissen, welche Unterlagen bereits im Auftrag liegen."/></EHField>
               <p>Mit dem Absenden wird ein interner Servicefall erstellt. Es wird weder ein neuer Handwerkerauftrag erzeugt noch automatisch ein Versicherer angeschrieben.</p>
-              <button type="submit">Servicefall an Einfach Hausen übergeben</button>
+              <EHSubmitButton>Servicefall an Einfach Hausen übergeben</EHSubmitButton>
             </form>
           )}
         </EHPanel>)

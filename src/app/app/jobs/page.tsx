@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { EHAppHeader, EHRequestList, EHRouteTabs, EHEmptyState, EHButton, EHStatus } from '@/design-system';
+import { EHAppHeader, EHRequestList, EHRouteTabs, EHEmptyState, EHButton } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';

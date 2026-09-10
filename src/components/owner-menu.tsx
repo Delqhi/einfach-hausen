@@ -81,7 +81,7 @@ const SECTIONS: Section[] = [
     subs: [
       hist("Alle Ereignisse", ico(BookIco, 16)),
       hist("Renovierungen & Reparaturen", ico(HammerIco, 16)),
-      hist("Neu Installation oder Zubauen", ico(HomeMenuIcon)),
+      hist("Neuinstallation oder Anbau", ico(HomeMenuIcon)),
       hist("Wartungen", ico(GearMenuIcon)),
       { label: "Ereignis hinzufügen", href: "/app/home/history", icon: ico(PlusIco, 16) },
     ],
@@ -92,7 +92,7 @@ const SECTIONS: Section[] = [
       { label: "Mein Profil", href: "/app/profile", icon: <PersonSmallIcon /> },
       { label: "Benachrichtigungen", href: "/notifications", icon: ico(BellIco, 16) },
       { label: "Datenschutz", href: "/datenschutz", icon: <ShieldIcon /> },
-      { label: "Hilfe & Kontakt", href: "/hilfe", icon: ico(HelpIco, 16) },
+      { label: "Hilfe & Kontakt", href: "/app/hilfe", icon: ico(HelpIco, 16) },
       { label: "Über einfachhausen", href: "/ueber-uns", icon: ico(InfoIco, 16) },
       { label: "Abmelden", logout: true, icon: <LogoutIcon /> },
     ],
@@ -151,7 +151,7 @@ export function OwnerMobileMenu({ active }: { active: string }) {
         <nav className="sm-nav ehn-acc">
           {SECTIONS.map((s) => (
             <div key={s.n} className={`ehn-acc-sec${(openSections[s.n] ?? s.open) ? " ehn-acc-open" : ""}`}>
-              <button type="button" className="sm-item ehn-acc-head" aria-expanded={Boolean(openSections[s.n])} onClick={() => toggleSection(s.n)}>
+              <button type="button" className="sm-item ehn-acc-head" aria-expanded={openSections[s.n] ?? s.open} onClick={() => toggleSection(s.n)}>
                 <span className="sm-icon">{s.icon}</span>
                 <span className="sm-label">{s.n} {s.label}</span>
                 <span className="ehn-acc-chevron" aria-hidden="true"><ArrowRightThin /></span>
