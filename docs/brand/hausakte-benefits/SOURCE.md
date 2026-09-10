@@ -1,3 +1,10 @@
+# Vollständiger Quelltext
+
+## src/app/hausakte/page.tsx
+
+SHA256 ef6dcb3e98d3271e96d234cadc9a21fe47dddd1d25e38d9911db98d5592e289d
+
+```tsx
 import type { Metadata } from 'next';
 import { canonical } from '@/lib/seo';
 import { MarketingShell } from '@/components/marketing/site-shell';
@@ -100,3 +107,4 @@ export default function Page() {
       secondary={<EHButton href="/app/home" variant="secondary">Ich habe schon ein Hauskonto</EHButton>} />
   </EHScope></MarketingShell>;
 }
+```

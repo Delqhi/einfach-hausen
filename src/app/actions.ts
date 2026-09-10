@@ -1029,14 +1029,27 @@ export async function completeMaintenanceTaskAction(taskId:number){
   revalidatePath('/app/home'); revalidatePath('/app/year');
 }
 
-export async function startMembershipCheckoutAction(planSlug:string){
+export async function startMembershipCheckoutAction(planSlug:string, fd?:FormData){
   const user=await requireUser('homeowner');
   const plan=db.prepare('SELECT * FROM membership_plans WHERE slug=? AND active=1').get(planSlug) as any; if(!plan)return;
   const current=db.prepare('SELECT stripe_subscription_id FROM subscriptions WHERE homeowner_id=?').get(user.id) as {stripe_subscription_id:string|null}|undefined;
   if(plan.monthly_amount===0){
-    if(current?.stripe_subscription_id&&process.env.STRIPE_SECRET_KEY){const stripe=new Stripe(process.env.STRIPE_SECRET_KEY);try{await stripe.subscriptions.cancel(current.stripe_subscription_id);}catch{}}
+    const remoteRef=current?.stripe_subscription_id||null;
+    if(remoteRef){
+      if(fd&&!fd.get('confirmFreeSwitch')) redirect('/app/plans?error=' + encodeURIComponent('Bitte best\u00e4tige zuerst den Wechsel auf Free, bevor du ihn abschickst.'));
+      if(!process.env.STRIPE_SECRET_KEY) redirect('/app/plans?error=' + encodeURIComponent('Die K\u00fcndigung deiner bezahlten Mitgliedschaft kann gerade nicht best\u00e4tigt werden, weil der Zahlungsdienst nicht konfiguriert ist. Es wurde nichts umgestellt; deine Mitgliedschaft bleibt aktiv.'));
+      const stripe=new Stripe(process.env.STRIPE_SECRET_KEY);
+      try{
+        await stripe.subscriptions.cancel(remoteRef);
+      }catch(error:unknown){
+        const message=String((error as {message?:string})?.message||'').toLowerCase();
+        const stale=String((error as {code?:string})?.code||'')==='resource_missing';
+        const already=message.includes('already cancel');
+        if(!stale&&!already) redirect('/app/plans?error=' + encodeURIComponent('Die K\u00fcndigung beim Zahlungsdienst ist fehlgeschlagen. Deine bezahlte Mitgliedschaft bleibt aktiv und bezahlt; es wurde nichts umgestellt. Bitte versuche es erneut oder kontaktiere den Support.'));
+      }
+    }
     db.prepare(`INSERT INTO subscriptions(homeowner_id,plan_slug,status,stripe_subscription_id,current_period_end,updated_at) VALUES(?,?,'active',NULL,NULL,CURRENT_TIMESTAMP) ON CONFLICT(homeowner_id) DO UPDATE SET plan_slug=excluded.plan_slug,status='active',stripe_subscription_id=NULL,current_period_end=NULL,updated_at=CURRENT_TIMESTAMP`).run(user.id,plan.slug);
-    revalidatePath('/app/plans'); revalidatePath('/app'); redirect('/app/plans?checkout=success');
+    revalidatePath('/app/plans'); revalidatePath('/app'); redirect('/app/plans?switch=done');
   }
   if(!process.env.STRIPE_SECRET_KEY) redirect('/app/plans?error=Stripe%20ist%20noch%20nicht%20konfiguriert');
   const stripe=new Stripe(process.env.STRIPE_SECRET_KEY); const origin=process.env.NEXT_PUBLIC_APP_URL||'http://localhost:3000';
