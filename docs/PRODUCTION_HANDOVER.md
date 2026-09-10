@@ -16,11 +16,13 @@ Lokale Release-Evidence vor Push/Deploy: Next.js Production Build **115/115**, `
 
 This document is the canonical **production operations** continuation point. Repository/agent continuation starts at [`NEXT_AGENT.md`](NEXT_AGENT.md). All agents share one engineering goal and one transactional taskplan; remaining release-wide work is strictly T-0042 Final Acceptance followed by T-0043 Final Convergence/Handover unless acceptance creates a canonical remediation task.
 
+> **Stand-Hinweis 2026-09-10 (Repo-HEAD `0503da3`, Vorgänger `a25ae3f`):** Die Abschnitte 0 und 1 unten sind historische Momentaufnahmen vom 2026-08-25 (Release `dcd53ca1`, lokaler Stand `16fad40`). OCI `/srv/einfach-hausen` steht lesend verifiziert auf `0503da3` („Finisher-2 Integration 2026-09-10“). Ältere SHAs (13496d7, dcd53ca, 16fad40, 3fbe3c9) sind historisch, nicht aktuell. Vor Deploy-, DNS- oder Stripe-Entscheidungen den Live-Zustand frisch verifizieren; `docs/OPERATIONS.md` bleibt der Betriebs-Runbook.
+
 ### T-0165 visual/presentation contract
 
 Presentation work follows **Notion App Design → `DESIGN.md` → `docs/PRESENTATION_BRAND.md` → `presentation/premium/brand.config.json` → `presentation/premium/deck.html`**. Notion is a visual reference, not automatic product truth. The presentation uses the repository's real logo asset unchanged, keeps Owner and Pro on the same light visual foundation, uses a 3px phone frame (5px maximum), and treats dark slides as targeted accents. Any future app-design change must be checked through this chain before a new deck export.
 
-## 0. Latest continuation checkpoint — 2026-08-25
+## 0. Latest continuation checkpoint — historisch, Stand 2026-08-25
 
 **Canonical next-agent entry:** [`NEXT_AGENT.md`](NEXT_AGENT.md).
 
@@ -45,7 +47,7 @@ Two deployment edge cases were found and fixed before acceptance. Commit `cf56a8
 
 Do not overwrite or delete these paths during deployment.
 
-## 1. Current state in one minute
+## 1. Current state in one minute — historisch, Stand 2026-08-25
 
 | Area | State | Evidence / next action |
 |---|---|---|

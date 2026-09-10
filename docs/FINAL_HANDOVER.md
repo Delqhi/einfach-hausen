@@ -1,6 +1,9 @@
-# Final Handover — Designer-Boss Premium-Website-Welle
+# Final Handover — Designer-Boss Premium-Website-Welle — historisch, Stand 2026-08-30/31
 
 **Datum:** 2026-08-30/31 · **Agent:** Designer-Boss (Prime Agent)
+
+> **Einordnung 2026-09-10 (Repo-HEAD `0503da3`, Vorgänger `a25ae3f`):** Historische Momentaufnahme; die Fortschreibungen vom 2026-09-04 (`13496d7`) und 2026-09-09 (`f554939`) bleiben Stichtagswerte. Kernaussagen bleiben, keine neuen Behauptungen.
+
 **START_HEAD:** `09c7bc2` · **FINAL_HEAD:** `ca03cfa` · **GITHUB_MAIN:** `ca03cfa` (SHA-Gleichheit: local==remote, push verified)
 **PRODUCTION_HEAD:** Deploy @ OCI via `deploy/update-on-oci.sh` (letzte deploy: 993cd93+ — web-vitals hinzugefügt nach Deploy)
 **EXECUTION_HOST:** Mac-M1 · **CANONICAL_WORKTREE:** `/Users/jeremy/dev/einfach-hausen`

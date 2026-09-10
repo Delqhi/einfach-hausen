@@ -1,4 +1,6 @@
-# UI-Convergence
+# UI-Convergence — historisch, Stand September 2026
+
+> **Einordnung 2026-09-10:** Historische Momentaufnahme; Kernaussagen bleiben.
 
 Ergänzung zu `DESIGN.md`. Diese Seite beschreibt, **wie** die visuelle
 Konvergenz umgesetzt ist, damit die nächste Änderung nicht wieder eine

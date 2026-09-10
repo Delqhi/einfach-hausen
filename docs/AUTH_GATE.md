@@ -34,3 +34,14 @@ dezentrale, autoritative Prüfung in jeder Server Component / jedem Route Handle
   Ein-Session-pro-User-Rotation identisch zu allen anderen Login-Pfaden.
   `getLocalUser()` liest denselben Cookie-Namen (`cookieName()`).
 - Legacy-`mh_session`-Cookies werden in Production nicht akzeptiert.
+
+## Auth-Modi (Kurzfassung, 2026-09-10)
+
+- `requireUser('homeowner' | 'provider')` (`src/lib/auth.ts`): Server-seitige
+  Pflichtprüfung in jeder geschützten Server Component / jedem Route Handler.
+  Falsche Rolle wird umgeleitet (Anbieter → `/pro`, Kunde → `/app`).
+- `requireAdmin()` (`src/lib/admin-auth.ts`): schützt Admin-Bereiche wie
+  `/docs-internal` (inkl. Ein-Session-Rotation, `admin_sessions`).
+- Supabase ist die Server-Identitätsinstanz (JWT via `@supabase/ssr`,
+  Rollen nur aus der App-DB). `AUTH_MODE=local` (SQLite/`mh_session`)
+  ist nur Local-Dev-Fallback und wirft in Production (fail-closed, T-0168).

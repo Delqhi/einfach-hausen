@@ -41,6 +41,16 @@ const sections = [
     links: [{ href: '/pro/plans', label: 'Zu den Tarifen' }],
   },
   {
+    title: 'Leads & Eingehende Anfragen',
+    text: 'Neue Kundenkontakte landen hier: Anfragen prüfen, annehmen oder ablehnen und den Status pflegen. Nur freigegebene Kontakte werden mit allen Details angezeigt.',
+    links: [{ href: '/pro/leads', label: 'Zu den Leads' }],
+  },
+  {
+    title: 'Offene Anfragen',
+    text: 'Alle passenden offenen Anfragen aus deinem Gebiet in einer Liste. Filtern nach Dringlichkeit und direkt zum Vorgang springen.',
+    links: [{ href: '/anfragen-pro', label: 'Zu den offenen Anfragen' }],
+  },
+  {
     title: 'Onboarding',
     text: 'Neu dabei? In vier Schritten richtest du deinen Betrieb ein: Firmendaten, Leistungen, Arbeitsgebiet und abschlie\u00dfende Angaben. Jeder Schritt wird beim Weitergehen gespeichert.',
     links: [{ href: '/pro/onboarding', label: 'Zur Einrichtung' }],

@@ -1,4 +1,6 @@
-# Einfach Hausen — Final Acceptance
+# Einfach Hausen — Final Acceptance — historisch, Stand 2026-08-25 (T-0042, Release `dcd53ca1`)
+
+> **Einordnung 2026-09-10 (Repo-HEAD `0503da3`):** Historische Momentaufnahme der T-0042-Abnahme vom 2026-08-25. Kernaussagen bleiben; SHAs und Taskstände sind Stichtagswerte, keine aktuellen Behauptungen.
 
 **Acceptance date:** 2026-08-25
 **Canonical task:** T-0042 — Acceptance: map and close product-issue gaps with evidence
