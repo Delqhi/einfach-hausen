@@ -1,3 +1,7 @@
+> **Konvergenz 2026-09-10 (OCI sin-supabase, local-agent):** 6 PRs (#78 ceo-fixes, #82 owner-sweep, #81 pro-sweep, #79 backend-sweep, #80 docs-refresh, #77 docs-appstore) via `integ/eh-sweep-converge-20260910` nach main **4fef0f4** gemergt und deployed. Prod-SHA 4fef0f4 (Restart 13:16 UTC ohne sudo), Health ok/ready lokal+public, Routen 200 (/ /login /notfall), Rollen kunde->/app + handwerker->/pro. Gates: tsc 0, eslint 0 errors, eh-design-check CONSISTENT, build ok, release-gate 15/15 (integ + prod), Browser-Spots Login/Owner-Logout/Hausmeister-Hints/Ad-Button/Pro-Team, Shots /tmp/eh-converge-*.png. Alle 6 PRs MERGED + kommentiert (superseded-Vermerk, Main-SHA). Taskplan: EH-FIX-01 + EH-SWEEP-OWNER/PRO/BACKEND/DOCS done (Events + Ledger + render + validate, integrity ok). ChatGPT-Review 13:15 UTC zu EH-SWEEP-OWNER (Jahresplan-Luecken, fix/eh-year-20260910) ist als Follow-up im Task beschrieben, nicht Teil dieser Konvergenz.
+>
+> **Naechste Aktion (genau eine):** Hoechste priorisierte eligible Aufgabe aus `.sin-gpt-web/taskplan.sqlite3` aufnehmen — aktuell **EH-APP-01** (backlog/high, iOS App Store; offene Entscheidungen Gina: Apple Developer/Bundle-ID, T-0206 B7 Notion-Login, IAP-vs-Stripe).
+
 > **iOS App Store 2026-09-10:** Task **EH-APP-01** (Capacitor-Hülle + TestFlight-Pipeline,
 > backlog/high, local-agent) angelegt. Docs-Branch `docs/eh-appstore-20260910`,
 > Handoff: `docs/brand/appstore/HANDOFF.md`. Code-Track parallel auf
