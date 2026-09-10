@@ -29,7 +29,7 @@ async function sendWhatsApp(to:string,body:string){
   const token=process.env.WHATSAPP_ACCESS_TOKEN; const phoneId=process.env.WHATSAPP_PHONE_NUMBER_ID; if(!token||!phoneId)return false;
   const version=process.env.WHATSAPP_GRAPH_VERSION||'v23.0';
   try{
-    const response=await fetch(`https://graph.facebook.com/${version}/${phoneId}/messages`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({messaging_product:'whatsapp',to,type:'text',text:{body:body.slice(0,4000)}})});
+    const response=await fetch(`https://graph.facebook.com/${version}/${phoneId}/messages`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({messaging_product:'whatsapp',to,type:'text',text:{body:body.slice(0,4000)}}),signal:AbortSignal.timeout(8000)});
     return response.ok;
   }catch{return false;}
 }

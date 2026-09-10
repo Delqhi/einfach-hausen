@@ -41,11 +41,11 @@ export async function syncToCrm(payload: SyncPayload): Promise<SyncResult> {
         Authorization: `Bearer ${crmToken}`,
       },
       body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`CRM API antwortete mit Status ${res.status}: ${errText}`);
+      throw new Error(`CRM API antwortete mit Status ${res.status}`);
     }
 
     return (await res.json()) as SyncResult;
