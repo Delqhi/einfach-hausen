@@ -1,0 +1,41 @@
+[
+  {
+    "width": 390,
+    "calls": 4,
+    "noAutomaticRequest": true,
+    "login": true,
+    "quota": true,
+    "rateLimit": true,
+    "reply": true,
+    "escapeAndFocus": true,
+    "fits": true,
+    "overflow": false,
+    "inputFont": "16px"
+  },
+  {
+    "width": 736,
+    "calls": 4,
+    "noAutomaticRequest": true,
+    "login": true,
+    "quota": true,
+    "rateLimit": true,
+    "reply": true,
+    "escapeAndFocus": true,
+    "fits": true,
+    "overflow": false,
+    "inputFont": "16px"
+  },
+  {
+    "width": 1536,
+    "calls": 4,
+    "noAutomaticRequest": true,
+    "login": true,
+    "quota": true,
+    "rateLimit": true,
+    "reply": true,
+    "escapeAndFocus": true,
+    "fits": true,
+    "overflow": false,
+    "inputFont": "16px"
+  }
+]
