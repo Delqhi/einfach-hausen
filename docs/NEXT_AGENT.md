@@ -1,3 +1,5 @@
+> **Jahresplan-Nachbesserung 2026-09-10:** Im bestehenden Task EH-SWEEP-OWNER zuerst docs/brand/year-workflow/HANDOFF.md abarbeiten. Branch fix/eh-year-20260910; lokale Integration, Browser-/Releaseabnahme offen. Frühere Done-Angaben sind keine Abnahme dieser neu belegten Lücken.
+
 > **iOS App Store 2026-09-10:** Task **EH-APP-01** (Capacitor-Hülle + TestFlight-Pipeline,
 > backlog/high, local-agent) angelegt. Docs-Branch `docs/eh-appstore-20260910`,
 > Handoff: `docs/brand/appstore/HANDOFF.md`. Code-Track parallel auf

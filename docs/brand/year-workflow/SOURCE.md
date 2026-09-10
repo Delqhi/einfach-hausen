@@ -1,3 +1,12 @@
+# Vollständiger Quelltext
+
+Basis: 4fef0f470efaf0b284f0d34dbd98472a82a81545. Host OCI sin-supabase.
+
+## src/app/app/year/page.tsx
+
+SHA256: ee276da4a283173abd94a2d255a24b265fe382e07eb8747d1937799825e07c32
+
+```tsx
 import { AppShell } from '@/components/shell';
 import { EHAppHeader, EHWorkSection, EHScheduleList, EHRouteTabs, EHList, EHEmptyState, EHButton, EHActions, EHStatus, EHSubmitButton } from '@/design-system';
 import { completeMaintenanceTaskAction } from '@/app/actions';
@@ -90,3 +99,4 @@ export default async function YearPage({ searchParams }: {
     </EHWorkSection>
   </AppShell>;
 }
+```
