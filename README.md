@@ -1112,3 +1112,18 @@ updated: 2026-08-31T15:17:38+00:00
 actor: local-agent
 evidence-sha256: 3c5ff2bd506025e42f53ea35964b6be662f201604fdd2d490f55ac7573da8fcb
 -->
+
+
+## Owner-Dashboard · 11.09.2026
+
+Die Eigentümer-Startseite `/app` verwendet die ausdrücklich freigegebene professionelle Dashboard-Komposition aus `DESIGN.md`. Sie verbindet reale Hausdaten, offene Entscheidungen, Wartungen, den bestehenden Hausmeister-Composer, Hausakte und Jahresübersicht in einer ruhigen Arbeitsoberfläche.
+
+Kanonische UI-Bausteine:
+`EHOwnerDashboardHeader`,
+`EHOwnerDashboardTopGrid`,
+`EHOwnerDashboardStatus`,
+`EHOwnerDashboardOverview`,
+`EHOwnerDashboardComposer`,
+`EHOwnerDashboardUtilityGrid`.
+
+Die Umsetzung verändert keine Auth-, Datenbank-, Matching-, Upload- oder Server-Action-Verträge.

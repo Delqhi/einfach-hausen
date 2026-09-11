@@ -991,3 +991,61 @@ updated: 2026-08-31T15:17:38+00:00
 actor: local-agent
 evidence-sha256: 3c5ff2bd506025e42f53ea35964b6be662f201604fdd2d490f55ac7573da8fcb
 -->
+
+
+## Owner-Dashboard-Komposition
+
+Die Eigentümer-Startseite `/app` verwendet eine eigene kanonische Dashboard-Komposition innerhalb des gemeinsamen Einfachhausen-Designsystems.
+
+Daten- und Zustandsverantwortung bleibt in `src/app/app/page.tsx`:
+- authentifizierter Owner über `requireUser('homeowner')`
+- Objektkontext aus `homeowner_profiles` und `primaryProperty`
+- bestätigte Termine aus `appointments`
+- offene Angebotsentscheidung aus `jobs` und `quotes`
+- fällige Wartung aus `maintenance_tasks`
+
+Darstellung liegt im versiegelten Designpaket:
+- `EHOwnerDashboardHeader`
+- `EHOwnerDashboardTopGrid`
+- `EHOwnerDashboardStatus`
+- `EHOwnerDashboardOverview`
+- `EHOwnerDashboardComposer`
+- `EHOwnerDashboardUtilityGrid`
+
+Der bestehende `HomeownerHausmeisterComposer` bleibt Consumer des Dashboards. Seine Draft-Persistenz, Medienaufnahme, Spracheingabe, Offline-Erkennung und `sendHausmeisterAction` werden nicht in das Designpaket verschoben.
+
+Damit bleibt die Trennung erhalten:
+Server Component / Datenbeschaffung → kanonische Dashboard-Komposition → bestehende interaktive Client-Komponenten.
+
+Das Dashboard führt keine neue Farb-, Typografie-, Radius- oder Motion-Quelle ein. Alle Werte stammen weiterhin aus `packages/eh-design/src/tokens.json`.
+
+
+## Owner-Auftragsübersicht
+
+`/app/jobs` bleibt eine authentifizierte Server-Component-Route.
+
+Datenquellen:
+
+- `jobs`
+- `quotes`
+- `appointments`
+- `provider_profiles`
+- `job_photos`
+- `homeowner_profiles`
+- `primaryProperty`
+
+Die Route löscht oder transformiert keine Auftragsdaten.
+
+Für die visuelle Übersicht werden ausschließlich Service-Aufträge berücksichtigt:
+
+`jobs.request_kind = 'service'`
+
+Kontaktvorgänge bleiben weiterhin im bestehenden Ansprechpartner-/Nachrichtenmodell erhalten.
+
+Auftragsbilder bleiben privat. Die Liste greift nie direkt auf Dateipfade zu, sondern ausschließlich auf den vorhandenen authentifizierten Endpunkt:
+
+`/api/job-media/[id]`
+
+Die fachliche Route hält Datenbeschaffung und Filterung. Die gemeinsamen Designkomponenten befinden sich in `packages/eh-design/src/workspace-records.tsx`.
+
+Die globale AppShell bleibt unabhängig von dieser Seitenkomposition.

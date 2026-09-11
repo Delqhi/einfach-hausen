@@ -169,3 +169,57 @@ Badge-Text auf Sand nutzt Ink; Terra nur als ergänzender Icon-Akzent. Verbindli
 
 ## App-Komposition 2026-09-08: bisherige gestalterische Abnahme zurückgewiesen
 Jerry verlangt professionellen Neuaufbau innerhalb Atelier02. Verbindlicher Kandidat und Beweisgrenzen: docs/brand/workspace/NEXT_AGENT.md. Technische Gates und EH-Imports beweisen keine Produktgestaltung; keine neue visuelle Baseline ohne Begutachtung.
+
+
+## Owner-Dashboard-Komposition 2026-09-11 — visuell freigegeben
+
+Jerry hat die neue Eigentümer-Startseite anhand des konkreten Desktop-Mockups ausdrücklich mit „Perfekt. Genauso“ freigegeben. Diese Freigabe erweitert Atelier 02 ausschließlich um die Komposition der Owner-Startseite `/app`; sie ist keine allgemeine Erlaubnis für autonome Rebrandings anderer Routen.
+
+Die freigegebene Hierarchie ist verbindlich:
+
+1. ruhiger App-Kopf mit Register `ÜBERSICHT`, persönlicher Begrüßung, realer Objektadresse und einer zurückhaltend beschnittenen vorhandenen Hausfotografie;
+2. erste Arbeitsebene aus großem `Hausstatus` und schmalem `Dein nächster Überblick`;
+3. `Hausstatus` bündelt genau die wesentlichen nächsten Entscheidungen in einer gemeinsamen Fläche statt vieler gleichgewichteter Kacheln;
+4. der bestehende Hausmeister-Composer erhält eine eigene große Arbeitsfläche mit Foto-, Sprach- und Sendeaktion; rechts stehen ruhige Beispiele für Anliegen;
+5. die nachgelagerte Orientierung besteht aus den Bereichen `Für dein Zuhause`, `Deine Hausakte` und `Mein Jahr`;
+6. echte Backenddaten, Rollenlogik, Navigation, Uploads, Sprache, Draft-Persistenz und Serveraktionen bleiben erhalten.
+
+Die Gestaltung bleibt innerhalb der kanonischen Tokens: Papier, Weiß, Petrol, tiefes Petrol, Tinte, Sekundärtext und Linie. Keine neue Palette, keine Verläufe, kein Glassmorphism, keine dekorativen Schatten, keine frei erfundenen Radien und keine lokale CSS-Familie im Consumer.
+
+Für diese Komposition sind `EHOwnerDashboardHeader`, `EHOwnerDashboardTopGrid`, `EHOwnerDashboardStatus`, `EHOwnerDashboardOverview`, `EHOwnerDashboardComposer` und `EHOwnerDashboardUtilityGrid` die kanonischen Bausteine in `packages/eh-design/src/workspace.tsx`. Die visuelle Umsetzung liegt ausschließlich in `packages/eh-design/src/styles.module.css`.
+
+Die Desktop-Referenz zeigt eine klare Reihenfolge statt einer Dashboard-Kachelwand. Auf kleineren Viewports darf die Reihenfolge responsiv untereinander fließen; Inhalte, Aktionen und fachliche Priorität dürfen dabei nicht verschwinden. Horizontales Seiten-Scrolling ist nicht zulässig.
+
+Diese Freigabe erlaubt die Aktualisierung des versiegelten Designkerns ausschließlich für die hier dokumentierten Owner-Dashboard-Bausteine. Sie erlaubt nicht, Design-Guard, Debt-Baseline oder andere geschützte Regeln abzuschwächen.
+
+
+## Owner-Aufträge 2026-09-11 — visuell freigegeben
+
+Jerry hat die neue Eigentümer-Auftragsübersicht anhand des konkreten 1536×876-Referenzbildes ausdrücklich zur exakten Umsetzung freigegeben.
+
+Die Freigabe erweitert die Owner-App-Komposition innerhalb Atelier 02. Sie erlaubt keine zweite Palette und keine abweichende AppShell.
+
+Verbindliche Informationshierarchie von `/app/jobs`:
+
+1. ruhiger Auftrags-Hero mit Register `AUFTRÄGE`, zweizeiliger Hauptaussage, kurzer Erklärung, bestehender Hausfotografie und echter Objektadresse;
+2. funktionale Suche nach vorhandenen Aufträgen;
+3. vier gleich hohe Übersichtsflächen für `Offene Aufträge`, `In Bearbeitung`, `Abgeschlossen` und `Neuen Auftrag erstellen`;
+4. aktuelle Aufträge als kompakte horizontale Arbeitsliste, nicht als große Kachelwand;
+5. reale Auftragsmedien dürfen als kleines Thumbnail erscheinen; ohne echtes Bild bleibt die Darstellung neutral;
+6. jede Zeile zeigt Titel, fachliche Kategorie, tatsächlichen Status, vorhandenen Termin oder Wunschtermin und einen eindeutigen `Details`-Zugang;
+7. abschließender Hilfebereich führt zurück zum bestehenden Hausmeister-Intake.
+
+Zahlen werden ausschließlich aus realen `jobs` berechnet. Statische Demo-Zähler, erfundene Termine, erfundene Anbieter oder künstliche Auftragsbilder sind in der Produktansicht verboten.
+
+Die kanonischen Bausteine liegen in `packages/eh-design/src/workspace-records.tsx`:
+
+- `EHOwnerOrdersHero`
+- `EHOwnerOrdersStats`
+- `EHOwnerOrdersList`
+- `EHOwnerOrdersSupport`
+
+Ihre Styles liegen ausschließlich in `packages/eh-design/src/styles.module.css`.
+
+Die bestehende globale Owner-Shell bleibt unabhängig davon kanonisch. Das Aufträge-Referenzbild darf nicht benutzt werden, um pro Route unterschiedliche Sidebars oder Topbars zu erfinden.
+
+Desktop priorisiert die horizontale, ruhige Listenstruktur. Tablet und Mobile dürfen die Informationen stapeln, ohne Inhalte oder Aktionen zu entfernen. Horizontaler Seiten-Overflow ist nicht zulässig.

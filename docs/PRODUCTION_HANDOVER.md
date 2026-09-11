@@ -1076,3 +1076,85 @@ updated: 2026-08-31T15:17:38+00:00
 actor: local-agent
 evidence-sha256: 3c5ff2bd506025e42f53ea35964b6be662f201604fdd2d490f55ac7573da8fcb
 -->
+
+
+## EH-OWNER-DASHBOARD-20260911
+
+Ziel:
+Die Owner-Startseite `/app` wird nach der ausdrücklich freigegebenen professionellen Dashboard-Referenz neu zusammengesetzt.
+
+Branch:
+`design/owner-dashboard-20260911`
+
+Scope:
+- `src/app/app/page.tsx`
+- `packages/eh-design/src/workspace.tsx`
+- `packages/eh-design/src/styles.module.css`
+- `DESIGN.md`
+- zugehörige Agent-/Architektur-/Taskplan-Dokumentation
+- durch autorisierte Designänderung neu erzeugtes `design/design-lock.json`
+
+Nicht verändert werden sollen:
+- Authentifizierung
+- DB-Schema
+- Server Actions
+- Matching
+- Quote-Logik
+- Appointment-Logik
+- Maintenance-Logik
+- Upload-Verträge
+- Spracheingabe-Verträge
+- Navigation
+- Rollen-Isolation
+
+Releasegrenze:
+Dieser Auftrag erzeugt einen prüfbaren Branch. Kein Produktionsdeploy ohne erneute Operator-Anweisung.
+
+Visuelle Freigabe:
+Die Referenzkomposition wurde vor Implementierung durch den Operator ausdrücklich mit „Perfekt. Genauso“ freigegeben. Die tatsächliche gerenderte Route muss trotzdem gegen die Referenz geprüft werden; eine grüne Build-Pipeline allein beweist keine visuelle Gleichheit.
+
+
+## EH-OWNER-ORDERS-20260911
+
+Route:
+`/app/jobs`
+
+Branch:
+`design/owner-dashboard-20260911`
+
+Visuelles Ziel:
+vom Operator freigegebene 1536×876-Aufträge-Referenz.
+
+Scope:
+
+- `src/app/app/jobs/page.tsx`
+- `packages/eh-design/src/workspace-records.tsx`
+- `packages/eh-design/src/styles.module.css`
+- `DESIGN.md`
+- Dokumentations-/Handoff-Dateien
+- neu erzeugter Design-Lock nach ausdrücklich autorisierter Designänderung
+
+Nicht verändert:
+
+- Job-Schema
+- Quote-Schema
+- Appointment-Schema
+- Auth
+- Matching
+- Server Actions
+- Private-Media-Autorisierung
+- Job-Detail-Lifecycle
+- globale Owner-Shell
+
+Keine statischen Produktdaten wurden eingeführt.
+
+Kein Produktionsdeploy ohne erneute Operator-Anweisung.
+
+
+## GitNexus-Abschluss
+
+`detect-changes --scope all` und Vergleich gegen die tatsächliche Branch-Basis `origin/main` melden 14 geänderte Dateien, 19 Symbole, 8 betroffene Flows und Risk Level `high`.
+
+Die betroffenen Flows sind ausschließlich die erwarteten `Dashboard`-/`Jobs`-Ketten bis zu AuthMode/Jar/Demo-/Ownership-Hilfsfunktionen. Auth-, Session-, Ownership- und Transfer-Code selbst wurde nicht verändert; die vollständigen Security-, A11y-, TypeScript- und Build-Gates sind grün.
+
+Ein Vergleich gegen den lokalen Ref `main` ist auf diesem Mac nicht aussagekräftig, weil dieser Checkout historisch stark von `origin/main` divergiert. Der Arbeitsbranch wurde von `origin/main` erstellt; deshalb ist `origin/main` die korrekte Vergleichsbasis.

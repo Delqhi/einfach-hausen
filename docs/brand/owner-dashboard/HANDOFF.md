@@ -1,0 +1,135 @@
+# EH-OWNER-DASHBOARD-20260911 · Handoff
+
+## Auftrag
+
+Die Eigentümer-Startseite `/app` wird exakt nach dem am 11.09.2026 ausdrücklich freigegebenen professionellen Dashboard-Mockup umgesetzt.
+
+Die Referenz ist keine Einladung zu einer alternativen Interpretation. Informationshierarchie, ruhige Flächen, Statusübersicht, Composer-Arbeitsbereich und dreigeteilte untere Orientierung sind verbindlich.
+
+## Repository
+
+`Delqhi/einfach-hausen`
+
+## Branch
+
+`design/owner-dashboard-20260911`
+
+## Kanonische Quellen
+
+- `AGENTS.md`
+- `DESIGN.md`
+- `packages/eh-design/src/tokens.json`
+- `packages/eh-design/src/workspace.tsx`
+- `packages/eh-design/src/styles.module.css`
+- `src/app/app/page.tsx`
+- `src/components/homeowner/homeowner-hausmeister-composer.tsx`
+
+## Datenverträge
+
+Unverändert erhalten:
+
+- `requireUser('homeowner')`
+- `homeowner_profiles`
+- `primaryProperty`
+- `appointments`
+- `jobs`
+- `quotes`
+- `maintenance_tasks`
+- `sendHausmeisterAction`
+
+## Interaktionsverträge
+
+Unverändert erhalten:
+
+- Hausmeister-Draft in LocalStorage
+- Medienupload
+- Spracheingabe
+- Offline-Erkennung
+- Submit-Fehlerzustand
+- Next.js Redirect Control Flow
+- Sidebar-Navigation
+- Bottom-Navigation
+- Hausassistent in der Toolbar
+- Benachrichtigungen
+
+## Neue kanonische Komponenten
+
+- `EHOwnerDashboardHeader`
+- `EHOwnerDashboardTopGrid`
+- `EHOwnerDashboardStatus`
+- `EHOwnerDashboardOverview`
+- `EHOwnerDashboardComposer`
+- `EHOwnerDashboardUtilityGrid`
+
+Keine Consumer-lokale CSS-Familie wurde eingeführt.
+
+## Responsives Ziel
+
+Desktop:
+Status links, Next-Overview rechts; Composer mit Beispielspalte; drei Utility-Bereiche.
+
+Tablet:
+Status und Overview untereinander; Utility-Bereiche dürfen zweispaltig umbrechen.
+
+Mobile:
+eine Spalte; Statusinformationen untereinander; Composer-Aktionen umbrechen; Send-Aktion volle Breite; Bottom-Navigation bleibt benutzbar.
+
+Pflichtbreiten:
+- 390 px
+- 736 px
+- 1536 px
+
+Kein horizontaler Overflow.
+
+## Designgrenzen
+
+Weiterhin verboten:
+
+- neue Farbpalette
+- Gradients
+- Glassmorphism
+- dekorative Glow-Effekte
+- frei erfundene Schatten
+- zweite Schriftfamilie
+- lokales Rebranding
+- nachgebautes Logo
+
+## Design-Lock
+
+`DESIGN.md`, `packages/eh-design/src/workspace.tsx` und `packages/eh-design/src/styles.module.css` sind bewusst geschützte Designquellen.
+
+Der Operator hat diese konkrete Änderung ausdrücklich autorisiert. Deshalb darf `scripts/eh-design-seal.mjs` nach vollständiger Umsetzung und Prüfung einmal ausgeführt werden, um die freigegebene neue Designversion zu versiegeln.
+
+Das ist keine Erlaubnis, Design-Guard oder Debt-Baseline zu lockern.
+
+## Noch vor Commit nachweisen
+
+- TypeScript
+- gezieltes ESLint
+- Token-Generator-Check
+- Design-Guard
+- Design-Guard-Test
+- App-A11y
+- Build
+- GitNexus detect-changes
+- git diff --check
+- reale Browseransichten 390 / 736 / 1536
+
+## Release
+
+Kein Deploy in diesem Auftrag ohne erneute Operator-Anweisung.
+
+
+## Abschluss-Evidenz 2026-09-11
+
+- Browser-Evidence: 390 / 736 / 1536 ohne horizontalen Overflow
+- Responsive-Matrix: PASS
+- A11y: PASS, keine serious/critical Blocking Findings auf den geprüften App-Routen
+- TypeScript / ESLint / Design-Guard / Build: PASS
+
+Erzeugte Evidenz:
+- `evidence/dashboard-390.png`
+- `evidence/dashboard-736.png`
+- `evidence/dashboard-1536.png`
+
+Kein Merge nach `main` und kein Deploy in diesem Auftrag.

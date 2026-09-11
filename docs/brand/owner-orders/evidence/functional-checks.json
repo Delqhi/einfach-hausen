@@ -1,0 +1,107 @@
+{
+  "at": "2026-09-11T14:05:11.252Z",
+  "checks": [
+    {
+      "name": "authenticated owner landing",
+      "ok": true,
+      "detail": "http://127.0.0.1:58463/app"
+    },
+    {
+      "name": "/app 390 no horizontal overflow",
+      "ok": true,
+      "detail": "{\"scrollWidth\":390,\"clientWidth\":390}"
+    },
+    {
+      "name": "/app/jobs 390 no horizontal overflow",
+      "ok": true,
+      "detail": "{\"scrollWidth\":390,\"clientWidth\":390}"
+    },
+    {
+      "name": "/app 736 no horizontal overflow",
+      "ok": true,
+      "detail": "{\"scrollWidth\":736,\"clientWidth\":736}"
+    },
+    {
+      "name": "/app/jobs 736 no horizontal overflow",
+      "ok": true,
+      "detail": "{\"scrollWidth\":736,\"clientWidth\":736}"
+    },
+    {
+      "name": "/app 1536 no horizontal overflow",
+      "ok": true,
+      "detail": "{\"scrollWidth\":1536,\"clientWidth\":1536}"
+    },
+    {
+      "name": "/app/jobs 1536 no horizontal overflow",
+      "ok": true,
+      "detail": "{\"scrollWidth\":1536,\"clientWidth\":1536}"
+    },
+    {
+      "name": "orders hero present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "real fixture address present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "existing search returns fixture order",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "unknown search shows empty state",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "cleared search restores current orders",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "completed stat opens completed view",
+      "ok": true,
+      "detail": "http://127.0.0.1:58463/app/jobs?view=completed"
+    },
+    {
+      "name": "completed job visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "active fixture excluded from completed view",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "new order CTA routes to Hausmeister",
+      "ok": true,
+      "detail": "http://127.0.0.1:58463/app/hausmeister"
+    },
+    {
+      "name": "primary order row opens correct detail",
+      "ok": true,
+      "detail": "http://127.0.0.1:58463/app/jobs/1"
+    },
+    {
+      "name": "details button opens correct detail",
+      "ok": true,
+      "detail": "http://127.0.0.1:58463/app/jobs/1"
+    },
+    {
+      "name": "support CTA routes to Hausmeister",
+      "ok": true,
+      "detail": "http://127.0.0.1:58463/app/hausmeister"
+    }
+  ],
+  "fixture": {
+    "openId": 2,
+    "quotedId": 3,
+    "progressId": 4,
+    "completedId": 5,
+    "acceptedId": 1
+  }
+}

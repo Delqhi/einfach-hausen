@@ -946,3 +946,31 @@ Verbindliche Umsetzung und Prüfgrenzen: docs/brand/workspace/NEXT_AGENT.md. Neu
 
 ## Produktkomposition: Referenzkandidat 2026-09-11
 Vor Änderungen an Hausakte-Komposition `docs/brand/mature-reference/HANDOFF.md` lesen. EHPropertyOverview, EHDetailDisclosure und EHProductIntroduction wiederverwenden; keine eigene Nachbildung. Die Referenz wartet auf visuelle Nutzerabnahme. Grüne Token-/Screenshot-Gates ersetzen keine Gestaltungsfreigabe.
+
+
+## EH-OWNER-DASHBOARD-20260911
+
+Die Root-Route `/app` besitzt seit der ausdrücklichen Operator-Freigabe vom 11.09.2026 eine neue kanonische Owner-Dashboard-Komposition. Verbindliche Quelle ist `DESIGN.md`, Abschnitt `Owner-Dashboard-Komposition 2026-09-11 — visuell freigegeben`.
+
+Für `/app` keine lokale Komponenten- oder CSS-Familie anlegen. Die freigegebenen Dashboard-Bausteine leben in `packages/eh-design/src/workspace.tsx` und `packages/eh-design/src/styles.module.css`. Backend, Auth, Navigation, Hausmeister-Composer, Upload, Sprache und bestehende Serveraktionen bleiben Consumer-Verantwortung und dürfen durch die visuelle Arbeit nicht ersetzt werden.
+
+Andere Owner-, Provider-, Marketing- oder CRM-Seiten erhalten diese Komposition nicht automatisch. Eine Wiederverwendung muss fachlich passen und den bestehenden Designvertrag respektieren.
+
+
+## EH-OWNER-ORDERS-20260911
+
+Die Route `/app/jobs` besitzt seit der ausdrücklichen Operator-Freigabe vom 11.09.2026 eine eigene kanonische Auftragskomposition.
+
+Quelle:
+`DESIGN.md` → `Owner-Aufträge 2026-09-11 — visuell freigegeben`
+
+Neue Bausteine gehören ausschließlich in das gemeinsame Designpaket und nicht in lokale Route-CSS-Dateien:
+
+- EHOwnerOrdersHero
+- EHOwnerOrdersStats
+- EHOwnerOrdersList
+- EHOwnerOrdersSupport
+
+Die globale AppShell aus dem Owner-Dashboard-Auftrag bleibt erhalten. Keine route-spezifische Sidebar oder zweite Topbar bauen.
+
+Auftragszahlen und Zeilen müssen aus echten `jobs`, `quotes`, `appointments`, `provider_profiles` und `job_photos` stammen. Keine Mockdaten im Produkt.
