@@ -1,7 +1,7 @@
 import { CalendarDays, FileText, History, House, NotebookPen, TrendingUp, Wrench } from 'lucide-react';
 import { AppShell } from '@/components/shell';
 import {
-  EHAppHeader, EHList, EHEmptyState, EHButton, EHText, EHRecordCover,
+  EHAppHeader, EHList, EHEmptyState, EHButton, EHText, EHPropertyOverview, EHDetailDisclosure,
   EHWorkspaceGrid, EHWorkSection, EHWorkMetrics, EHWorkflowStack,
   EHServiceDirectory, EHSubmitButton,
 } from '@/design-system';
@@ -23,20 +23,14 @@ export default async function MyHome() {
   return <AppShell role="homeowner" active="/app/home" title="Mein Haus" subtitle="Deine digitale Hausakte">
     <EHWorkflowStack>
       <EHAppHeader eyebrow="Digitale Hausakte" title="Mein Haus" text="Dein Gebäude, deine Technik und die nächsten Schritte im Überblick."
-        actions={<EHButton href="#technik-anlegen" arrow>Technik hinzufügen</EHButton>} />
-      <EHWorkspaceGrid main={<EHRecordCover eyebrow="Dein Zuhause" title={p?.address || 'Deine Hausakte.'}
-        subtitle={[p?.postcode, p?.house_type].filter(Boolean).join(' · ') || 'Ergänze die Grunddaten deines Zuhauses.'}>
-        <EHText>{[p?.build_year ? `Baujahr ${p.build_year}` : null, p?.living_area ? `${p.living_area} m² Wohnfläche` : null].filter(Boolean).join(' · ') || 'Gebäude, Ausstattung und Hausgeschichte bleiben hier zusammen.'}</EHText>
-        <EHButton href="#hausprofil" variant="on-dark">Hausprofil bearbeiten</EHButton>
-      </EHRecordCover>} aside={<EHWorkSection title="Als Nächstes" link={{ href: '/app/year', label: 'Mein Jahr' }}>
-        {tasks.length > 0 ? <EHList label="Nächste Wartungen" items={tasks.slice(0, 4).map(t => ({
-          id: String(t.id), title: t.title, text: `Fällig ${dateLabel(t.due_date)}`, href: '/app/year',
-        }))} /> : <EHEmptyState title="Keine offene Wartung hinterlegt" text="Dein Jahresplan sammelt anstehende Arbeiten und Wartungen."
-          action={<EHButton href="/app/year" variant="secondary">Jahresplan öffnen</EHButton>} />}
-        {appointments.length > 0 && <EHList label="Bestätigte Termine" items={appointments.map(a => ({
-          id: String(a.id), title: a.title, text: `${a.business_name} · ${dateLabel(a.start_at)}`, href: `/app/jobs/${a.job_id}`,
-        }))} />}
-      </EHWorkSection>} />
+        actions={<EHButton href="/app/year" variant="secondary">Jahresplan öffnen</EHButton>} />
+      <EHPropertyOverview title={p?.address || 'Hausdaten ergänzen'} subtitle={[p?.postcode, p?.house_type].filter(Boolean).join(' · ')}
+        facts={[
+          { label: 'Baujahr', value: p?.build_year ? String(p.build_year) : 'Nicht erfasst' },
+          { label: 'Wohnfläche', value: p?.living_area ? p.living_area + ' m²' : 'Nicht erfasst' },
+          { label: 'Grundstück', value: p?.plot_area ? p.plot_area + ' m²' : 'Nicht erfasst' },
+          { label: 'Technik', value: assets.length + ' erfasst' },
+        ]} />
       <EHWorkMetrics items={[
         { label: 'Technik & Geräte', value: assets.length, href: '#technik' },
         { label: 'Dokumente & Rechnungen', value: docs.c + invoiceCount, href: '/app/documents' },
@@ -48,7 +42,7 @@ export default async function MyHome() {
             id: String(a.id), title: a.name,
             text: [HOUSE_ASSET_KINDS[a.kind] || a.kind, a.installed_year ? `Installiert ${a.installed_year}` : null, a.details].filter(Boolean).join(' · '),
           }))} /> : <EHEmptyState title="Deine Ausstattung ist noch nicht erfasst" text="Beginne zum Beispiel mit deiner Heizung oder PV-Anlage. Hersteller und Modell kannst du direkt ergänzen." />}
-          {tasks.length > 0 && <EHWorkSection title="Wartungen erledigen">
+          {tasks.length > 0 && <EHWorkSection title="Nächste Wartungen" link={{ href: '/app/year', label: 'Alle ansehen' }}>
             <EHList label="Offene Wartungen" items={tasks.slice(0, 4).map(t => ({
               id: String(t.id), title: t.title, text: `Fällig ${dateLabel(t.due_date)}`,
               action: <form action={completeMaintenanceTaskAction.bind(null, t.id)} aria-label={`${t.title} abschließen`}>
@@ -56,11 +50,18 @@ export default async function MyHome() {
               </form>,
             }))} />
           </EHWorkSection>}
-        </EHWorkSection>} aside={<div id="technik-anlegen"><HouseAssetForm action={addHouseAssetAction} /></div>} />
+        </EHWorkSection>} aside={<EHWorkSection title="Termine" link={{ href: '/app/year', label: 'Jahresplan' }}>
+          {appointments.length ? <EHList label="Bestätigte Termine" items={appointments.map(a => ({
+            id: String(a.id), title: a.title, text: a.business_name + ' · ' + dateLabel(a.start_at), href: '/app/jobs/' + a.job_id,
+          }))} /> : <EHText muted>Keine bestätigten Termine hinterlegt.</EHText>}
+          <EHDetailDisclosure id="technik-anlegen" title="Technik hinzufügen" description="Gerät, Anlage oder Ausstattung erfassen">
+            <HouseAssetForm action={addHouseAssetAction} />
+          </EHDetailDisclosure>
+        </EHWorkSection>} />
       </section>
-      <section id="hausprofil" aria-label="Hausprofil bearbeiten">
+      <EHDetailDisclosure id="hausprofil" title="Hausdaten bearbeiten" description="Adresse, Gebäude und Flächen">
         <HouseProfileForm action={saveHouseProfileAction} profile={p} />
-      </section>
+      </EHDetailDisclosure>
       <EHWorkSection title="Deine Hausakte weiterführen">
           <EHServiceDirectory groups={[{ title: 'Wissen & Unterlagen', items: [
             { href: '/app/home/history', title: 'Hausgeschichte', text: 'Frühere Arbeiten, Kosten und Ansprechpartner dokumentieren.', icon: <History /> },
