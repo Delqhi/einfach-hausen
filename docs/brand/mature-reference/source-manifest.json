@@ -1,0 +1,103 @@
+{
+  "base": "e620e5b9496f58e68ae8073d37215ec5b86025e6",
+  "implementationCommit": "2eff748ff14ea748092365a8310642e64071eacf",
+  "files": {
+    "AGENTS.md": {
+      "sha256": "16e4ded4ae6d7cdc6fd52927dd47bac3dba113cfb63325e13f93e08821516553",
+      "bytes": 38484,
+      "kind": "text"
+    },
+    "design/design-lock.json": {
+      "sha256": "1db7ab8aae894ab5835151d5eb1d48f10cbd35ca4d2d85bc3d330e1c991178e3",
+      "bytes": 5406,
+      "kind": "text"
+    },
+    "docs/NEXT_AGENT.md": {
+      "sha256": "908535f7b383d9772cefe4818a45ae977a7df51bd43dc7e4d277ba728888375e",
+      "bytes": 41820,
+      "kind": "text"
+    },
+    "docs/brand/mature-reference/HANDOFF.md": {
+      "sha256": "35f9f2abab7f5a7613c36a35eb17081ac093a63ed737e15fb709945300b3f4b9",
+      "bytes": 4858,
+      "kind": "text"
+    },
+    "docs/brand/mature-reference/app-1536.png": {
+      "sha256": "77b183ff5de49071fd3fe16f69bbc43c032069ef3438c585ac48c04e22458e79",
+      "bytes": 227627,
+      "kind": "binary"
+    },
+    "docs/brand/mature-reference/app-390.png": {
+      "sha256": "a02e28712967ffc7781c3f58b32602c37450c2db4a99c834a6940a60e1b052a1",
+      "bytes": 33894,
+      "kind": "binary"
+    },
+    "docs/brand/mature-reference/app-736.png": {
+      "sha256": "49b2b41b2001700ccd343de42a83b451ce12a330ec7dcb834de23d0ca65e4430",
+      "bytes": 214240,
+      "kind": "binary"
+    },
+    "docs/brand/mature-reference/browser-evidence.jsonl": {
+      "sha256": "b3999d6105689c1735cb67a12f57176c95f462ded9d98774e28b69bc76182806",
+      "bytes": 386,
+      "kind": "text"
+    },
+    "docs/brand/mature-reference/web-1536.png": {
+      "sha256": "7719838e04416b0bb6c756009ff59dd23ba60a908d47c543b592f2d76a53fa86",
+      "bytes": 521576,
+      "kind": "binary"
+    },
+    "docs/brand/mature-reference/web-390.png": {
+      "sha256": "041e7b23ec8528362560db724dba498890ac8cbe496a4aadffa842d2a60a8c93",
+      "bytes": 327426,
+      "kind": "binary"
+    },
+    "docs/brand/mature-reference/web-736.png": {
+      "sha256": "c59064ce8c7bd4af92ca42094e4a36ef408a814fccf4cbb489998696df44e425",
+      "bytes": 362847,
+      "kind": "binary"
+    },
+    "packages/eh-design/src/html-style.mjs": {
+      "sha256": "619d9efc5efaf94b8b7b66f2efcd48ccd5b35b8aa3b39cefcf026ecb0460cf8f",
+      "bytes": 305085,
+      "kind": "text"
+    },
+    "packages/eh-design/src/html.css": {
+      "sha256": "ab0930a27196ff4612efb8ee59dccc18ae375af9d18255807d2c57c5ee8e73a4",
+      "bytes": 58425,
+      "kind": "text"
+    },
+    "packages/eh-design/src/index.ts": {
+      "sha256": "a36e270e21e5dddcfce6a4c668a1d38348f5baa554a0644b8232223d413e7c1a",
+      "bytes": 540,
+      "kind": "text"
+    },
+    "packages/eh-design/src/property-overview.tsx": {
+      "sha256": "30091372f31bc51461f6178def533e4347d5f1f5b1a4a9d0001fff10135d4bf8",
+      "bytes": 1527,
+      "kind": "text"
+    },
+    "packages/eh-design/src/styles.module.css": {
+      "sha256": "f59ed952dbdc2497fd0bd660ed9fb849291b7c1a3e1e0baf6a9a0b63ad7a0f50",
+      "bytes": 56448,
+      "kind": "text"
+    },
+    "public/images/marketing/house-workspace-reference.png": {
+      "sha256": "a2786ac65bbdee16d26f4465ea2fa227300dad3369da3851c96c652110b0f358",
+      "bytes": 97048,
+      "kind": "binary"
+    },
+    "src/app/app/home/page.tsx": {
+      "sha256": "857291086b2f1b6313ca7fef948544e282c48c052b60c4d81a8ba931cd995e52",
+      "bytes": 6647,
+      "kind": "text"
+    },
+    "src/app/hausakte/page.tsx": {
+      "sha256": "4e2f8b38fc524b12761c937518df66a20c15b3e2a18f584db22b4f116246c3c9",
+      "bytes": 4044,
+      "kind": "text"
+    }
+  },
+  "deleted": [],
+  "symlinks": {}
+}

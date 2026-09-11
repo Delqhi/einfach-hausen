@@ -1,5 +1,6 @@
 import {EHScope, EHWorkspaceFrame, EHWorkspaceNavItem} from "@/design-system";
 import Link from 'next/link';
+import { HouseAssistant } from './house-assistant';
 import { Bell, HelpCircle, Menu } from 'lucide-react';
 import { BottomNav, isNavActive, ownerNav, providerNav } from './bottom-nav';
 import { OwnerMobileMenu } from './owner-menu';
@@ -29,7 +30,7 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
     navigation={items.map(([href,Icon,label])=><EHWorkspaceNavItem key={href} href={href} active={isNavActive(active,href)} icon={<Icon size={22}/>}>{label}</EHWorkspaceNavItem>)}
     account={<Link href={profileHref}><strong>{user?`${user.first_name} ${user.last_name}`:'Profil'}</strong><small>{pro?'Partnerkonto':'Eigenheim-Konto'} · Profil öffnen</small></Link>}
     mobileMenu={mobileMenu}
-    notifications={<><Link href="/notifications" aria-label={unread?`${unread} ungelesene Benachrichtigungen`:'Benachrichtigungen'}><Bell size={22}/>{unread>0&&<span>{unread>99?'99+':unread}</span>}</Link><Link href={profileHref} aria-label="Profil">{initials}</Link></>}
+    notifications={<>{!pro && <HouseAssistant placement="toolbar" />}<Link href="/notifications" aria-label={unread?`${unread} ungelesene Benachrichtigungen`:'Benachrichtigungen'}><Bell size={22}/>{unread>0&&<span>{unread>99?'99+':unread}</span>}</Link><Link href={profileHref} aria-label="Profil">{initials}</Link></>}
     bottomNav={<BottomNav role={role} active={active}/>}>{children}</EHWorkspaceFrame></EHScope>;
 }
 
