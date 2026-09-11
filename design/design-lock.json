@@ -15,15 +15,15 @@
     "packages/eh-design/src/composition.tsx": "b81e331888eeceb4d1af3d5da8abb989129f869c78562101d0e2f977b8ce9829",
     "packages/eh-design/src/documents.tsx": "b9140f0fbbb09071c6d7b034492662a3f65a60bd54aa66102408ffea027abeed",
     "packages/eh-design/src/domain-recipes.tsx": "4ab6bc03926690539761d73b55a18ed08da43688cb04c907b80429226d1876a7",
-    "packages/eh-design/src/html-style.mjs": "23beb0cb420d6f6f23f48cb5692aaf17435ec3846e4759d2c0738618aa348187",
-    "packages/eh-design/src/html.css": "e03b7eb33b86def055494c394b6b17677ec9473f30aba60d894f00d82daf1336",
+    "packages/eh-design/src/html-style.mjs": "619d9efc5efaf94b8b7b66f2efcd48ccd5b35b8aa3b39cefcf026ecb0460cf8f",
+    "packages/eh-design/src/html.css": "ab0930a27196ff4612efb8ee59dccc18ae375af9d18255807d2c57c5ee8e73a4",
     "packages/eh-design/src/html.mjs": "7dde2a71e7eccbe9ddd7888bfb7b8d96a0a91c74e6fd07a2501070abf72d6033",
-    "packages/eh-design/src/index.ts": "67eaf8d00bb29ea97ab8d17cf26063e5468e8ba88f9e271228527148597c5f72",
+    "packages/eh-design/src/index.ts": "a36e270e21e5dddcfce6a4c668a1d38348f5baa554a0644b8232223d413e7c1a",
     "packages/eh-design/src/job-forms.tsx": "703eea10b17a9de9ea9712c9821edec878ef61cc498803895e8c1e08c54f8545",
     "packages/eh-design/src/primitives.tsx": "d90af74e98fc45c3af3acb90134621b226902b6aaa0b3d74c9ab558a2fde6edb",
     "packages/eh-design/src/recipes.tsx": "0b56b2c76d10f031aedc5375922495711e61759a57cda1a99a63ecfbc563931f",
     "packages/eh-design/src/request-form.tsx": "efaa49e4d8a8329f350e26c75e85b1d5d61c910eae78a70222486229114d8002",
-    "packages/eh-design/src/styles.module.css": "8e6234f22420cf4b218a983345ed359401d1d1fbd5483a47d4315afc1c2e8873",
+    "packages/eh-design/src/styles.module.css": "f59ed952dbdc2497fd0bd660ed9fb849291b7c1a3e1e0baf6a9a0b63ad7a0f50",
     "packages/eh-design/src/submit-button.tsx": "022785d7044b1e19760d26f9fed643f835c4d3da640692288ef9e3bcfdb52e30",
     "packages/eh-design/src/tokens.css": "4358aae0a1bcb0de84b2e97415b4c6f0356212dbdf67b901590f9dc90cbfc191",
     "packages/eh-design/src/tokens.json": "b399d3041129b93605a0b0a3541424b7ca251032f1b07dbd2bee59289c417e35",
@@ -48,6 +48,7 @@
     "src/components/marketing/tokens.css": "7cd827cb75fceabf3222b1420dce2524cf1e22789d799be55eb001d3bb4da88b",
     "src/components/marketing/ui.tsx": "a8a03cf1d32ecbc80fd5205d90cbcce48afcdd9b9721f5f7583cb2cce040012b",
     "src/design-system/index.ts": "c5880f7f92770415c9a60609a9c6bd927e44217893bb16f81469b0231d2f9ab7",
-    "packages/eh-design/src/assistant.tsx": "3b4e211a777cfd9911f601630ba2df50063a6d0d75cfc1e813924594df76f1ed"
+    "packages/eh-design/src/assistant.tsx": "3b4e211a777cfd9911f601630ba2df50063a6d0d75cfc1e813924594df76f1ed",
+    "packages/eh-design/src/property-overview.tsx": "30091372f31bc51461f6178def533e4347d5f1f5b1a4a9d0001fff10135d4bf8"
   }
 }
