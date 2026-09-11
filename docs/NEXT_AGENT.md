@@ -878,3 +878,25 @@ updated: 2026-08-31T15:17:38+00:00
 actor: local-agent
 evidence-sha256: 3c5ff2bd506025e42f53ea35964b6be662f201604fdd2d490f55ac7573da8fcb
 -->
+
+
+## Live-Deploy 2026-09-11
+
+Operator-Freigabe zum Merge und Produktionsdeploy wurde erteilt.
+
+Release:
+- App-Release-SHA: `05675c6f7cd3f74089c2173d2b7234534737f84f`
+- Branch `design/owner-dashboard-20260911` fast-forward nach `main`
+- Produktion auf `/srv/einfach-hausen` auf denselben App-Release-Stand aktualisiert
+- Pre-Deploy-Backup: `/var/backups/einfach-hausen/einfach-hausen-20260911T165236Z`
+- Production Node: `v22.23.0`
+- Release-Gate: `15/15 PASS`
+- Production-Smoke: `18/18 PASS`
+- SQLite `PRAGMA integrity_check`: `ok`
+- lokaler und öffentlicher `/api/health`: `ok=true`, `database=ready`
+- `/app` und `/app/jobs` erzwingen unauthentifiziert weiterhin Login-Redirect
+- `www.einfachhausen.de` endet korrekt auf dem Apex
+- Service nach neuem Build kontrolliert neu gestartet; neuer MainPID bestätigt
+
+Hinweis zum Deploy-Gate:
+Der Security-Fuzz benötigt `WEBHOOK_SECRET` als temporären Gate-Fixture-Wert, obwohl die Produktion bewusst ohne diesen Legacy-Secret fail-closed läuft. Der erste Beobachtungslauf war deshalb 14/15; der maßgebliche Lauf mit ausschließlich prozesslokalem Fixture-Secret war 15/15. Die Produktions-Environment wurde dafür nicht verändert.
