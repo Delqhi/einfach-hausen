@@ -14,7 +14,7 @@ async function send(messages: EHAssistantMessage[], signal: AbortSignal): Promis
 export function HouseAssistant() {
   const path = usePathname();
   // Do not compete with authentication, provider work, payments, print or existing chat.
-  if (!path || /^\/(login|register|auth|onboarding|pro|admin|ki-chat|checkout|pay|transfer|partner-invite|design-system)(\/|$)/.test(path)
+  if (!path || path === '/app/onboarding' || path.startsWith('/app/onboarding/') || /^\/(login|register|auth|onboarding|pro|admin|ki-chat|checkout|pay|transfer|partner-invite|design-system)(\/|$)/.test(path)
       || /\/(passport|receipt)(\/|$)/.test(path) || /^\/app\/invoices\//.test(path)
       || ['/impressum', '/datenschutz', '/app/messages', '/app/hausmeister'].includes(path)) return null;
   return <EHAssistant key={path} onSend={send} loginHref="/login" settingsHref="/app/settings" aboveNavigation={path === '/app' || path.startsWith('/app/')} />;
