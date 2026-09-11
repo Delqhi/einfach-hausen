@@ -46,7 +46,7 @@ async function deleteE2eIdentities(){
   }
 }
 const serverLog=[];
-process.on('exit',()=>{try{if(server&&!server.killed)server.kill('SIGKILL');}catch{}try{fs.rmSync(tempRoot,{recursive:true,force:true});}catch{}});
+process.on('exit',()=>{try{if(server&&!server.killed)server.kill('SIGKILL');}catch{}try{if(!process.env.E2E_KEEP_TEMP)fs.rmSync(tempRoot,{recursive:true,force:true});else console.error('E2E-KEPT ' + tempRoot);}catch{}});
 
 function browserExecutable(){
   const bundled=typeof browserType.executablePath==='function'?browserType.executablePath():'';
@@ -570,12 +570,12 @@ await manager.waitForFunction(()=>document.body.innerText.includes('ungelesen'),
 await assertNoOverflow(manager,'Mobile notification center');
 
 // 8) Hausakte und Tarife entsprechen dem Geschäftsmodell.
-await nav(owner, base+'/app/home'); await waitText(owner,'Gebäude & Räume'); await assertNoOverflow(owner,'Mobile house file'); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche (m²)').fill('145'); await owner.getByLabel('Grundstück (m²)').fill('620'); await clickServerAction(owner,owner.getByRole('button',{name:'Hausprofil speichern'}));
-const assetForm=owner.locator('form').filter({has:owner.locator('select[name="kind"]')}).first(); await assetForm.getByLabel('Bereich').selectOption('pv'); await assetForm.locator('input[name="name"]').fill('PV-Anlage 10 kWp'); await clickServerAction(owner,assetForm.getByRole('button',{name:'Zur Hausakte hinzufügen'})); await waitText(owner,'PV-Anlage und Ertrag prüfen');
+await nav(owner, base+'/app/home'); await waitText(owner,'Mein Haus'); await owner.locator('#hausprofil > summary').click(); await assertNoOverflow(owner,'Mobile house file'); await owner.getByLabel('Haustyp').selectOption('Einfamilienhaus'); await owner.getByLabel('Baujahr').fill('2004'); await owner.getByLabel('Wohnfläche (m²)').fill('145'); await owner.getByLabel('Grundstück (m²)').fill('620'); await clickServerAction(owner,owner.getByRole('button',{name:'Hausprofil speichern'}));
+await owner.locator('#technik-anlegen > summary').click(); const assetForm=owner.locator('form').filter({has:owner.locator('select[name="kind"]')}).first(); await assetForm.getByLabel('Bereich').selectOption('pv'); await assetForm.locator('input[name="name"]').fill('PV-Anlage 10 kWp'); await clickServerAction(owner,assetForm.getByRole('button',{name:'Zur Hausakte hinzufügen'})); await waitText(owner,'PV-Anlage und Ertrag prüfen');
 await nav(owner, base+'/app/home/history'); await owner.getByLabel('Bereich').selectOption({label:'Dach & Fassade'}); await owner.getByLabel('Datum').fill('2025-06-12'); await owner.getByLabel('Was wurde gemacht?').fill('Dachsanierung 2025'); await owner.getByLabel('Firma').fill('Gartenbau Müller'); await owner.getByLabel('E-Mail Handwerker').fill(providerEmail); await owner.getByLabel('Kosten €').fill('18500'); await clickServerAction(owner,owner.getByRole('button',{name:'In Hausakte speichern'})); await waitText(owner,'Dachsanierung 2025'); await waitText(owner,'Partner verbunden'); await assertNoOverflow(owner,'Mobile house history');
 await nav(owner, base+'/app/messages'); await waitText(owner,'Dach'); await waitText(owner,'Garten'); const thomasRow=owner.locator('a[href*="/app/messages?contact="]').filter({hasText:'Thomas Weber'}).first(); await thomasRow.click(); await owner.locator('details').filter({has:owner.getByText('Bereich ändern')}).first().locator('summary').click(); await owner.getByLabel('Eigener Bereich (optional)').fill('Hecke & Bäume'); await clickAndWaitUrl(owner,owner.getByRole('button',{name:'Bereich speichern'}),/category=saved/); await waitText(owner,'Hecke & Bäume');
 await nav(owner, base+`/app/year?year=${new Date().getFullYear()+2}`); await waitText(owner,'Mein Jahr'); await waitText(owner,'PV-Anlage und Ertrag prüfen'); await assertNoOverflow(owner,'Mobile year plan');
-await nav(owner, base+'/app/plans'); await waitText(owner,'Jahres- & Premiumpakete'); await waitText(owner,'Haus Jahrespflege'); await waitText(owner,'Energie & Technik Check'); await assertNoOverflow(owner,'Mobile plans');
+await nav(owner, base+'/app/plans'); await waitText(owner,'Monatliche Mitgliedschaften'); await waitText(owner,'Haus Jahrespflege'); await waitText(owner,'Energie & Technik Check'); await assertNoOverflow(owner,'Mobile plans');
 await nav(owner, base+'/app/jobs?tab=completed'); await waitText(owner,'Meine Aufträge'); await waitText(owner,'Abgeschlossen'); await assertNoOverflow(owner,'Mobile completed jobs');
 await nav(manager, base+'/pro/plans'); await waitText(manager,'0 % Provision'); for(const plan of ['Free','Start — 29 €/Monat','Pro (beliebt)','Premium — 199 €/Monat'])await manager.getByText(plan).first().waitFor();
 
@@ -653,5 +653,5 @@ console.log(JSON.stringify(evidence,null,2));
   try{ await deleteE2eIdentities(); }catch{}
 
   if(server&&!server.killed){server.kill('SIGTERM');await new Promise(resolve=>{const timer=setTimeout(resolve,3000);server.once('exit',()=>{clearTimeout(timer);resolve();});});if(server.exitCode===null)server.kill('SIGKILL');}
-  fs.rmSync(tempRoot,{recursive:true,force:true});
+  if(!process.env.E2E_KEEP_TEMP)fs.rmSync(tempRoot,{recursive:true,force:true});else console.error('E2E-KEPT ' + tempRoot);
 }

@@ -942,3 +942,7 @@ evidence-sha256: 3c5ff2bd506025e42f53ea35964b6be662f201604fdd2d490f55ac7573da8fc
 
 ## Aktueller App-Umbau
 Verbindliche Umsetzung und Prüfgrenzen: docs/brand/workspace/NEXT_AGENT.md. Neue Workspace-Komposition erhalten; historische technische Abnahmen ersetzen keine aktuelle visuelle Bewertung.
+
+
+## Produktkomposition: Referenzkandidat 2026-09-11
+Vor Änderungen an Hausakte-Komposition `docs/brand/mature-reference/HANDOFF.md` lesen. EHPropertyOverview, EHDetailDisclosure und EHProductIntroduction wiederverwenden; keine eigene Nachbildung. Die Referenz wartet auf visuelle Nutzerabnahme. Grüne Token-/Screenshot-Gates ersetzen keine Gestaltungsfreigabe.

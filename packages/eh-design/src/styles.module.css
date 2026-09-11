@@ -606,3 +606,46 @@
 @media print { .assistantLauncher,.assistantDialog { display:none!important; } }
 
 @media(min-width:601px) and (max-width:999px) { .assistantLauncher[data-above-nav] { bottom:calc(88px + env(safe-area-inset-bottom)); } }
+
+/* Compact property reference, authorized 2026-09-11; opt-in only. */
+.propertyOverview { background: var(--eh-color-white); border: 1px solid var(--eh-rule); border-radius: 8px; overflow: hidden; }
+.propertyOverview header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 24px; }
+.propertyOverview header span { color: var(--eh-color-petrol); font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.propertyOverview h2 { font-size: clamp(22px,2vw,28px); line-height: 1.2; letter-spacing: -.025em; margin: 8px 0; overflow-wrap: anywhere; }
+.propertyOverview p { margin: 0; font-size: 15px; color: var(--eh-color-secondary); }
+.propertyOverview dl { margin: 0; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); border-top: 1px solid var(--eh-rule); }
+.propertyOverview dl > div { padding: 16px 24px; min-width: 0; }
+.propertyOverview dt { font-size: 13px; color: var(--eh-color-secondary); margin-bottom: 6px; }
+.propertyOverview dd { margin: 0; font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
+.detailDisclosure { border: 1px solid var(--eh-rule); border-radius: 8px; background: var(--eh-color-white); scroll-margin-top: 96px; }
+.detailDisclosure summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; min-height: 56px; cursor: pointer; list-style: none; }
+.detailDisclosure summary::-webkit-details-marker { display: none; }
+.detailDisclosure summary > span:first-child { display: grid; gap: 4px; }
+.detailDisclosure summary strong { font-size: 16px; }
+.detailDisclosure summary span span { font-size: 14px; color: var(--eh-color-secondary); }
+.detailDisclosure summary > span:last-child { font-size: 24px; color: var(--eh-color-petrol); }
+.detailDisclosure[open] summary > span:last-child { transform: rotate(45deg); }
+.detailDisclosure summary:focus-visible { outline: 3px solid var(--eh-color-petrol); outline-offset: 3px; }
+.detailDisclosure > div { padding: 0 24px 24px; }
+.productIntroduction { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: end; padding: 16px 0 32px; }
+.productIntroduction > div:first-child > p { margin: 0 0 16px; color: var(--eh-color-petrol); font-size: 13px; font-weight: 650; }
+.productIntroduction h1 { margin: 0; font-size: clamp(32px,3.5vw,48px); line-height: 1.1; letter-spacing: -.035em; max-width: 18ch; }
+.productIntroduction > div:last-child > p { margin: 0 0 24px; font-size: 18px; line-height: 1.6; }
+.productIntroduction > div:last-child > div { display: flex; flex-wrap: wrap; gap: 12px; }
+@media(max-width:760px) {
+ .propertyOverview dl { grid-template-columns: repeat(2,minmax(0,1fr)); }
+ .propertyOverview header, .propertyOverview dl > div { padding: 16px; }
+ .detailDisclosure summary { padding: 16px; }
+ .detailDisclosure > div { padding: 0 16px 16px; }
+ .productIntroduction { grid-template-columns: 1fr; gap: 24px; padding-bottom: 16px; }
+}
+
+.productScreenshot { margin: 0; }
+.productScreenshot > img { display: block; width: 100%; height: auto; border: 1px solid var(--eh-rule); border-radius: 8px; }
+.productScreenshot > figcaption { margin-top: 12px; color: var(--eh-color-secondary); font-size: 14px; line-height: 1.5; }
+
+/* App assistant occupies its own toolbar slot; never floats over workflow controls. */
+.assistantLauncher[data-placement="toolbar"] { position:static; min-height:44px; padding:8px 12px; gap:8px; max-width:none; z-index:auto; }
+.assistantLauncher[data-placement="toolbar"] img { display:none; }
+.assistantLauncher[data-placement="toolbar"] strong { font-size:14px; white-space:nowrap; }
+@media(max-width:600px) { .assistantLauncher[data-placement="toolbar"] { padding:8px; } }
