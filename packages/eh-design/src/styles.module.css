@@ -643,3 +643,9 @@
 .productScreenshot { margin: 0; }
 .productScreenshot > img { display: block; width: 100%; height: auto; border: 1px solid var(--eh-rule); border-radius: 8px; }
 .productScreenshot > figcaption { margin-top: 12px; color: var(--eh-color-secondary); font-size: 14px; line-height: 1.5; }
+
+/* App assistant occupies its own toolbar slot; never floats over workflow controls. */
+.assistantLauncher[data-placement="toolbar"] { position:static; min-height:44px; padding:8px 12px; gap:8px; max-width:none; z-index:auto; }
+.assistantLauncher[data-placement="toolbar"] img { display:none; }
+.assistantLauncher[data-placement="toolbar"] strong { font-size:14px; white-space:nowrap; }
+@media(max-width:600px) { .assistantLauncher[data-placement="toolbar"] { padding:8px; } }

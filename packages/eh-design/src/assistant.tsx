@@ -8,9 +8,9 @@ export type EHAssistantMessage = {role: 'user' | 'assistant'; content: string};
 export type EHAssistantResult = {reply: string; kind: 'reply' | 'login' | 'quota' | 'error'};
 
 /** User-opened customer assistant; data access and account policy belong to the consumer. */
-export function EHAssistant({onSend, loginHref, settingsHref, aboveNavigation = false}: {
+export function EHAssistant({onSend, loginHref, settingsHref, aboveNavigation = false, placement = 'floating'}: {
   onSend: (messages: EHAssistantMessage[], signal: AbortSignal) => Promise<EHAssistantResult>;
-  loginHref: string; settingsHref: string; aboveNavigation?: boolean;
+  loginHref: string; settingsHref: string; aboveNavigation?: boolean; placement?: 'floating' | 'toolbar';
 }) {
   const id = useId();
   const dialog = useRef<HTMLDialogElement>(null);
@@ -44,10 +44,10 @@ export function EHAssistant({onSend, loginHref, settingsHref, aboveNavigation = 
   }
 
   return <div className={s.scope} data-eh-app>
-    <button ref={launcher} type="button" className={s.assistantLauncher} data-above-nav={aboveNavigation || undefined}
-      aria-haspopup="dialog" aria-controls={id} onClick={() => dialog.current?.showModal()}>
+    <button ref={launcher} type="button" className={s.assistantLauncher} data-placement={placement} data-above-nav={aboveNavigation || undefined}
+      aria-label="Hausassistent öffnen" aria-haspopup="dialog" aria-controls={id} onClick={() => dialog.current?.showModal()}>
       <img src="/brand/logo-full.png" alt="" width={64} height={42} />
-      <span><strong>Frag deinen Hausassistenten</strong><small>KI-Hilfe rund um dein Zuhause</small></span>
+      <span><strong>{placement === 'toolbar' ? 'Hausassistent' : 'Frag deinen Hausassistenten'}</strong>{placement !== 'toolbar' && <small>KI-Hilfe rund um dein Zuhause</small>}</span>
     </button>
     <dialog ref={dialog} id={id} className={s.assistantDialog} aria-labelledby={id+'-title'} onClose={() => launcher.current?.focus()}>
       <header className={s.assistantHeader}>

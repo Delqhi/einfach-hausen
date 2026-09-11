@@ -23,7 +23,7 @@
     "packages/eh-design/src/primitives.tsx": "d90af74e98fc45c3af3acb90134621b226902b6aaa0b3d74c9ab558a2fde6edb",
     "packages/eh-design/src/recipes.tsx": "0b56b2c76d10f031aedc5375922495711e61759a57cda1a99a63ecfbc563931f",
     "packages/eh-design/src/request-form.tsx": "efaa49e4d8a8329f350e26c75e85b1d5d61c910eae78a70222486229114d8002",
-    "packages/eh-design/src/styles.module.css": "f59ed952dbdc2497fd0bd660ed9fb849291b7c1a3e1e0baf6a9a0b63ad7a0f50",
+    "packages/eh-design/src/styles.module.css": "82ed68ce347928ea28c12aa906bd551bb092b4189a73f22a839fb62220138d12",
     "packages/eh-design/src/submit-button.tsx": "022785d7044b1e19760d26f9fed643f835c4d3da640692288ef9e3bcfdb52e30",
     "packages/eh-design/src/tokens.css": "4358aae0a1bcb0de84b2e97415b4c6f0356212dbdf67b901590f9dc90cbfc191",
     "packages/eh-design/src/tokens.json": "b399d3041129b93605a0b0a3541424b7ca251032f1b07dbd2bee59289c417e35",
@@ -48,7 +48,7 @@
     "src/components/marketing/tokens.css": "7cd827cb75fceabf3222b1420dce2524cf1e22789d799be55eb001d3bb4da88b",
     "src/components/marketing/ui.tsx": "a8a03cf1d32ecbc80fd5205d90cbcce48afcdd9b9721f5f7583cb2cce040012b",
     "src/design-system/index.ts": "c5880f7f92770415c9a60609a9c6bd927e44217893bb16f81469b0231d2f9ab7",
-    "packages/eh-design/src/assistant.tsx": "3b4e211a777cfd9911f601630ba2df50063a6d0d75cfc1e813924594df76f1ed",
+    "packages/eh-design/src/assistant.tsx": "ad65d01d849c8a2f28eb61d18c81f997fc85a7340d399078de8a5dc1a3e3812b",
     "packages/eh-design/src/property-overview.tsx": "30091372f31bc51461f6178def533e4347d5f1f5b1a4a9d0001fff10135d4bf8"
   }
 }
