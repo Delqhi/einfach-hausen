@@ -1,137 +1,76 @@
 import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
-import { EHAppHeader, EHPanel } from '@/design-system';
+import {
+  EHAppHeader,
+  EHButton,
+  EHDetailDisclosure,
+  EHList,
+  EHPanel,
+  EHWorkspaceGrid,
+  EHWorkSection,
+} from '@/design-system';
 
 export default async function HilfePage() {
   await requireUser('homeowner');
 
   return (
-    <AppShell role="homeowner" active="/app/more" title="Hilfe" subtitle="Dein Haus. Einfach geregelt.">
+    <AppShell role="homeowner" active="/app/more" title="Hilfe" subtitle="Orientierung und persönliche Unterstützung">
       <EHAppHeader
-        eyebrow="Hilfe"
-        title="Dein Haus. Einfach geregelt."
-        text="Hier findest du eine kurze Anleitung zu allen Bereichen deiner App. Alles in einfachem Deutsch erklärt – tippe auf einen Link, um direkt zum Bereich zu springen."
+        eyebrow="Hilfe & Orientierung"
+        title="Was möchtest du klären?"
+        text="Finde den passenden Bereich für dein Anliegen oder öffne deine Ansprechpartner."
+        actions={<EHButton href="/app/messages" variant="secondary">Zu deinen Ansprechpartnern</EHButton>}
       />
-
-      <EHPanel
-        title="Mein Haus (Hausakte)"
-        footer={{ href: '/app/home', text: 'Zu Mein Haus' }}
-      >
-        <p>Hier liegt alles zu deinem Zuhause an einem Ort: Adresse, Ausstattung und wichtige Daten.</p>
-        <p>Unter Historie siehst du, was bisher gemacht wurde. Im Hauspass stehen die wichtigsten Kennwerte deines Hauses.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Aufträge"
-        footer={{ href: '/app/jobs', text: 'Zu den Aufträgen' }}
-      >
-        <p>Du brauchst einen Handwerker? Lege einen Auftrag an und beschreibe kurz, was zu tun ist.</p>
-        <p>Du siehst jederzeit, wie es weitergeht – von der Anfrage bis zur Fertigstellung. Wenn alles erledigt ist, schließt du den Auftrag ab.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Termine & Kalender"
-        footer={{ href: '/app/calendar', text: 'Zum Kalender' }}
-      >
-        <p>Im Kalender stehen alle deine Termine: Besuche von Partnern, Wartungen und Erinnerungen.</p>
-        <p>Du verpasst nichts, weil alles übersichtlich an einem Ort gesammelt ist.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Dokumente & Rechnungen"
-        footer={{ href: '/app/documents', text: 'Zu den Dokumenten' }}
-      >
-        <p>Hier sammelst du Rechnungen, Nachweise und Belege – zum Beispiel für Handwerkerleistungen oder die Steuer.</p>
-        <p>Lade ein Foto oder eine Datei hoch, damit du alles griffbereit hast, wenn du es brauchst.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Hausmeisterservice"
-        footer={{ href: '/app/hausmeister', text: 'Zum Hausmeisterservice' }}
-      >
-        <p>Kleine Aufgaben rund ums Haus? Stelle hier deine Anfrage an den Hausmeisterservice.</p>
-        <p>Du klärst deine Frage und organisierst den nächsten Schritt – ohne lange Telefonate.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Nachrichten"
-        footer={{ href: '/app/messages', text: 'Zu den Nachrichten' }}
-      >
-        <p>Hier schreibst du mit Partnern und dem Einfach-Hausen-Team.</p>
-        <p>Alle Absprachen zu deinen Aufträgen bleiben nachvollziehbar an einem Ort.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Partner"
-        footer={{ href: '/app/partners', text: 'Zu den Partnern' }}
-      >
-        <p>Hier findest du geprüfte Partner aus deiner Region.</p>
-        <p>Du siehst, wer für welche Aufgabe zuständig ist, und kannst direkt Kontakt aufnehmen.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Notfall"
-        footer={{ href: '/app/emergency', text: 'Zum Notfallbereich' }}
-      >
-        <p>Wenn es eilig ist – zum Beispiel ein Rohrbruch oder ein Stromausfall – hilft dir dieser Bereich weiter.</p>
-        <p>Bei Lebensgefahr, Brand oder Gasgeruch rufe zuerst die 112 an. Wir suchen nach verfügbaren Helfern in deiner Nähe, versprechen aber keine Betreuung rund um die Uhr.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Beratung"
-        footer={{ href: '/app/consultation', text: 'Zur Beratung' }}
-      >
-        <p>Du hast eine Frage rund ums Haus und willst erst einen Fachmann fragen? Schidere dein Problem und finde einen passenden Ansprechpartner.</p>
-        <p>Daraus entsteht noch kein Auftrag und kein Preis. Erst wenn du willst, wird daraus eine Anfrage.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Versicherung"
-        footer={{ href: '/app/insurance', text: 'Zur Versicherung' }}
-      >
-        <p>Bei einem Schadenfall bereitest du hier alles sauber vor: Fotos, Belege und den Ablauf zum bereits beauftragten Vorgang.</p>
-        <p>Wichtig: Wir kontaktieren deine Versicherung nicht automatisch. Du entscheidest, was du weitergibst.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Hausverkauf"
-        footer={{ href: '/app/home/sale', text: 'Zum Hausverkauf' }}
-      >
-        <p>Du denkst ans Verkaufen? Hier siehst du die Schritte: Verkaufsinteresse, passende Makler, Besichtigung und Abschluss.</p>
-        <p>Deine Kontaktdaten gibst du nur frei, wenn du es ausdrücklich erlaubst.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Mein Jahr"
-        footer={{ href: '/app/year', text: 'Zu Mein Jahr' }}
-      >
-        <p>Hier siehst du das ganze Jahr im Überblick: anstehende Wartungen, Termine und erledigte Arbeiten.</p>
-        <p>Überfällige Aufgaben stehen oben, damit du nichts vergisst.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="KI-Assistent"
-        footer={{ href: '/app/hausmeister', text: 'Zum KI-Assistenten' }}
-      >
-        <p>Der Assistent hilft dir beim Organisieren: Fragen klären, Aufgaben planen und den nächsten Schritt vorschlagen.</p>
-        <p>Er gibt keine Garantien. Das kostenlose Kontingent ist begrenzt – wer mehr braucht, kann einen eigenen API-Schlüssel hinterlegen oder per Werbeanzeige weitere Aktionen freischalten.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Mitgliedschaft & Pakete"
-        footer={{ href: '/app/plans', text: 'Zu Mitgliedschaft & Pakete' }}
-      >
-        <p>Hier siehst du deine Mitgliedschaft: Free, Plus, Premium oder ein Jahrespaket.</p>
-        <p>Du erfährst, welche Leistungen enthalten sind, und kannst dein Paket wechseln oder verlängern.</p>
-      </EHPanel>
-
-      <EHPanel
-        title="Profil & Einstellungen"
-        footer={{ href: '/app/profile', text: 'Zum Profil' }}
-      >
-        <p>In deinem Profil stehen deine persönlichen Daten und Kontaktwege, zum Beispiel WhatsApp.</p>
-        <p>In den Einstellungen passt du an, wie die App dich benachrichtigt und was sie über dich wissen soll.</p>
-      </EHPanel>
+      <EHWorkspaceGrid
+        main={
+          <EHWorkSection title="Dein nächster Schritt">
+            <EHList label="Schnelle Hilfe" items={[
+              { id: 'request', title: 'Ein Anliegen rund ums Haus beschreiben', text: 'Starte beim Hausmeister und kläre, was als Nächstes nötig ist.', href: '/app/hausmeister' },
+              { id: 'order', title: 'Einen bestehenden Auftrag prüfen', text: 'Öffne den Auftrag für Status und zugehörige Informationen.', href: '/app/jobs' },
+              { id: 'appointment', title: 'Einen Termin nachsehen', text: 'Prüfe Datum, Uhrzeit und den angezeigten Terminstatus.', href: '/app/calendar' },
+              { id: 'contact', title: 'Eine Absprache wiederfinden', text: 'Öffne deine Ansprechpartner und die zugehörige Unterhaltung.', href: '/app/messages' },
+            ]} />
+          </EHWorkSection>
+        }
+        aside={
+          <EHPanel title="Wenn es dringend ist" footer={{ href: '/app/emergency', text: 'Zum Notfallbereich' }}>
+            <p>Bei Lebensgefahr, Brand oder Gasgeruch rufe zuerst die 112 an.</p>
+            <p>Für dringende Probleme am Haus findest du Hinweise im Notfallbereich. Eine Betreuung rund um die Uhr ist nicht zugesichert.</p>
+          </EHPanel>
+        }
+      />
+      <EHWorkSection title="Die App einfach erklärt">
+        <EHDetailDisclosure id="hilfe-haus" title="Dein Haus & deine Unterlagen" description="Hausdaten, Dokumente und der Überblick über dein Jahr.">
+          <EHList label="Haus und Unterlagen" items={[
+            { id: 'home', title: 'Mein Haus', text: 'Adresse, Ausstattung und Hausdaten. Hier findest du auch Historie und Hauspass.', href: '/app/home' },
+            { id: 'documents', title: 'Dokumente & Rechnungen', text: 'Sammle Rechnungen, Nachweise und Belege zu deinem Zuhause.', href: '/app/documents' },
+            { id: 'year', title: 'Mein Jahr', text: 'Verschaffe dir einen Überblick über Wartungen, Termine und erledigte Arbeiten.', href: '/app/year' },
+          ]} />
+        </EHDetailDisclosure>
+        <EHDetailDisclosure id="hilfe-organisieren" title="Anliegen & Zusammenarbeit" description="Aufträge, Termine und die Menschen, die dir weiterhelfen.">
+          <EHList label="Anliegen und Zusammenarbeit" items={[
+            { id: 'manager', title: 'Hausmeister', text: 'Beschreibe dein Anliegen und kläre einen nächsten Schritt. Der Assistent ersetzt keine fachliche Prüfung vor Ort.', href: '/app/hausmeister' },
+            { id: 'jobs', title: 'Aufträge', text: 'Verfolge deine Anfrage und den weiteren Ablauf im zugehörigen Auftrag.', href: '/app/jobs' },
+            { id: 'calendar', title: 'Termine', text: 'Hier findest du die gespeicherten Termine und ihren aktuellen Status.', href: '/app/calendar' },
+            { id: 'messages', title: 'Ansprechpartner & Nachrichten', text: 'Finde deine Kontakte und halte Absprachen in der zugehörigen Unterhaltung fest.', href: '/app/messages' },
+            { id: 'partners', title: 'Partner', text: 'Informiere dich über die angebotenen Partner und ihre Leistungen.', href: '/app/partners' },
+          ]} />
+        </EHDetailDisclosure>
+        <EHDetailDisclosure id="hilfe-entscheidungen" title="Beratung, Schaden & Hausverkauf" description="Unterstützung bei besonderen Fragen rund um dein Zuhause.">
+          <EHList label="Besondere Anliegen" items={[
+            { id: 'consultation', title: 'Beratung', text: 'Schildere deine Frage. Daraus entsteht nicht automatisch ein Auftrag oder ein Preis.', href: '/app/consultation' },
+            { id: 'insurance', title: 'Versicherung', text: 'Bereite Fotos, Belege und Informationen zu einem Schaden vor. Deine Versicherung wird nicht automatisch kontaktiert.', href: '/app/insurance' },
+            { id: 'sale', title: 'Hausverkauf', text: 'Informiere dich über den Ablauf. Du entscheidest, ob du Kontaktdaten weitergibst.', href: '/app/home/sale' },
+          ]} />
+        </EHDetailDisclosure>
+        <EHDetailDisclosure id="hilfe-konto" title="Dein Profil & deine App" description="Persönliche Angaben, Mitgliedschaft und App-Funktionen.">
+          <EHList label="Profil und App" items={[
+            { id: 'profile', title: 'Profileinstellungen', text: 'Prüfe und bearbeite deine persönlichen Angaben und deine Adresse.', href: '/app/profile' },
+            { id: 'settings', title: 'Einstellungen', text: 'Informationen zu Installation, Benachrichtigungen, Assistent und Kontodaten.', href: '/app/settings' },
+            { id: 'plans', title: 'Mitgliedschaft & Pakete', text: 'Sieh nach, welche Leistungen deine Mitgliedschaft enthält.', href: '/app/plans' },
+          ]} />
+        </EHDetailDisclosure>
+      </EHWorkSection>
     </AppShell>
   );
 }
