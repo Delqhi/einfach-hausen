@@ -583,6 +583,7 @@ if(!owner.url().includes('view=completed'))throw new Error('completed view param
   if(completedBody.includes('Noch keine abgeschlossenen Aufträge')){await waitText(owner,'Abgeschlossene Aufträge erscheinen hier');}
   else{
     const completedList=owner.locator('section[aria-labelledby="owner-orders-current-heading"]');
+    await waitForDomStable(owner,'section[aria-labelledby="owner-orders-current-heading"]');
     const listText=await completedList.innerText();
     if(/Angebot liegt vor|Angebote liegen vor/.test(listText))throw new Error('Active quoted job leaked into completed view');
     await completedList.getByText('Erledigt').first().waitFor();
