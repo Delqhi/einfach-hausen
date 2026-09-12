@@ -1,5 +1,5 @@
 import { Cpu, DoorOpen, Hammer, HardHat, Home, Leaf, Lock, Sparkles, Wrench, Zap } from 'lucide-react';
-import { EHContactDirectory, EHInbox, EHContactGroup, EHConversation, EHWorkflowForm, EHSubmitButton, EHFormFeedback, EHAppHeader, EHEmptyState, EHErrorState, EHCallout, EHButton, EHField, EHSelect, EHInput } from '@/design-system';
+import { EHContactDirectory, EHContactGroup, EHConversation, EHWorkflowForm, EHSubmitButton, EHFormFeedback, EHAppHeader, EHEmptyState, EHErrorState, EHCallout, EHButton, EHField, EHSelect, EHInput } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
@@ -41,7 +41,7 @@ export default async function Messages({ searchParams }: { searchParams: Promise
   const selected = hasRequestedContact
     ? contacts.find((contact) => Number.isSafeInteger(requestedId) && contact.contact_user_id === requestedId)
     : contacts[0];
-  const selectedId = selected?.contact_user_id;
+  const selectedId = hasRequestedContact ? selected?.contact_user_id : undefined;
   const selectedCategory = selected ? normalizeContactCategory(selected.category || '') : '';
   const messages = selected
     ? db.prepare(`SELECT 'direct' source,cm.id,cm.sender_id,cm.body,cm.read_at,cm.created_at,NULL context_title,NULL job_id
@@ -108,6 +108,7 @@ export default async function Messages({ searchParams }: { searchParams: Promise
   return <AppShell role="homeowner" active="/app/messages" title="Ansprechpartner" subtitle="Dein persönliches Netzwerk fürs Haus">
     <EHAppHeader eyebrow="Netzwerk" title="Meine Ansprechpartner" text="Nach Bereichen sortiert, damit du sofort weißt, wen du für Garten, Dach, Elektro oder andere Themen ansprechen kannst." />
     {contacts.length === 0 ? <EHEmptyState title="Noch keine Ansprechpartner" text="Wenn du zuerst nur mit einem passenden Menschen sprechen möchtest, startest du beim Hausmeister und wählst bewusst „Ansprechpartner finden“." action={<EHButton href="/app/hausmeister" arrow>Ansprechpartner finden</EHButton>} /> : <>
+      {!(hasRequestedContact && selected) && (
       <EHContactDirectory
         totalHref="/app/messages"
         totalLabel={`Alle Ansprechpartner · ${contacts.length} in deinem Netzwerk`}
@@ -118,8 +119,11 @@ export default async function Messages({ searchParams }: { searchParams: Promise
         listAllHref="/app/messages"
         list={<>{directoryGrouped.length === 0 ? <EHEmptyState title="Keine Treffer" text="Für diese Suche gibt es in deinen Ansprechpartnern keinen Treffer." /> : directoryGrouped.map(([category, rows]) => <EHContactGroup key={category} title={category} contacts={(rows as any[]).map((contact: any) => ({ id: String(contact.contact_user_id), href: `/app/messages?contact=${contact.contact_user_id}`, name: `${contact.first_name} ${contact.last_name}`, detail: `${contact.job_title || 'Ansprechpartner'} · ${contact.business_name}${contact.last_job_title ? ` · ${contact.last_job_title}` : ''}`, active: contact.contact_user_id === selectedId, unread: Number(contact.unread_count || 0) }))} />)}</>}
       />
+      )}
       {hasRequestedContact && !selected && <EHErrorState text="Dieser Ansprechpartner ist nicht mehr verfügbar. Wähle einen Kontakt aus deiner Liste." />}
-      <EHInbox contacts={grouped.map(([category,rows])=><EHContactGroup key={category} title={category} contacts={rows.map((contact:any)=>({id:String(contact.contact_user_id),href:`/app/messages?contact=${contact.contact_user_id}`,name:`${contact.first_name} ${contact.last_name}`,detail:`${contact.job_title||'Ansprechpartner'} · ${contact.business_name}${contact.last_job_title?` · ${contact.last_job_title}`:''}`,active:contact.contact_user_id===selectedId,unread:Number(contact.unread_count||0)}))}/>)}>
+      {hasRequestedContact && selected ? (
+      <>
+      <p style={{ margin: '0 0 4px' }}><a href="/app/messages">← Zurück zu allen Ansprechpartnern</a></p>
         {selected&&<EHConversation role="owner" name={`${selected.first_name} ${selected.last_name}`} detail={`${selected.job_title||'Ansprechpartner'} · ${selected.business_name} · ${selectedCategory}`} phone={selected.phone}
           messages={messages.map(message=>({id:`${message.source}-${message.id}`,mine:message.sender_id===u.id,author:`${message.sender_id===u.id?'Du':selected.first_name}${message.source==='job'&&message.context_title?` · Auftrag: ${message.context_title}`:''}`,body:message.body}))}
           composer={<OwnerMessageComposer contactUserId={selected.contact_user_id} peerName={selected.first_name} unreadCount={unreadCount}/>}
@@ -131,8 +135,9 @@ export default async function Messages({ searchParams }: { searchParams: Promise
               <EHSubmitButton>Bereich speichern</EHSubmitButton>
             </EHWorkflowForm></details>
           </>}/>} 
-      </EHInbox>
-      {selected&&<EHCallout title="Bestehende Kundenbeziehung"><p>Dieser Kontakt bleibt Teil deiner Hausakte. Für direkte Folgearbeiten ist keine neue Partnervermittlung nötig.</p></EHCallout>}
+      </>
+      ) : null}
+      {hasRequestedContact && selected && <EHCallout title="Bestehende Kundenbeziehung"><p>Dieser Kontakt bleibt Teil deiner Hausakte. Für direkte Folgearbeiten ist keine neue Partnervermittlung nötig.</p></EHCallout>}
     </>}
   </AppShell>;
 }
