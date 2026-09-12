@@ -302,7 +302,7 @@ async function fuzzRoutes(scratch) {
   const dbPath = path.join(scratch, 'routes.db');
   const server = spawn(process.execPath, [path.join(root, 'node_modules', 'next', 'dist', 'bin', 'next'), 'start', '-H', '127.0.0.1', '-p', String(port)], {
     cwd: root,
-    env: { ...process.env, AUTH_MODE: 'supabase', DATABASE_PATH: dbPath, NEXT_PUBLIC_APP_URL: `http://127.0.0.1:${port}`, NODE_ENV: 'production' },
+    env: { ...process.env, AUTH_MODE: 'supabase', WEBHOOK_SECRET: 'fuzz-only-test-secret', DATABASE_PATH: dbPath, NEXT_PUBLIC_APP_URL: `http://127.0.0.1:${port}`, NODE_ENV: 'production' },
     stdio: 'ignore',
   });
   try {
