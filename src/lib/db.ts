@@ -291,3 +291,4 @@ addColumnIfMissing('ai_usage','credit_id','credit_id INTEGER REFERENCES ai_credi
 addColumnIfMissing('user_settings','ai_byok_key_enc','ai_byok_key_enc TEXT');
 addColumnIfMissing('user_settings','ai_byok_base_url',"ai_byok_base_url TEXT NOT NULL DEFAULT ''");
 addColumnIfMissing('user_settings','ai_byok_model',"ai_byok_model TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing('user_settings','automation_prefs',"automation_prefs TEXT NOT NULL DEFAULT '{}'");

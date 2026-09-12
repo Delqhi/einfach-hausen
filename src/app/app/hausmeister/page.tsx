@@ -24,7 +24,7 @@ export default async function Hausmeister({searchParams}:{searchParams:Promise<R
   return <AppShell role="homeowner" active="/app" title="Hausmeister" subtitle="Fragen klären oder etwas organisieren">
     <div className="housemaster-panel">
       <EHAppHeader eyebrow="Hausmeister · bereit" title={`Hallo ${user.first_name}.`} text="Beschreib einfach, was los ist. Wir klären zuerst die Frage. Erst danach entscheidest du bewusst zwischen weiter fragen, einem persönlichen Ansprechpartner oder einem echten Auftrag." />
-      {sp.error&&<EHErrorState text={sp.error} />}
+      <p><a href="/app/hausmanager">Zum KI-Hausmanager: alte Gespräche, Aufgaben & Automatisierungen →</a></p>{sp.error&&<EHErrorState text={sp.error} />}
       <EHPanel title="KI-Kontingent & Limits">
         <div data-testid="hausmeister-quota" role="status" aria-live="polite">
           <p>KI-Kontingent: {quota.freemiumRemaining} von {quota.freemiumAllowed} frei · {quota.credits} Bonus-Aktionen{quota.byok ? ' · eigener Key aktiv' : ''}.</p>

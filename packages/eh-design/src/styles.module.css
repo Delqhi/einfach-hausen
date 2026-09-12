@@ -2074,3 +2074,35 @@ a.ownerDashboardStatusItem:hover {
 @media (max-width: 1199px) { .contactDirectoryGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 899px) { .contactDirectoryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 599px) { .contactDirectoryCard { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 14px; } .contactDirectoryIcon { width: 40px; height: 40px; } .contactDirectoryArrow { display: none; } }
+.managerHero { min-width: 0; }
+.managerHero h1 { margin: 6px 0 4px; color: var(--eh-color-ink); font-size: var(--eh-font-app-title); font-weight: 760; line-height: 1.06; letter-spacing: -.045em; }
+.managerHero > p:last-child { color: var(--eh-color-secondary); font-size: var(--eh-font-app); }
+.managerEyebrow { margin: 0; color: var(--eh-color-petrol); font-size: var(--eh-font-eyebrow); font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
+.managerAttention { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 22px; border-radius: var(--eh-shape-panel); background: var(--eh-color-deep); color: var(--eh-color-white); }
+.managerAttention strong { display: block; font-size: var(--eh-font-label); }
+.managerAttention p { margin: 4px 0 0; opacity: .8; font-size: var(--eh-font-meta); }
+.managerAttention > a { flex: none; padding: 10px 20px; border-radius: var(--eh-shape-control); background: var(--eh-color-white); color: var(--eh-color-deep); font-size: var(--eh-font-label); font-weight: 700; text-decoration: none; }
+.managerGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.managerCard { min-width: 0; padding: 22px; border: 1px solid var(--eh-color-line); border-radius: var(--eh-shape-panel); background: var(--eh-color-white); }
+.managerCard > h2 { margin: 0; font-size: 1.25rem; font-weight: 680; }
+.managerCard > p { margin: 4px 0 12px; color: var(--eh-color-secondary); font-size: var(--eh-font-label); }
+.managerSaved { color: var(--eh-color-success); font-weight: 650; }
+.managerRows { display: grid; }
+.managerRows > a, .managerRows > label { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--eh-color-line); color: var(--eh-color-ink); text-decoration: none; }
+.managerRows > a:first-child, .managerRows > label:first-child { border-top: 0; }
+.managerRows > label { cursor: pointer; }
+.managerRows > label[aria-disabled="true"] { cursor: not-allowed; opacity: .85; }
+.managerRowIcon { flex: none; width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--eh-color-paper); color: var(--eh-color-petrol); }
+.managerRowIcon svg { width: 20px; height: 20px; }
+.managerRowText { min-width: 0; flex: 1; display: block; }
+.managerRowText strong { display: block; font-size: var(--eh-font-label); font-weight: 650; }
+.managerRowText small { display: block; margin-top: 2px; color: var(--eh-color-secondary); font-size: var(--eh-font-meta); }
+.managerRows > a > span:last-child { flex: none; color: var(--eh-color-petrol); font-size: 1.375rem; }
+.managerBadgeFree, .managerBadgeAbo { flex: none; font-size: var(--eh-font-meta); font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+.managerBadgeFree { background: color-mix(in srgb, var(--eh-color-petrol) 8%, var(--eh-color-white)); color: var(--eh-color-petrol); }
+.managerBadgeAbo { background: var(--eh-color-sand); color: var(--eh-color-ink); }
+.managerRows input[type="checkbox"] { flex: none; width: 24px; height: 24px; accent-color: var(--eh-color-petrol); }
+.managerSave { margin-top: 14px; min-height: 48px; padding: 10px 24px; border: 0; border-radius: var(--eh-shape-control); background: var(--eh-color-petrol); color: var(--eh-color-white); font-size: var(--eh-font-label); font-weight: 700; cursor: pointer; }
+.managerSave:hover { background: var(--eh-color-deep); }
+.managerWide { grid-column: 1 / -1; }
+@media (max-width: 899px) { .managerGrid { grid-template-columns: minmax(0, 1fr); } .managerAttention { flex-direction: column; align-items: stretch; } .managerAttention > a { text-align: center; } }

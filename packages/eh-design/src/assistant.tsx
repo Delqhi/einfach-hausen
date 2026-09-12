@@ -47,12 +47,12 @@ export function EHAssistant({onSend, loginHref, settingsHref, aboveNavigation = 
     <button ref={launcher} type="button" className={s.assistantLauncher} data-placement={placement} data-above-nav={aboveNavigation || undefined}
       aria-label="Hausassistent öffnen" aria-haspopup="dialog" aria-controls={id} onClick={() => dialog.current?.showModal()}>
       <img src="/brand/logo-full.png" alt="" width={64} height={42} />
-      <span><strong>{placement === 'toolbar' ? 'Hausassistent' : 'Frag deinen Hausassistenten'}</strong>{placement !== 'toolbar' && <small>KI-Hilfe rund um dein Zuhause</small>}</span>
+      <span><strong>{placement === 'toolbar' ? 'Hausmanager' : 'Frag deinen Hausmanager'}</strong>{placement !== 'toolbar' && <small>KI-Hilfe rund um dein Zuhause</small>}</span>
     </button>
     <dialog ref={dialog} id={id} className={s.assistantDialog} aria-labelledby={id+'-title'} onClose={() => launcher.current?.focus()}>
       <header className={s.assistantHeader}>
         <img src="/brand/logo-full.png" alt="einfachhausen" width={72} height={46} />
-        <div><h2 id={id+'-title'}>Dein Hausassistent</h2><span>KI-Unterstützung</span></div>
+        <div><h2 id={id+'-title'}>Dein Hausmanager</h2><span>Kennt dein Zuhause</span></div>
         <EHButton variant="quiet" aria-label="Chat schließen" onClick={() => dialog.current?.close()}>×</EHButton>
       </header>
       <div ref={log} className={s.assistantMessages} role="log" aria-label="Chatverlauf" aria-live="polite" aria-relevant="additions text">
@@ -62,7 +62,7 @@ export function EHAssistant({onSend, loginHref, settingsHref, aboveNavigation = 
           <EHText size="meta" muted>Du sprichst mit einer KI. Antworten können Fehler enthalten. Ein Chat beauftragt keinen Betrieb.</EHText>
         </div>
         {messages.map((message, index) => <div key={index} className={s.assistantMessage} data-role={message.role}>
-          <strong>{message.role === 'user' ? 'Du' : 'Hausassistent · KI'}</strong><p>{message.content}</p>
+          <strong>{message.role === 'user' ? 'Du' : 'Hausmanager · KI'}</strong><p>{message.content}</p>
         </div>)}
         {busy && <p role="status">Deine Antwort wird vorbereitet …</p>}
         {notice && <div className={s.assistantNotice} role="status">
