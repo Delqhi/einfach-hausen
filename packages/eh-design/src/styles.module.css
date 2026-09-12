@@ -1899,3 +1899,134 @@ a.ownerDashboardStatusItem:hover {
     gap: 10px;
   }
 }
+
+/* Operator reference correction: only the two owner overview compositions. */
+.workspaceContent:has(> .ownerDashboardHeader),
+.workspaceContent:has(> .ownerOrdersHero) {
+  max-width: none;
+  width: 100%;
+  gap: 18px;
+}
+.ownerDashboardHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 142px;
+  isolation: isolate;
+}
+.ownerDashboardHeaderCopy { position: relative; z-index: 1; max-width: 60%; }
+.ownerDashboardHeaderCopy h1 { font-weight: 650; letter-spacing: -.04em; }
+.ownerDashboardHeaderCopy > p:last-child { margin-top: 8px; }
+.ownerDashboardHeaderMedia {
+  position: absolute;
+  inset: 0 -40px 0 auto;
+  width: 58%;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  mask-image: linear-gradient(to right, transparent, #000 44%);
+  z-index: -1;
+}
+.ownerDashboardHeaderMedia img { object-position: right center; }
+.ownerDashboardTopGrid,
+.ownerDashboardComposerGrid { grid-template-columns: minmax(0, 2.4fr) minmax(320px, 1fr); gap: 18px; }
+.ownerDashboardStatus { overflow: visible; background: color-mix(in srgb, var(--eh-color-petrol) 5%, var(--eh-color-paper)); }
+.ownerDashboardStatusHeader { padding: 24px 28px 16px; gap: 20px; align-items: center; }
+.ownerDashboardStatusHeader h2 { font-size: 2rem; font-weight: 600; }
+.ownerDashboardStatusHeader > div > p:last-child { margin-top: 4px; }
+.ownerDashboardStatusItems { border-top: 0; padding: 6px 20px 24px; }
+.ownerDashboardStatusItem { padding: 0 14px; gap: 14px; }
+.ownerDashboardItemIcon { width: 48px; height: 48px; border-radius: 50%; background: color-mix(in srgb, var(--eh-color-petrol) 5%, var(--eh-color-paper)); }
+.ownerDashboardItemIcon svg { width: 23px; height: 23px; stroke-width: 1.7; }
+.ownerDashboardItemLabel { font-weight: 450; margin-bottom: 3px; }
+.ownerDashboardItemCopy strong { font-weight: 550; }
+.ownerDashboardItemCopy small { margin-top: 3px; }
+.ownerDashboardOverview { overflow: visible; }
+.ownerDashboardOverview > header { padding: 16px 22px 12px; }
+.ownerDashboardOverview h2 { font-weight: 450; }
+.ownerDashboardOverviewItems > a { padding: 12px 22px; grid-template-columns: 48px minmax(0,1fr) auto; }
+.ownerDashboardOverviewFooter { padding: 12px 22px; font-weight: 450; }
+.ownerDashboardComposer { padding: 18px 22px; }
+.ownerDashboardComposer > header { margin-bottom: 12px; }
+.ownerDashboardComposer > header h2 { font-size: 1.375rem; font-weight: 600; }
+.ownerDashboardComposer > header p { margin-top: 5px; }
+.ownerDashboardComposer :global(.agent-composer) { overflow: visible; }
+.ownerDashboardComposer :global(.agent-composer > textarea) { min-height: 68px; height: 68px; padding: 12px; }
+.ownerDashboardComposer :global(.agent-actions) { padding: 6px 8px; flex-wrap: wrap; }
+.ownerDashboardExamples { padding: 18px 22px; border: 1px solid var(--eh-color-line); border-radius: var(--eh-shape-panel); background: var(--eh-color-white); }
+.ownerDashboardExamples h3 { font-size: var(--eh-font-meta); margin-bottom: 6px; font-weight: 550; }
+.ownerDashboardExamples nav a { padding: 7px 0; font-size: var(--eh-font-meta); gap: 12px; }
+.ownerDashboardExamples nav a:last-child { border-bottom: 0; }
+.ownerDashboardUtilityGrid { grid-template-columns: 1.36fr 1fr 1fr; gap: 16px; }
+.ownerDashboardUtilityCard { overflow: visible; }
+.ownerDashboardUtilityCard > h2 { padding: 14px 22px 8px; font-size: 1.125rem; font-weight: 600; }
+.ownerDashboardUtilityItems > a { padding: 9px 22px; grid-template-columns: 48px minmax(0,1fr) auto; gap: 12px; }
+.ownerDashboardUtilityFooter { padding: 10px 22px; font-weight: 450; }
+.ownerOrdersHero { overflow: visible; border: 0; background: transparent; }
+.ownerOrdersSearch { margin: 0 0 12px; width: min(420px, 100%); }
+.ownerOrdersHeroBody { position: relative; isolation: isolate; display: flex; min-height: 210px; border: 0; }
+.ownerOrdersHeroCopy { padding: 18px 0; position: relative; z-index: 1; width: 65%; }
+.ownerOrdersHeroCopy h1 { max-width: none; font-size: clamp(2rem, 2.5vw, 2.75rem); font-weight: 550; line-height: 1.12; }
+.ownerOrdersHeroCopy > p:last-child { max-width: none; margin-top: 12px; }
+.ownerOrdersHeroMedia { position: absolute; inset: 0 -40px 0 auto; width: 60%; min-height: 0; max-height: none; aspect-ratio: auto; overflow: visible; background: transparent; z-index: -1; }
+.ownerOrdersHeroMedia > img { object-position: right center; mask-image: linear-gradient(to right, transparent, #000 45%); }
+.ownerOrdersHeroMedia figcaption { top: 10px; right: 28px; min-width: 200px; }
+.ownerOrdersStats > a { min-height: 100px; padding: 16px 20px; border-color: transparent; }
+.ownerOrdersStats > a[data-tone="petrol"] { background: color-mix(in srgb, var(--eh-color-petrol) 7%, var(--eh-color-white)); }
+.ownerOrdersStats > a[data-tone="sand"], .ownerOrdersStats > a[data-tone="warm"] { background: color-mix(in srgb, var(--eh-color-sand) 30%, var(--eh-color-white)); }
+.ownerOrdersStats > a[data-tone="paper"] { background: color-mix(in srgb, var(--eh-color-petrol) 4%, var(--eh-color-white)); }
+.ownerOrdersStatIcon, .ownerOrdersSupportIcon { border-radius: 50%; }
+.ownerOrdersStatus { border: 0; border-radius: 20px; font-weight: 450; }
+.ownerOrdersStatus[data-tone="info"] { background: color-mix(in srgb, var(--eh-color-petrol) 8%, var(--eh-color-white)); }
+.ownerOrdersStatus[data-tone="warning"] { background: color-mix(in srgb, var(--eh-color-sand) 45%, var(--eh-color-white)); }
+.ownerOrdersList > li { min-height: 74px; gap: 18px; padding-block: 8px; }
+.ownerOrdersTitle strong { font-weight: 550; }
+.ownerOrdersSupport { padding: 14px 22px; }
+:global(.owner-orders-section-heading) h2 { font-size: 1.375rem; font-weight: 550; }
+@media (min-width: 1200px) {
+  .workspaceContent:has(> .ownerDashboardHeader), .workspaceContent:has(> .ownerOrdersHero) { padding: 12px 40px 18px; }
+ .ownerDashboardHeader { min-height: 130px; }
+ .ownerDashboardOverview > header { padding-block: 10px; }
+ .ownerDashboardOverviewItems > a { padding-block: 8px; }
+ .ownerDashboardOverviewFooter { padding-block: 10px; }
+ .ownerDashboardStatusHeader { padding-block: 18px 12px; }
+ .ownerDashboardStatusItems { padding-bottom: 18px; }
+ .ownerDashboardComposer { padding-block: 14px; }
+ .ownerDashboardComposer > header { margin-bottom: 8px; }
+ .ownerDashboardComposer .ownerDashboardComposerInput :global(.agent-composer) { padding: 0; }
+ .ownerDashboardUtilityCard > h2 { padding-block: 10px 6px; }
+ .ownerDashboardUtilityItems > a { padding-block: 7px; }
+ .workspaceContent:has(> .ownerDashboardHeader) { padding-bottom: 16px; }
+  .workspace:has(.ownerDashboardHeader) .workspaceTop,
+  .workspace:has(.ownerOrdersHero) .workspaceTop { height: 64px; }
+}
+@media (max-width: 1199px) {
+  .ownerDashboardTopGrid, .ownerDashboardComposerGrid { grid-template-columns: minmax(0,1fr); }
+  .ownerDashboardUtilityGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .ownerDashboardHeaderMedia, .ownerOrdersHeroMedia { right: -24px; }
+  .ownerOrdersHeroCopy { width: 75%; }
+}
+@media (max-width: 899px) {
+  .ownerDashboardStatusItem { padding: 14px 0; }
+  .ownerDashboardStatusItems { padding: 0 22px 10px; }
+  .ownerDashboardHeaderCopy { max-width: 78%; }
+  .ownerDashboardHeaderMedia { width: 65%; opacity: .55; }
+  .ownerOrdersHeroCopy { width: 100%; }
+  .ownerOrdersHeroBody { display: block; }
+  .ownerOrdersHeroMedia { position: relative; inset: auto; width: 100%; height: 180px; opacity: 1; }
+  .ownerOrdersHeroMedia > img { position: absolute; inset: 0; mask-image: none; }
+  .ownerOrdersHeroMedia figcaption { position: absolute; top: 10px; right: 12px; margin: 0; }
+}
+@media (max-width: 699px) {
+  .ownerDashboardUtilityGrid { grid-template-columns: minmax(0,1fr); }
+  .ownerDashboardHeaderMedia { right: -20px; }
+  .ownerDashboardStatusHeader { align-items: stretch; }
+  .ownerDashboardComposer :global(.agent-composer > textarea) { min-height: 100px; }
+}
+.ownerDashboardStatus .ownerDashboardItemIcon,
+.ownerDashboardOverview .ownerDashboardItemIcon,
+.ownerDashboardUtilityCard .ownerDashboardItemIcon,
+.ownerOrdersStats .ownerOrdersStatIcon {
+ border-radius: 50%;
+ background: color-mix(in srgb, var(--eh-color-petrol) 6%, var(--eh-color-paper));
+}

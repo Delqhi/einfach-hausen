@@ -576,7 +576,20 @@ await nav(owner, base+'/app/home/history'); await owner.getByLabel('Bereich').se
 await nav(owner, base+'/app/messages'); await waitText(owner,'Dach'); await waitText(owner,'Garten'); const thomasRow=owner.locator('a[href*="/app/messages?contact="]').filter({hasText:'Thomas Weber'}).first(); await thomasRow.click(); await owner.locator('details').filter({has:owner.getByText('Bereich ändern')}).first().locator('summary').click(); await owner.getByLabel('Eigener Bereich (optional)').fill('Hecke & Bäume'); await clickAndWaitUrl(owner,owner.getByRole('button',{name:'Bereich speichern'}),/category=saved/); await waitText(owner,'Hecke & Bäume');
 await nav(owner, base+`/app/year?year=${new Date().getFullYear()+2}`); await waitText(owner,'Mein Jahr'); await waitText(owner,'PV-Anlage und Ertrag prüfen'); await assertNoOverflow(owner,'Mobile year plan');
 await nav(owner, base+'/app/plans'); await waitText(owner,'Monatliche Mitgliedschaften'); await waitText(owner,'Haus Jahrespflege'); await waitText(owner,'Energie & Technik Check'); await assertNoOverflow(owner,'Mobile plans');
-await nav(owner, base+'/app/jobs?tab=completed'); await waitText(owner,'Meine Aufträge'); await waitText(owner,'Abgeschlossen'); await assertNoOverflow(owner,'Mobile completed jobs');
+await nav(owner, base+'/app/jobs?view=completed');
+if(!owner.url().includes('view=completed'))throw new Error('completed view param lost');
+{
+  const completedBody=await owner.locator('body').innerText();
+  if(completedBody.includes('Noch keine abgeschlossenen Aufträge')){await waitText(owner,'Abgeschlossene Aufträge erscheinen hier');}
+  else{
+    const completedList=owner.locator('section[aria-labelledby="owner-orders-current-heading"]');
+    await waitForDomStable(owner,'section[aria-labelledby="owner-orders-current-heading"]');
+    const listText=await completedList.innerText();
+    if(/Angebot liegt vor|Angebote liegen vor/.test(listText))throw new Error('Active quoted job leaked into completed view');
+    await completedList.getByText('Erledigt').first().waitFor();
+  }
+}
+await assertNoOverflow(owner,'Mobile completed jobs');
 await nav(manager, base+'/pro/plans'); await waitText(manager,'0 % Provision'); for(const plan of ['Free','Start — 29 €/Monat','Pro (beliebt)','Premium — 199 €/Monat'])await manager.getByText(plan).first().waitFor();
 
 // 9) Beratung und Notfall sind eigenständige, sehr einfache Einstiege.
@@ -626,7 +639,7 @@ await nav(buyer, base+'/app/home'); await waitText(buyer,'PV-Anlage 10 kWp');
 await nav(buyer, base+`/app/year?year=${new Date().getFullYear()+2}`); await waitText(buyer,'PV-Anlage und Ertrag prüfen');
 await nav(buyer, base+'/app/messages'); const buyerMessages=await buyer.locator('body').innerText(); if(buyerMessages.includes('30 Minuten vorher')||buyerMessages.includes('bitte kurz Bescheid'))throw new Error('Private prior-owner messages leaked through house transfer');
 await nav(buyer, base+'/app/documents'); const buyerDocuments=await buyer.locator('body').innerText(); const leakedInvoice=invoiceNumber!==''&&buyerDocuments.includes(invoiceNumber); const leakedDoc=buyerDocuments.includes('Leistungsnachweis Heckenschnitt'); if(leakedInvoice||leakedDoc){console.error('E2EDIAG leak: invoice='+leakedInvoice+' doc='+leakedDoc+' | body=' + buyerDocuments.slice(0,1200).replace(/\n+/g,' | '));throw new Error('Private prior-owner invoice/job documents leaked through house transfer');}
-await nav(buyer, base+'/app/jobs?tab=completed'); if((await buyer.locator('body').innerText()).includes('Heckenschnitt inkl.'))throw new Error('Private prior-owner completed job leaked through house transfer');
+await nav(buyer, base+'/app/jobs?view=completed'); if((await buyer.locator('body').innerText()).includes('Heckenschnitt inkl.'))throw new Error('Private prior-owner completed job leaked through house transfer');
 await nav(owner, base+'/app/documents'); await waitText(owner,invoiceNumber); await nav(owner, base+`/app/messages?contact=${encodeURIComponent(String(thomasValue))}`); await waitText(owner,'Thomas Weber'); await waitText(owner,'30 Minuten vorher');
 await buyerCtx.close();
 

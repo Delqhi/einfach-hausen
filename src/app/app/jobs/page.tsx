@@ -241,8 +241,8 @@ export default async function Jobs({
             </>
           }
           text="Beauftragen, verfolgen, erledigt. Wir kümmern uns um den Rest."
-          imageSrc="/images/premium/hero-homeowner.jpg"
-          imageAlt="Wohnhaus als ruhige Bildwelt für den Auftragsbereich"
+          imageSrc="/images/marketing/owner-facade-reference.png"
+          imageAlt=""
           address={address}
           postcode={postcode}
           search={{
