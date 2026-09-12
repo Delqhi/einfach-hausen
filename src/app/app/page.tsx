@@ -210,8 +210,8 @@ export default async function Dashboard() {
           eyebrow="Übersicht"
           title={`Hallo ${user.first_name}.`}
           text={houseContext || 'Dein Zuhause im Überblick.'}
-          imageSrc="/images/marketing/family-home.jpg"
-          imageAlt="Ein Zuhause im Garten"
+          imageSrc="/images/marketing/owner-facade-reference.png"
+          imageAlt=""
         />
 
         {onboardingPending && (

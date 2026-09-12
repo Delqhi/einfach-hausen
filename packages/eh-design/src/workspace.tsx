@@ -236,17 +236,18 @@ export function EHOwnerDashboardComposer({
   }[];
 }) {
   return (
-    <section className={s.ownerDashboardComposer}>
+    <div className={s.ownerDashboardComposerGrid}>
+      <section className={s.ownerDashboardComposer}>
       <header>
         <h2>{title}</h2>
         <p>{text}</p>
       </header>
 
-      <div className={s.ownerDashboardComposerGrid}>
         <div className={s.ownerDashboardComposerInput}>
           {composer}
         </div>
 
+      </section>
         <aside className={s.ownerDashboardExamples}>
           <h3>Beispiele für Anliegen</h3>
 
@@ -262,8 +263,7 @@ export function EHOwnerDashboardComposer({
             ))}
           </nav>
         </aside>
-      </div>
-    </section>
+    </div>
   );
 }
 
