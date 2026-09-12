@@ -3,9 +3,11 @@ import { AppShell } from '@/components/shell';
 import {
   EHFormFeedback,
   EHManagerAttention,
+  EHManagerGrid,
   EHManagerAutomations,
   EHManagerHero,
   EHManagerTasks,
+  EHManagerWide,
   EHManagerThreads,
 } from '@/design-system';
 import { requireUser } from '@/lib/auth';
@@ -80,7 +82,7 @@ export default async function Hausmanager({
         <EHFormFeedback kind="success">Automatisierungen gespeichert.</EHFormFeedback>
       )}
 
-      <div className="managerGrid">
+      <EHManagerGrid>
         <EHManagerThreads
           items={threads.map((thread) => ({
             id: String(thread.id),
@@ -109,7 +111,7 @@ export default async function Hausmanager({
           ]}
         />
 
-        <div className="managerWide">
+        <EHManagerWide>
           <EHManagerAutomations
             items={AUTOMATION_STARTERS.map((starter) => ({
               slug: starter.slug,
@@ -122,8 +124,8 @@ export default async function Hausmanager({
             action={updateAutomationPrefsAction}
             saved={false}
           />
-        </div>
-      </div>
+        </EHManagerWide>
+      </EHManagerGrid>
 
       <p>
         <Bell aria-hidden="true" /> Neue Gespräche starten jederzeit beim{' '}

@@ -43,6 +43,14 @@ export function EHManagerAttention({
   );
 }
 
+export function EHManagerGrid({ children }: { children: ReactNode }) {
+  return <div className={s.managerGrid}>{children}</div>;
+}
+
+export function EHManagerWide({ children }: { children: ReactNode }) {
+  return <div className={s.managerWide}>{children}</div>;
+}
+
 export function EHManagerThreads({
   items,
 }: {
