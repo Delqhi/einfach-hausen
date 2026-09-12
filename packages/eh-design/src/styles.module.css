@@ -2030,3 +2030,36 @@ a.ownerDashboardStatusItem:hover {
  border-radius: 50%;
  background: color-mix(in srgb, var(--eh-color-petrol) 6%, var(--eh-color-paper));
 }
+
+.contactDirectory { min-width: 0; display: grid; gap: 18px; }
+.contactDirectoryToolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.contactDirectorySearch { width: min(420px, 100%); min-height: 46px; display: flex; align-items: center; gap: 10px; padding: 0 14px; border: 1px solid var(--eh-color-line); border-radius: var(--eh-shape-control); background: var(--eh-color-white); }
+.contactDirectorySearch > label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.contactDirectorySearch > span { flex: none; color: var(--eh-color-secondary); font-size: 1.25rem; line-height: 1; }
+.contactDirectorySearch input { width: 100%; min-width: 0; height: 44px; padding: 0; border: 0; outline: 0; background: transparent; color: var(--eh-color-ink); font: 400 var(--eh-font-input)/1.4 var(--eh-font-family); }
+.contactDirectorySearch input::placeholder { color: var(--eh-color-secondary); }
+.contactDirectorySearch:focus-within { outline: 3px solid var(--eh-color-focus); outline-offset: 2px; }
+.contactDirectoryTotal { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border: 1px solid var(--eh-color-line); border-radius: var(--eh-shape-control); background: var(--eh-color-white); color: var(--eh-color-ink); font-size: var(--eh-font-label); font-weight: 650; text-decoration: none; }
+.contactDirectoryTotal > span { color: var(--eh-color-petrol); font-size: 1.25rem; }
+.contactDirectoryTotal:hover { border-color: var(--eh-color-petrol); }
+.contactDirectoryGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.contactDirectoryCard { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 14px; align-items: start; padding: 16px; border: 1px solid var(--eh-color-line); border-radius: var(--eh-shape-panel); background: var(--eh-color-white); color: var(--eh-color-ink); text-decoration: none; }
+.contactDirectoryCard:hover { border-color: var(--eh-color-petrol); }
+.contactDirectoryCard[aria-current="true"] { border-color: var(--eh-color-petrol); background: color-mix(in srgb, var(--eh-color-petrol) 5%, var(--eh-color-white)); }
+.contactDirectoryIcon { width: 52px; height: 52px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: color-mix(in srgb, var(--eh-color-petrol) 6%, var(--eh-color-paper)); color: var(--eh-color-petrol); }
+.contactDirectoryIcon svg { width: 24px; height: 24px; }
+.contactDirectoryCopy { min-width: 0; display: block; }
+.contactDirectoryCopy strong { display: block; font-size: var(--eh-font-label); font-weight: 680; }
+.contactDirectoryCopy small { display: block; margin-top: 2px; color: var(--eh-color-secondary); font-size: var(--eh-font-meta); }
+.contactDirectoryCopy > span { display: block; margin-top: 6px; color: var(--eh-color-secondary); font-size: var(--eh-font-meta); line-height: 1.45; }
+.contactDirectoryArrow { color: var(--eh-color-petrol); font-size: 1.375rem; line-height: 1; }
+.contactDirectoryFinder { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 16px; border: 1px solid var(--eh-color-line); border-radius: var(--eh-shape-panel); background: color-mix(in srgb, var(--eh-color-petrol) 5%, var(--eh-color-paper)); color: var(--eh-color-ink); text-decoration: none; }
+.contactDirectoryFinder:hover { border-color: var(--eh-color-petrol); }
+.contactDirectoryFinderIcon { width: 52px; height: 52px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--eh-color-petrol); color: var(--eh-color-white); font-size: 1.75rem; line-height: 1; }
+.contactDirectoryListHead { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-top: 6px; }
+.contactDirectoryListHead h2 { margin: 0; font-size: 1.375rem; font-weight: 650; }
+.contactDirectoryListHead > a { color: var(--eh-color-petrol); font-size: var(--eh-font-label); font-weight: 650; text-decoration: none; }
+.contactDirectoryList { display: grid; gap: 14px; }
+@media (max-width: 1199px) { .contactDirectoryGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 899px) { .contactDirectoryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 599px) { .contactDirectoryCard { grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 14px; } .contactDirectoryIcon { width: 40px; height: 40px; } .contactDirectoryArrow { display: none; } }

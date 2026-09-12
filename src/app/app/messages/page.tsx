@@ -1,4 +1,5 @@
-import { EHInbox, EHContactGroup, EHConversation, EHWorkflowForm, EHSubmitButton, EHFormFeedback, EHAppHeader, EHEmptyState, EHErrorState, EHCallout, EHButton, EHField, EHSelect, EHInput } from '@/design-system';
+import { Cpu, DoorOpen, Hammer, HardHat, Home, Leaf, Lock, Sparkles, Wrench, Zap } from 'lucide-react';
+import { EHContactDirectory, EHInbox, EHContactGroup, EHConversation, EHWorkflowForm, EHSubmitButton, EHFormFeedback, EHAppHeader, EHEmptyState, EHErrorState, EHCallout, EHButton, EHField, EHSelect, EHInput } from '@/design-system';
 import { AppShell } from '@/components/shell';
 import { requireUser } from '@/lib/auth';
 import { db } from '@/lib/db';
@@ -66,10 +67,57 @@ export default async function Messages({ searchParams }: { searchParams: Promise
         ) as ThreadMessage[]
     : [];
   const unreadCount = selected ? Number(selected.unread_count || 0) : 0;
+  const rawQuery = typeof sp.q === 'string' ? sp.q : '';
+  const query = rawQuery.trim().toLowerCase();
+  const activeArea = typeof sp.bereich === 'string' ? sp.bereich : '';
+  const directoryContacts = contacts.filter((contact: any) => {
+    const area = normalizeContactCategory(contact.category || '');
+    if (activeArea && area !== activeArea) return false;
+    if (!query) return true;
+    const haystack = `${contact.first_name || ''} ${contact.last_name || ''} ${contact.business_name || ''} ${contact.job_title || ''} ${contact.last_job_title || ''} ${area}`.toLowerCase();
+    return haystack.includes(query);
+  });
+  const directoryGrouped = groupContactsByCategory(directoryContacts);
+  const areaMeta: Record<string, { hint: string; icon: React.ReactNode }> = {
+    'Haus & Allgemein': { hint: 'z. B. Hausmeister & allgemeine Fragen', icon: <Home aria-hidden="true" /> },
+    'Garten & Außen': { hint: 'z. B. Rasen mähen oder Hecke schneiden', icon: <Leaf aria-hidden="true" /> },
+    'Dach & Fassade': { hint: 'z. B. Dach undicht oder Fassade beschädigt', icon: <HardHat aria-hidden="true" /> },
+    'Elektro': { hint: 'z. B. Stromausfall oder Steckdose defekt', icon: <Zap aria-hidden="true" /> },
+    'Sanitär & Heizung': { hint: 'z. B. Wasserhahn undicht oder Heizung ohne Wärme', icon: <Wrench aria-hidden="true" /> },
+    'Fenster & Türen': { hint: 'z. B. Fenster klemmt oder Tür schließt nicht', icon: <DoorOpen aria-hidden="true" /> },
+    'Reinigung & Pflege': { hint: 'z. B. Fensterreinigung oder Grundreinigung', icon: <Sparkles aria-hidden="true" /> },
+    'Technik & Energie': { hint: 'z. B. PV-Anlage oder Wallbox', icon: <Cpu aria-hidden="true" /> },
+    'Sicherheit & Schloss': { hint: 'z. B. Schloss klemmt oder Einbruchschutz', icon: <Lock aria-hidden="true" /> },
+    'Renovierung & Innenausbau': { hint: 'z. B. Möbelaufbau oder kleine Reparaturen', icon: <Hammer aria-hidden="true" /> },
+  };
+  const areaCounts = new Map<string, number>();
+  for (const contact of contacts as any[]) {
+    const area = normalizeContactCategory((contact as any).category || '');
+    areaCounts.set(area, (areaCounts.get(area) || 0) + 1);
+  }
+  const directoryCategories = (Object.keys(areaMeta) as string[]).map((area) => ({
+    id: area,
+    title: area,
+    count: areaCounts.get(area) || 0,
+    hint: areaMeta[area].hint,
+    href: activeArea === area ? '/app/messages' : `/app/messages?bereich=${encodeURIComponent(area)}`,
+    active: activeArea === area,
+    icon: areaMeta[area].icon,
+  }));
 
   return <AppShell role="homeowner" active="/app/messages" title="Ansprechpartner" subtitle="Dein persönliches Netzwerk fürs Haus">
     <EHAppHeader eyebrow="Netzwerk" title="Meine Ansprechpartner" text="Nach Bereichen sortiert, damit du sofort weißt, wen du für Garten, Dach, Elektro oder andere Themen ansprechen kannst." />
     {contacts.length === 0 ? <EHEmptyState title="Noch keine Ansprechpartner" text="Wenn du zuerst nur mit einem passenden Menschen sprechen möchtest, startest du beim Hausmeister und wählst bewusst „Ansprechpartner finden“." action={<EHButton href="/app/hausmeister" arrow>Ansprechpartner finden</EHButton>} /> : <>
+      <EHContactDirectory
+        totalHref="/app/messages"
+        totalLabel={`Alle Ansprechpartner · ${contacts.length} in deinem Netzwerk`}
+        search={{ action: '/app/messages', name: 'q', defaultValue: rawQuery, placeholder: 'Suche nach Dienstleister oder Kategorie …' }}
+        categories={directoryCategories}
+        finder={{ title: 'Ansprechpartner finden', text: 'Noch kein passender Kontakt? Starte beim Hausmeister – wir vermitteln den passenden Betrieb.', href: '/app/hausmeister', label: 'Anliegen beschreiben' }}
+        listTitle="Meine Ansprechpartner"
+        listAllHref="/app/messages"
+        list={<>{directoryGrouped.length === 0 ? <EHEmptyState title="Keine Treffer" text="Für diese Suche gibt es in deinen Ansprechpartnern keinen Treffer." /> : directoryGrouped.map(([category, rows]) => <EHContactGroup key={category} title={category} contacts={(rows as any[]).map((contact: any) => ({ id: String(contact.contact_user_id), href: `/app/messages?contact=${contact.contact_user_id}`, name: `${contact.first_name} ${contact.last_name}`, detail: `${contact.job_title || 'Ansprechpartner'} · ${contact.business_name}${contact.last_job_title ? ` · ${contact.last_job_title}` : ''}`, active: contact.contact_user_id === selectedId, unread: Number(contact.unread_count || 0) }))} />)}</>}
+      />
       {hasRequestedContact && !selected && <EHErrorState text="Dieser Ansprechpartner ist nicht mehr verfügbar. Wähle einen Kontakt aus deiner Liste." />}
       <EHInbox contacts={grouped.map(([category,rows])=><EHContactGroup key={category} title={category} contacts={rows.map((contact:any)=>({id:String(contact.contact_user_id),href:`/app/messages?contact=${contact.contact_user_id}`,name:`${contact.first_name} ${contact.last_name}`,detail:`${contact.job_title||'Ansprechpartner'} · ${contact.business_name}${contact.last_job_title?` · ${contact.last_job_title}`:''}`,active:contact.contact_user_id===selectedId,unread:Number(contact.unread_count||0)}))}/>)}>
         {selected&&<EHConversation role="owner" name={`${selected.first_name} ${selected.last_name}`} detail={`${selected.job_title||'Ansprechpartner'} · ${selected.business_name} · ${selectedCategory}`} phone={selected.phone}

@@ -15,3 +15,72 @@ export function EHConversation({name,detail,phone,messages,composer,settings,rol
   <div className={s.conversationComposer}>{composer}</div>
  </section>;
 }
+
+export type EHContactDirectoryCategory = {
+  id: string;
+  title: string;
+  count: number;
+  hint: string;
+  href: string;
+  active: boolean;
+  icon: ReactNode;
+};
+export function EHContactDirectory({
+  totalHref,
+  totalLabel,
+  search,
+  categories,
+  finder,
+  listTitle,
+  listAllHref,
+  list,
+}: {
+  totalHref: string;
+  totalLabel: string;
+  search: { action: string; name: string; defaultValue?: string; placeholder: string; extra?: { name: string; value: string } };
+  categories: EHContactDirectoryCategory[];
+  finder: { title: string; text: string; href: string; label: string };
+  listTitle: string;
+  listAllHref: string;
+  list: ReactNode;
+}) {
+  return (
+    <div className={s.contactDirectory}>
+      <div className={s.contactDirectoryToolbar}>
+        <form className={s.contactDirectorySearch} action={search.action} method="get" role="search">
+          <label htmlFor="contact-directory-search">Ansprechpartner durchsuchen</label>
+          <span aria-hidden="true">⌕</span>
+          {search.extra && <input type="hidden" name={search.extra.name} value={search.extra.value} />}
+          <input id="contact-directory-search" name={search.name} type="search" defaultValue={search.defaultValue} placeholder={search.placeholder} />
+        </form>
+        <a className={s.contactDirectoryTotal} href={totalHref}>{totalLabel}<span aria-hidden="true">›</span></a>
+      </div>
+      <div className={s.contactDirectoryGrid} role="list" aria-label="Bereiche">
+        {categories.map((category) => (
+          <a key={category.id} role="listitem" className={s.contactDirectoryCard} href={category.href} aria-current={category.active ? "true" : undefined}>
+            <span className={s.contactDirectoryIcon}>{category.icon}</span>
+            <span className={s.contactDirectoryCopy}>
+              <strong>{category.title}</strong>
+              <small>{category.count === 1 ? "1 Ansprechpartner" : `${category.count} Ansprechpartner`}</small>
+              <span>{category.hint}</span>
+            </span>
+            <span className={s.contactDirectoryArrow} aria-hidden="true">›</span>
+          </a>
+        ))}
+      </div>
+      <a className={s.contactDirectoryFinder} href={finder.href}>
+        <span className={s.contactDirectoryFinderIcon} aria-hidden="true">+</span>
+        <span className={s.contactDirectoryCopy}>
+          <strong>{finder.title}</strong>
+          <span>{finder.text}</span>
+        </span>
+        <span className={s.contactDirectoryArrow} aria-hidden="true">›</span>
+      </a>
+      <div className={s.contactDirectoryListHead}>
+        <h2>{listTitle}</h2>
+        <a href={listAllHref}>Alle anzeigen<span aria-hidden="true"> ›</span></a>
+      </div>
+      <div className={s.contactDirectoryList}>{list}</div>
+    </div>
+  );
+}
