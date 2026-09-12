@@ -48,3 +48,19 @@ Preview `sessions` rows vanish within minutes with no login/logout traffic (issu
 - GitNexus worktree index: 8,435 nodes / 19,693 edges. Fresh impact: Dashboard/Jobs leaf UNKNOWN; EHOwnerDashboardHeader/Composer -> Dashboard LOW; EHOwnerOrdersHero -> Jobs LOW; AppShell CRITICAL/31 (do not touch).
 - graphify binary absent on OCI (GitNexus is the working graph).
 - No commit, no merge, no deploy performed. Production runs /srv/einfach-hausen (service active) untouched.
+
+## AUDIT TRAIL — Release 2026-09-12 (angehaengt nach Final APPROVE)
+
+- PR #92 MERGED 82faad5 (2026-09-12T10:46:16Z): visual repair + facade asset + seed script + e2e completed-view.
+- PR #93 MERGED dfe20d0: 1-line t0120 fuzz WEBHOOK_SECRET env fix (gate 14/15 -> 15/15). Sibling security-test APPROVE.
+- Pre-seed backup: /var/backups/einfach-hausen/einfach-hausen-20260912T104642Z (explicit, vor Prod-Seed).
+- Prod seed: scripts/seed-demo-content.mjs, 18 Vorbedingungen PASS + 15 Readbacks PASS, users 10 / jobs 6 stabil, zero deletes/updates auf Fremddaten.
+- Deploy: /srv/einfach-hausen/deploy/update-on-oci.sh, release gate 15/15, /srv @dfe20d0, service active Node v22.23.0, /api/health ok=true ready.
+- Live smoke (Loopback, echte Demo-Box-Logins, 0 pageerrors/5xx): kunde -> /app (Hallo Demo, Ahornweg 12, Badarmatur/1 Angebot, Wartung Mi 09.09., Facade-Hero, Composer); handwerker -> /pro (Demo-Betrieb, Stats 2/1/2/1 kohaerent). Shots: live-owner-1672.png, live-pro-1672.png.
+- Reviews: seed-diff APPROVE, /app PASS, e2e completed-view v2 APPROVE (list-scoped), security-test APPROVE. Kein Self-Accept durch diesen Agenten.
+- Taskplan-Limit: keine Snapshot/Tool-Unterstuetzung gefunden; Release auf explizite Operator-Autorisierung, keine Historie fabriziert.
+
+## Follow-up (NICHT Teil des Releases, neue Autorisierung noetig)
+
+- Stale Demo-Daten: Maintenance 9001 (due 09-09, vergangen) + Appointment 1 (09-09, vergangen) wirken als "Mi., 09.09."-Vergangenheit im Demo-Dashboard. Vorschlag: Seed um Termin-Rollover erweitern (bestehende Demo-Zeilen per UPDATE auf relative Zukunft datieren, NUR ids 1/9001 nach Ownership-Reassert) ODER neue zukunftsdatierte Demo-Zeilen; vergangene als Historie behalten ist auch legitim. Keine Prod-Writes ohne neue Autorisierung.
+- Preview-Session-Wipe (nur Vorschau-DB, Prod unbetroffen): Ursache offen.
