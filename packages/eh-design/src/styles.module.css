@@ -318,8 +318,19 @@
 /* Workspace composition approved for implementation by Jerry, 2026-09-08. */
 .workspace { display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100dvh;background:var(--eh-color-paper);color:var(--eh-color-ink);font-size:var(--eh-font-app);line-height:1.6; }
 .workspaceSidebar { position:sticky;top:0;height:100dvh;display:flex;flex-direction:column;gap:40px;padding:32px 20px 24px;background:var(--eh-color-white);border-right:1px solid var(--eh-color-line);overflow-y:auto; }
-.workspaceSidebar > a { max-width:132px;align-self:flex-start; }
-.workspaceSidebar > a img { width:132px;height:auto; }
+.workspaceBrand { display:flex;align-items:center;justify-content:space-between;gap:12px; }
+.workspaceBrand > a { max-width:132px;min-width:0; }
+.workspaceBrand > a img { width:132px;height:auto;display:block; }
+.workspaceCollapse { flex:none;width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--eh-color-line);border-radius:var(--eh-shape-control);background:var(--eh-color-white);color:var(--eh-color-petrol);cursor:pointer; }
+.workspaceCollapse:hover { background:var(--eh-color-paper); }
+.workspaceCollapse:focus-visible { outline:3px solid var(--eh-color-focus);outline-offset:2px; }
+.workspaceAccount { position:relative; }
+.workspace:has(> aside[data-collapsed="true"]) { grid-template-columns:76px minmax(0,1fr); }
+.workspaceSidebar[data-collapsed="true"] { padding:32px 12px 24px; }
+.workspaceSidebar[data-collapsed="true"] .workspaceBrand { justify-content:center; }
+.workspaceSidebar[data-collapsed="true"] .workspaceBrand > a { display:none; }
+.workspaceSidebar[data-collapsed="true"] .workspaceNav a { justify-content:center;padding:13px 0; }
+.workspaceSidebar[data-collapsed="true"] .workspaceNav a > span { display:none; }
 .workspaceNav { display:grid;gap:8px; }
 .workspaceNav a { display:flex;gap:14px;align-items:center;padding:13px 16px;border-radius:var(--eh-shape-control);color:var(--eh-color-secondary);text-decoration:none;font-size:var(--eh-font-app);font-weight:550; }
 .workspaceNav a[aria-current="page"] { background:var(--eh-color-petrol);color:var(--eh-color-white); }

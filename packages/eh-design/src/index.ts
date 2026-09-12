@@ -9,6 +9,7 @@ export * from "./workflow-layouts";
 export * from "./submit-button";
 export * from "./job-forms";
 export * from "./workspace";
+export * from "./workspace-sidebar";
 export * from "./workspace-records";
 export * from "./workspace-conversation";
 export * from "./workspace-detail";
