@@ -4,6 +4,7 @@ import { HouseAssistant } from './house-assistant';
 import { Bell, HelpCircle, Menu } from 'lucide-react';
 import { BottomNav, isNavActive, ownerNav, providerNav } from './bottom-nav';
 import { OwnerMobileMenu } from './owner-menu';
+import { SidebarAccountMenu } from './sidebar-account-menu';
 import { BellRoundedIcon } from './icons';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
@@ -28,7 +29,7 @@ export async function AppShell({ role, active, children, title, subtitle }: { ro
   return <EHScope app><EHWorkspaceFrame homeHref={pro?"/pro":"/app"}
     context={pro ? "Partnerbereich" : "Mein Zuhause"}
     navigation={items.map(([href,Icon,label])=><EHWorkspaceNavItem key={href} href={href} active={isNavActive(active,href)} icon={<Icon size={22}/>}>{label}</EHWorkspaceNavItem>)}
-    account={<Link href={profileHref}><strong>{user?`${user.first_name} ${user.last_name}`:'Profil'}</strong><small>{pro?'Partnerkonto':'Eigenheim-Konto'} · Profil öffnen</small></Link>}
+    account={<SidebarAccountMenu name={user?`${user.first_name} ${user.last_name}`:'Profil'} initials={initials} accountLabel={pro?'Partnerkonto':'Eigenheim-Konto'} profileHref={profileHref} settingsHref={pro?'/pro/profile':'/app/settings'} helpHref={pro?'/pro/hilfe':'/app/hilfe'} />}
     mobileMenu={mobileMenu}
     notifications={<>{!pro && <HouseAssistant placement="toolbar" />}<Link href="/notifications" aria-label={unread?`${unread} ungelesene Benachrichtigungen`:'Benachrichtigungen'}><Bell size={22}/>{unread>0&&<span>{unread>99?'99+':unread}</span>}</Link><Link href={profileHref} aria-label="Profil">{initials}</Link></>}
     bottomNav={<BottomNav role={role} active={active}/>}>{children}</EHWorkspaceFrame></EHScope>;
