@@ -48,3 +48,9 @@ Preview `sessions` rows vanish within minutes with no login/logout traffic (issu
 - GitNexus worktree index: 8,435 nodes / 19,693 edges. Fresh impact: Dashboard/Jobs leaf UNKNOWN; EHOwnerDashboardHeader/Composer -> Dashboard LOW; EHOwnerOrdersHero -> Jobs LOW; AppShell CRITICAL/31 (do not touch).
 - graphify binary absent on OCI (GitNexus is the working graph).
 - No commit, no merge, no deploy performed. Production runs /srv/einfach-hausen (service active) untouched.
+
+## AUDIT — dateLabel crash fix (pre/post proof, 2026-09-12)
+
+- Pre-fix (guard absent, dev :3104, prod backup-copy DB): 23x server RangeError in devY.log with exact stack `at dateLabel (src/lib/format.ts:7:175)` <- `src/app/app/jobs/[id]/page.tsx:76:445` <- Array.map <- JobDetail. Trigger data quotes.id=9001.available_at='Naechste Woche'. SSR returns 200 loading shell; client boundary shows the reported error view.
+- Post-fix (one-line isFinite guard): HTTP 200, Badarmatur detail renders, bad quote shows 'Verfügbar: Flexibel', zero RangeError. Full matrix 9001-9005 green.
+- Fix commit: eh-datelabel-20260912 (1 insertion, src/lib/format.ts:7). Pre-existing crash (server log 08:16, before seed/deploy) — seed data NOT the cause.

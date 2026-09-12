@@ -4,6 +4,7 @@ export const euro = (cents: number | null | undefined) =>
 export const dateLabel = (value?: string | null) => {
   if (!value) return 'Flexibel';
   const d = new Date(value.length === 10 ? value + 'T12:00:00' : value);
+  if (!Number.isFinite(d.getTime())) return 'Flexibel';
   return new Intl.DateTimeFormat('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',hour:value.length>10?'2-digit':undefined,minute:value.length>10?'2-digit':undefined}).format(d);
 };
 
