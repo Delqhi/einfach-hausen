@@ -970,6 +970,21 @@ export async function assignJobContactAction(jobId:number,fd:FormData){
   revalidatePath(`/pro/jobs/${jobId}`); revalidatePath(`/app/jobs/${jobId}`); revalidatePath('/app/messages'); revalidatePath('/pro/orders'); revalidatePath('/notifications');
 }
 
+export async function updateAutomationPrefsAction(fd:FormData){
+  const user=await requireUser('homeowner');
+  const patch:Record<string,boolean>={};
+  for(const slug of ['wartungserinnerung','heiz-check-herbst','angebotsvergleich']){
+    const v=fd.get(`automation:${slug}`);
+    // Checkbox-Semantik: vorhanden+an -> true, 'off'/'0'/missing -> false.
+    // Abo-Slugs filtert setAutomationPrefs ehrlich heraus (kein Enforcement erfunden).
+    patch[slug]=v==='on'||v==='1'||v==='true';
+  }
+  const { setAutomationPrefs } = await import('@/lib/hausmanager');
+  setAutomationPrefs(user.id,patch);
+  revalidatePath('/app/hausmanager');
+  redirect('/app/hausmanager?prefs=saved');
+}
+
 export async function updateContactCategoryAction(contactUserId:number,fd:FormData){
   const user=await requireUser('homeowner');
   const relation=db.prepare('SELECT 1 FROM homeowner_contacts WHERE homeowner_id=? AND contact_user_id=?').get(user.id,contactUserId);
